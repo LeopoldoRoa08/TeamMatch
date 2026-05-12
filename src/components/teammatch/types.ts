@@ -19,4 +19,15 @@ export interface SportEvent {
   distanceKm: number;
   x: number; // map position %
   y: number;
+  requests?: JoinRequest[];
+}
+
+export interface JoinRequest {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  eventId: string;
+  eventTitle: string;
+  status: 'pending' | 'accepted' | 'rejected';
 }
