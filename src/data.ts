@@ -1,0 +1,42 @@
+import { SportEvent } from "./types";
+
+export const events: SportEvent[] = [
+  {
+    id: "1",
+    title: "Running grupal en Chacao",
+    sport: "Running",
+    level: "Intermedio",
+    location: "Parque El Bosque",
+    zone: "Chacao",
+    date: "Hoy",
+    time: "18:00 – 19:30",
+    price: 8,
+    spots: 14,
+    joined: 11,
+    host: "Diego R.",
+    hostAvatar: "DR",
+    image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=800",
+    distanceKm: 1.2,
+    x: 35,
+    y: 45,
+  },
+  {
+    id: "2",
+    title: "Senderismo al Ávila",
+    sport: "Senderismo",
+    level: "Avanzado",
+    location: "Sabas Nieves",
+    zone: "Altamira",
+    date: "Hoy",
+    time: "06:00 – 09:00",
+    price: 0,
+    spots: 10,
+    joined: 6,
+    host: "Andrea M.",
+    hostAvatar: "AM",
+    image: "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=800",
+    distanceKm: 2.4,
+    x: 60,
+    y: 25,
+  }
+];
