@@ -47,63 +47,70 @@ function Index() {
   };
 
   return (
-    <main className="min-h-screen w-full bg-secondary">
-      {/* Desktop side panel */}
-      <div className="mx-auto flex min-h-screen max-w-[1200px] items-center gap-12 px-6 py-10">
-        <aside className="hidden flex-1 text-primary-foreground lg:block">
-          <Logo size={36} />
-          <h1 className="mt-8 text-5xl font-bold leading-tight tracking-tight">
-            Encuentra tu próximo
-            <br />
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              partido en Caracas.
-            </span>
-          </h1>
-          <p className="mt-4 max-w-md text-base text-primary-foreground/70">
-            Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores verificados
-            y matchmaking por nivel.
-          </p>
+    <main className="min-h-[100dvh] w-full bg-secondary">
+      <div className="flex min-h-[100dvh] w-full lg:gap-0">
+        {/* Panel lateral solo en desktop */}
+        <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-primary-foreground lg:flex">
+          <div className="absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
+          <div className="absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
 
-          <div className="mt-10 grid max-w-md grid-cols-3 gap-3">
-            {[
-              { k: "1.2k", v: "Jugadores" },
-              { k: "320", v: "Eventos/mes" },
-              { k: "4.9★", v: "Rating" },
-            ].map((s) => (
-              <div
-                key={s.v}
-                className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-4"
-              >
-                <div className="text-2xl font-bold text-primary">{s.k}</div>
-                <div className="text-xs text-primary-foreground/60">{s.v}</div>
-              </div>
-            ))}
+          <div className="relative">
+            <Logo size={36} />
           </div>
 
-          <div className="mt-10 flex items-center gap-3 text-xs text-primary-foreground/50">
-            <span>👉</span> Navega el prototipo en el teléfono →
+          <div className="relative">
+            <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Disponible en Caracas
+            </span>
+            <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl">
+              Encuentra tu próximo
+              <br />
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                partido en Caracas.
+              </span>
+            </h1>
+            <p className="mt-5 max-w-md text-base text-primary-foreground/70">
+              Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores
+              verificados y matchmaking por nivel.
+            </p>
+
+            <div className="mt-10 grid max-w-md grid-cols-3 gap-3">
+              {[
+                { k: "1.2k", v: "Jugadores" },
+                { k: "320", v: "Eventos/mes" },
+                { k: "4.9★", v: "Rating" },
+              ].map((s) => (
+                <div
+                  key={s.v}
+                  className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-4"
+                >
+                  <div className="text-2xl font-bold text-primary">{s.k}</div>
+                  <div className="text-xs text-primary-foreground/60">{s.v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative text-xs text-primary-foreground/50">
+            👉 Usa la app a la derecha — totalmente responsive.
           </div>
         </aside>
 
-        {/* Phone frame */}
-        <div className="mx-auto flex-shrink-0">
-          <div className="relative h-[820px] w-[390px] overflow-hidden rounded-[3rem] border-[10px] border-secondary bg-background shadow-pop ring-1 ring-primary-foreground/10">
-            {/* Notch */}
-            <div className="absolute left-1/2 top-2 z-50 h-6 w-32 -translate-x-1/2 rounded-full bg-secondary" />
-            {/* Screen */}
-            <div className="relative h-full w-full overflow-hidden">
-              {renderScreen()}
-              {started && !creating && screen !== "detail" && (
-                <BottomNav
-                  current={screen}
-                  onChange={setScreen}
-                  onCreate={() => setCreating(true)}
-                />
-              )}
-            </div>
+        {/* Área de la app: pantalla completa en móvil, columna derecha en desktop */}
+        <section className="relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop">
+          <div className="relative h-[100dvh] w-full overflow-hidden">
+            {renderScreen()}
+            {started && !creating && screen !== "detail" && (
+              <BottomNav
+                current={screen}
+                onChange={setScreen}
+                onCreate={() => setCreating(true)}
+              />
+            )}
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
 }
+
