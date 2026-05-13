@@ -20,8 +20,8 @@ export const events: SportEvent[] = [
     hostAvatar: "DR",
     image: running,
     distanceKm: 1.2,
-    x: 38,
-    y: 42,
+    lat: 10.4939,
+    lng: -66.8522,
   },
   {
     id: "2",
@@ -39,8 +39,8 @@ export const events: SportEvent[] = [
     hostAvatar: "AM",
     image: hiking,
     distanceKm: 2.4,
-    x: 62,
-    y: 30,
+    lat: 10.5100,
+    lng: -66.8500,
   },
   {
     id: "3",
@@ -58,8 +58,8 @@ export const events: SportEvent[] = [
     hostAvatar: "CP",
     image: padel,
     distanceKm: 3.1,
-    x: 48,
-    y: 65,
+    lat: 10.4815,
+    lng: -66.8615,
   },
   {
     id: "4",
@@ -77,7 +77,7 @@ export const events: SportEvent[] = [
     hostAvatar: "ML",
     image: running,
     distanceKm: 4.8,
-    x: 25,
-    y: 75,
+    lat: 10.4988,
+    lng: -66.8967,
   },
 ];

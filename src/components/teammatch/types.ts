@@ -17,6 +17,6 @@ export interface SportEvent {
   hostAvatar: string;
   image: string;
   distanceKm: number;
-  x: number; // map position %
-  y: number;
+  lat: number;
+  lng: number;
 }
