@@ -2,7 +2,13 @@ import { MapPin, Users, Trophy, ArrowRight } from "lucide-react";
 import { Logo } from "./Logo";
 import caracasMap from "@/assets/caracas-map.jpg";
 
-export function WelcomeScreen({ onStart }: { onStart: () => void }) {
+export function WelcomeScreen({
+  onRegister,
+  onLogin,
+}: {
+  onRegister: () => void;
+  onLogin: () => void;
+}) {
   return (
     <div className="relative h-full w-full overflow-hidden gradient-dark text-secondary-foreground">
       {/* Background map */}
@@ -60,15 +66,17 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
 
         <div className="mt-6 space-y-3">
           <button
-            onClick={onStart}
+            id="welcome-register-btn"
+            onClick={onRegister}
             className="group flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-base font-bold text-secondary shadow-pop transition active:scale-[0.98]"
           >
             Empezar a jugar
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
           </button>
           <button
-            onClick={onStart}
-            className="w-full rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 py-3 text-sm font-medium text-secondary-foreground/80"
+            id="welcome-login-btn"
+            onClick={onLogin}
+            className="w-full rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 py-3 text-sm font-medium text-secondary-foreground/80 transition hover:bg-primary-foreground/10 active:scale-[0.98]"
           >
             Ya tengo cuenta
           </button>

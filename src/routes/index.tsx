@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { CreateEventScreen } from "@/components/teammatch/CreateEventScreen";
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
+import { AuthScreen, type AuthMode } from "@/components/teammatch/AuthScreen";
 import { BottomNav } from "@/components/teammatch/BottomNav";
 import { Logo } from "@/components/teammatch/Logo";
+import { supabase } from "@/lib/supabase";
 import type { Screen } from "@/components/teammatch/types-nav";
 import type { SportEvent } from "@/components/teammatch/types";
 
@@ -25,11 +27,32 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+// Posibles estados de la pantalla de auth
+type AppState =
+  | { phase: "checking" }           // verificando sesión al arrancar
+  | { phase: "welcome" }            // sin sesión → pantalla de bienvenida
+  | { phase: "auth"; mode: AuthMode } // formulario de login/registro
+  | { phase: "app" };               // sesión activa → app principal
+
 function Index() {
-  const [started, setStarted] = useState(false);
+  const [appState, setAppState] = useState<AppState>({ phase: "checking" });
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
   const [creating, setCreating] = useState(false);
+
+  // Al montar, verificar si ya existe una sesión activa en Supabase
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAppState(session ? { phase: "app" } : { phase: "welcome" });
+    });
+
+    // Escuchar cambios de sesión (ej: logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) setAppState({ phase: "welcome" });
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const openDetail = (e: SportEvent) => {
     setSelected(e);
@@ -37,7 +60,37 @@ function Index() {
   };
 
   const renderScreen = () => {
-    if (!started) return <WelcomeScreen onStart={() => setStarted(true)} />;
+    // Cargando sesión
+    if (appState.phase === "checking") {
+      return (
+        <div className="flex h-full items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      );
+    }
+
+    // Sin sesión → bienvenida
+    if (appState.phase === "welcome") {
+      return (
+        <WelcomeScreen
+          onRegister={() => setAppState({ phase: "auth", mode: "register" })}
+          onLogin={() => setAppState({ phase: "auth", mode: "login" })}
+        />
+      );
+    }
+
+    // Formulario de auth
+    if (appState.phase === "auth") {
+      return (
+        <AuthScreen
+          initialMode={appState.mode}
+          onSuccess={() => setAppState({ phase: "app" })}
+          onClose={() => setAppState({ phase: "welcome" })}
+        />
+      );
+    }
+
+    // App principal (sesión activa)
     if (creating) return <CreateEventScreen onClose={() => setCreating(false)} />;
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
@@ -93,7 +146,7 @@ function Index() {
             {/* Screen */}
             <div className="relative h-full w-full overflow-hidden">
               {renderScreen()}
-              {started && !creating && screen !== "detail" && (
+              {appState.phase === "app" && !creating && screen !== "detail" && (
                 <BottomNav
                   current={screen}
                   onChange={setScreen}
