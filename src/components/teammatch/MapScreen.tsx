@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Search, SlidersHorizontal, Bell } from "lucide-react";
+import { Search, SlidersHorizontal, Bell, Plus } from "lucide-react";
+import { CreateEventForm } from "./CreateEventForm";
 import mapImg from "@/assets/caracas-map.jpg";
 import { events } from "./data";
 import { EventCard } from "./EventCard";
@@ -10,6 +11,7 @@ const sports = ["Todos", "Running", "Senderismo", "Pádel", "Vóleibol"] as cons
 export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
   const [active, setActive] = useState<(typeof sports)[number]>("Todos");
   const [selectedId, setSelectedId] = useState(events[0].id);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const filtered = active === "Todos" ? events : events.filter((e) => e.sport === active);
 
   return (
@@ -104,6 +106,27 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
           ))}
         </div>
       </div>
+
+      {/* FAB — Crear evento */}
+      <button
+        id="fab-create-event-btn"
+        onClick={() => setShowCreateForm(true)}
+        className="absolute bottom-24 right-4 z-30 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+        aria-label="Crear evento"
+      >
+        <Plus size={18} strokeWidth={2.5} />
+        Crear
+      </button>
+
+      {/* Panel de creación de evento (pantalla completa sobre el mapa) */}
+      {showCreateForm && (
+        <div className="absolute inset-0 z-40 bg-background">
+          <CreateEventForm
+            onClose={() => setShowCreateForm(false)}
+            onEventCreated={() => setShowCreateForm(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }
