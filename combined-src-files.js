@@ -1,6 +1,6 @@
 /**
- * COMBINED SOURCE FILES FROM: C:\Users\leopo\Downloads\TeamMatch
- * Generated on: 2026-05-11T23:47:34.831Z
+ * COMBINED SOURCE FILES FROM: C:\Users\yilup\teammatch\TeamMatch
+ * Generated on: 2026-05-13T22:52:34.061Z
  * 
  * This file contains all JavaScript files from the src directory combined into a single file.
  * Each file is clearly marked with separators and includes the original file path.
@@ -8,82 +8,429 @@
  * TABLE OF CONTENTS:
  */
 
- * 1. src\components\teammatch\BottomNav.tsx
- * 2. src\components\teammatch\CreateEventScreen.tsx
- * 3. src\components\teammatch\EventCard.tsx
- * 4. src\components\teammatch\EventDetailScreen.tsx
- * 5. src\components\teammatch\Logo.tsx
- * 6. src\components\teammatch\MapScreen.tsx
- * 7. src\components\teammatch\MyEventsScreen.tsx
- * 8. src\components\teammatch\ProfileScreen.tsx
- * 9. src\components\teammatch\SportBadge.tsx
- * 10. src\components\teammatch\WelcomeScreen.tsx
- * 11. src\components\teammatch\data.ts
- * 12. src\components\teammatch\types-nav.ts
- * 13. src\components\teammatch\types.ts
- * 14. src\components\ui\accordion.tsx
- * 15. src\components\ui\alert-dialog.tsx
- * 16. src\components\ui\alert.tsx
- * 17. src\components\ui\aspect-ratio.tsx
- * 18. src\components\ui\avatar.tsx
- * 19. src\components\ui\badge.tsx
- * 20. src\components\ui\breadcrumb.tsx
- * 21. src\components\ui\button.tsx
- * 22. src\components\ui\calendar.tsx
- * 23. src\components\ui\card.tsx
- * 24. src\components\ui\carousel.tsx
- * 25. src\components\ui\chart.tsx
- * 26. src\components\ui\checkbox.tsx
- * 27. src\components\ui\collapsible.tsx
- * 28. src\components\ui\command.tsx
- * 29. src\components\ui\context-menu.tsx
- * 30. src\components\ui\dialog.tsx
- * 31. src\components\ui\drawer.tsx
- * 32. src\components\ui\dropdown-menu.tsx
- * 33. src\components\ui\form.tsx
- * 34. src\components\ui\hover-card.tsx
- * 35. src\components\ui\input-otp.tsx
- * 36. src\components\ui\input.tsx
- * 37. src\components\ui\label.tsx
- * 38. src\components\ui\menubar.tsx
- * 39. src\components\ui\navigation-menu.tsx
- * 40. src\components\ui\pagination.tsx
- * 41. src\components\ui\popover.tsx
- * 42. src\components\ui\progress.tsx
- * 43. src\components\ui\radio-group.tsx
- * 44. src\components\ui\resizable.tsx
- * 45. src\components\ui\scroll-area.tsx
- * 46. src\components\ui\select.tsx
- * 47. src\components\ui\separator.tsx
- * 48. src\components\ui\sheet.tsx
- * 49. src\components\ui\sidebar.tsx
- * 50. src\components\ui\skeleton.tsx
- * 51. src\components\ui\slider.tsx
- * 52. src\components\ui\sonner.tsx
- * 53. src\components\ui\switch.tsx
- * 54. src\components\ui\table.tsx
- * 55. src\components\ui\tabs.tsx
- * 56. src\components\ui\textarea.tsx
- * 57. src\components\ui\toggle-group.tsx
- * 58. src\components\ui\toggle.tsx
- * 59. src\components\ui\tooltip.tsx
- * 60. src\hooks\use-mobile.tsx
- * 61. src\lib\error-capture.ts
- * 62. src\lib\error-page.ts
- * 63. src\lib\utils.ts
- * 64. src\routeTree.gen.ts
- * 65. src\router.tsx
- * 66. src\routes\__root.tsx
- * 67. src\routes\index.tsx
- * 68. src\server.ts
- * 69. src\start.ts
- * 70. src\vite-env.d.ts
- * 71. vite.config.ts
+ * 1. src\components\teammatch\AuthScreen.tsx
+ * 2. src\components\teammatch\BottomNav.tsx
+ * 3. src\components\teammatch\CreateEventForm.tsx
+ * 4. src\components\teammatch\CreateEventScreen.tsx
+ * 5. src\components\teammatch\EventCard.tsx
+ * 6. src\components\teammatch\EventDetailScreen.tsx
+ * 7. src\components\teammatch\LeafletMap.tsx
+ * 8. src\components\teammatch\Logo.tsx
+ * 9. src\components\teammatch\MapScreen.tsx
+ * 10. src\components\teammatch\MyEventsScreen.tsx
+ * 11. src\components\teammatch\ProfileScreen.tsx
+ * 12. src\components\teammatch\SportBadge.tsx
+ * 13. src\components\teammatch\WelcomeScreen.tsx
+ * 14. src\components\teammatch\data.ts
+ * 15. src\components\teammatch\types-nav.ts
+ * 16. src\components\teammatch\types.ts
+ * 17. src\components\ui\accordion.tsx
+ * 18. src\components\ui\alert-dialog.tsx
+ * 19. src\components\ui\alert.tsx
+ * 20. src\components\ui\aspect-ratio.tsx
+ * 21. src\components\ui\avatar.tsx
+ * 22. src\components\ui\badge.tsx
+ * 23. src\components\ui\breadcrumb.tsx
+ * 24. src\components\ui\button.tsx
+ * 25. src\components\ui\calendar.tsx
+ * 26. src\components\ui\card.tsx
+ * 27. src\components\ui\carousel.tsx
+ * 28. src\components\ui\chart.tsx
+ * 29. src\components\ui\checkbox.tsx
+ * 30. src\components\ui\collapsible.tsx
+ * 31. src\components\ui\command.tsx
+ * 32. src\components\ui\context-menu.tsx
+ * 33. src\components\ui\dialog.tsx
+ * 34. src\components\ui\drawer.tsx
+ * 35. src\components\ui\dropdown-menu.tsx
+ * 36. src\components\ui\form.tsx
+ * 37. src\components\ui\hover-card.tsx
+ * 38. src\components\ui\input-otp.tsx
+ * 39. src\components\ui\input.tsx
+ * 40. src\components\ui\label.tsx
+ * 41. src\components\ui\menubar.tsx
+ * 42. src\components\ui\navigation-menu.tsx
+ * 43. src\components\ui\pagination.tsx
+ * 44. src\components\ui\popover.tsx
+ * 45. src\components\ui\progress.tsx
+ * 46. src\components\ui\radio-group.tsx
+ * 47. src\components\ui\resizable.tsx
+ * 48. src\components\ui\scroll-area.tsx
+ * 49. src\components\ui\select.tsx
+ * 50. src\components\ui\separator.tsx
+ * 51. src\components\ui\sheet.tsx
+ * 52. src\components\ui\sidebar.tsx
+ * 53. src\components\ui\skeleton.tsx
+ * 54. src\components\ui\slider.tsx
+ * 55. src\components\ui\sonner.tsx
+ * 56. src\components\ui\switch.tsx
+ * 57. src\components\ui\table.tsx
+ * 58. src\components\ui\tabs.tsx
+ * 59. src\components\ui\textarea.tsx
+ * 60. src\components\ui\toggle-group.tsx
+ * 61. src\components\ui\toggle.tsx
+ * 62. src\components\ui\tooltip.tsx
+ * 63. src\hooks\use-mobile.tsx
+ * 64. src\lib\error-capture.ts
+ * 65. src\lib\error-page.ts
+ * 66. src\lib\supabase.ts
+ * 67. src\lib\utils.ts
+ * 68. src\routeTree.gen.ts
+ * 69. src\router.tsx
+ * 70. src\routes\__root.tsx
+ * 71. src\routes\index.tsx
+ * 72. src\server.ts
+ * 73. src\start.ts
+ * 74. src\vite-env.d.ts
+ * 75. vite.config.ts
  */
 
 
 ================================================================================
-// FILE 1 of 71
+// FILE 1 of 75
+// PATH: src\components\teammatch\AuthScreen.tsx
+// SIZE: 12569 characters
+================================================================================
+
+/**
+ * FILE: AuthScreen.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+export type AuthMode = "login" | "register";
+
+interface Props {
+  initialMode?: AuthMode;
+  onSuccess: () => void;
+  onClose: () => void;
+}
+
+// ─── Componente principal ─────────────────────────────────────────────────────
+export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props) {
+  const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [error, setError] = useState<string | null>(null);
+
+  // ── Limpiar estado al cambiar de modo ─────────────────────────────────────
+  function switchMode(next: AuthMode) {
+    setMode(next);
+    setError(null);
+    setStatus("idle");
+  }
+
+  // ── Traducir errores de Supabase ──────────────────────────────────────────
+  function translateError(msg: string): string {
+    if (msg.includes("Invalid login credentials"))
+      return "Correo o contraseña incorrectos. Revisa tus datos.";
+    if (msg.includes("Email not confirmed"))
+      return "Confirma tu correo antes de iniciar sesión.";
+    if (msg.includes("User already registered"))
+      return "Ya existe una cuenta con ese correo. Intenta iniciar sesión.";
+    if (msg.includes("Password should be at least"))
+      return "La contraseña debe tener al menos 6 caracteres.";
+    if (msg.includes("Unable to validate email"))
+      return "Ingresa un correo electrónico válido.";
+    if (msg.includes("Email rate limit exceeded"))
+      return "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
+    return msg;
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────────────
+  async function handleSubmit() {
+    setError(null);
+
+    // Validación básica
+    if (!email.trim() || !password.trim()) {
+      setError("Completa todos los campos obligatorios.");
+      return;
+    }
+    if (mode === "register" && !name.trim()) {
+      setError("Ingresa tu nombre para continuar.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    setStatus("loading");
+
+    try {
+      if (mode === "login") {
+        const { error: authError } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+        if (authError) throw authError;
+      } else {
+        const { error: authError } = await supabase.auth.signUp({
+          email: email.trim(),
+          password,
+          options: {
+            data: { full_name: name.trim() },
+          },
+        });
+        if (authError) throw authError;
+      }
+
+      setStatus("success");
+      // Pequeña pausa para mostrar el estado de éxito
+      setTimeout(() => onSuccess(), 900);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error inesperado. Intenta de nuevo.";
+      setError(translateError(msg));
+      setStatus("idle");
+    }
+  }
+
+  const isLoading = status === "loading";
+  const isSuccess = status === "success";
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Glows decorativos */}
+      <div className="[TAILWIND_CLASSES_REMOVED]" />
+      <div className="[TAILWIND_CLASSES_REMOVED]" />
+
+      {/* Header */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <button
+          id="auth-back-btn"
+          onClick={onClose}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Volver"
+        >
+          <ArrowLeft size={18} className="text-secondary-foreground" />
+        </button>
+        <Logo size={22} />
+      </div>
+
+      {/* Títulos */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <h1 className="[TAILWIND_CLASSES_REMOVED]">
+          {mode === "login" ? (
+            <>
+              Bienvenido
+              <br />
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                de vuelta 👋
+              </span>
+            </>
+          ) : (
+            <>
+              Crea tu cuenta
+              <br />
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                y entra a jugar ⚡
+              </span>
+            </>
+          )}
+        </h1>
+        <p className="[TAILWIND_CLASSES_REMOVED]">
+          {mode === "login"
+            ? "Inicia sesión para ver y unirte a eventos."
+            : "Regístrate gratis. En segundos estás dentro."}
+        </p>
+      </div>
+
+      {/* Formulario */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Nombre (solo registro) */}
+        {mode === "register" && (
+          <InputField
+            id="auth-name-input"
+            label="Nombre completo"
+            type="text"
+            placeholder="Ej: Diego Ramírez"
+            value={name}
+            onChange={setName}
+            icon={<User size={16} className="text-muted-foreground" />}
+            disabled={isLoading}
+          />
+        )}
+
+        {/* Email */}
+        <InputField
+          id="auth-email-input"
+          label="Correo electrónico"
+          type="email"
+          placeholder="tu@email.com"
+          value={email}
+          onChange={setEmail}
+          icon={<Mail size={16} className="text-muted-foreground" />}
+          disabled={isLoading}
+        />
+
+        {/* Contraseña */}
+        <div>
+          <label className="[TAILWIND_CLASSES_REMOVED]">
+            Contraseña
+          </label>
+          <div
+            className={`flex items-center gap-3 rounded-2xl border px-4 py-3.5 backdrop-blur transition-colors focus-within:border-primary ${error ? "border-destructive/60" : "border-primary-foreground/15 bg-primary-foreground/8"
+              }`}
+          >
+            <Lock size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+            <input
+              id="auth-password-input"
+              type={showPassword ? "text" : "password"}
+              placeholder={mode === "register" ? "Mín. 6 caracteres" : "Tu contraseña"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            >
+              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          </div>
+          {mode === "login" && (
+            <button className="[TAILWIND_CLASSES_REMOVED]">
+              ¿Olvidaste tu contraseña?
+            </button>
+          )}
+        </div>
+
+        {/* Banner de error */}
+        {error && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <AlertCircle size={15} className="[TAILWIND_CLASSES_REMOVED]" />
+            <p className="[TAILWIND_CLASSES_REMOVED]">{error}</p>
+          </div>
+        )}
+
+        {/* Banner de éxito */}
+        {isSuccess && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <CheckCircle2 size={15} className="[TAILWIND_CLASSES_REMOVED]" />
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              {mode === "login" ? "¡Sesión iniciada! Entrando..." : "¡Cuenta creada! Bienvenido..."}
+            </p>
+          </div>
+        )}
+
+        {/* Botón principal */}
+        <button
+          id="auth-submit-btn"
+          onClick={handleSubmit}
+          disabled={isLoading || isSuccess}
+          className={`group mt-2 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed ${isSuccess
+              ? "bg-emerald-500 text-white"
+              : "gradient-primary text-secondary shadow-pop hover:shadow-lg disabled:opacity-70"
+            }`}
+        >
+          {isLoading && <Loader2 size={16} className="animate-spin" />}
+          {isSuccess && <CheckCircle2 size={16} />}
+          {!isLoading && !isSuccess && (
+            <ArrowRight
+              size={16}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            />
+          )}
+          {isLoading
+            ? mode === "login"
+              ? "Iniciando sesión..."
+              : "Creando cuenta..."
+            : isSuccess
+              ? mode === "login"
+                ? "¡Sesión iniciada!"
+                : "¡Cuenta creada!"
+              : mode === "login"
+                ? "Iniciar sesión"
+                : "Crear cuenta gratis"}
+        </button>
+
+        {/* Divisor */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
+          <span className="[TAILWIND_CLASSES_REMOVED]">o</span>
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
+        </div>
+
+        {/* Cambio de modo */}
+        <button
+          id="auth-switch-mode-btn"
+          onClick={() => switchMode(mode === "login" ? "register" : "login")}
+          disabled={isLoading}
+          className="[TAILWIND_CLASSES_REMOVED]"
+        >
+          {mode === "login" ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
+        </button>
+
+        <p className="[TAILWIND_CLASSES_REMOVED]">
+          Al continuar aceptas los Términos de Uso y la Política de Privacidad de TeamMatch.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Helper: Input estilizado ──────────────────────────────────────────────────
+function InputField({
+  id,
+  label,
+  type,
+  placeholder,
+  value,
+  onChange,
+  icon,
+  disabled,
+}: {
+  id: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  value: string;
+  onChange: (v: string) => void;
+  icon: React.ReactNode;
+  disabled?: boolean;
+}) {
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className="[TAILWIND_CLASSES_REMOVED]"
+      >
+        {label}
+      </label>
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {icon}
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          className="[TAILWIND_CLASSES_REMOVED]"
+        />
+      </div>
+    </div>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\AuthScreen.tsx
+================================================================================
+
+
+================================================================================
+// FILE 2 of 75
 // PATH: src\components\teammatch\BottomNav.tsx
 // SIZE: 2123 characters
 ================================================================================
@@ -160,7 +507,498 @@ export function BottomNav({ current, onChange, onCreate }: Props) {
 
 
 ================================================================================
-// FILE 2 of 71
+// FILE 3 of 75
+// PATH: src\components\teammatch\CreateEventForm.tsx
+// SIZE: 18488 characters
+================================================================================
+
+/**
+ * FILE: CreateEventForm.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+const SPORTS = [
+  { id: 1, label: "Fútbol", emoji: "⚽" },
+  { id: 2, label: "Tenis", emoji: "🎾" },
+  { id: 3, label: "Golf", emoji: "⛳" },
+  { id: 4, label: "Pádel", emoji: "🏓" },
+] as const;
+
+type SportId = (typeof SPORTS)[number]["id"];
+
+// ─── Intensidades ────────────────────────────────────────────────────────────
+const INTENSITIES = ["Principiante", "Intermedio", "Pro"] as const;
+type Intensity = (typeof INTENSITIES)[number];
+
+// ─── Colores por intensidad ──────────────────────────────────────────────────
+const INTENSITY_STYLE: Record<Intensity, string> = {
+  Principiante: "bg-emerald-50 text-emerald-700 ring-emerald-300",
+  Intermedio: "bg-amber-50 text-amber-700 ring-amber-300",
+  Pro: "bg-red-50 text-red-700 ring-red-300",
+};
+
+// ─── Props ───────────────────────────────────────────────────────────────────
+interface Props {
+  onClose: () => void;
+  onEventCreated: () => void;
+}
+
+// ─── Estado inicial del formulario ───────────────────────────────────────────
+const INITIAL_FORM = {
+  sportId: null as SportId | null,
+  intensity: null as Intensity | null,
+  date: "",
+  time: "",
+  latitude: "",
+  longitude: "",
+  maxCapacity: "",
+};
+
+type FormState = typeof INITIAL_FORM;
+type FieldError = Partial<Record<keyof FormState, string>>;
+
+// ─── Componente principal ────────────────────────────────────────────────────
+export function CreateEventForm({ onClose, onEventCreated }: Props) {
+  const [form, setForm] = useState<FormState>(INITIAL_FORM);
+  const [errors, setErrors] = useState<FieldError>({});
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  // ── Actualizar campo ──────────────────────────────────────────────────────
+  function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    // limpiar error individual al editar
+    if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  }
+
+  // ── Validación ────────────────────────────────────────────────────────────
+  function validate(): boolean {
+    const newErrors: FieldError = {};
+
+    if (!form.sportId) newErrors.sportId = "Selecciona un deporte";
+    if (!form.intensity) newErrors.intensity = "Selecciona la intensidad";
+    if (!form.date) newErrors.date = "La fecha es obligatoria";
+    if (!form.time) newErrors.time = "La hora es obligatoria";
+    if (!form.latitude || !form.longitude) {
+      newErrors.latitude = "Ingresa latitud y longitud";
+    } else {
+      const lat = parseFloat(form.latitude);
+      const lng = parseFloat(form.longitude);
+      if (isNaN(lat) || lat < -90 || lat > 90)
+        newErrors.latitude = "Latitud inválida (-90 a 90)";
+      if (isNaN(lng) || lng < -180 || lng > 180)
+        newErrors.longitude = "Longitud inválida (-180 a 180)";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────────────
+  async function handleSubmit() {
+    if (!validate()) return;
+
+    setStatus("loading");
+    setServerError(null);
+
+    try {
+      // Combinar fecha y hora en ISO 8601
+      const eventDate = new Date(`${form.date}T${form.time}:00`).toISOString();
+
+      // Formatear ubicación como WKT POINT para PostGIS / columna text
+      const location = `POINT(${parseFloat(form.longitude)} ${parseFloat(form.latitude)})`;
+
+      // Obtener usuario autenticado
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        setServerError("Debes iniciar sesión para crear un evento.");
+        setStatus("error");
+        return;
+      }
+
+
+      // ── Payload del insert (esquema real de la tabla events) ────────────
+      // Columnas: id, creator_username, sport_id, location (geography),
+      //           event_date, max_capacity, status (enum), intensity (enum),
+      //           description_after_arrival, created_at
+      // creator_username debe coincidir exactamente con el registro en la tabla profiles
+      // Usamos user.email como fuente de verdad (FK estricta)
+      if (!user.email) {
+        setServerError("No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
+        setStatus("error");
+        return;
+      }
+
+      const payload = {
+        // creator_username: email exacto del usuario (Foreign Key → tabla profiles)
+        creator_username: user.email,
+
+        // sport_id: entero — form.sportId ya viene del catálogo numérico (1-4)
+        sport_id: form.sportId,
+
+        // location: geography Point — formato WKT aceptado por PostGIS/Supabase
+        location,
+
+        // event_date: timestamp ISO 8601
+        event_date: eventDate,
+
+        // max_capacity: entero opcional
+        max_capacity: form.maxCapacity ? parseInt(form.maxCapacity, 10) : null,
+
+        // intensity: enum intensity_level — 'Principiante' | 'Intermedio' | 'Pro'
+        intensity: form.intensity,
+
+        // status: enum event_status — 'abierto' | 'lleno' | 'cancelado' | 'finalizado'
+        status: "abierto",
+      };
+
+      // 🔍 Debug: verificar el payload exacto antes de enviarlo a Supabase
+      console.log("Payload a enviar:", payload);
+
+      const { error: insertError } = await supabase.from("events").insert(payload);
+
+      if (insertError) throw insertError;
+
+      setStatus("success");
+
+      // Limpiar formulario tras éxito
+      setTimeout(() => {
+        setForm(INITIAL_FORM);
+        setStatus("idle");
+        onEventCreated();
+        onClose();
+      }, 1500);
+    } catch (err: unknown) {
+      // Loggear el error completo de Supabase (PostgrestError) para diagnóstico
+      if (err && typeof err === "object" && "message" in err) {
+        const pgErr = err as { message: string; details?: string; hint?: string; code?: string };
+        console.error("❌ Supabase insert error:", {
+          message: pgErr.message,
+          details: pgErr.details,
+          hint: pgErr.hint,
+          code: pgErr.code,
+        });
+        setServerError(
+          `Error al crear el evento: ${pgErr.message}${pgErr.hint ? ` — ${pgErr.hint}` : ""}`,
+        );
+      } else {
+        console.error("❌ Error inesperado:", err);
+        setServerError("Error inesperado al crear el evento. Revisa la consola para más detalles.");
+      }
+      setStatus("error");
+    }
+  }
+
+  // ─── Render ───────────────────────────────────────────────────────────────
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* ── Header ── */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <button
+          onClick={onClose}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Cerrar formulario"
+        >
+          <ArrowLeft size={18} className="text-secondary" />
+        </button>
+        <div>
+          <h1 className="[TAILWIND_CLASSES_REMOVED]">Nuevo evento</h1>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            Completa los datos para publicar tu evento
+          </p>
+        </div>
+      </div>
+
+      {/* ── Cuerpo del formulario ── */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+
+        {/* Deporte */}
+        <FormSection
+          title="Deporte"
+          icon={<Zap size={13} />}
+          error={errors.sportId}
+          required
+        >
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {SPORTS.map((s) => (
+              <button
+                key={s.id}
+                id={`sport-btn-${s.id}`}
+                onClick={() => setField("sportId", s.id)}
+                className={`flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all active:scale-[0.97] ${
+                  form.sportId === s.id
+                    ? "gradient-primary border-transparent text-secondary shadow-pop"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <span className="text-xl">{s.emoji}</span>
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </FormSection>
+
+        {/* Intensidad */}
+        <FormSection
+          title="Intensidad"
+          icon={<Zap size={13} />}
+          error={errors.intensity}
+          required
+        >
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {INTENSITIES.map((lvl) => (
+              <button
+                key={lvl}
+                id={`intensity-btn-${lvl.toLowerCase()}`}
+                onClick={() => setField("intensity", lvl)}
+                className={`rounded-xl py-2.5 text-xs font-bold ring-1 transition-all active:scale-95 ${
+                  form.intensity === lvl
+                    ? `${INTENSITY_STYLE[lvl]} ring-current shadow-sm`
+                    : "bg-muted text-muted-foreground ring-transparent"
+                }`}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
+        </FormSection>
+
+        {/* Fecha y Hora */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <FormSection
+            title="Fecha"
+            icon={<Calendar size={13} />}
+            error={errors.date}
+            required
+          >
+            <input
+              id="event-date-input"
+              type="date"
+              value={form.date}
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => setField("date", e.target.value)}
+              className={`w-full rounded-2xl border bg-card px-3 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${
+                errors.date ? "border-destructive" : "border-border"
+              }`}
+            />
+          </FormSection>
+
+          <FormSection
+            title="Hora"
+            icon={<Clock size={13} />}
+            error={errors.time}
+            required
+          >
+            <input
+              id="event-time-input"
+              type="time"
+              value={form.time}
+              onChange={(e) => setField("time", e.target.value)}
+              className={`w-full rounded-2xl border bg-card px-3 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${
+                errors.time ? "border-destructive" : "border-border"
+              }`}
+            />
+          </FormSection>
+        </div>
+
+        {/* Ubicación */}
+        <FormSection
+          title="Ubicación (coordenadas)"
+          icon={<MapPin size={13} />}
+          error={errors.latitude || errors.longitude}
+          required
+        >
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {/* Indicador visual de mapa */}
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <MapPin size={16} className="text-primary" />
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                Ingresa las coordenadas del lugar
+              </span>
+            </div>
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <label
+                  htmlFor="event-latitude-input"
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                >
+                  Latitud
+                </label>
+                <input
+                  id="event-latitude-input"
+                  type="number"
+                  step="any"
+                  placeholder="10.4880"
+                  value={form.latitude}
+                  onChange={(e) => setField("latitude", e.target.value)}
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                />
+              </div>
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <label
+                  htmlFor="event-longitude-input"
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                >
+                  Longitud
+                </label>
+                <input
+                  id="event-longitude-input"
+                  type="number"
+                  step="any"
+                  placeholder="-66.8792"
+                  value={form.longitude}
+                  onChange={(e) => setField("longitude", e.target.value)}
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                />
+              </div>
+            </div>
+            {(form.latitude || form.longitude) && !errors.latitude && !errors.longitude && (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <CheckCircle2 size={12} className="text-emerald-600" />
+                <span className="[TAILWIND_CLASSES_REMOVED]">
+                  Guardará como: POINT({form.longitude || "..."} {form.latitude || "..."})
+                </span>
+              </div>
+            )}
+          </div>
+        </FormSection>
+
+        {/* Capacidad máxima (opcional) */}
+        <FormSection
+          title="Capacidad máxima"
+          icon={<Users size={13} />}
+        >
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <Users size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+            <input
+              id="event-capacity-input"
+              type="number"
+              min={1}
+              max={100}
+              placeholder="Ej: 12 jugadores (opcional)"
+              value={form.maxCapacity}
+              onChange={(e) => setField("maxCapacity", e.target.value)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            />
+          </div>
+        </FormSection>
+
+        {/* Error del servidor */}
+        {status === "error" && serverError && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <AlertCircle size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+            <p className="[TAILWIND_CLASSES_REMOVED]">{serverError}</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Footer con botón de acción ── */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Resumen rápido */}
+        {form.sportId && form.intensity && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              {SPORTS.find((s) => s.id === form.sportId)?.emoji}{" "}
+              {SPORTS.find((s) => s.id === form.sportId)?.label}
+            </span>
+            <span>·</span>
+            <span>{form.intensity}</span>
+            {form.date && form.time && (
+              <>
+                <span>·</span>
+                <span>
+                  {new Date(`${form.date}T${form.time}`).toLocaleString("es-VE", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </>
+            )}
+          </div>
+        )}
+
+        <button
+          id="publish-event-btn"
+          onClick={handleSubmit}
+          disabled={status === "loading" || status === "success"}
+          className={`w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${
+            status === "success"
+              ? "bg-emerald-500 text-white"
+              : status === "loading"
+                ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
+                : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
+          }`}
+        >
+          {status === "loading" && (
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              <Loader2 size={16} className="animate-spin" />
+              Publicando evento…
+            </span>
+          )}
+          {status === "success" && (
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              <CheckCircle2 size={16} />
+              ¡Evento publicado!
+            </span>
+          )}
+          {(status === "idle" || status === "error") && "Publicar evento"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Helper: Sección de formulario ──────────────────────────────────────────
+function FormSection({
+  title,
+  icon,
+  error,
+  required,
+  children,
+}: {
+  title: string;
+  icon?: React.ReactNode;
+  error?: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="space-y-2">
+      <label className="[TAILWIND_CLASSES_REMOVED]">
+        {icon}
+        {title}
+        {required && <span className="text-primary">*</span>}
+      </label>
+      {children}
+      {error && (
+        <p className="[TAILWIND_CLASSES_REMOVED]">
+          <AlertCircle size={11} />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\CreateEventForm.tsx
+================================================================================
+
+
+================================================================================
+// FILE 4 of 75
 // PATH: src\components\teammatch\CreateEventScreen.tsx
 // SIZE: 5239 characters
 ================================================================================
@@ -322,7 +1160,7 @@ function Field({
 
 
 ================================================================================
-// FILE 3 of 71
+// FILE 5 of 75
 // PATH: src\components\teammatch\EventCard.tsx
 // SIZE: 2774 characters
 ================================================================================
@@ -411,7 +1249,7 @@ export function EventCard({
 
 
 ================================================================================
-// FILE 4 of 71
+// FILE 6 of 75
 // PATH: src\components\teammatch\EventDetailScreen.tsx
 // SIZE: 5706 characters
 ================================================================================
@@ -563,7 +1401,110 @@ function InfoTile({
 
 
 ================================================================================
-// FILE 5 of 71
+// FILE 7 of 75
+// PATH: src\components\teammatch\LeafletMap.tsx
+// SIZE: 2959 characters
+================================================================================
+
+/**
+ * FILE: LeafletMap.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ * EXPORTS: This file exports module(s) for use in other parts of the application.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+function buildIcon(event: SportEvent, isSelected: boolean) {
+  const emoji =
+    event.sport === "Running"
+      ? "🏃"
+      : event.sport === "Senderismo"
+        ? "🥾"
+        : event.sport === "Pádel"
+          ? "🎾"
+          : "🏐";
+
+  const html = renderToStaticMarkup(
+    <div
+      className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
+        isSelected
+          ? "gradient-primary scale-110 ring-background shadow-pop"
+          : "bg-secondary ring-card/80"
+      }`}
+    >
+      <span className="text-lg">{emoji}</span>
+      <div
+        className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
+          isSelected ? "bg-primary" : "bg-secondary"
+        }`}
+      />
+    </div>,
+  );
+
+  return L.divIcon({
+    className: "custom-leaflet-icon bg-transparent border-none",
+    html,
+    iconSize: [44, 44],
+    iconAnchor: [22, 44],
+  });
+}
+
+// ── Sincroniza el centro del mapa con el evento seleccionado ──────────────────
+function MapFlyTo({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo([lat, lng], map.getZoom(), { animate: true, duration: 0.6 });
+  }, [lat, lng, map]);
+  return null;
+}
+
+// ── Componente exportado: el mapa Leaflet real ────────────────────────────────
+interface LeafletMapProps {
+  events: SportEvent[];
+  selectedId: number;
+  onSelect: (id: number) => void;
+}
+
+export default function LeafletMap({ events, selectedId, onSelect }: LeafletMapProps) {
+  const selected = events.find((e) => e.id === selectedId) ?? events[0];
+
+  return (
+    <MapContainer
+      center={[10.49, -66.87]}
+      zoom={13}
+      style={{[INLINE_STYLES_REMOVED]}}
+      zoomControl={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+
+      {/* Vuela suavemente al marcador seleccionado */}
+      {selected && <MapFlyTo lat={selected.lat} lng={selected.lng} />}
+
+      {events.map((e) => (
+        <Marker
+          key={e.id}
+          position={[e.lat, e.lng]}
+          icon={buildIcon(e, e.id === selectedId)}
+          eventHandlers={{ click: () => onSelect(e.id) }}
+        />
+      ))}
+    </MapContainer>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\LeafletMap.tsx
+================================================================================
+
+
+================================================================================
+// FILE 8 of 75
 // PATH: src\components\teammatch\Logo.tsx
 // SIZE: 597 characters
 ================================================================================
@@ -598,9 +1539,9 @@ export function Logo({ size = 28 }: { size?: number }) {
 
 
 ================================================================================
-// FILE 6 of 71
+// FILE 9 of 75
 // PATH: src\components\teammatch\MapScreen.tsx
-// SIZE: 4590 characters
+// SIZE: 5822 characters
 ================================================================================
 
 /**
@@ -612,22 +1553,48 @@ export function Logo({ size = 28 }: { size?: number }) {
  * HOOKS: Uses React hooks for state and effects
  */
 
+const LeafletMap = lazy(() => import("./LeafletMap"));
+
+// ── Esqueleto mientras carga el mapa ─────────────────────────────────────────
+function MapSkeleton() {
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
+          <span className="[TAILWIND_CLASSES_REMOVED]">Cargando mapa…</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Filtros de deporte ────────────────────────────────────────────────────────
 const sports = ["Todos", "Running", "Senderismo", "Pádel", "Vóleibol"] as const;
 
+// ── Componente principal ──────────────────────────────────────────────────────
 export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
   const [active, setActive] = useState<(typeof sports)[number]>("Todos");
   const [selectedId, setSelectedId] = useState(events[0].id);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+
   const filtered = active === "Todos" ? events : events.filter((e) => e.sport === active);
 
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
-      {/* Map */}
+
+      {/* ── Mapa Leaflet (lazy, solo client) ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
-        <img src={mapImg} alt="Mapa de Caracas" className="[TAILWIND_CLASSES_REMOVED]" />
-        <div className="[TAILWIND_CLASSES_REMOVED]" />
+        <Suspense fallback={<MapSkeleton />}>
+          <LeafletMap
+            events={filtered}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+        </Suspense>
       </div>
 
-      {/* Top bar */}
+      {/* ── Top bar ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <div className="[TAILWIND_CLASSES_REMOVED]">
           <div className="[TAILWIND_CLASSES_REMOVED]">
@@ -646,7 +1613,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
           </button>
         </div>
 
-        {/* Sport filters */}
+        {/* Filtros de deporte */}
         <div className="[TAILWIND_CLASSES_REMOVED]">
           {sports.map((s) => (
             <button
@@ -664,53 +1631,52 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
         </div>
       </div>
 
-      {/* Pins */}
-      {filtered.map((e) => {
-        const sel = e.id === selectedId;
-        return (
-          <button
-            key={e.id}
-            onClick={() => setSelectedId(e.id)}
-            className="[TAILWIND_CLASSES_REMOVED]"
-            style={{ left: `${e.x}%`, top: `${e.y}%` }}
-          >
-            <div
-              className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
-                sel ? "gradient-primary scale-110 ring-background shadow-pop" : "bg-secondary ring-card/80"
-              }`}
-            >
-              <span className="text-lg">
-                {e.sport === "Running" ? "🏃" : e.sport === "Senderismo" ? "🥾" : e.sport === "Pádel" ? "🎾" : "🏐"}
-              </span>
-              <div
-                className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
-                  sel ? "bg-primary" : "bg-secondary"
-                }`}
-              />
-            </div>
-          </button>
-        );
-      })}
-
-      {/* Bottom sheet */}
+      {/* ── Bottom sheet con cards de eventos ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          <div className="[TAILWIND_CLASSES_REMOVED]" />
-        </div>
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          <h2 className="[TAILWIND_CLASSES_REMOVED]">
-            {filtered.length} eventos cerca de ti
-          </h2>
-          <button className="[TAILWIND_CLASSES_REMOVED]">Ver todos</button>
-        </div>
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          {filtered.map((e) => (
-            <div key={e.id} className="[TAILWIND_CLASSES_REMOVED]">
-              <EventCard event={e} onClick={() => onSelect(e)} />
-            </div>
-          ))}
+        <div className="pointer-events-auto">
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <div className="[TAILWIND_CLASSES_REMOVED]" />
+          </div>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <h2 className="[TAILWIND_CLASSES_REMOVED]">
+              {filtered.length} eventos cerca de ti
+            </h2>
+            <button className="[TAILWIND_CLASSES_REMOVED]">Ver todos</button>
+          </div>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {filtered.map((e) => (
+              <div
+                key={e.id}
+                className="[TAILWIND_CLASSES_REMOVED]"
+                onClick={() => setSelectedId(e.id)}
+              >
+                <EventCard event={e} onClick={() => onSelect(e)} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* ── FAB — Crear evento ── */}
+      <button
+        id="fab-create-event-btn"
+        onClick={() => setShowCreateForm(true)}
+        className="[TAILWIND_CLASSES_REMOVED]"
+        aria-label="Crear evento"
+      >
+        <Plus size={18} strokeWidth={2.5} />
+        Crear
+      </button>
+
+      {/* ── Panel de creación (pantalla completa sobre el mapa) ── */}
+      {showCreateForm && (
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <CreateEventForm
+            onClose={() => setShowCreateForm(false)}
+            onEventCreated={() => setShowCreateForm(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -722,7 +1688,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
 
 
 ================================================================================
-// FILE 7 of 71
+// FILE 10 of 75
 // PATH: src\components\teammatch\MyEventsScreen.tsx
 // SIZE: 2665 characters
 ================================================================================
@@ -805,7 +1771,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
 
 ================================================================================
-// FILE 8 of 71
+// FILE 11 of 75
 // PATH: src\components\teammatch\ProfileScreen.tsx
 // SIZE: 3878 characters
 ================================================================================
@@ -918,7 +1884,7 @@ export function ProfileScreen() {
 
 
 ================================================================================
-// FILE 9 of 71
+// FILE 12 of 75
 // PATH: src\components\teammatch\SportBadge.tsx
 // SIZE: 777 characters
 ================================================================================
@@ -955,9 +1921,9 @@ export function SportBadge({ sport, withEmoji = true }: { sport: Sport; withEmoj
 
 
 ================================================================================
-// FILE 10 of 71
+// FILE 13 of 75
 // PATH: src\components\teammatch\WelcomeScreen.tsx
-// SIZE: 3992 characters
+// SIZE: 4224 characters
 ================================================================================
 
 /**
@@ -967,7 +1933,13 @@ export function SportBadge({ sport, withEmoji = true }: { sport: Sport; withEmoj
  * PURPOSE: This file is located in teammatch directory.
  */
 
-export function WelcomeScreen({ onStart }: { onStart: () => void }) {
+export function WelcomeScreen({
+  onRegister,
+  onLogin,
+}: {
+  onRegister: () => void;
+  onLogin: () => void;
+}) {
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
       {/* Background map */}
@@ -1025,14 +1997,16 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
 
         <div className="[TAILWIND_CLASSES_REMOVED]">
           <button
-            onClick={onStart}
+            id="welcome-register-btn"
+            onClick={onRegister}
             className="[TAILWIND_CLASSES_REMOVED]"
           >
             Empezar a jugar
             <ArrowRight className="[TAILWIND_CLASSES_REMOVED]" strokeWidth={2.5} />
           </button>
           <button
-            onClick={onStart}
+            id="welcome-login-btn"
+            onClick={onLogin}
             className="[TAILWIND_CLASSES_REMOVED]"
           >
             Ya tengo cuenta
@@ -1053,9 +2027,9 @@ export function WelcomeScreen({ onStart }: { onStart: () => void }) {
 
 
 ================================================================================
-// FILE 11 of 71
+// FILE 14 of 75
 // PATH: src\components\teammatch\data.ts
-// SIZE: 1748 characters
+// SIZE: 1808 characters
 ================================================================================
 
 /**
@@ -1082,8 +2056,8 @@ export const events: SportEvent[] = [
     hostAvatar: "DR",
     image: running,
     distanceKm: 1.2,
-    x: 38,
-    y: 42,
+    lat: 10.4939,
+    lng: -66.8522,
   },
   {
     id: "2",
@@ -1101,8 +2075,8 @@ export const events: SportEvent[] = [
     hostAvatar: "AM",
     image: hiking,
     distanceKm: 2.4,
-    x: 62,
-    y: 30,
+    lat: 10.5100,
+    lng: -66.8500,
   },
   {
     id: "3",
@@ -1120,8 +2094,8 @@ export const events: SportEvent[] = [
     hostAvatar: "CP",
     image: padel,
     distanceKm: 3.1,
-    x: 48,
-    y: 65,
+    lat: 10.4815,
+    lng: -66.8615,
   },
   {
     id: "4",
@@ -1139,8 +2113,8 @@ export const events: SportEvent[] = [
     hostAvatar: "ML",
     image: running,
     distanceKm: 4.8,
-    x: 25,
-    y: 75,
+    lat: 10.4988,
+    lng: -66.8967,
   },
 ];
 
@@ -1151,7 +2125,7 @@ export const events: SportEvent[] = [
 
 
 ================================================================================
-// FILE 12 of 71
+// FILE 15 of 75
 // PATH: src\components\teammatch\types-nav.ts
 // SIZE: 74 characters
 ================================================================================
@@ -1172,9 +2146,9 @@ export type Screen = "map" | "events" | "create" | "profile" | "detail";
 
 
 ================================================================================
-// FILE 13 of 71
+// FILE 16 of 75
 // PATH: src\components\teammatch\types.ts
-// SIZE: 502 characters
+// SIZE: 488 characters
 ================================================================================
 
 /**
@@ -1203,8 +2177,8 @@ export interface SportEvent {
   hostAvatar: string;
   image: string;
   distanceKm: number;
-  x: number; // map position %
-  y: number;
+  lat: number;
+  lng: number;
 }
 
 
@@ -1214,7 +2188,7 @@ export interface SportEvent {
 
 
 ================================================================================
-// FILE 14 of 71
+// FILE 17 of 75
 // PATH: src\components\ui\accordion.tsx
 // SIZE: 2051 characters
 ================================================================================
@@ -1280,7 +2254,7 @@ export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
 
 
 ================================================================================
-// FILE 15 of 71
+// FILE 18 of 75
 // PATH: src\components\ui\alert-dialog.tsx
 // SIZE: 4466 characters
 ================================================================================
@@ -1410,7 +2384,7 @@ export {
 
 
 ================================================================================
-// FILE 16 of 71
+// FILE 19 of 75
 // PATH: src\components\ui\alert.tsx
 // SIZE: 1638 characters
 ================================================================================
@@ -1475,7 +2449,7 @@ export { Alert, AlertTitle, AlertDescription };
 
 
 ================================================================================
-// FILE 17 of 71
+// FILE 20 of 75
 // PATH: src\components\ui\aspect-ratio.tsx
 // SIZE: 148 characters
 ================================================================================
@@ -1498,7 +2472,7 @@ export { AspectRatio };
 
 
 ================================================================================
-// FILE 18 of 71
+// FILE 21 of 75
 // PATH: src\components\ui\avatar.tsx
 // SIZE: 1460 characters
 ================================================================================
@@ -1566,7 +2540,7 @@ export { Avatar, AvatarImage, AvatarFallback };
 
 
 ================================================================================
-// FILE 19 of 71
+// FILE 22 of 75
 // PATH: src\components\ui\badge.tsx
 // SIZE: 1155 characters
 ================================================================================
@@ -1614,7 +2588,7 @@ export { Badge, badgeVariants };
 
 
 ================================================================================
-// FILE 20 of 71
+// FILE 23 of 75
 // PATH: src\components\ui\breadcrumb.tsx
 // SIZE: 2850 characters
 ================================================================================
@@ -1730,7 +2704,7 @@ export {
 
 
 ================================================================================
-// FILE 21 of 71
+// FILE 24 of 75
 // PATH: src\components\ui\button.tsx
 // SIZE: 1900 characters
 ================================================================================
@@ -1794,7 +2768,7 @@ export { Button, buttonVariants };
 
 
 ================================================================================
-// FILE 22 of 71
+// FILE 25 of 75
 // PATH: src\components\ui\calendar.tsx
 // SIZE: 7387 characters
 ================================================================================
@@ -1993,7 +2967,7 @@ export { Calendar, CalendarDayButton };
 
 
 ================================================================================
-// FILE 23 of 71
+// FILE 26 of 75
 // PATH: src\components\ui\card.tsx
 // SIZE: 1872 characters
 ================================================================================
@@ -2065,7 +3039,7 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 
 
 ================================================================================
-// FILE 24 of 71
+// FILE 27 of 75
 // PATH: src\components\ui\carousel.tsx
 // SIZE: 6440 characters
 ================================================================================
@@ -2320,7 +3294,7 @@ export {
 
 
 ================================================================================
-// FILE 25 of 71
+// FILE 28 of 75
 // PATH: src\components\ui\chart.tsx
 // SIZE: 10901 characters
 ================================================================================
@@ -2664,7 +3638,7 @@ export {
 
 
 ================================================================================
-// FILE 26 of 71
+// FILE 29 of 75
 // PATH: src\components\ui\checkbox.tsx
 // SIZE: 1054 characters
 ================================================================================
@@ -2705,7 +3679,7 @@ export { Checkbox };
 
 
 ================================================================================
-// FILE 27 of 71
+// FILE 30 of 75
 // PATH: src\components\ui\collapsible.tsx
 // SIZE: 346 characters
 ================================================================================
@@ -2736,7 +3710,7 @@ export { Collapsible, CollapsibleTrigger, CollapsibleContent };
 
 
 ================================================================================
-// FILE 28 of 71
+// FILE 31 of 75
 // PATH: src\components\ui\command.tsx
 // SIZE: 5019 characters
 ================================================================================
@@ -2900,7 +3874,7 @@ export {
 
 
 ================================================================================
-// FILE 29 of 71
+// FILE 32 of 75
 // PATH: src\components\ui\context-menu.tsx
 // SIZE: 7578 characters
 ================================================================================
@@ -3102,7 +4076,7 @@ export {
 
 
 ================================================================================
-// FILE 30 of 71
+// FILE 33 of 75
 // PATH: src\components\ui\dialog.tsx
 // SIZE: 3905 characters
 ================================================================================
@@ -3227,7 +4201,7 @@ export {
 
 
 ================================================================================
-// FILE 31 of 71
+// FILE 34 of 75
 // PATH: src\components\ui\drawer.tsx
 // SIZE: 3071 characters
 ================================================================================
@@ -3341,7 +4315,7 @@ export {
 
 
 ================================================================================
-// FILE 32 of 71
+// FILE 35 of 75
 // PATH: src\components\ui\dropdown-menu.tsx
 // SIZE: 7784 characters
 ================================================================================
@@ -3550,7 +4524,7 @@ export {
 
 
 ================================================================================
-// FILE 33 of 71
+// FILE 36 of 75
 // PATH: src\components\ui\form.tsx
 // SIZE: 4372 characters
 ================================================================================
@@ -3727,7 +4701,7 @@ export {
 
 
 ================================================================================
-// FILE 34 of 71
+// FILE 37 of 75
 // PATH: src\components\ui\hover-card.tsx
 // SIZE: 1273 characters
 ================================================================================
@@ -3770,7 +4744,7 @@ export { HoverCard, HoverCardTrigger, HoverCardContent };
 
 
 ================================================================================
-// FILE 35 of 71
+// FILE 38 of 75
 // PATH: src\components\ui\input-otp.tsx
 // SIZE: 2230 characters
 ================================================================================
@@ -3854,7 +4828,7 @@ export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
 
 
 ================================================================================
-// FILE 36 of 71
+// FILE 39 of 75
 // PATH: src\components\ui\input.tsx
 // SIZE: 798 characters
 ================================================================================
@@ -3893,7 +4867,7 @@ export { Input };
 
 
 ================================================================================
-// FILE 37 of 71
+// FILE 40 of 75
 // PATH: src\components\ui\label.tsx
 // SIZE: 737 characters
 ================================================================================
@@ -3935,7 +4909,7 @@ export { Label };
 
 
 ================================================================================
-// FILE 38 of 71
+// FILE 41 of 75
 // PATH: src\components\ui\menubar.tsx
 // SIZE: 8775 characters
 ================================================================================
@@ -4179,7 +5153,7 @@ export {
 
 
 ================================================================================
-// FILE 39 of 71
+// FILE 42 of 75
 // PATH: src\components\ui\navigation-menu.tsx
 // SIZE: 5229 characters
 ================================================================================
@@ -4313,7 +5287,7 @@ export {
 
 
 ================================================================================
-// FILE 40 of 71
+// FILE 43 of 75
 // PATH: src\components\ui\pagination.tsx
 // SIZE: 2837 characters
 ================================================================================
@@ -4426,7 +5400,7 @@ export {
 
 
 ================================================================================
-// FILE 41 of 71
+// FILE 44 of 75
 // PATH: src\components\ui\popover.tsx
 // SIZE: 1383 characters
 ================================================================================
@@ -4473,7 +5447,7 @@ export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };
 
 
 ================================================================================
-// FILE 42 of 71
+// FILE 45 of 75
 // PATH: src\components\ui\progress.tsx
 // SIZE: 806 characters
 ================================================================================
@@ -4519,7 +5493,7 @@ export { Progress };
 
 
 ================================================================================
-// FILE 43 of 71
+// FILE 46 of 75
 // PATH: src\components\ui\radio-group.tsx
 // SIZE: 1426 characters
 ================================================================================
@@ -4570,7 +5544,7 @@ export { RadioGroup, RadioGroupItem };
 
 
 ================================================================================
-// FILE 44 of 71
+// FILE 47 of 75
 // PATH: src\components\ui\resizable.tsx
 // SIZE: 1589 characters
 ================================================================================
@@ -4622,7 +5596,7 @@ export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
 
 
 ================================================================================
-// FILE 45 of 71
+// FILE 48 of 75
 // PATH: src\components\ui\scroll-area.tsx
 // SIZE: 1679 characters
 ================================================================================
@@ -4682,7 +5656,7 @@ export { ScrollArea, ScrollBar };
 
 
 ================================================================================
-// FILE 46 of 71
+// FILE 49 of 75
 // PATH: src\components\ui\select.tsx
 // SIZE: 5886 characters
 ================================================================================
@@ -4855,7 +5829,7 @@ export {
 
 
 ================================================================================
-// FILE 47 of 71
+// FILE 50 of 75
 // PATH: src\components\ui\separator.tsx
 // SIZE: 747 characters
 ================================================================================
@@ -4895,7 +5869,7 @@ export { Separator };
 
 
 ================================================================================
-// FILE 48 of 71
+// FILE 51 of 75
 // PATH: src\components\ui\sheet.tsx
 // SIZE: 4355 characters
 ================================================================================
@@ -5038,7 +6012,7 @@ export {
 
 
 ================================================================================
-// FILE 49 of 71
+// FILE 52 of 75
 // PATH: src\components\ui\sidebar.tsx
 // SIZE: 24603 characters
 ================================================================================
@@ -5784,7 +6758,7 @@ export {
 
 
 ================================================================================
-// FILE 50 of 71
+// FILE 53 of 75
 // PATH: src\components\ui\skeleton.tsx
 // SIZE: 246 characters
 ================================================================================
@@ -5809,7 +6783,7 @@ export { Skeleton };
 
 
 ================================================================================
-// FILE 51 of 71
+// FILE 54 of 75
 // PATH: src\components\ui\slider.tsx
 // SIZE: 1048 characters
 ================================================================================
@@ -5848,7 +6822,7 @@ export { Slider };
 
 
 ================================================================================
-// FILE 52 of 71
+// FILE 55 of 75
 // PATH: src\components\ui\sonner.tsx
 // SIZE: 757 characters
 ================================================================================
@@ -5889,7 +6863,7 @@ export { Toaster };
 
 
 ================================================================================
-// FILE 53 of 71
+// FILE 56 of 75
 // PATH: src\components\ui\switch.tsx
 // SIZE: 1183 characters
 ================================================================================
@@ -5932,7 +6906,7 @@ export { Switch };
 
 
 ================================================================================
-// FILE 54 of 71
+// FILE 57 of 75
 // PATH: src\components\ui\table.tsx
 // SIZE: 2914 characters
 ================================================================================
@@ -6043,7 +7017,7 @@ export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 
 
 ================================================================================
-// FILE 55 of 71
+// FILE 58 of 75
 // PATH: src\components\ui\tabs.tsx
 // SIZE: 1944 characters
 ================================================================================
@@ -6112,7 +7086,7 @@ export { Tabs, TabsList, TabsTrigger, TabsContent };
 
 
 ================================================================================
-// FILE 56 of 71
+// FILE 59 of 75
 // PATH: src\components\ui\textarea.tsx
 // SIZE: 698 characters
 ================================================================================
@@ -6150,7 +7124,7 @@ export { Textarea };
 
 
 ================================================================================
-// FILE 57 of 71
+// FILE 60 of 75
 // PATH: src\components\ui\toggle-group.tsx
 // SIZE: 1809 characters
 ================================================================================
@@ -6228,7 +7202,7 @@ export { ToggleGroup, ToggleGroupItem };
 
 
 ================================================================================
-// FILE 58 of 71
+// FILE 61 of 75
 // PATH: src\components\ui\toggle.tsx
 // SIZE: 1533 characters
 ================================================================================
@@ -6285,7 +7259,7 @@ export { Toggle, toggleVariants };
 
 
 ================================================================================
-// FILE 59 of 71
+// FILE 62 of 75
 // PATH: src\components\ui\tooltip.tsx
 // SIZE: 1310 characters
 ================================================================================
@@ -6338,7 +7312,7 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
 
 
 ================================================================================
-// FILE 60 of 71
+// FILE 63 of 75
 // PATH: src\hooks\use-mobile.tsx
 // SIZE: 595 characters
 ================================================================================
@@ -6377,7 +7351,7 @@ export function useIsMobile() {
 
 
 ================================================================================
-// FILE 61 of 71
+// FILE 64 of 75
 // PATH: src\lib\error-capture.ts
 // SIZE: 933 characters
 ================================================================================
@@ -6421,7 +7395,7 @@ export function consumeLastCapturedError(): unknown {
 
 
 ================================================================================
-// FILE 62 of 71
+// FILE 65 of 75
 // PATH: src\lib\error-page.ts
 // SIZE: 1401 characters
 ================================================================================
@@ -6471,7 +7445,38 @@ export function renderErrorPage(): string {
 
 
 ================================================================================
-// FILE 63 of 71
+// FILE 66 of 75
+// PATH: src\lib\supabase.ts
+// SIZE: 497 characters
+================================================================================
+
+/**
+ * FILE: supabase.ts
+ * DIRECTORY: lib
+ * 
+ * PURPOSE: This file is located in lib directory.
+ */
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Faltan las variables de entorno VITE_SUPABASE_URL y/o VITE_SUPABASE_ANON_KEY. ' +
+    'Asegúrate de que el archivo .env.local existe y está configurado correctamente.',
+  );
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+
+================================================================================
+// END OF FILE: src\lib\supabase.ts
+================================================================================
+
+
+================================================================================
+// FILE 67 of 75
 // PATH: src\lib\utils.ts
 // SIZE: 175 characters
 ================================================================================
@@ -6495,7 +7500,7 @@ export function cn(...inputs: ClassValue[]) {
 
 
 ================================================================================
-// FILE 64 of 71
+// FILE 68 of 75
 // PATH: src\routeTree.gen.ts
 // SIZE: 1797 characters
 ================================================================================
@@ -6584,7 +7589,7 @@ declare module '@tanstack/react-start' {
 
 
 ================================================================================
-// FILE 65 of 71
+// FILE 69 of 75
 // PATH: src\router.tsx
 // SIZE: 410 characters
 ================================================================================
@@ -6616,7 +7621,7 @@ export const getRouter = () => {
 
 
 ================================================================================
-// FILE 66 of 71
+// FILE 70 of 75
 // PATH: src\routes\__root.tsx
 // SIZE: 3781 characters
 ================================================================================
@@ -6743,9 +7748,9 @@ function RootComponent() {
 
 
 ================================================================================
-// FILE 67 of 71
+// FILE 71 of 75
 // PATH: src\routes\index.tsx
-// SIZE: 4618 characters
+// SIZE: 6499 characters
 ================================================================================
 
 /**
@@ -6771,11 +7776,29 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+type AppState = "checking" | "welcome" | "auth" | "app";
+
 function Index() {
-  const [started, setStarted] = useState(false);
+  const [appState, setAppState] = useState<AppState>("checking");
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
   const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAppState(session ? "app" : "welcome");
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAppState(session ? "app" : "welcome");
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const openDetail = (e: SportEvent) => {
     setSelected(e);
@@ -6783,7 +7806,33 @@ function Index() {
   };
 
   const renderScreen = () => {
-    if (!started) return <WelcomeScreen onStart={() => setStarted(true)} />;
+    if (appState === "checking") {
+      return (
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
+        </div>
+      );
+    }
+    
+    if (appState === "welcome") {
+      return (
+        <WelcomeScreen 
+          onLogin={() => { setAuthMode("login"); setAppState("auth"); }}
+          onRegister={() => { setAuthMode("register"); setAppState("auth"); }}
+        />
+      );
+    }
+    
+    if (appState === "auth") {
+      return (
+        <AuthScreen 
+          initialMode={authMode}
+          onSuccess={() => setAppState("app")}
+          onClose={() => setAppState("welcome")}
+        />
+      );
+    }
+
     if (creating) return <CreateEventScreen onClose={() => setCreating(false)} />;
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
@@ -6794,61 +7843,67 @@ function Index() {
 
   return (
     <main className="[TAILWIND_CLASSES_REMOVED]">
-      {/* Desktop side panel */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Panel lateral solo en desktop */}
         <aside className="[TAILWIND_CLASSES_REMOVED]">
-          <Logo size={36} />
-          <h1 className="[TAILWIND_CLASSES_REMOVED]">
-            Encuentra tu próximo
-            <br />
-            <span className="[TAILWIND_CLASSES_REMOVED]">
-              partido en Caracas.
-            </span>
-          </h1>
-          <p className="[TAILWIND_CLASSES_REMOVED]">
-            Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores verificados
-            y matchmaking por nivel.
-          </p>
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
 
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            {[
-              { k: "1.2k", v: "Jugadores" },
-              { k: "320", v: "Eventos/mes" },
-              { k: "4.9★", v: "Rating" },
-            ].map((s) => (
-              <div
-                key={s.v}
-                className="[TAILWIND_CLASSES_REMOVED]"
-              >
-                <div className="[TAILWIND_CLASSES_REMOVED]">{s.k}</div>
-                <div className="[TAILWIND_CLASSES_REMOVED]">{s.v}</div>
-              </div>
-            ))}
+          <div className="relative">
+            <Logo size={36} />
+          </div>
+
+          <div className="relative">
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              <span className="[TAILWIND_CLASSES_REMOVED]" /> Disponible en Caracas
+            </span>
+            <h1 className="[TAILWIND_CLASSES_REMOVED]">
+              Encuentra tu próximo
+              <br />
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                partido en Caracas.
+              </span>
+            </h1>
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores
+              verificados y matchmaking por nivel.
+            </p>
+
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              {[
+                { k: "1.2k", v: "Jugadores" },
+                { k: "320", v: "Eventos/mes" },
+                { k: "4.9★", v: "Rating" },
+              ].map((s) => (
+                <div
+                  key={s.v}
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                >
+                  <div className="[TAILWIND_CLASSES_REMOVED]">{s.k}</div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">{s.v}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            <span>👉</span> Navega el prototipo en el teléfono →
+            👉 Usa la app a la derecha — totalmente responsive.
           </div>
         </aside>
 
-        {/* Phone frame */}
-        <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Área de la app: pantalla completa en móvil, columna derecha en desktop */}
+        <section className="[TAILWIND_CLASSES_REMOVED]">
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            {/* Notch */}
-            <div className="[TAILWIND_CLASSES_REMOVED]" />
-            {/* Screen */}
-            <div className="[TAILWIND_CLASSES_REMOVED]">
-              {renderScreen()}
-              {started && !creating && screen !== "detail" && (
-                <BottomNav
-                  current={screen}
-                  onChange={setScreen}
-                  onCreate={() => setCreating(true)}
-                />
-              )}
-            </div>
+            {renderScreen()}
+            {appState === "app" && !creating && screen !== "detail" && (
+              <BottomNav
+                current={screen}
+                onChange={setScreen}
+                onCreate={() => setCreating(true)}
+              />
+            )}
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
@@ -6861,7 +7916,7 @@ function Index() {
 
 
 ================================================================================
-// FILE 68 of 71
+// FILE 72 of 75
 // PATH: src\server.ts
 // SIZE: 2569 characters
 ================================================================================
@@ -6957,7 +8012,7 @@ export default {
 
 
 ================================================================================
-// FILE 69 of 71
+// FILE 73 of 75
 // PATH: src\start.ts
 // SIZE: 641 characters
 ================================================================================
@@ -6995,7 +8050,7 @@ export const startInstance = createStart(() => ({
 
 
 ================================================================================
-// FILE 70 of 71
+// FILE 74 of 75
 // PATH: src\vite-env.d.ts
 // SIZE: 45 characters
 ================================================================================
@@ -7015,7 +8070,7 @@ export const startInstance = createStart(() => ({
 
 
 ================================================================================
-// FILE 71 of 71
+// FILE 75 of 75
 // PATH: vite.config.ts
 // SIZE: 834 characters
 ================================================================================
@@ -7043,6 +8098,6 @@ export default defineConfig({
 
 /**
  * END OF COMBINED FILES
- * Total files processed: 71
- * Total size: 233818 characters
+ * Total files processed: 75
+ * Total size: 269328 characters
  */

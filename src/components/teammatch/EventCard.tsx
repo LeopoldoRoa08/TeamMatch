@@ -1,4 +1,7 @@
-import { MapPin, Clock, Users } from "lucide-react";
+import { useState } from "react";
+import { MapPin, Clock, Users, Loader2, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 
@@ -11,7 +14,47 @@ export function EventCard({
   onClick?: () => void;
   variant?: "full" | "compact";
 }) {
+  const [joining, setJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
   const pct = (event.joined / event.spots) * 100;
+  const isFull = event.joined >= event.spots;
+
+  async function handleJoin(e: React.MouseEvent) {
+    e.stopPropagation(); // Evitar click en la card
+    
+    if (isFull || hasJoined) return;
+
+    // Obtener sesión actual (opcional pero buena práctica)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Inicia sesión", { description: "Debes iniciar sesión para unirte." });
+      return;
+    }
+
+    setJoining(true);
+
+    try {
+      const { error } = await supabase
+        .from("events")
+        .update({ joined: event.joined + 1 })
+        .eq("id", event.id);
+
+      if (error) throw error;
+
+      setHasJoined(true);
+      toast.success("¡Estás dentro!", {
+        description: "Te has unido al evento exitosamente.",
+        icon: "🎉",
+      });
+    } catch (err: any) {
+      console.error("Error al unirse:", err);
+      toast.error("Error al unirse", {
+        description: err.message || "No pudimos procesar tu solicitud.",
+      });
+    } finally {
+      setJoining(false);
+    }
+  }
   return (
     <button
       onClick={onClick}
@@ -65,6 +108,34 @@ export function EventCard({
                 <Users size={12} /> {event.joined}/{event.spots}
               </span>
             </div>
+
+            <button
+              onClick={handleJoin}
+              disabled={isFull || hasJoined || joining}
+              className={`mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 ${
+                hasJoined
+                  ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                  : isFull
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : joining
+                      ? "bg-secondary text-primary-foreground opacity-70 cursor-wait"
+                      : "bg-secondary text-primary-foreground shadow-pop hover:bg-secondary/90"
+              }`}
+            >
+              {joining ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" /> Cargando...
+                </>
+              ) : hasJoined ? (
+                <>
+                  <CheckCircle2 size={14} /> ¡Estás dentro!
+                </>
+              ) : isFull ? (
+                "Evento lleno"
+              ) : (
+                "Unirse al evento"
+              )}
+            </button>
           </>
         )}
       </div>

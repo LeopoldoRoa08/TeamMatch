@@ -18,8 +18,8 @@ export function WelcomeScreen({
       </div>
 
       {/* Floating glows */}
-      <div className="absolute -top-20 -left-16 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
-      <div className="absolute bottom-32 -right-20 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
+      <div className="pointer-events-none absolute -top-20 -left-16 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-32 -right-20 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
 
       <div className="relative flex h-full flex-col px-7 pt-14 pb-8">
         <div className="flex justify-center">

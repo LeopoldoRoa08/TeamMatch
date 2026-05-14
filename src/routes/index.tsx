@@ -1,11 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { CreateEventScreen } from "@/components/teammatch/CreateEventScreen";
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
+import { AuthScreen, type AuthMode } from "@/components/teammatch/AuthScreen";
 import { BottomNav } from "@/components/teammatch/BottomNav";
 import { Logo } from "@/components/teammatch/Logo";
 import type { Screen } from "@/components/teammatch/types-nav";
@@ -25,11 +27,29 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+type AppState = "checking" | "welcome" | "auth" | "app";
+
 function Index() {
-  const [started, setStarted] = useState(false);
+  const [appState, setAppState] = useState<AppState>("checking");
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
   const [creating, setCreating] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAppState(session ? "app" : "welcome");
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAppState(session ? "app" : "welcome");
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const openDetail = (e: SportEvent) => {
     setSelected(e);
@@ -37,7 +57,33 @@ function Index() {
   };
 
   const renderScreen = () => {
-    if (!started) return <WelcomeScreen onStart={() => setStarted(true)} />;
+    if (appState === "checking") {
+      return (
+        <div className="flex h-full w-full items-center justify-center bg-background">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      );
+    }
+    
+    if (appState === "welcome") {
+      return (
+        <WelcomeScreen 
+          onLogin={() => { setAuthMode("login"); setAppState("auth"); }}
+          onRegister={() => { setAuthMode("register"); setAppState("auth"); }}
+        />
+      );
+    }
+    
+    if (appState === "auth") {
+      return (
+        <AuthScreen 
+          initialMode={authMode}
+          onSuccess={() => setAppState("app")}
+          onClose={() => setAppState("welcome")}
+        />
+      );
+    }
+
     if (creating) return <CreateEventScreen onClose={() => setCreating(false)} />;
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
@@ -47,12 +93,12 @@ function Index() {
   };
 
   return (
-    <main className="min-h-[100dvh] w-full bg-secondary">
-      <div className="flex min-h-[100dvh] w-full lg:gap-0">
+    <main className="fixed inset-0 w-full h-[100dvh] flex flex-col bg-background overflow-hidden"> 
+      <div className="flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex">
         {/* Panel lateral solo en desktop */}
         <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-primary-foreground lg:flex">
-          <div className="absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
-          <div className="absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+          <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
+          <div className="pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
 
           <div className="relative">
             <Logo size={36} />
@@ -100,7 +146,7 @@ function Index() {
         <section className="relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop">
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
-            {started && !creating && screen !== "detail" && (
+            {appState === "app" && !creating && screen !== "detail" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}
@@ -113,4 +159,3 @@ function Index() {
     </main>
   );
 }
-

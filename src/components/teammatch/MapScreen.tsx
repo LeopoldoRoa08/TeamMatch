@@ -1,86 +1,165 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Search, SlidersHorizontal, Bell, Plus } from "lucide-react";
 import { CreateEventForm } from "./CreateEventForm";
-import mapImg from "@/assets/caracas-map.jpg";
-import { events } from "./data";
 import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import L from "leaflet";
-import { renderToStaticMarkup } from "react-dom/server";
-import "leaflet/dist/leaflet.css";
+import { supabase } from "@/lib/supabase";
 
-const sports = ["Todos", "Running", "Senderismo", "Pádel", "Vóleibol"] as const;
+// ── Carga diferida de Leaflet ─────────────────────────────────────────────────
+// React.lazy + Suspense garantiza que LeafletMap (y todo lo que importa:
+// leaflet, react-leaflet, leaflet.css) solo se descargue y ejecute en el
+// cliente. El SSR nunca evalúa este módulo → desaparece el error
+// "ReferenceError: window is not defined".
+const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
 
-const getCustomIcon = (event: SportEvent, isSelected: boolean) => {
-  const emoji =
-    event.sport === "Running"
-      ? "🏃"
-      : event.sport === "Senderismo"
-      ? "🥾"
-      : event.sport === "Pádel"
-      ? "🎾"
-      : "🏐";
-
-  const iconHtml = renderToStaticMarkup(
-    <div
-      className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
-        isSelected
-          ? "gradient-primary scale-110 ring-background shadow-pop"
-          : "bg-secondary ring-card/80"
-      }`}
-    >
-      <span className="text-lg">{emoji}</span>
-      <div
-        className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
-          isSelected ? "bg-primary" : "bg-secondary"
-        }`}
-      />
+// ── Esqueleto mientras carga el mapa ─────────────────────────────────────────
+function MapSkeleton() {
+  return (
+    <div className="h-full w-full animate-pulse bg-muted">
+      <div className="flex h-full items-center justify-center">
+        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+          <div className="h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+          <span className="text-xs font-medium">Cargando mapa…</span>
+        </div>
+      </div>
     </div>
   );
+}
 
-  return L.divIcon({
-    className: "custom-leaflet-icon bg-transparent border-none",
-    html: iconHtml,
-    iconSize: [44, 44],
-    iconAnchor: [22, 44],
-  });
-};
+// ── Filtros de deporte ────────────────────────────────────────────────────────
+const sports = ["Todos", "Running", "Senderismo", "Pádel", "Vóleibol"] as const;
 
-export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
-  const [active, setActive] = useState<(typeof sports)[number]>("Todos");
-  const [selectedId, setSelectedId] = useState(events[0].id);
+// ── Componente principal ──────────────────────────────────────────────────────
+export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
+  const [active, setActive] = useState<string>("Todos");
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedId, setSelectedId] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const fetchEvents = useCallback(async () => {
+    const { data, error } = await supabase.from("events").select("*").order("created_at", { ascending: false });
+    if (error) {
+      console.error("Error fetching events:", error);
+      return;
+    }
+    
+    if (data) {
+      const processed = data.map((row: any) => {
+        let lat = 0;
+        let lng = 0;
+        if (row.location) {
+          if (typeof row.location === "string") {
+            if (row.location.toUpperCase().includes("POINT")) {
+              // Limpiamos la cadena WKT y hacemos split por espacio
+              const cleaned = row.location.toUpperCase().replace("POINT", "").replace("(", "").replace(")", "").trim();
+              const coords = cleaned.split(/\s+/);
+              if (coords.length >= 2) {
+                lng = parseFloat(coords[0]); // Longitud
+                lat = parseFloat(coords[1]); // Latitud
+              }
+            } else if (/^[0-9A-Fa-f]+$/.test(row.location) && row.location.length >= 50) {
+              // Supabase / PostGIS devuelve un WKB Hex String nativo
+              // Ej: 0101000020E6100000 + 8 bytes X + 8 bytes Y
+              try {
+                const hex = row.location;
+                const buffer = new Uint8Array(hex.match(/../g)!.map((h: string) => parseInt(h, 16))).buffer;
+                const view = new DataView(buffer);
+                lng = view.getFloat64(9, true); // true para Little Endian
+                lat = view.getFloat64(17, true);
+              } catch (err) {
+                console.error("Error decodificando WKB Hex de PostGIS:", err);
+              }
+            }
+
+            // Parche inteligente: Si lat y lng están invertidos en la DB vieja
+            // (por ej: lat = -66.87, lng = 10.49 en lugar de lat = 10.49, lng = -66.87)
+            // como sabemos que Caracas está en Lat 10, Lng -66, los intercambiamos.
+            if (lat < -20 && lng > 0) {
+              const temp = lat;
+              lat = lng;
+              lng = temp;
+            }
+          } else if (typeof row.location === "object" && row.location.type === "Point") {
+            lng = row.location.coordinates[0];
+            lat = row.location.coordinates[1];
+          }
+        }
+
+        // Fallbacks básicos para que la UI no se rompa (EventCard, iconos)
+        const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+
+        return {
+          ...row,
+          lat,
+          lng,
+          sport: sportName,
+          title: row.title || `Evento de ${sportName}`,
+          hostName: row.creator_username || "Usuario",
+          hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
+          time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
+          date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
+          image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+          distanceKm: 2.5,
+          joined: row.joined ?? 1,
+          spots: row.max_capacity || 10,
+          price: 0,
+          zone: "Caracas",
+        };
+      });
+      
+      console.log('Eventos cargados:', processed);
+      setEvents(processed);
+      if (processed.length > 0) setSelectedId(processed[0].id);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEvents();
+
+    // ── Supabase Realtime: Escuchar nuevos eventos ─────────────────────────
+    const channel = supabase
+      .channel("public:events")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "events" },
+        (payload) => {
+          console.log("¡Nuevo evento en tiempo real detectado!", payload);
+          // Refrescamos la lista para todos
+          fetchEvents();
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "events" },
+        (payload) => {
+          console.log("¡Evento actualizado en tiempo real detectado!", payload);
+          fetchEvents();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchEvents]);
+
   const filtered = active === "Todos" ? events : events.filter((e) => e.sport === active);
 
   return (
     <div className="relative h-full overflow-hidden bg-muted">
-      {/* Map */}
+
+      {/* ── Mapa Leaflet (lazy, solo client) ── */}
       <div className="absolute inset-0 z-0">
-        <MapContainer
-          center={[10.49, -66.87]}
-          zoom={13}
-          style={{ height: "100%", width: "100%" }}
-          zoomControl={false}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        <Suspense fallback={<MapSkeleton />}>
+          <LeafletMap
+            events={filtered}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
           />
-          {filtered.map((e) => (
-            <Marker
-              key={e.id}
-              position={[e.lat, e.lng]}
-              icon={getCustomIcon(e, e.id === selectedId)}
-              eventHandlers={{
-                click: () => setSelectedId(e.id),
-              }}
-            />
-          ))}
-        </MapContainer>
+        </Suspense>
       </div>
 
-      {/* Top bar */}
+      {/* ── Top bar ── */}
       <div className="absolute inset-x-0 top-0 z-20 px-4 pt-12 pointer-events-none">
         <div className="flex items-center gap-2 pointer-events-auto">
           <div className="flex flex-1 items-center gap-2 rounded-2xl glass px-4 py-3 shadow-soft">
@@ -99,7 +178,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
           </button>
         </div>
 
-        {/* Sport filters */}
+        {/* Filtros de deporte */}
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1 pointer-events-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {sports.map((s) => (
             <button
@@ -117,7 +196,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
         </div>
       </div>
 
-      {/* Bottom sheet */}
+      {/* ── Bottom sheet con cards de eventos ── */}
       <div className="absolute inset-x-0 bottom-16 z-20 pb-4 pointer-events-none">
         <div className="pointer-events-auto">
           <div className="px-4 pb-2">
@@ -131,7 +210,11 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
           </div>
           <div className="flex gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {filtered.map((e) => (
-              <div key={e.id} className="w-[78%] flex-shrink-0">
+              <div
+                key={e.id}
+                className="w-[78%] flex-shrink-0"
+                onClick={() => setSelectedId(e.id)}
+              >
                 <EventCard event={e} onClick={() => onSelect(e)} />
               </div>
             ))}
@@ -139,7 +222,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
         </div>
       </div>
 
-      {/* FAB — Crear evento */}
+      {/* ── FAB — Crear evento ── */}
       <button
         id="fab-create-event-btn"
         onClick={() => setShowCreateForm(true)}
@@ -150,12 +233,12 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
         Crear
       </button>
 
-      {/* Panel de creación de evento (pantalla completa sobre el mapa) */}
+      {/* ── Panel de creación (pantalla completa sobre el mapa) ── */}
       {showCreateForm && (
         <div className="absolute inset-0 z-40 bg-background">
           <CreateEventForm
             onClose={() => setShowCreateForm(false)}
-            onEventCreated={() => setShowCreateForm(false)}
+            onEventCreated={fetchEvents}
           />
         </div>
       )}
