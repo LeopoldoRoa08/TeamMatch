@@ -13,3 +13,5 @@ export default defineConfig({
     server: { entry: "server" },
   },
 });
+
+// Force Vite cache clear (1)

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import {
   ArrowLeft,
   MapPin,
@@ -11,6 +11,19 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+
+const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
+
+function MapSkeleton() {
+  return (
+    <div className="flex h-[250px] w-full items-center justify-center bg-muted">
+      <div className="flex flex-col items-center gap-3 text-muted-foreground">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <span className="text-xs font-medium">Cargando mapa…</span>
+      </div>
+    </div>
+  );
+}
 
 // ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
@@ -47,6 +60,7 @@ const INITIAL_FORM = {
   time: "",
   latitude: "",
   longitude: "",
+  address: "",
   maxCapacity: "",
 };
 
@@ -65,6 +79,28 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     setForm((prev) => ({ ...prev, [key]: value }));
     // limpiar error individual al editar
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  }
+
+  // ── Manejar click en el mapa ──────────────────────────────────────────────
+  async function handleMapClick(lat: number, lng: number) {
+    setField("latitude", lat.toString());
+    setField("longitude", lng.toString());
+    setField("address", "Buscando dirección...");
+
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await res.json();
+      if (data && data.display_name) {
+        // Extraemos un nombre amigable: calle, barrio, o la primera parte del display_name
+        const name = data.address?.road || data.address?.suburb || data.display_name.split(',')[0];
+        setField("address", name);
+      } else {
+        setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+      }
+    } catch (e) {
+      console.error("Geocoding error:", e);
+      setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+    }
   }
 
   // ── Validación ────────────────────────────────────────────────────────────
@@ -189,6 +225,22 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     }
   }
 
+  if (status === "success") {
+    return (
+      <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
+        <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
+          <CheckCircle2 size={48} strokeWidth={2.5} />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-secondary">¡Evento publicado!</h2>
+          <p className="text-sm text-muted-foreground">
+            Tu partido ya está en el mapa, listo para que otros jugadores se unan.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="relative flex h-full flex-col overflow-hidden bg-background">
@@ -303,60 +355,34 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
 
         {/* Ubicación */}
         <FormSection
-          title="Ubicación (coordenadas)"
+          title="Ubicación"
           icon={<MapPin size={13} />}
           error={errors.latitude || errors.longitude}
           required
         >
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-            {/* Indicador visual de mapa */}
-            <div className="flex items-center justify-center gap-2 border-b border-border bg-muted/50 py-3">
-              <MapPin size={16} className="text-primary" />
-              <span className="text-xs font-semibold text-muted-foreground">
-                Ingresa las coordenadas del lugar
+            <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3">
+              <MapPin size={16} className="text-primary shrink-0" />
+              <span className="text-xs font-semibold text-muted-foreground line-clamp-1">
+                {form.address || "Toca el mapa para elegir el lugar"}
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-px bg-border">
-              <div className="bg-card p-3">
-                <label
-                  htmlFor="event-latitude-input"
-                  className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-muted-foreground"
-                >
-                  Latitud
-                </label>
-                <input
-                  id="event-latitude-input"
-                  type="number"
-                  step="any"
-                  placeholder="10.4880"
-                  value={form.latitude}
-                  onChange={(e) => setField("latitude", e.target.value)}
-                  className="w-full bg-transparent text-sm font-semibold text-secondary outline-none placeholder:text-muted-foreground/50"
+            
+            {/* Mapa Leaflet interactivo */}
+            <div className="relative z-0 h-[250px] w-full">
+              <Suspense fallback={<MapSkeleton />}>
+                <LeafletMap 
+                  events={[]} 
+                  onLocationSelect={handleMapClick}
                 />
-              </div>
-              <div className="bg-card p-3">
-                <label
-                  htmlFor="event-longitude-input"
-                  className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-muted-foreground"
-                >
-                  Longitud
-                </label>
-                <input
-                  id="event-longitude-input"
-                  type="number"
-                  step="any"
-                  placeholder="-66.8792"
-                  value={form.longitude}
-                  onChange={(e) => setField("longitude", e.target.value)}
-                  className="w-full bg-transparent text-sm font-semibold text-secondary outline-none placeholder:text-muted-foreground/50"
-                />
-              </div>
+              </Suspense>
             </div>
+
             {(form.latitude || form.longitude) && !errors.latitude && !errors.longitude && (
               <div className="flex items-center gap-1.5 border-t border-border bg-emerald-50 px-3 py-2">
                 <CheckCircle2 size={12} className="text-emerald-600" />
                 <span className="text-[11px] font-medium text-emerald-700">
-                  Guardará como: POINT({form.longitude || "..."} {form.latitude || "..."})
+                  Guardará como: POINT({parseFloat(form.longitude).toFixed(4)} {parseFloat(form.latitude).toFixed(4)})
                 </span>
               </div>
             )}
