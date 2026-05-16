@@ -64,7 +64,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
     setJoining(false);
   }
 
-  async function handleAction(participantId: number, status: "aprobado" | "rechazado") {
+  async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
     setActionLoading(participantId.toString());
     const { error } = await supabase
       .from("event_participants")
@@ -73,7 +73,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
     
     if (!error) {
       // Simular la notificación al usuario
-      alert(`Has ${status === "aprobado" ? "aceptado" : "rechazado"} la solicitud.`);
+      alert(`Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
       fetchParticipants();
     } else {
       alert("Error al actualizar la solicitud");
@@ -81,12 +81,12 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
     setActionLoading(null);
   }
 
-  const approvedPlayers = participants.filter(p => p.status === "approved" || p.status === "aprobado" || !p.status); // Fallback si status no existe
+  const approvedPlayers = participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status); // Fallback si status no existe
   const pendingRequests = participants.filter(p => p.status === "pending" || p.status === "pendiente");
   const emptySpots = Math.max(0, event.spots - approvedPlayers.length);
 
   const isUserPending = participants.some(p => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
-  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aprobado" || !p.status));
+  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
 
   return (
     <div className="relative h-full overflow-y-auto bg-background">
@@ -180,13 +180,14 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
                     <button 
                       disabled={actionLoading === req.id.toString()}
                       onClick={() => handleAction(req.id, "rejected")}
+                      onClick={() => handleAction(req.id, "rechazado")}
                       className="grid h-9 w-9 place-items-center rounded-full bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20 disabled:opacity-50"
                     >
                       <X size={16} strokeWidth={2.5} />
                     </button>
                     <button 
                       disabled={actionLoading === req.id.toString()}
-                      onClick={() => handleAction(req.id, "approved")}
+                      onClick={() => handleAction(req.id, "aceptado")}
                       className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600 transition-colors hover:bg-emerald-100 disabled:opacity-50"
                     >
                       {actionLoading === req.id.toString() ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} strokeWidth={2.5} />}

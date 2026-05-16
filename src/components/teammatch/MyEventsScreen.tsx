@@ -45,7 +45,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
     setLoading(false);
   }
 
-  async function handleAction(participantId: number, status: "aprobado" | "rechazado") {
+  async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
     setActionLoading(participantId.toString());
     const { error } = await supabase
       .from("event_participants")
@@ -55,7 +55,8 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
     if (!error) {
       setPendingRequests(prev => prev.filter(r => r.id !== participantId));
     } else {
-      alert("Error al procesar la solicitud");
+      console.error(error);
+      alert("Error al procesar la solicitud: " + error.message);
     }
     setActionLoading(null);
   }
@@ -128,7 +129,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
                   </button>
                   <button 
                     disabled={actionLoading === req.id.toString()}
-                    onClick={() => handleAction(req.id, "aprobado")}
+                    onClick={() => handleAction(req.id, "aceptado")}
                     className="flex flex-1 items-center justify-center rounded-xl gradient-primary py-2.5 text-xs font-bold text-secondary shadow-pop disabled:opacity-50"
                   >
                     {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : "Aceptar"}
