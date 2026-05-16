@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
-import { CreateEventScreen } from "@/components/teammatch/CreateEventScreen";
+
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
@@ -35,7 +35,7 @@ function Index() {
   
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
-  const [creating, setCreating] = useState(false);
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -84,7 +84,7 @@ function Index() {
       );
     }
 
-    if (creating) return <CreateEventScreen onClose={() => setCreating(false)} />;
+
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
@@ -146,11 +146,10 @@ function Index() {
         <section className="relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop">
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
-            {appState === "app" && !creating && screen !== "detail" && (
+            {appState === "app" && screen !== "detail" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}
-                onCreate={() => setCreating(true)}
               />
             )}
           </div>
