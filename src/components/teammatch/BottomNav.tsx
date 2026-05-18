@@ -11,9 +11,6 @@ export function BottomNav({ current, onChange }: Props) {
     { id: "map", label: "Explorar", icon: Map },
     { id: "events", label: "Eventos", icon: CalendarCheck },
   ];
-  const right: { id: Screen; label: string; icon: typeof Map }[] = [
-    { id: "profile", label: "Perfil", icon: User },
-  ];
 
   const Btn = ({ id, label, Icon }: { id: Screen; label: string; Icon: typeof Map }) => {
     const active = current === id;
@@ -41,9 +38,6 @@ export function BottomNav({ current, onChange }: Props) {
           <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
         ))}
 
-        {right.map((it) => (
-          <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
-        ))}
         <div className="flex-1" />
       </div>
     </nav>
