@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
+import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
 
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
@@ -87,6 +88,7 @@ function Index() {
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
+    if (screen === "profile") return <ProfileScreen />;
     return <MapScreen onSelect={openDetail} />;
   };
 

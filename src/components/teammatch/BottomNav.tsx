@@ -10,6 +10,7 @@ export function BottomNav({ current, onChange }: Props) {
   const items: { id: Screen; label: string; icon: typeof Map }[] = [
     { id: "map", label: "Explorar", icon: Map },
     { id: "events", label: "Eventos", icon: CalendarCheck },
+    { id: "profile", label: "Perfil", icon: User as any },
   ];
 
   const Btn = ({ id, label, Icon }: { id: Screen; label: string; Icon: typeof Map }) => {
