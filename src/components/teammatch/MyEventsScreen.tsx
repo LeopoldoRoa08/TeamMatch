@@ -10,18 +10,54 @@ const tabs = ["Próximos", "Solicitudes", "Historial"] as const;
 export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
   const [tab, setTab] = useState<(typeof tabs)[number]>("Próximos");
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
+  const [createdEvents, setCreatedEvents] = useState<any[]>([]);
+  const [joinedEvents, setJoinedEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+  const formatEvent = (row: any) => {
+    if (!row) return null;
+    const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+    return {
+      ...row,
+      sport: sportName,
+      title: row.title || `Evento de ${sportName}`,
+      hostName: row.creator_username || "Usuario",
+      hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
+      time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
+      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
+      image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+      distanceKm: 2.5,
+      joined: row.joined ?? 1,
+      spots: row.max_capacity || 10,
+      price: 0,
+      zone: "Caracas",
+    };
+  };
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setCurrentUser(data.user);
       if (data.user) {
         fetchRequests(data.user.email);
+        fetchCreated(data.user.email);
+        fetchJoined(data.user.email);
       }
     });
   }, []);
+
+  async function fetchCreated(email: string | undefined) {
+    if (!email) return;
+    const { data } = await supabase.from("events").select("*").eq("creator_username", email).order("created_at", { ascending: false });
+    if (data) setCreatedEvents(data.map(formatEvent).filter(Boolean));
+  }
+
+  async function fetchJoined(email: string | undefined) {
+    if (!email) return;
+    const { data } = await supabase.from("event_participants").select("events(*)").eq("user_username", email);
+    if (data) setJoinedEvents(data.map((d: any) => formatEvent(d.events)).filter(Boolean));
+  }
 
   async function fetchRequests(email: string | undefined) {
     if (!email) return;
@@ -70,21 +106,24 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
       <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
         <div className="flex gap-1 rounded-full bg-muted p-1">
-          {tabs.map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${
-                tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+          {tabs.map((t) => {
+            if (t === "Solicitudes" && currentUser?.user_metadata?.is_organizer !== true) return null;
+            return (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${
+                  tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
+                }`}
+              >
+                {t}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {tab === "Solicitudes" ? (
+      {tab === "Solicitudes" && currentUser?.user_metadata?.is_organizer === true ? (
         <div className="space-y-3 px-5 pt-3">
           {loading ? (
             <div className="flex justify-center p-5"><Loader2 className="animate-spin text-primary" /></div>
@@ -141,9 +180,16 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
         </div>
       ) : (
         <div className="space-y-3 px-5 pt-3">
-          {mockEvents.map((e) => (
+          {(tab === "Próximos" ? createdEvents : joinedEvents).map((e) => (
             <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
           ))}
+          {(tab === "Próximos" ? createdEvents : joinedEvents).length === 0 && (
+            <div className="text-center text-sm text-muted-foreground p-5 mt-10">
+              {tab === "Próximos" 
+                ? "No hay eventos disponibles" 
+                : "No te has unido a ningún evento todavía."}
+            </div>
+          )}
         </div>
       )}
     </div>

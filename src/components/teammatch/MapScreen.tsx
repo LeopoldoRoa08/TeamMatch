@@ -35,6 +35,15 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedId, setSelectedId] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [isOrganizer, setIsOrganizer] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setIsOrganizer(data.user.user_metadata?.is_organizer === true);
+      }
+    });
+  }, []);
 
   const fetchEvents = useCallback(async () => {
     const { data, error } = await supabase.from("events").select("*").order("created_at", { ascending: false });
@@ -223,15 +232,17 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
       </div>
 
       {/* ── FAB — Crear evento ── */}
-      <button
-        id="fab-create-event-btn"
-        onClick={() => setShowCreateForm(true)}
-        className="absolute bottom-24 right-4 z-30 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
-        aria-label="Crear evento"
-      >
-        <Plus size={18} strokeWidth={2.5} />
-        Crear
-      </button>
+      {isOrganizer && (
+        <button
+          id="fab-create-event-btn"
+          onClick={() => setShowCreateForm(true)}
+          className="absolute bottom-24 right-4 z-30 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+          aria-label="Crear evento"
+        >
+          <Plus size={18} strokeWidth={2.5} />
+          Crear
+        </button>
+      )}
 
       {/* ── Panel de creación (pantalla completa sobre el mapa) ── */}
       {showCreateForm && (

@@ -29,6 +29,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +90,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           email: email.trim(),
           password,
           options: {
-            data: { full_name: name.trim() },
+            data: { full_name: name.trim(), is_organizer: isOrganizer },
           },
         });
         if (authError) throw authError;
@@ -159,16 +160,31 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
       <div className="relative z-10 flex-1 overflow-y-auto px-7 pt-8 pb-6 space-y-4">
         {/* Nombre (solo registro) */}
         {mode === "register" && (
-          <InputField
-            id="auth-name-input"
-            label="Nombre completo"
-            type="text"
-            placeholder="Ej: Diego Ramírez"
-            value={name}
-            onChange={setName}
-            icon={<User size={16} className="text-muted-foreground" />}
-            disabled={isLoading}
-          />
+          <>
+            <InputField
+              id="auth-name-input"
+              label="Nombre completo"
+              type="text"
+              placeholder="Ej: Diego Ramírez"
+              value={name}
+              onChange={setName}
+              icon={<User size={16} className="text-muted-foreground" />}
+              disabled={isLoading}
+            />
+            
+            <label className="flex items-center gap-3 rounded-2xl border border-primary-foreground/15 bg-primary-foreground/8 px-4 py-3.5 backdrop-blur cursor-pointer transition-colors hover:border-primary/50">
+              <input
+                type="checkbox"
+                checked={isOrganizer}
+                onChange={(e) => setIsOrganizer(e.target.checked)}
+                className="h-4 w-4 rounded border-primary-foreground/30 text-primary accent-primary"
+                disabled={isLoading}
+              />
+              <span className="text-sm font-medium text-secondary-foreground">
+                Quiero registrarme como Organizador
+              </span>
+            </label>
+          </>
         )}
 
         {/* Email */}

@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
+import { EditProfileScreen } from "@/components/teammatch/EditProfileScreen";
 
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
@@ -88,7 +89,8 @@ function Index() {
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
-    if (screen === "profile") return <ProfileScreen />;
+    if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
+    if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} />;
     return <MapScreen onSelect={openDetail} />;
   };
 
@@ -97,7 +99,7 @@ function Index() {
       <div className="flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex">
         {/* Panel lateral solo en desktop */}
         {appState !== "app" && (
-        <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-primary-foreground lg:flex">
+        <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex">
           <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
           <div className="pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
 
@@ -109,14 +111,14 @@ function Index() {
             <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Disponible en Caracas
             </span>
-            <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl">
+            <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl text-primary-foreground">
               Encuentra tu próximo
               <br />
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 partido en Caracas.
               </span>
             </h1>
-            <p className="mt-5 max-w-md text-base text-primary-foreground/70">
+            <p className="mt-5 max-w-md text-base text-[#32CD32]">
               Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores
               verificados y matchmaking por nivel.
             </p>
@@ -132,14 +134,14 @@ function Index() {
                   className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-4"
                 >
                   <div className="text-2xl font-bold text-primary">{s.k}</div>
-                  <div className="text-xs text-primary-foreground/60">{s.v}</div>
+                  <div className="text-xs text-[#32CD32]">{s.v}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="relative text-xs text-primary-foreground/50">
-            👉 Usa la app a la derecha — totalmente responsive.
+          <div className="relative text-xs text-[#32CD32]">
+            👉 A jugar ya
           </div>
         </aside>
         )}
@@ -154,7 +156,7 @@ function Index() {
         >
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
-            {appState === "app" && screen !== "detail" && (
+            {appState === "app" && screen !== "detail" && screen !== "editProfile" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}
