@@ -232,17 +232,15 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
       </div>
 
       {/* ── FAB — Crear evento ── */}
-      {isOrganizer && (
-        <button
-          id="fab-create-event-btn"
-          onClick={() => setShowCreateForm(true)}
-          className="absolute bottom-24 right-4 z-30 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
-          aria-label="Crear evento"
-        >
-          <Plus size={18} strokeWidth={2.5} />
-          Crear
-        </button>
-      )}
+      <button
+        id="fab-create-event-btn"
+        onClick={() => setShowCreateForm(true)}
+        className="absolute bottom-24 right-4 z-30 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+        aria-label="Crear evento"
+      >
+        <Plus size={18} strokeWidth={2.5} />
+        Crear
+      </button>
 
       {/* ── Panel de creación (pantalla completa sobre el mapa) ── */}
       {showCreateForm && (

@@ -107,7 +107,6 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
       <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
         <div className="flex gap-1 rounded-full bg-muted p-1">
           {tabs.map((t) => {
-            if (t === "Solicitudes" && currentUser?.user_metadata?.is_organizer !== true) return null;
             return (
               <button
                 key={t}
@@ -123,7 +122,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
         </div>
       </div>
 
-      {tab === "Solicitudes" && currentUser?.user_metadata?.is_organizer === true ? (
+      {tab === "Solicitudes" ? (
         <div className="space-y-3 px-5 pt-3">
           {loading ? (
             <div className="flex justify-center p-5"><Loader2 className="animate-spin text-primary" /></div>

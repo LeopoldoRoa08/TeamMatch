@@ -94,12 +94,20 @@ export function ProfileScreen({ onEdit }: { onEdit?: () => void }) {
           </button>
         </div>
         <div className="mt-4 flex items-center gap-4">
-          <div 
-            className="grid h-20 w-20 place-items-center rounded-full bg-card text-2xl font-bold ring-4 ring-card/20 shadow-pop"
-            style={{ color: "#32CD32" }} /* Verde Lima */
-          >
-            {initials}
-          </div>
+          {user?.user_metadata?.avatar_url ? (
+            <img
+              src={user.user_metadata.avatar_url}
+              alt="Avatar"
+              className="h-20 w-20 rounded-full object-cover ring-4 ring-card/20 shadow-pop"
+            />
+          ) : (
+            <div
+              className="grid h-20 w-20 place-items-center rounded-full bg-card text-2xl font-bold ring-4 ring-card/20 shadow-pop"
+              style={{ color: "#32CD32" }}
+            >
+              {initials}
+            </div>
+          )}
           <div>
             <h1 className="text-xl font-bold text-white flex items-center gap-2">
               {name}
