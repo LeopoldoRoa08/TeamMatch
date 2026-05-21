@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import {
   ArrowLeft,
   MapPin,
@@ -9,8 +9,11 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  ChevronRight,
+  Trophy,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { CanchasScreen, type Cancha } from "./CanchasScreen";
 
 const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
 
@@ -73,6 +76,17 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
   const [errors, setErrors] = useState<FieldError>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [selectedCancha, setSelectedCancha] = useState<Cancha | null>(null);
+  const [showCanchas, setShowCanchas] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setIsOrganizer(data.user.user_metadata?.is_organizer === true);
+      }
+    });
+  }, []);
 
   // ── Actualizar campo ──────────────────────────────────────────────────────
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -244,6 +258,19 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="relative flex h-full flex-col overflow-hidden bg-background">
+      {/* ── Panel de canchas (overlay) ── */}
+      {showCanchas && (
+        <div className="absolute inset-0 z-50 bg-background">
+          <CanchasScreen
+            isOrganizer={isOrganizer}
+            onBack={() => setShowCanchas(false)}
+            onSelect={(cancha) => {
+              setSelectedCancha(cancha);
+              setShowCanchas(false);
+            }}
+          />
+        </div>
+      )}
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/90 px-4 pb-3 pt-12 backdrop-blur">
         <button
@@ -389,6 +416,35 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
           </div>
         </FormSection>
 
+        {/* Cancha (opcional) */}
+        <FormSection title="Cancha" icon={<Trophy size={13} />}>
+          <button
+            id="select-cancha-btn"
+            type="button"
+            onClick={() => setShowCanchas(true)}
+            className={`w-full flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-sm font-semibold transition-all active:scale-[0.97] ${
+              selectedCancha
+                ? "border-primary/40 bg-primary/5 text-secondary"
+                : "border-border bg-card text-muted-foreground hover:border-primary/40"
+            }`}
+          >
+            <Trophy size={16} className="shrink-0 text-muted-foreground" />
+            <span className="flex-1 text-left">
+              {selectedCancha ? selectedCancha.name : "Seleccionar cancha (opcional)"}
+            </span>
+            {selectedCancha && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setSelectedCancha(null); }}
+                className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground hover:text-destructive"
+              >
+                ✕
+              </button>
+            )}
+            <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
+          </button>
+        </FormSection>
+
         {/* Capacidad máxima (opcional) */}
         <FormSection
           title="Capacidad máxima"
@@ -449,28 +505,21 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         <button
           id="publish-event-btn"
           onClick={handleSubmit}
-          disabled={status === "loading" || status === "success"}
+          disabled={status === "loading"}
           className={`w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${
-            status === "success"
-              ? "bg-emerald-500 text-white"
-              : status === "loading"
-                ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
-                : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
+            status === "loading"
+              ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
+              : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
           }`}
         >
-          {status === "loading" && (
+          {status === "loading" ? (
             <span className="flex items-center justify-center gap-2">
               <Loader2 size={16} className="animate-spin" />
               Publicando evento…
             </span>
+          ) : (
+            "Publicar evento"
           )}
-          {status === "success" && (
-            <span className="flex items-center justify-center gap-2">
-              <CheckCircle2 size={16} />
-              ¡Evento publicado!
-            </span>
-          )}
-          {(status === "idle" || status === "error") && "Publicar evento"}
         </button>
       </div>
     </div>

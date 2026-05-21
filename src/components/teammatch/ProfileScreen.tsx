@@ -42,12 +42,6 @@ export function ProfileScreen({ onEdit }: { onEdit?: () => void }) {
             count: sportCounts[parseInt(id)]
           }));
           setMySports(sportsList);
-        } else {
-          // Fallback data if user hasn't joined any real DB events yet
-          setMySports([
-            { name: "Pádel", count: 2 },
-            { name: "Running", count: 1 }
-          ]);
         }
       }
       setLoading(false);
@@ -162,7 +156,7 @@ export function ProfileScreen({ onEdit }: { onEdit?: () => void }) {
             </div>
           )) : (
             <div className="text-sm text-muted-foreground p-3 text-center bg-card rounded-2xl shadow-soft">
-              Aún no te has unido a ningún evento
+              No has escogido ningún deporte
             </div>
           )}
         </div>

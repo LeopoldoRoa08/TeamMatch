@@ -35,15 +35,6 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedId, setSelectedId] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [isOrganizer, setIsOrganizer] = useState(false);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        setIsOrganizer(data.user.user_metadata?.is_organizer === true);
-      }
-    });
-  }, []);
 
   const fetchEvents = useCallback(async () => {
     const { data, error } = await supabase.from("events").select("*").order("created_at", { ascending: false });
