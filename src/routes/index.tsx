@@ -141,7 +141,7 @@ function Index() {
           </div>
 
           <div className="relative text-xs text-[#32CD32]">
-            👉 A jugar ya
+            👉 ¡A jugar ya!
           </div>
         </aside>
         )}
