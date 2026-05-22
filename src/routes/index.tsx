@@ -90,7 +90,7 @@ function Index() {
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
-    if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} />;
+    if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
     return <MapScreen onSelect={openDetail} />;
   };
 
