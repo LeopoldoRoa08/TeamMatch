@@ -14,7 +14,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
     fetchParticipants();
-    
+
     // Suscripción a cambios en tiempo real
     const channel = supabase
       .channel(`participants_${event.id}`)
@@ -35,7 +35,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
       .from("event_participants")
       .select("*, profiles(username, rating)")
       .eq("event_id", event.id);
-    
+
     if (!error && data) {
       setParticipants(data);
     }
@@ -45,7 +45,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
   async function handleJoin() {
     if (!currentUser || !currentUser.email) return alert("Debes iniciar sesión");
     setJoining(true);
-    
+
     // Insertamos solicitud con status 'pending'
     const { error } = await supabase.from("event_participants").insert({
       event_id: event.id,
@@ -70,7 +70,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
       .from("event_participants")
       .update({ status })
       .eq("id", participantId);
-    
+
     if (!error) {
       // Simular la notificación al usuario
       alert(`Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
@@ -177,15 +177,14 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       disabled={actionLoading === req.id.toString()}
-                      onClick={() => handleAction(req.id, "rejected")}
                       onClick={() => handleAction(req.id, "rechazado")}
                       className="grid h-9 w-9 place-items-center rounded-full bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20 disabled:opacity-50"
                     >
                       <X size={16} strokeWidth={2.5} />
                     </button>
-                    <button 
+                    <button
                       disabled={actionLoading === req.id.toString()}
                       onClick={() => handleAction(req.id, "aceptado")}
                       className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-emerald-600 transition-colors hover:bg-emerald-100 disabled:opacity-50"
@@ -242,7 +241,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
               {event.price === 0 ? "Gratis" : `$${event.price} USD`}
             </div>
           </div>
-          <button 
+          <button
             disabled={joining || emptySpots === 0 || isUserPending || isUserApproved}
             onClick={handleJoin}
             className="ml-auto flex-1 rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"

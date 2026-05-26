@@ -1,90 +1,34 @@
-import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
+import { MapPin } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
-// ── Sincroniza el centro del mapa con el evento seleccionado ──────────────────
-function MapFlyTo({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap();
-  useEffect(() => {
-    if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
-      map.flyTo([lat, lng], 15, { animate: true, duration: 0.8 });
-    }
-  }, [lat, lng, map]);
-  return null;
+// ── Props ─────────────────────────────────────────────────────────────────────
+interface LeafletMapProps {
+  canchas?: any[];
+  onCanchaClick?: (cancha: any) => void;
 }
 
-// ── Marcador temporal para selección de ubicación ──────────────────────────────
-function LocationMarker({ onSelect }: { onSelect: (lat: number, lng: number) => void }) {
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
-
-  useMapEvents({
-    click(e) {
-      setPosition(e.latlng);
-      if (onSelect) onSelect(e.latlng.lat, e.latlng.lng);
-    },
-  });
-
-  if (!position) return null;
-  // Bloqueo estricto de SSR para Leaflet globals
-  if (typeof window === "undefined" || !(window as any).L) return null;
-
-  const html = renderToStaticMarkup(
-    <div className="relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all bg-destructive ring-background shadow-pop scale-110">
-      <span className="text-lg">📍</span>
-      <div className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-destructive" />
-    </div>
-  );
-
-  const L = (window as any).L;
-  const redIcon = L.divIcon({
-    className: "custom-leaflet-icon bg-transparent border-none",
-    html,
-    iconSize: [44, 44],
-    iconAnchor: [22, 44],
-  });
-
-  return (
-    <Marker position={position} icon={redIcon}>
-      <Popup>Ubicación seleccionada</Popup>
-    </Marker>
-  );
-}
-
-// ── Componente exportado: el mapa Leaflet real ────────────────────────────────
-export default function LeafletMap({ events = [], selectedId, onSelect, onLocationSelect }: any) {
-  // BLOQUEO ABSOLUTO DE SSR
+// ── Componente principal exportado ────────────────────────────────────────────
+export default function LeafletMap({
+  canchas = [],
+  onCanchaClick,
+}: LeafletMapProps) {
+  // BLOQUEO ABSOLUTO DE SSR — Leaflet necesita window
   if (typeof window === "undefined") return null;
 
-  const selected = events.length > 0 ? (events.find((e: any) => e.id === selectedId) ?? events[0]) : null;
-
-  // buildIcon se mueve dentro para asegurar que no se evalúa al cargar el módulo
-  function buildIcon(event: any, isSelected: boolean) {
-    if (typeof window === "undefined" || !(window as any).L) return null;
-
-    const emoji =
-      event.sport === "Running"
-        ? "🏃"
-        : event.sport === "Senderismo"
-          ? "🥾"
-          : event.sport === "Pádel"
-            ? "🎾"
-            : "🏐";
+  // ── Construir ícono "Pin Verde" para cada cancha ───────────────────────────
+  function buildCanchaIcon(isActive = false) {
+    if (!(window as any).L) return null;
 
     const html = renderToStaticMarkup(
       <div
-        className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
-          isSelected
-            ? "gradient-primary scale-110 ring-background shadow-pop"
-            : "bg-secondary ring-card/80"
+        className={`relative grid h-11 w-11 place-items-center rounded-full text-white shadow-pop ring-4 ring-background transition-all ${
+          isActive ? "bg-emerald-600 scale-125" : "bg-emerald-500"
         }`}
       >
-        <span className="text-lg">{emoji}</span>
-        <div
-          className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
-            isSelected ? "bg-primary" : "bg-secondary"
-          }`}
-        />
+        <MapPin size={20} />
+        <div className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-emerald-500" />
       </div>
     );
 
@@ -97,9 +41,11 @@ export default function LeafletMap({ events = [], selectedId, onSelect, onLocati
     });
   }
 
+  const canchaIcon = buildCanchaIcon();
+
   return (
     <MapContainer
-      center={[10.49, -66.87]}
+      center={[10.4806, -66.8551]}
       zoom={13}
       style={{ height: "100%", width: "100%" }}
       zoomControl={false}
@@ -109,34 +55,30 @@ export default function LeafletMap({ events = [], selectedId, onSelect, onLocati
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* Marcador de selección de ubicación */}
-      {onLocationSelect && <LocationMarker onSelect={onLocationSelect} />}
+      {/* Renderizar Canchas (Pines Verdes) usando lat/lng ya procesados */}
+      {canchas.map((c: any) => {
+        // Las canchas vienen pre-procesadas desde MapScreen con lat/lng numéricos
+        const lat = c.lat;
+        const lng = c.lng;
 
-      {/* Vuela suavemente al marcador seleccionado */}
-      {selected && <MapFlyTo lat={selected.lat} lng={selected.lng} />}
-
-      {events.map((e: any) => {
-        if (typeof e.lat !== "number" || typeof e.lng !== "number" || isNaN(e.lat) || isNaN(e.lng)) return null;
-
-        const icon = buildIcon(e, e.id === selectedId);
-        if (!icon) return null;
+        // Validar que las coordenadas sean números válidos
+        if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
+          console.warn(`⚠️ Cancha "${c.name}" sin coordenadas válidas:`, { lat, lng });
+          return null;
+        }
 
         return (
           <Marker
-            key={e.id}
-            position={[e.lat, e.lng]}
-            icon={icon}
+            key={`cancha-${c.id}`}
+            position={[lat, lng]}
+            icon={canchaIcon}
             eventHandlers={{
               click: () => {
-                if (onSelect) onSelect(e.id);
+                console.log("📍 Cancha tocada en el mapa:", c.name, { lat, lng });
+                if (onCanchaClick) onCanchaClick(c);
               },
             }}
-          >
-            <Popup>
-              <div className="font-semibold text-sm">{e.title}</div>
-              <div className="text-xs text-muted-foreground">{e.sport || e.sport_id}</div>
-            </Popup>
-          </Marker>
+          />
         );
       })}
     </MapContainer>

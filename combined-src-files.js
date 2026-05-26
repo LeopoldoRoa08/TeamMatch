@@ -1,6 +1,6 @@
 /**
  * COMBINED SOURCE FILES FROM: C:\Users\yilup\teammatch\TeamMatch
- * Generated on: 2026-05-13T22:52:34.061Z
+ * Generated on: 2026-05-23T03:57:53.205Z
  * 
  * This file contains all JavaScript files from the src directory combined into a single file.
  * Each file is clearly marked with separators and includes the original file path.
@@ -10,86 +10,87 @@
 
  * 1. src\components\teammatch\AuthScreen.tsx
  * 2. src\components\teammatch\BottomNav.tsx
- * 3. src\components\teammatch\CreateEventForm.tsx
- * 4. src\components\teammatch\CreateEventScreen.tsx
- * 5. src\components\teammatch\EventCard.tsx
- * 6. src\components\teammatch\EventDetailScreen.tsx
- * 7. src\components\teammatch\LeafletMap.tsx
- * 8. src\components\teammatch\Logo.tsx
- * 9. src\components\teammatch\MapScreen.tsx
- * 10. src\components\teammatch\MyEventsScreen.tsx
- * 11. src\components\teammatch\ProfileScreen.tsx
- * 12. src\components\teammatch\SportBadge.tsx
- * 13. src\components\teammatch\WelcomeScreen.tsx
- * 14. src\components\teammatch\data.ts
- * 15. src\components\teammatch\types-nav.ts
- * 16. src\components\teammatch\types.ts
- * 17. src\components\ui\accordion.tsx
- * 18. src\components\ui\alert-dialog.tsx
- * 19. src\components\ui\alert.tsx
- * 20. src\components\ui\aspect-ratio.tsx
- * 21. src\components\ui\avatar.tsx
- * 22. src\components\ui\badge.tsx
- * 23. src\components\ui\breadcrumb.tsx
- * 24. src\components\ui\button.tsx
- * 25. src\components\ui\calendar.tsx
- * 26. src\components\ui\card.tsx
- * 27. src\components\ui\carousel.tsx
- * 28. src\components\ui\chart.tsx
- * 29. src\components\ui\checkbox.tsx
- * 30. src\components\ui\collapsible.tsx
- * 31. src\components\ui\command.tsx
- * 32. src\components\ui\context-menu.tsx
- * 33. src\components\ui\dialog.tsx
- * 34. src\components\ui\drawer.tsx
- * 35. src\components\ui\dropdown-menu.tsx
- * 36. src\components\ui\form.tsx
- * 37. src\components\ui\hover-card.tsx
- * 38. src\components\ui\input-otp.tsx
- * 39. src\components\ui\input.tsx
- * 40. src\components\ui\label.tsx
- * 41. src\components\ui\menubar.tsx
- * 42. src\components\ui\navigation-menu.tsx
- * 43. src\components\ui\pagination.tsx
- * 44. src\components\ui\popover.tsx
- * 45. src\components\ui\progress.tsx
- * 46. src\components\ui\radio-group.tsx
- * 47. src\components\ui\resizable.tsx
- * 48. src\components\ui\scroll-area.tsx
- * 49. src\components\ui\select.tsx
- * 50. src\components\ui\separator.tsx
- * 51. src\components\ui\sheet.tsx
- * 52. src\components\ui\sidebar.tsx
- * 53. src\components\ui\skeleton.tsx
- * 54. src\components\ui\slider.tsx
- * 55. src\components\ui\sonner.tsx
- * 56. src\components\ui\switch.tsx
- * 57. src\components\ui\table.tsx
- * 58. src\components\ui\tabs.tsx
- * 59. src\components\ui\textarea.tsx
- * 60. src\components\ui\toggle-group.tsx
- * 61. src\components\ui\toggle.tsx
- * 62. src\components\ui\tooltip.tsx
- * 63. src\hooks\use-mobile.tsx
- * 64. src\lib\error-capture.ts
- * 65. src\lib\error-page.ts
- * 66. src\lib\supabase.ts
- * 67. src\lib\utils.ts
- * 68. src\routeTree.gen.ts
- * 69. src\router.tsx
- * 70. src\routes\__root.tsx
- * 71. src\routes\index.tsx
- * 72. src\server.ts
- * 73. src\start.ts
- * 74. src\vite-env.d.ts
- * 75. vite.config.ts
+ * 3. src\components\teammatch\CanchasScreen.tsx
+ * 4. src\components\teammatch\CreateEventForm.tsx
+ * 5. src\components\teammatch\EditProfileScreen.tsx
+ * 6. src\components\teammatch\EventCard.tsx
+ * 7. src\components\teammatch\EventDetailScreen.tsx
+ * 8. src\components\teammatch\LeafletMap.tsx
+ * 9. src\components\teammatch\Logo.tsx
+ * 10. src\components\teammatch\MapScreen.tsx
+ * 11. src\components\teammatch\MyEventsScreen.tsx
+ * 12. src\components\teammatch\ProfileScreen.tsx
+ * 13. src\components\teammatch\SportBadge.tsx
+ * 14. src\components\teammatch\WelcomeScreen.tsx
+ * 15. src\components\teammatch\data.ts
+ * 16. src\components\teammatch\types-nav.ts
+ * 17. src\components\teammatch\types.ts
+ * 18. src\components\ui\accordion.tsx
+ * 19. src\components\ui\alert-dialog.tsx
+ * 20. src\components\ui\alert.tsx
+ * 21. src\components\ui\aspect-ratio.tsx
+ * 22. src\components\ui\avatar.tsx
+ * 23. src\components\ui\badge.tsx
+ * 24. src\components\ui\breadcrumb.tsx
+ * 25. src\components\ui\button.tsx
+ * 26. src\components\ui\calendar.tsx
+ * 27. src\components\ui\card.tsx
+ * 28. src\components\ui\carousel.tsx
+ * 29. src\components\ui\chart.tsx
+ * 30. src\components\ui\checkbox.tsx
+ * 31. src\components\ui\collapsible.tsx
+ * 32. src\components\ui\command.tsx
+ * 33. src\components\ui\context-menu.tsx
+ * 34. src\components\ui\dialog.tsx
+ * 35. src\components\ui\drawer.tsx
+ * 36. src\components\ui\dropdown-menu.tsx
+ * 37. src\components\ui\form.tsx
+ * 38. src\components\ui\hover-card.tsx
+ * 39. src\components\ui\input-otp.tsx
+ * 40. src\components\ui\input.tsx
+ * 41. src\components\ui\label.tsx
+ * 42. src\components\ui\menubar.tsx
+ * 43. src\components\ui\navigation-menu.tsx
+ * 44. src\components\ui\pagination.tsx
+ * 45. src\components\ui\popover.tsx
+ * 46. src\components\ui\progress.tsx
+ * 47. src\components\ui\radio-group.tsx
+ * 48. src\components\ui\resizable.tsx
+ * 49. src\components\ui\scroll-area.tsx
+ * 50. src\components\ui\select.tsx
+ * 51. src\components\ui\separator.tsx
+ * 52. src\components\ui\sheet.tsx
+ * 53. src\components\ui\sidebar.tsx
+ * 54. src\components\ui\skeleton.tsx
+ * 55. src\components\ui\slider.tsx
+ * 56. src\components\ui\sonner.tsx
+ * 57. src\components\ui\switch.tsx
+ * 58. src\components\ui\table.tsx
+ * 59. src\components\ui\tabs.tsx
+ * 60. src\components\ui\textarea.tsx
+ * 61. src\components\ui\toggle-group.tsx
+ * 62. src\components\ui\toggle.tsx
+ * 63. src\components\ui\tooltip.tsx
+ * 64. src\hooks\use-mobile.tsx
+ * 65. src\lib\error-capture.ts
+ * 66. src\lib\error-page.ts
+ * 67. src\lib\supabase.ts
+ * 68. src\lib\utils.ts
+ * 69. src\routeTree.gen.ts
+ * 70. src\router.tsx
+ * 71. src\routes\__root.tsx
+ * 72. src\routes\index.tsx
+ * 73. src\server.ts
+ * 74. src\start.ts
+ * 75. src\vite-env.d.ts
+ * 76. vite.config.ts
  */
 
 
 ================================================================================
-// FILE 1 of 75
+// FILE 1 of 76
 // PATH: src\components\teammatch\AuthScreen.tsx
-// SIZE: 12569 characters
+// SIZE: 13427 characters
 ================================================================================
 
 /**
@@ -115,6 +116,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -175,7 +177,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           email: email.trim(),
           password,
           options: {
-            data: { full_name: name.trim() },
+            data: { full_name: name.trim(), is_organizer: isOrganizer },
           },
         });
         if (authError) throw authError;
@@ -245,16 +247,31 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
       <div className="[TAILWIND_CLASSES_REMOVED]">
         {/* Nombre (solo registro) */}
         {mode === "register" && (
-          <InputField
-            id="auth-name-input"
-            label="Nombre completo"
-            type="text"
-            placeholder="Ej: Diego Ramírez"
-            value={name}
-            onChange={setName}
-            icon={<User size={16} className="text-muted-foreground" />}
-            disabled={isLoading}
-          />
+          <>
+            <InputField
+              id="auth-name-input"
+              label="Nombre completo"
+              type="text"
+              placeholder="Ej: Diego Ramírez"
+              value={name}
+              onChange={setName}
+              icon={<User size={16} className="text-muted-foreground" />}
+              disabled={isLoading}
+            />
+            
+            <label className="[TAILWIND_CLASSES_REMOVED]">
+              <input
+                type="checkbox"
+                checked={isOrganizer}
+                onChange={(e) => setIsOrganizer(e.target.checked)}
+                className="[TAILWIND_CLASSES_REMOVED]"
+                disabled={isLoading}
+              />
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                Quiero registrarme como Organizador
+              </span>
+            </label>
+          </>
         )}
 
         {/* Email */}
@@ -430,9 +447,9 @@ function InputField({
 
 
 ================================================================================
-// FILE 2 of 75
+// FILE 2 of 76
 // PATH: src\components\teammatch\BottomNav.tsx
-// SIZE: 2123 characters
+// SIZE: 1463 characters
 ================================================================================
 
 /**
@@ -445,16 +462,13 @@ function InputField({
 interface Props {
   current: Screen;
   onChange: (s: Screen) => void;
-  onCreate: () => void;
 }
 
-export function BottomNav({ current, onChange, onCreate }: Props) {
+export function BottomNav({ current, onChange }: Props) {
   const items: { id: Screen; label: string; icon: typeof Map }[] = [
     { id: "map", label: "Explorar", icon: Map },
     { id: "events", label: "Eventos", icon: CalendarCheck },
-  ];
-  const right: { id: Screen; label: string; icon: typeof Map }[] = [
-    { id: "profile", label: "Perfil", icon: User },
+    { id: "profile", label: "Perfil", icon: User as any },
   ];
 
   const Btn = ({ id, label, Icon }: { id: Screen; label: string; Icon: typeof Map }) => {
@@ -482,18 +496,7 @@ export function BottomNav({ current, onChange, onCreate }: Props) {
         {items.map((it) => (
           <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
         ))}
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          <button
-            onClick={onCreate}
-            className="[TAILWIND_CLASSES_REMOVED]"
-            aria-label="Crear evento"
-          >
-            <Plus className="text-secondary" size={26} strokeWidth={3} />
-          </button>
-        </div>
-        {right.map((it) => (
-          <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
-        ))}
+
         <div className="flex-1" />
       </div>
     </nav>
@@ -507,9 +510,442 @@ export function BottomNav({ current, onChange, onCreate }: Props) {
 
 
 ================================================================================
-// FILE 3 of 75
+// FILE 3 of 76
+// PATH: src\components\teammatch\CanchasScreen.tsx
+// SIZE: 16616 characters
+================================================================================
+
+/**
+ * FILE: CanchasScreen.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+const LeafletMap = lazy(() =>
+  import("./LeafletMap").then((m) => ({ default: m.default }))
+);
+
+function MapSkeleton() {
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]" />
+        <span className="[TAILWIND_CLASSES_REMOVED]">Cargando mapa…</span>
+      </div>
+    </div>
+  );
+}
+
+const SPORTS = [
+  { id: 1, label: "Fútbol", emoji: "⚽" },
+  { id: 2, label: "Tenis", emoji: "🎾" },
+  { id: 3, label: "Golf", emoji: "⛳" },
+  { id: 4, label: "Pádel", emoji: "🏓" },
+] as const;
+
+type SportId = (typeof SPORTS)[number]["id"];
+
+export interface Cancha {
+  id: number;
+  name: string;
+  sport_id: SportId;
+  description?: string;
+  price?: number;
+  created_by?: string;
+}
+
+// ── AddCanchaForm ─────────────────────────────────────────────────────────────
+function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () => void }) {
+  const [name, setName] = useState("");
+  const [sportId, setSportId] = useState<SportId | null>(null);
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [address, setAddress] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  async function handleMapClick(lat: number, lng: number) {
+    setLatitude(lat.toString());
+    setLongitude(lng.toString());
+    setAddress("Buscando dirección...");
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      );
+      const data = await res.json();
+      if (data?.display_name) {
+        const n = data.address?.road || data.address?.suburb || data.display_name.split(",")[0];
+        setAddress(n);
+      } else {
+        setAddress(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+      }
+    } catch {
+      setAddress(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+    }
+  }
+
+  function validate() {
+    const e: Record<string, string> = {};
+    if (!name.trim()) e.name = "El nombre es obligatorio";
+    if (!sportId) e.sportId = "Selecciona un deporte";
+    if (!latitude || !longitude) e.location = "Elige la ubicación en el mapa";
+    return e;
+  }
+
+  async function handleSubmit() {
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length > 0) return;
+    setStatus("loading");
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const location = `POINT(${parseFloat(longitude)} ${parseFloat(latitude)})`;
+
+    const { error } = await supabase.from("canchas").insert({
+      name: name.trim(),
+      sport_id: sportId,
+      location,
+      description: description.trim() || null,
+      price: price ? parseFloat(price) : null,
+      created_by: user?.email,
+    });
+
+    if (error) {
+      console.error(error);
+      setErrors({ submit: error.message });
+      setStatus("error");
+    } else {
+      setStatus("success");
+      setTimeout(onSaved, 1200);
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <CheckCircle2 size={48} strokeWidth={2.5} />
+        </div>
+        <div>
+          <h2 className="[TAILWIND_CLASSES_REMOVED]">¡Cancha añadida!</h2>
+          <p className="[TAILWIND_CLASSES_REMOVED]">Ya aparece en el listado de canchas</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Header */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <button
+          onClick={onBack}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Volver"
+        >
+          <ArrowLeft size={18} className="text-secondary" />
+        </button>
+        <div>
+          <h1 className="[TAILWIND_CLASSES_REMOVED]">Añadir cancha</h1>
+          <p className="[TAILWIND_CLASSES_REMOVED]">Registra una nueva cancha deportiva</p>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Nombre */}
+        <div className="space-y-2">
+          <label className="[TAILWIND_CLASSES_REMOVED]">
+            🏟️ Nombre <span className="text-primary">*</span>
+          </label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Ej: Cancha San Bernardino"
+            className={`w-full rounded-2xl border bg-card px-4 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${
+              errors.name ? "border-destructive" : "border-border"
+            }`}
+          />
+          {errors.name && (
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              <AlertCircle size={11} /> {errors.name}
+            </p>
+          )}
+        </div>
+
+        {/* Deporte */}
+        <div className="space-y-2">
+          <label className="[TAILWIND_CLASSES_REMOVED]">
+            ⚡ Deporte <span className="text-primary">*</span>
+          </label>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {SPORTS.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => setSportId(s.id)}
+                className={`flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all active:scale-[0.97] ${
+                  sportId === s.id
+                    ? "gradient-primary border-transparent text-secondary shadow-pop"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <span className="text-xl">{s.emoji}</span>
+                {s.label}
+              </button>
+            ))}
+          </div>
+          {errors.sportId && (
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              <AlertCircle size={11} /> {errors.sportId}
+            </p>
+          )}
+        </div>
+
+        {/* Ubicación */}
+        <div className="space-y-2">
+          <label className="[TAILWIND_CLASSES_REMOVED]">
+            📍 Ubicación <span className="text-primary">*</span>
+          </label>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <MapPin size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                {address || "Toca el mapa para elegir la ubicación"}
+              </span>
+            </div>
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <Suspense fallback={<MapSkeleton />}>
+                <LeafletMap events={[]} onLocationSelect={handleMapClick} />
+              </Suspense>
+            </div>
+            {latitude && longitude && (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <CheckCircle2 size={12} className="text-emerald-600" />
+                <span className="[TAILWIND_CLASSES_REMOVED]">Ubicación seleccionada</span>
+              </div>
+            )}
+          </div>
+          {errors.location && (
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              <AlertCircle size={11} /> {errors.location}
+            </p>
+          )}
+        </div>
+
+        {/* Descripción */}
+        <div className="space-y-2">
+          <label className="[TAILWIND_CLASSES_REMOVED]">
+            📝 Descripción
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Iluminación nocturna, vestuarios, estacionamiento..."
+            rows={3}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          />
+        </div>
+
+        {/* Precio */}
+        <div className="space-y-2">
+          <label className="[TAILWIND_CLASSES_REMOVED]">
+            💰 Precio por hora (Bs.)
+          </label>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span className="[TAILWIND_CLASSES_REMOVED]">Bs.</span>
+            <input
+              type="number"
+              min={0}
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Ej: 50 (opcional)"
+              className="[TAILWIND_CLASSES_REMOVED]"
+            />
+          </div>
+        </div>
+
+        {errors.submit && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <AlertCircle size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+            <p className="[TAILWIND_CLASSES_REMOVED]">{errors.submit}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <button
+          onClick={handleSubmit}
+          disabled={status === "loading"}
+          className="[TAILWIND_CLASSES_REMOVED]"
+        >
+          {status === "loading" ? (
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              <Loader2 size={16} className="animate-spin" />
+              Guardando cancha…
+            </span>
+          ) : (
+            "Guardar cancha"
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── CanchasScreen ─────────────────────────────────────────────────────────────
+interface CanchasScreenProps {
+  onBack: () => void;
+  onSelect?: (cancha: Cancha) => void;
+  isOrganizer: boolean;
+}
+
+export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenProps) {
+  const [view, setView] = useState<"list" | "add">("list");
+  const [canchas, setCanchas] = useState<Cancha[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCanchas();
+  }, []);
+
+  async function fetchCanchas() {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("canchas")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) setCanchas(data as Cancha[]);
+    setLoading(false);
+  }
+
+  if (view === "add") {
+    return (
+      <AddCanchaForm
+        onBack={() => setView("list")}
+        onSaved={() => {
+          setView("list");
+          fetchCanchas();
+        }}
+      />
+    );
+  }
+
+  const sportLabel = (id: number) => SPORTS.find((s) => s.id === id)?.label ?? "Deporte";
+  const sportEmoji = (id: number) => SPORTS.find((s) => s.id === id)?.emoji ?? "🏟️";
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Header */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <button
+          onClick={onBack}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Volver"
+        >
+          <ArrowLeft size={18} className="text-secondary" />
+        </button>
+        <div className="flex-1">
+          <h1 className="[TAILWIND_CLASSES_REMOVED]">Canchas</h1>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            {onSelect ? "Selecciona una cancha para tu evento" : "Canchas disponibles"}
+          </p>
+        </div>
+        {isOrganizer && (
+          <button
+            onClick={() => setView("add")}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          >
+            <Plus size={14} strokeWidth={2.5} />
+            Añadir
+          </button>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {loading ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <Loader2 className="[TAILWIND_CLASSES_REMOVED]" />
+          </div>
+        ) : canchas.length === 0 ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              🏟️
+            </div>
+            <div>
+              <p className="[TAILWIND_CLASSES_REMOVED]">No hay canchas por ahora</p>
+              {isOrganizer && (
+                <p className="[TAILWIND_CLASSES_REMOVED]">
+                  Sé el primero en añadir una cancha
+                </p>
+              )}
+            </div>
+            {isOrganizer && (
+              <button
+                onClick={() => setView("add")}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                <Plus size={16} strokeWidth={2.5} />
+                Añadir primera cancha
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {canchas.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => onSelect?.(c)}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    {sportEmoji(c.sport_id)}
+                  </div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <div className="[TAILWIND_CLASSES_REMOVED]">{c.name}</div>
+                    <div className="[TAILWIND_CLASSES_REMOVED]">{sportLabel(c.sport_id)}</div>
+                    {c.price != null && c.price > 0 && (
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        Bs. {c.price}/hora
+                      </div>
+                    )}
+                  </div>
+                  <MapPin size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+                </div>
+                {c.description && (
+                  <p className="[TAILWIND_CLASSES_REMOVED]">
+                    {c.description}
+                  </p>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\CanchasScreen.tsx
+================================================================================
+
+
+================================================================================
+// FILE 4 of 76
 // PATH: src\components\teammatch\CreateEventForm.tsx
-// SIZE: 18488 characters
+// SIZE: 21365 characters
 ================================================================================
 
 /**
@@ -521,6 +957,20 @@ export function BottomNav({ current, onChange, onCreate }: Props) {
  * HOOKS: Uses React hooks for state and effects
  */
 
+const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
+
+function MapSkeleton() {
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]" />
+        <span className="[TAILWIND_CLASSES_REMOVED]">Cargando mapa…</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
   { id: 1, label: "Fútbol", emoji: "⚽" },
   { id: 2, label: "Tenis", emoji: "🎾" },
@@ -555,6 +1005,7 @@ const INITIAL_FORM = {
   time: "",
   latitude: "",
   longitude: "",
+  address: "",
   maxCapacity: "",
 };
 
@@ -567,12 +1018,45 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
   const [errors, setErrors] = useState<FieldError>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isOrganizer, setIsOrganizer] = useState(false);
+  const [selectedCancha, setSelectedCancha] = useState<Cancha | null>(null);
+  const [showCanchas, setShowCanchas] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setIsOrganizer(data.user.user_metadata?.is_organizer === true);
+      }
+    });
+  }, []);
 
   // ── Actualizar campo ──────────────────────────────────────────────────────
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
     // limpiar error individual al editar
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  }
+
+  // ── Manejar click en el mapa ──────────────────────────────────────────────
+  async function handleMapClick(lat: number, lng: number) {
+    setField("latitude", lat.toString());
+    setField("longitude", lng.toString());
+    setField("address", "Buscando dirección...");
+
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await res.json();
+      if (data && data.display_name) {
+        // Extraemos un nombre amigable: calle, barrio, o la primera parte del display_name
+        const name = data.address?.road || data.address?.suburb || data.display_name.split(',')[0];
+        setField("address", name);
+      } else {
+        setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+      }
+    } catch (e) {
+      console.error("Geocoding error:", e);
+      setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+    }
   }
 
   // ── Validación ────────────────────────────────────────────────────────────
@@ -697,9 +1181,38 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     }
   }
 
+  if (status === "success") {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <CheckCircle2 size={48} strokeWidth={2.5} />
+        </div>
+        <div className="space-y-2">
+          <h2 className="[TAILWIND_CLASSES_REMOVED]">¡Evento publicado!</h2>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            Tu partido ya está en el mapa, listo para que otros jugadores se unan.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* ── Panel de canchas (overlay) ── */}
+      {showCanchas && (
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <CanchasScreen
+            isOrganizer={isOrganizer}
+            onBack={() => setShowCanchas(false)}
+            onSelect={(cancha) => {
+              setSelectedCancha(cancha);
+              setShowCanchas(false);
+            }}
+          />
+        </div>
+      )}
       {/* ── Header ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <button
@@ -811,64 +1324,67 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
 
         {/* Ubicación */}
         <FormSection
-          title="Ubicación (coordenadas)"
+          title="Ubicación"
           icon={<MapPin size={13} />}
           error={errors.latitude || errors.longitude}
           required
         >
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            {/* Indicador visual de mapa */}
             <div className="[TAILWIND_CLASSES_REMOVED]">
-              <MapPin size={16} className="text-primary" />
+              <MapPin size={16} className="[TAILWIND_CLASSES_REMOVED]" />
               <span className="[TAILWIND_CLASSES_REMOVED]">
-                Ingresa las coordenadas del lugar
+                {form.address || "Toca el mapa para elegir el lugar"}
               </span>
             </div>
+            
+            {/* Mapa Leaflet interactivo */}
             <div className="[TAILWIND_CLASSES_REMOVED]">
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                <label
-                  htmlFor="event-latitude-input"
-                  className="[TAILWIND_CLASSES_REMOVED]"
-                >
-                  Latitud
-                </label>
-                <input
-                  id="event-latitude-input"
-                  type="number"
-                  step="any"
-                  placeholder="10.4880"
-                  value={form.latitude}
-                  onChange={(e) => setField("latitude", e.target.value)}
-                  className="[TAILWIND_CLASSES_REMOVED]"
+              <Suspense fallback={<MapSkeleton />}>
+                <LeafletMap 
+                  events={[]} 
+                  onLocationSelect={handleMapClick}
                 />
-              </div>
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                <label
-                  htmlFor="event-longitude-input"
-                  className="[TAILWIND_CLASSES_REMOVED]"
-                >
-                  Longitud
-                </label>
-                <input
-                  id="event-longitude-input"
-                  type="number"
-                  step="any"
-                  placeholder="-66.8792"
-                  value={form.longitude}
-                  onChange={(e) => setField("longitude", e.target.value)}
-                  className="[TAILWIND_CLASSES_REMOVED]"
-                />
-              </div>
+              </Suspense>
             </div>
+
             {(form.latitude || form.longitude) && !errors.latitude && !errors.longitude && (
               <div className="[TAILWIND_CLASSES_REMOVED]">
                 <CheckCircle2 size={12} className="text-emerald-600" />
                 <span className="[TAILWIND_CLASSES_REMOVED]">
-                  Guardará como: POINT({form.longitude || "..."} {form.latitude || "..."})
+                  Guardará como: POINT({parseFloat(form.longitude).toFixed(4)} {parseFloat(form.latitude).toFixed(4)})
                 </span>
               </div>
             )}
           </div>
+        </FormSection>
+
+        {/* Cancha (opcional) */}
+        <FormSection title="Cancha" icon={<Trophy size={13} />}>
+          <button
+            id="select-cancha-btn"
+            type="button"
+            onClick={() => setShowCanchas(true)}
+            className={`w-full flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-sm font-semibold transition-all active:scale-[0.97] ${
+              selectedCancha
+                ? "border-primary/40 bg-primary/5 text-secondary"
+                : "border-border bg-card text-muted-foreground hover:border-primary/40"
+            }`}
+          >
+            <Trophy size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              {selectedCancha ? selectedCancha.name : "Seleccionar cancha (opcional)"}
+            </span>
+            {selectedCancha && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setSelectedCancha(null); }}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                ✕
+              </button>
+            )}
+            <ChevronRight size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+          </button>
         </FormSection>
 
         {/* Capacidad máxima (opcional) */}
@@ -931,28 +1447,21 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         <button
           id="publish-event-btn"
           onClick={handleSubmit}
-          disabled={status === "loading" || status === "success"}
+          disabled={status === "loading"}
           className={`w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${
-            status === "success"
-              ? "bg-emerald-500 text-white"
-              : status === "loading"
-                ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
-                : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
+            status === "loading"
+              ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
+              : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
           }`}
         >
-          {status === "loading" && (
+          {status === "loading" ? (
             <span className="[TAILWIND_CLASSES_REMOVED]">
               <Loader2 size={16} className="animate-spin" />
               Publicando evento…
             </span>
+          ) : (
+            "Publicar evento"
           )}
-          {status === "success" && (
-            <span className="[TAILWIND_CLASSES_REMOVED]">
-              <CheckCircle2 size={16} />
-              ¡Evento publicado!
-            </span>
-          )}
-          {(status === "idle" || status === "error") && "Publicar evento"}
         </button>
       </div>
     </div>
@@ -998,13 +1507,13 @@ function FormSection({
 
 
 ================================================================================
-// FILE 4 of 75
-// PATH: src\components\teammatch\CreateEventScreen.tsx
-// SIZE: 5239 characters
+// FILE 5 of 76
+// PATH: src\components\teammatch\EditProfileScreen.tsx
+// SIZE: 7077 characters
 ================================================================================
 
 /**
- * FILE: CreateEventScreen.tsx
+ * FILE: EditProfileScreen.tsx
  * DIRECTORY: teammatch
  * 
  * PURPOSE: This file is located in teammatch directory.
@@ -1012,157 +1521,206 @@ function FormSection({
  * HOOKS: Uses React hooks for state and effects
  */
 
-const sports = ["Running", "Senderismo", "Pádel", "Vóleibol", "Tenis"];
-const levels = ["Principiante", "Intermedio", "Avanzado"];
+interface Props {
+  onBack: () => void;
+}
 
-export function CreateEventScreen({ onClose }: { onClose: () => void }) {
-  const [sport, setSport] = useState("Running");
-  const [level, setLevel] = useState("Intermedio");
+export function EditProfileScreen({ onBack }: Props) {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUser(user);
+        setName(user.user_metadata?.full_name || user.email?.split('@')[0] || "");
+        setEmail(user.email || "");
+        setAvatarUrl(user.user_metadata?.avatar_url || null);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setUploadingImage(true);
+      setError("");
+
+      if (!e.target.files || e.target.files.length === 0) {
+        throw new Error('Debes seleccionar una imagen.');
+      }
+
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      
+      setAvatarUrl(data.publicUrl);
+    } catch (error: any) {
+      setError(error.message || 'Error al subir la imagen');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      // Update metadata (name and avatar)
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { full_name: name, avatar_url: avatarUrl },
+        // If email is different, we also update it, but it sends a confirmation email.
+        ...(email !== user.email && { email })
+      });
+
+      if (updateError) throw updateError;
+      
+      setSuccess("Perfil actualizado correctamente");
+      setTimeout(() => {
+        onBack();
+      }, 1500);
+    } catch (err: any) {
+      setError(err.message || "Error al actualizar el perfil");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <Loader2 className="[TAILWIND_CLASSES_REMOVED]" />
+      </div>
+    );
+  }
 
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
-      <div className="[TAILWIND_CLASSES_REMOVED]">
+      <header className="[TAILWIND_CLASSES_REMOVED]">
         <button
-          onClick={onClose}
+          onClick={onBack}
           className="[TAILWIND_CLASSES_REMOVED]"
         >
-          <ArrowLeft size={18} className="text-secondary" />
+          <ArrowLeft size={20} className="text-secondary" />
         </button>
-        <h1 className="[TAILWIND_CLASSES_REMOVED]">Nuevo evento</h1>
-      </div>
+        <h1 className="[TAILWIND_CLASSES_REMOVED]">Editar Perfil</h1>
+      </header>
 
-      <div className="[TAILWIND_CLASSES_REMOVED]">
-        {/* Sport */}
-        <Section title="Deporte">
+      <form onSubmit={handleSave} className="[TAILWIND_CLASSES_REMOVED]">
+        {error && (
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            {sports.map((s) => (
-              <button
-                key={s}
-                onClick={() => setSport(s)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold transition-all ${
-                  sport === s
-                    ? "gradient-primary text-secondary shadow-pop"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
+            {error}
           </div>
-        </Section>
-
-        {/* Title */}
-        <Section title="Nombre del evento">
-          <input
-            defaultValue="Pickup amistoso"
-            className="[TAILWIND_CLASSES_REMOVED]"
-          />
-        </Section>
-
-        {/* Location with mini map */}
-        <Section title="Ubicación">
+        )}
+        {success && (
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            <div className="[TAILWIND_CLASSES_REMOVED]">
-              <img src={mapImg} alt="Ubicación" className="[TAILWIND_CLASSES_REMOVED]" />
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                <div className="[TAILWIND_CLASSES_REMOVED]">
-                  <MapPin size={18} className="text-secondary" />
-                </div>
-              </div>
-            </div>
-            <div className="[TAILWIND_CLASSES_REMOVED]">
-              <MapPin size={14} className="text-primary" />
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                Cancha El Bosque, Chacao
-              </div>
-            </div>
+            {success}
           </div>
-        </Section>
+        )}
 
-        {/* Date / Time */}
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          <Field icon={Calendar} label="Fecha" value="Sáb, 10 May" />
-          <Field icon={Clock} label="Hora" value="18:00" />
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Avatar" className="[TAILWIND_CLASSES_REMOVED]" />
+            ) : (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                {(name || "U").substring(0, 2).toUpperCase()}
+              </div>
+            )}
+            <label className="[TAILWIND_CLASSES_REMOVED]">
+              {uploadingImage ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
+              <input 
+                type="file" 
+                className="hidden" 
+                accept="image/*" 
+                onChange={handleImageUpload} 
+                disabled={uploadingImage}
+              />
+            </label>
+          </div>
+          <p className="[TAILWIND_CLASSES_REMOVED]">Foto de perfil</p>
         </div>
 
-        {/* Spots / Price */}
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          <Field icon={Users} label="Cupos" value="14 jugadores" />
-          <Field icon={DollarSign} label="Aporte" value="$8 USD" />
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="[TAILWIND_CLASSES_REMOVED]">Nombre completo</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+              placeholder="Tu nombre"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="[TAILWIND_CLASSES_REMOVED]">Correo electrónico</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+              placeholder="tu@email.com"
+              required
+            />
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              Al cambiar el correo electrónico, se enviará un mensaje de confirmación.
+            </p>
+          </div>
         </div>
 
-        {/* Level */}
-        <Section title="Nivel">
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            {levels.map((l) => (
-              <button
-                key={l}
-                onClick={() => setLevel(l)}
-                className={`rounded-xl py-2.5 text-xs font-semibold transition-all ${
-                  level === l
-                    ? "bg-secondary text-primary-foreground"
-                    : "bg-muted text-muted-foreground"
-                }`}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-        </Section>
-      </div>
-
-      <div className="[TAILWIND_CLASSES_REMOVED]">
         <button
-          onClick={onClose}
+          type="submit"
+          disabled={saving}
           className="[TAILWIND_CLASSES_REMOVED]"
         >
-          Publicar evento
+          {saving ? (
+            <Loader2 size={18} className="animate-spin" />
+          ) : (
+            <>
+              <Save size={18} />
+              Guardar Cambios
+            </>
+          )}
         </button>
-      </div>
-    </div>
-  );
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <label className="[TAILWIND_CLASSES_REMOVED]">
-        {title}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-function Field({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof MapPin;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="[TAILWIND_CLASSES_REMOVED]">
-      <div className="[TAILWIND_CLASSES_REMOVED]">
-        <Icon size={12} /> {label}
-      </div>
-      <div className="[TAILWIND_CLASSES_REMOVED]">{value}</div>
+      </form>
     </div>
   );
 }
 
 
 ================================================================================
-// END OF FILE: src\components\teammatch\CreateEventScreen.tsx
+// END OF FILE: src\components\teammatch\EditProfileScreen.tsx
 ================================================================================
 
 
 ================================================================================
-// FILE 5 of 75
+// FILE 6 of 76
 // PATH: src\components\teammatch\EventCard.tsx
-// SIZE: 2774 characters
+// SIZE: 5270 characters
 ================================================================================
 
 /**
@@ -1170,6 +1728,8 @@ function Field({
  * DIRECTORY: teammatch
  * 
  * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
  */
 
 export function EventCard({
@@ -1181,7 +1741,47 @@ export function EventCard({
   onClick?: () => void;
   variant?: "full" | "compact";
 }) {
+  const [joining, setJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(false);
   const pct = (event.joined / event.spots) * 100;
+  const isFull = event.joined >= event.spots;
+
+  async function handleJoin(e: React.MouseEvent) {
+    e.stopPropagation(); // Evitar click en la card
+    
+    if (isFull || hasJoined) return;
+
+    // Obtener sesión actual (opcional pero buena práctica)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast.error("Inicia sesión", { description: "Debes iniciar sesión para unirte." });
+      return;
+    }
+
+    setJoining(true);
+
+    try {
+      const { error } = await supabase
+        .from("events")
+        .update({ joined: event.joined + 1 })
+        .eq("id", event.id);
+
+      if (error) throw error;
+
+      setHasJoined(true);
+      toast.success("¡Estás dentro!", {
+        description: "Te has unido al evento exitosamente.",
+        icon: "🎉",
+      });
+    } catch (err: any) {
+      console.error("Error al unirse:", err);
+      toast.error("Error al unirse", {
+        description: err.message || "No pudimos procesar tu solicitud.",
+      });
+    } finally {
+      setJoining(false);
+    }
+  }
   return (
     <button
       onClick={onClick}
@@ -1235,6 +1835,34 @@ export function EventCard({
                 <Users size={12} /> {event.joined}/{event.spots}
               </span>
             </div>
+
+            <button
+              onClick={handleJoin}
+              disabled={isFull || hasJoined || joining}
+              className={`mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 ${
+                hasJoined
+                  ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
+                  : isFull
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : joining
+                      ? "bg-secondary text-primary-foreground opacity-70 cursor-wait"
+                      : "bg-secondary text-primary-foreground shadow-pop hover:bg-secondary/90"
+              }`}
+            >
+              {joining ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" /> Cargando...
+                </>
+              ) : hasJoined ? (
+                <>
+                  <CheckCircle2 size={14} /> ¡Estás dentro!
+                </>
+              ) : isFull ? (
+                "Evento lleno"
+              ) : (
+                "Unirse al evento"
+              )}
+            </button>
           </>
         )}
       </div>
@@ -1249,9 +1877,9 @@ export function EventCard({
 
 
 ================================================================================
-// FILE 6 of 75
+// FILE 7 of 76
 // PATH: src\components\teammatch\EventDetailScreen.tsx
-// SIZE: 5706 characters
+// SIZE: 12375 characters
 ================================================================================
 
 /**
@@ -1259,13 +1887,93 @@ export function EventCard({
  * DIRECTORY: teammatch
  * 
  * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
  */
 
 export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack: () => void }) {
-  const players = Array.from({ length: event.joined }).map((_, i) => ({
-    initials: ["JM", "LP", "CG", "RF", "DV", "AS", "MN", "TC", "EP", "GH", "BR"][i] ?? "??",
-  }));
-  const empty = event.spots - event.joined;
+  const [participants, setParticipants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [joining, setJoining] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
+    fetchParticipants();
+    
+    // Suscripción a cambios en tiempo real
+    const channel = supabase
+      .channel(`participants_${event.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "event_participants", filter: `event_id=eq.${event.id}` },
+        () => fetchParticipants()
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [event.id]);
+
+  async function fetchParticipants() {
+    setLoading(true);
+    // Asumimos que la tabla event_participants tiene una columna 'status' (pending, approved, rejected)
+    const { data, error } = await supabase
+      .from("event_participants")
+      .select("*, profiles(username, rating)")
+      .eq("event_id", event.id);
+    
+    if (!error && data) {
+      setParticipants(data);
+    }
+    setLoading(false);
+  }
+
+  async function handleJoin() {
+    if (!currentUser || !currentUser.email) return alert("Debes iniciar sesión");
+    setJoining(true);
+    
+    // Insertamos solicitud con status 'pending'
+    const { error } = await supabase.from("event_participants").insert({
+      event_id: event.id,
+      user_username: currentUser.email,
+      status: "pendiente" // Adaptado a tu enum request_status
+    });
+
+    if (error) {
+      console.error("Error al unirse:", error);
+      if (error.code === '23505') alert("Ya enviaste una solicitud");
+      else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
+    } else {
+      alert("Solicitud enviada al organizador");
+      fetchParticipants();
+    }
+    setJoining(false);
+  }
+
+  async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
+    setActionLoading(participantId.toString());
+    const { error } = await supabase
+      .from("event_participants")
+      .update({ status })
+      .eq("id", participantId);
+    
+    if (!error) {
+      // Simular la notificación al usuario
+      alert(`Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
+      fetchParticipants();
+    } else {
+      alert("Error al actualizar la solicitud");
+    }
+    setActionLoading(null);
+  }
+
+  const approvedPlayers = participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status); // Fallback si status no existe
+  const pendingRequests = participants.filter(p => p.status === "pending" || p.status === "pendiente");
+  const emptySpots = Math.max(0, event.spots - approvedPlayers.length);
+
+  const isUserPending = participants.some(p => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
+  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
 
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
@@ -1317,7 +2025,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
           <InfoTile icon={Calendar} label="Fecha" value={event.date} />
           <InfoTile icon={Clock} label="Hora" value={event.time} />
           <InfoTile icon={MapPin} label="Lugar" value={event.location} />
-          <InfoTile icon={Users} label="Cupos" value={`${event.joined}/${event.spots}`} />
+          <InfoTile icon={Users} label="Cupos" value={`${approvedPlayers.length}/${event.spots}`} />
         </div>
 
         {/* Description */}
@@ -1329,29 +2037,85 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
           </p>
         </div>
 
+        {/* Pending Requests (Mocked as Organizer) */}
+        {pendingRequests.length > 0 && (
+          <div>
+            <h3 className="[TAILWIND_CLASSES_REMOVED]">
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                {pendingRequests.length}
+              </span>
+              Solicitudes pendientes
+            </h3>
+            <div className="space-y-2">
+              {pendingRequests.map(req => (
+                <div key={req.id} className="[TAILWIND_CLASSES_REMOVED]">
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <div className="[TAILWIND_CLASSES_REMOVED]">
+                      {(req.user_username || "U").substring(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        {req.user_username?.split('@')[0] || "Usuario"}
+                      </div>
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        <Star size={10} className="[TAILWIND_CLASSES_REMOVED]" />
+                        {req.profiles?.rating || "5.00"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <button 
+                      disabled={actionLoading === req.id.toString()}
+                      onClick={() => handleAction(req.id, "rejected")}
+                      onClick={() => handleAction(req.id, "rechazado")}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                    >
+                      <X size={16} strokeWidth={2.5} />
+                    </button>
+                    <button 
+                      disabled={actionLoading === req.id.toString()}
+                      onClick={() => handleAction(req.id, "aceptado")}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                    >
+                      {actionLoading === req.id.toString() ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} strokeWidth={2.5} />}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Players */}
         <div>
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            <h3 className="[TAILWIND_CLASSES_REMOVED]">Jugadores</h3>
-            <span className="[TAILWIND_CLASSES_REMOVED]">{empty} cupos disponibles</span>
+            <h3 className="[TAILWIND_CLASSES_REMOVED]">Jugadores aprobados</h3>
+            <span className="[TAILWIND_CLASSES_REMOVED]">{emptySpots} cupos disponibles</span>
           </div>
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            {players.map((p, i) => (
-              <div
-                key={i}
-                className="[TAILWIND_CLASSES_REMOVED]"
-              >
-                {p.initials}
-              </div>
-            ))}
-            {Array.from({ length: empty }).map((_, i) => (
-              <div
-                key={`e-${i}`}
-                className="[TAILWIND_CLASSES_REMOVED]"
-              >
-                +
-              </div>
-            ))}
+            {loading ? (
+              <div className="[TAILWIND_CLASSES_REMOVED]">Cargando jugadores...</div>
+            ) : (
+              <>
+                {approvedPlayers.map((p, i) => (
+                  <div
+                    key={p.id || i}
+                    title={p.user_username}
+                    className="[TAILWIND_CLASSES_REMOVED]"
+                  >
+                    {(p.user_username || "U").substring(0, 2).toUpperCase()}
+                  </div>
+                ))}
+                {Array.from({ length: emptySpots }).map((_, i) => (
+                  <div
+                    key={`e-${i}`}
+                    className="[TAILWIND_CLASSES_REMOVED]"
+                  >
+                    +
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -1365,8 +2129,12 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
               {event.price === 0 ? "Gratis" : `$${event.price} USD`}
             </div>
           </div>
-          <button className="[TAILWIND_CLASSES_REMOVED]">
-            Solicitar unirme
+          <button 
+            disabled={joining || emptySpots === 0 || isUserPending || isUserApproved}
+            onClick={handleJoin}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          >
+            {joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Solicitud enviada" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"}
           </button>
         </div>
       </div>
@@ -1401,9 +2169,9 @@ function InfoTile({
 
 
 ================================================================================
-// FILE 7 of 75
+// FILE 8 of 76
 // PATH: src\components\teammatch\LeafletMap.tsx
-// SIZE: 2959 characters
+// SIZE: 4912 characters
 ================================================================================
 
 /**
@@ -1416,59 +2184,98 @@ function InfoTile({
  * HOOKS: Uses React hooks for state and effects
  */
 
-function buildIcon(event: SportEvent, isSelected: boolean) {
-  const emoji =
-    event.sport === "Running"
-      ? "🏃"
-      : event.sport === "Senderismo"
-        ? "🥾"
-        : event.sport === "Pádel"
-          ? "🎾"
-          : "🏐";
+function MapFlyTo({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap();
+  useEffect(() => {
+    if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
+      map.flyTo([lat, lng], 15, { animate: true, duration: 0.8 });
+    }
+  }, [lat, lng, map]);
+  return null;
+}
+
+// ── Marcador temporal para selección de ubicación ──────────────────────────────
+function LocationMarker({ onSelect }: { onSelect: (lat: number, lng: number) => void }) {
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+
+  useMapEvents({
+    click(e) {
+      setPosition(e.latlng);
+      if (onSelect) onSelect(e.latlng.lat, e.latlng.lng);
+    },
+  });
+
+  if (!position) return null;
+  // Bloqueo estricto de SSR para Leaflet globals
+  if (typeof window === "undefined" || !(window as any).L) return null;
 
   const html = renderToStaticMarkup(
-    <div
-      className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
-        isSelected
-          ? "gradient-primary scale-110 ring-background shadow-pop"
-          : "bg-secondary ring-card/80"
-      }`}
-    >
-      <span className="text-lg">{emoji}</span>
-      <div
-        className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
-          isSelected ? "bg-primary" : "bg-secondary"
-        }`}
-      />
-    </div>,
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      <span className="text-lg">📍</span>
+      <div className="[TAILWIND_CLASSES_REMOVED]" />
+    </div>
   );
 
-  return L.divIcon({
+  const L = (window as any).L;
+  const redIcon = L.divIcon({
     className: "custom-leaflet-icon bg-transparent border-none",
     html,
     iconSize: [44, 44],
     iconAnchor: [22, 44],
   });
-}
 
-// ── Sincroniza el centro del mapa con el evento seleccionado ──────────────────
-function MapFlyTo({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo([lat, lng], map.getZoom(), { animate: true, duration: 0.6 });
-  }, [lat, lng, map]);
-  return null;
+  return (
+    <Marker position={position} icon={redIcon}>
+      <Popup>Ubicación seleccionada</Popup>
+    </Marker>
+  );
 }
 
 // ── Componente exportado: el mapa Leaflet real ────────────────────────────────
-interface LeafletMapProps {
-  events: SportEvent[];
-  selectedId: number;
-  onSelect: (id: number) => void;
-}
+export default function LeafletMap({ events = [], selectedId, onSelect, onLocationSelect }: any) {
+  // BLOQUEO ABSOLUTO DE SSR
+  if (typeof window === "undefined") return null;
 
-export default function LeafletMap({ events, selectedId, onSelect }: LeafletMapProps) {
-  const selected = events.find((e) => e.id === selectedId) ?? events[0];
+  const selected = events.length > 0 ? (events.find((e: any) => e.id === selectedId) ?? events[0]) : null;
+
+  // buildIcon se mueve dentro para asegurar que no se evalúa al cargar el módulo
+  function buildIcon(event: any, isSelected: boolean) {
+    if (typeof window === "undefined" || !(window as any).L) return null;
+
+    const emoji =
+      event.sport === "Running"
+        ? "🏃"
+        : event.sport === "Senderismo"
+          ? "🥾"
+          : event.sport === "Pádel"
+            ? "🎾"
+            : "🏐";
+
+    const html = renderToStaticMarkup(
+      <div
+        className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
+          isSelected
+            ? "gradient-primary scale-110 ring-background shadow-pop"
+            : "bg-secondary ring-card/80"
+        }`}
+      >
+        <span className="text-lg">{emoji}</span>
+        <div
+          className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
+            isSelected ? "bg-primary" : "bg-secondary"
+          }`}
+        />
+      </div>
+    );
+
+    const L = (window as any).L;
+    return L.divIcon({
+      className: "custom-leaflet-icon bg-transparent border-none",
+      html,
+      iconSize: [44, 44],
+      iconAnchor: [22, 44],
+    });
+  }
 
   return (
     <MapContainer
@@ -1482,17 +2289,36 @@ export default function LeafletMap({ events, selectedId, onSelect }: LeafletMapP
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
+      {/* Marcador de selección de ubicación */}
+      {onLocationSelect && <LocationMarker onSelect={onLocationSelect} />}
+
       {/* Vuela suavemente al marcador seleccionado */}
       {selected && <MapFlyTo lat={selected.lat} lng={selected.lng} />}
 
-      {events.map((e) => (
-        <Marker
-          key={e.id}
-          position={[e.lat, e.lng]}
-          icon={buildIcon(e, e.id === selectedId)}
-          eventHandlers={{ click: () => onSelect(e.id) }}
-        />
-      ))}
+      {events.map((e: any) => {
+        if (typeof e.lat !== "number" || typeof e.lng !== "number" || isNaN(e.lat) || isNaN(e.lng)) return null;
+
+        const icon = buildIcon(e, e.id === selectedId);
+        if (!icon) return null;
+
+        return (
+          <Marker
+            key={e.id}
+            position={[e.lat, e.lng]}
+            icon={icon}
+            eventHandlers={{
+              click: () => {
+                if (onSelect) onSelect(e.id);
+              },
+            }}
+          >
+            <Popup>
+              <div className="[TAILWIND_CLASSES_REMOVED]">{e.title}</div>
+              <div className="[TAILWIND_CLASSES_REMOVED]">{e.sport || e.sport_id}</div>
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }
@@ -1504,7 +2330,7 @@ export default function LeafletMap({ events, selectedId, onSelect }: LeafletMapP
 
 
 ================================================================================
-// FILE 8 of 75
+// FILE 9 of 76
 // PATH: src\components\teammatch\Logo.tsx
 // SIZE: 597 characters
 ================================================================================
@@ -1539,9 +2365,9 @@ export function Logo({ size = 28 }: { size?: number }) {
 
 
 ================================================================================
-// FILE 9 of 75
+// FILE 10 of 76
 // PATH: src\components\teammatch\MapScreen.tsx
-// SIZE: 5822 characters
+// SIZE: 10460 characters
 ================================================================================
 
 /**
@@ -1553,7 +2379,7 @@ export function Logo({ size = 28 }: { size?: number }) {
  * HOOKS: Uses React hooks for state and effects
  */
 
-const LeafletMap = lazy(() => import("./LeafletMap"));
+const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
 
 // ── Esqueleto mientras carga el mapa ─────────────────────────────────────────
 function MapSkeleton() {
@@ -1573,10 +2399,118 @@ function MapSkeleton() {
 const sports = ["Todos", "Running", "Senderismo", "Pádel", "Vóleibol"] as const;
 
 // ── Componente principal ──────────────────────────────────────────────────────
-export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
-  const [active, setActive] = useState<(typeof sports)[number]>("Todos");
-  const [selectedId, setSelectedId] = useState(events[0].id);
+export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
+  const [active, setActive] = useState<string>("Todos");
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedId, setSelectedId] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const fetchEvents = useCallback(async () => {
+    const { data, error } = await supabase.from("events").select("*").order("created_at", { ascending: false });
+    if (error) {
+      console.error("Error fetching events:", error);
+      return;
+    }
+    
+    if (data) {
+      const processed = data.map((row: any) => {
+        let lat = 0;
+        let lng = 0;
+        if (row.location) {
+          if (typeof row.location === "string") {
+            if (row.location.toUpperCase().includes("POINT")) {
+              // Limpiamos la cadena WKT y hacemos split por espacio
+              const cleaned = row.location.toUpperCase().replace("POINT", "").replace("(", "").replace(")", "").trim();
+              const coords = cleaned.split(/\s+/);
+              if (coords.length >= 2) {
+                lng = parseFloat(coords[0]); // Longitud
+                lat = parseFloat(coords[1]); // Latitud
+              }
+            } else if (/^[0-9A-Fa-f]+$/.test(row.location) && row.location.length >= 50) {
+              // Supabase / PostGIS devuelve un WKB Hex String nativo
+              // Ej: 0101000020E6100000 + 8 bytes X + 8 bytes Y
+              try {
+                const hex = row.location;
+                const buffer = new Uint8Array(hex.match(/../g)!.map((h: string) => parseInt(h, 16))).buffer;
+                const view = new DataView(buffer);
+                lng = view.getFloat64(9, true); // true para Little Endian
+                lat = view.getFloat64(17, true);
+              } catch (err) {
+                console.error("Error decodificando WKB Hex de PostGIS:", err);
+              }
+            }
+
+            // Parche inteligente: Si lat y lng están invertidos en la DB vieja
+            // (por ej: lat = -66.87, lng = 10.49 en lugar de lat = 10.49, lng = -66.87)
+            // como sabemos que Caracas está en Lat 10, Lng -66, los intercambiamos.
+            if (lat < -20 && lng > 0) {
+              const temp = lat;
+              lat = lng;
+              lng = temp;
+            }
+          } else if (typeof row.location === "object" && row.location.type === "Point") {
+            lng = row.location.coordinates[0];
+            lat = row.location.coordinates[1];
+          }
+        }
+
+        // Fallbacks básicos para que la UI no se rompa (EventCard, iconos)
+        const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+
+        return {
+          ...row,
+          lat,
+          lng,
+          sport: sportName,
+          title: row.title || `Evento de ${sportName}`,
+          hostName: row.creator_username || "Usuario",
+          hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
+          time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
+          date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
+          image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+          distanceKm: 2.5,
+          joined: row.joined ?? 1,
+          spots: row.max_capacity || 10,
+          price: 0,
+          zone: "Caracas",
+        };
+      });
+      
+      console.log('Eventos cargados:', processed);
+      setEvents(processed);
+      if (processed.length > 0) setSelectedId(processed[0].id);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEvents();
+
+    // ── Supabase Realtime: Escuchar nuevos eventos ─────────────────────────
+    const channel = supabase
+      .channel("public:events")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "events" },
+        (payload) => {
+          console.log("¡Nuevo evento en tiempo real detectado!", payload);
+          // Refrescamos la lista para todos
+          fetchEvents();
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "events" },
+        (payload) => {
+          console.log("¡Evento actualizado en tiempo real detectado!", payload);
+          fetchEvents();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchEvents]);
 
   const filtered = active === "Todos" ? events : events.filter((e) => e.sport === active);
 
@@ -1673,7 +2607,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
         <div className="[TAILWIND_CLASSES_REMOVED]">
           <CreateEventForm
             onClose={() => setShowCreateForm(false)}
-            onEventCreated={() => setShowCreateForm(false)}
+            onEventCreated={fetchEvents}
           />
         </div>
       )}
@@ -1688,9 +2622,9 @@ export function MapScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
 
 
 ================================================================================
-// FILE 10 of 75
+// FILE 11 of 76
 // PATH: src\components\teammatch\MyEventsScreen.tsx
-// SIZE: 2665 characters
+// SIZE: 8667 characters
 ================================================================================
 
 /**
@@ -1706,6 +2640,94 @@ const tabs = ["Próximos", "Solicitudes", "Historial"] as const;
 
 export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
   const [tab, setTab] = useState<(typeof tabs)[number]>("Próximos");
+  const [pendingRequests, setPendingRequests] = useState<any[]>([]);
+  const [createdEvents, setCreatedEvents] = useState<any[]>([]);
+  const [joinedEvents, setJoinedEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  const formatEvent = (row: any) => {
+    if (!row) return null;
+    const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+    return {
+      ...row,
+      sport: sportName,
+      title: row.title || `Evento de ${sportName}`,
+      hostName: row.creator_username || "Usuario",
+      hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
+      time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
+      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
+      image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+      distanceKm: 2.5,
+      joined: row.joined ?? 1,
+      spots: row.max_capacity || 10,
+      price: 0,
+      zone: "Caracas",
+    };
+  };
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUser(data.user);
+      if (data.user) {
+        fetchRequests(data.user.email);
+        fetchCreated(data.user.email);
+        fetchJoined(data.user.email);
+      }
+    });
+  }, []);
+
+  async function fetchCreated(email: string | undefined) {
+    if (!email) return;
+    const { data } = await supabase.from("events").select("*").eq("creator_username", email).order("created_at", { ascending: false });
+    if (data) setCreatedEvents(data.map(formatEvent).filter(Boolean));
+  }
+
+  async function fetchJoined(email: string | undefined) {
+    if (!email) return;
+    const { data } = await supabase.from("event_participants").select("events(*)").eq("user_username", email);
+    if (data) setJoinedEvents(data.map((d: any) => formatEvent(d.events)).filter(Boolean));
+  }
+
+  async function fetchRequests(email: string | undefined) {
+    if (!email) return;
+    setLoading(true);
+    // Fetch pending requests for events owned by the user
+    const { data, error } = await supabase
+      .from("event_participants")
+      .select(`
+        id, 
+        user_username, 
+        status,
+        events!inner(id, creator_username, sport_id),
+        profiles(is_premium, rating)
+      `)
+      .eq("status", "pendiente")
+      .eq("events.creator_username", email);
+      
+    if (!error && data) {
+      setPendingRequests(data);
+    }
+    setLoading(false);
+  }
+
+  async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
+    setActionLoading(participantId.toString());
+    const { error } = await supabase
+      .from("event_participants")
+      .update({ status })
+      .eq("id", participantId);
+      
+    if (!error) {
+      setPendingRequests(prev => prev.filter(r => r.id !== participantId));
+    } else {
+      console.error(error);
+      alert("Error al procesar la solicitud: " + error.message);
+    }
+    setActionLoading(null);
+  }
+
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
       <header className="[TAILWIND_CLASSES_REMOVED]">
@@ -1715,49 +2737,89 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          {tabs.map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${
-                tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+          {tabs.map((t) => {
+            return (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${
+                  tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
+                }`}
+              >
+                {t}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {tab === "Solicitudes" ? (
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          {[events[0], events[2]].map((e) => (
-            <div key={e.id} className="[TAILWIND_CLASSES_REMOVED]">
-              <div className="[TAILWIND_CLASSES_REMOVED]">
+          {loading ? (
+            <div className="[TAILWIND_CLASSES_REMOVED]"><Loader2 className="[TAILWIND_CLASSES_REMOVED]" /></div>
+          ) : pendingRequests.length === 0 ? (
+            <div className="[TAILWIND_CLASSES_REMOVED]">No tienes solicitudes pendientes nuevas</div>
+          ) : (
+            pendingRequests.map((req) => {
+              const isPremium = req.profiles?.is_premium;
+              const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
+              
+              return (
+              <div key={req.id} className="[TAILWIND_CLASSES_REMOVED]">
                 <div className="[TAILWIND_CLASSES_REMOVED]">
-                  JM
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    {(req.user_username || "U").substring(0, 2).toUpperCase()}
+                  </div>
+                  <div className="flex-1">
+                    <div className="[TAILWIND_CLASSES_REMOVED]">
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        {req.user_username?.split('@')[0] || "Usuario"}
+                      </div>
+                      {isPremium ? (
+                        <span className="[TAILWIND_CLASSES_REMOVED]">
+                          <Star size={8} className="fill-amber-500" /> Premium
+                        </span>
+                      ) : (
+                        <span className="[TAILWIND_CLASSES_REMOVED]">
+                          Básica
+                        </span>
+                      )}
+                    </div>
+                    <div className="[TAILWIND_CLASSES_REMOVED]">quiere unirse a tu partido de {sportName}</div>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <div className="[TAILWIND_CLASSES_REMOVED]">Juan Martínez</div>
-                  <div className="[TAILWIND_CLASSES_REMOVED]">quiere unirse a {e.title}</div>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <button 
+                    disabled={actionLoading === req.id.toString()}
+                    onClick={() => handleAction(req.id, "rechazado")}
+                    className="[TAILWIND_CLASSES_REMOVED]"
+                  >
+                    Rechazar
+                  </button>
+                  <button 
+                    disabled={actionLoading === req.id.toString()}
+                    onClick={() => handleAction(req.id, "aceptado")}
+                    className="[TAILWIND_CLASSES_REMOVED]"
+                  >
+                    {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : "Aceptar"}
+                  </button>
                 </div>
               </div>
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                <button className="[TAILWIND_CLASSES_REMOVED]">
-                  Rechazar
-                </button>
-                <button className="[TAILWIND_CLASSES_REMOVED]">
-                  Aceptar
-                </button>
-              </div>
-            </div>
-          ))}
+            )})
+          )}
         </div>
       ) : (
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          {events.map((e) => (
+          {(tab === "Próximos" ? createdEvents : joinedEvents).map((e) => (
             <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
           ))}
+          {(tab === "Próximos" ? createdEvents : joinedEvents).length === 0 && (
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              {tab === "Próximos" 
+                ? "No hay eventos disponibles" 
+                : "No te has unido a ningún evento todavía."}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -1771,9 +2833,9 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
 
 ================================================================================
-// FILE 11 of 75
+// FILE 12 of 76
 // PATH: src\components\teammatch\ProfileScreen.tsx
-// SIZE: 3878 characters
+// SIZE: 11445 characters
 ================================================================================
 
 /**
@@ -1781,27 +2843,214 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
  * DIRECTORY: teammatch
  * 
  * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
  */
 
-const sports = [
-  { name: "Running", level: "Avanzado", color: "gradient-primary" },
-  { name: "Pádel", level: "Intermedio", color: "bg-accent text-secondary" },
-  { name: "Senderismo", level: "Principiante", color: "bg-secondary text-primary-foreground" },
-];
+const SPORT_NAMES: Record<number, string> = {
+  1: "Fútbol",
+  2: "Tenis",
+  3: "Baloncesto",
+  4: "Pádel",
+  5: "Senderismo",
+  6: "Running",
+  7: "Vóleibol",
+};
 
-const stats = [
-  { label: "Eventos", value: "32", icon: Calendar },
-  { label: "Rating", value: "4.9", icon: Star },
-  { label: "Trofeos", value: "7", icon: Trophy },
-];
+const SPORT_EMOJIS: Record<number, string> = {
+  1: "⚽",
+  2: "🎾",
+  3: "🏀",
+  4: "🏓",
+  5: "🥾",
+  6: "🏃",
+  7: "🏐",
+};
 
-export function ProfileScreen() {
+interface SportGroup {
+  sportId: number;
+  name: string;
+  emoji: string;
+  count: number;
+  events: any[];
+}
+
+function formatEvent(row: any): any {
+  if (!row) return null;
+  const sportName = SPORT_NAMES[row.sport_id] || "Deporte";
+  return {
+    ...row,
+    sport: sportName,
+    title: row.title || `Partido de ${sportName}`,
+    hostName: row.creator_username || "Usuario",
+    hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
+    time: row.event_date
+      ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      : "00:00",
+    date: row.event_date
+      ? new Date(row.event_date).toLocaleDateString("es-VE", {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+        })
+      : "Próximamente",
+    image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+    distanceKm: 2.5,
+    joined: row.joined ?? 1,
+    spots: row.max_capacity || 10,
+    price: 0,
+    zone: "Caracas",
+  };
+}
+
+export function ProfileScreen({
+  onEdit,
+  onSelectEvent,
+}: {
+  onEdit?: () => void;
+  onSelectEvent?: (e: SportEvent) => void;
+}) {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [sportGroups, setSportGroups] = useState<SportGroup[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<SportGroup | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (user) {
+        setUser(user);
+
+        // Traer eventos completos en los que el usuario participa
+        const { data } = await supabase
+          .from("event_participants")
+          .select(`events!inner(*)`)
+          .eq("user_username", user.email);
+
+        if (data && data.length > 0) {
+          // Agrupar por deporte
+          const groups: Record<number, SportGroup> = {};
+          data.forEach((p: any) => {
+            const ev = p.events;
+            if (!ev) return;
+            const sid: number = ev.sport_id;
+            if (!groups[sid]) {
+              groups[sid] = {
+                sportId: sid,
+                name: SPORT_NAMES[sid] || "Deporte",
+                emoji: SPORT_EMOJIS[sid] || "🏅",
+                count: 0,
+                events: [],
+              };
+            }
+            groups[sid].count += 1;
+            groups[sid].events.push(formatEvent(ev));
+          });
+          setSportGroups(Object.values(groups));
+        }
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
+  const email = user?.email || "";
+  const initials = name.substring(0, 2).toUpperCase();
+
+  if (loading) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <Loader2 className="[TAILWIND_CLASSES_REMOVED]" />
+      </div>
+    );
+  }
+
+  const totalEvents = sportGroups.reduce((acc, g) => acc + g.count, 0);
+
+  const stats = [
+    { label: "Eventos", value: totalEvents.toString(), icon: Calendar },
+    { label: "Rating", value: "4.9", icon: Star },
+    { label: "Trofeos", value: "7", icon: Trophy },
+  ];
+
+  // ── Vista: eventos de un deporte ──────────────────────────────────────────
+  if (selectedGroup) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Header */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <button
+            onClick={() => setSelectedGroup(null)}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          >
+            <ArrowLeft size={18} className="text-secondary" />
+          </button>
+          <div>
+            <h1 className="[TAILWIND_CLASSES_REMOVED]">
+              {selectedGroup.emoji} {selectedGroup.name}
+            </h1>
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              {selectedGroup.count} partido{selectedGroup.count !== 1 ? "s" : ""}
+            </p>
+          </div>
+        </div>
+
+        {/* Event list */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          {selectedGroup.events.map((ev) => (
+            <button
+              key={ev.id}
+              onClick={() => onSelectEvent?.(ev as SportEvent)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            >
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  {selectedGroup.emoji}
+                </div>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <div className="[TAILWIND_CLASSES_REMOVED]">{ev.title}</div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <span className="[TAILWIND_CLASSES_REMOVED]">
+                      <Calendar size={11} />
+                      {ev.date}
+                    </span>
+                    <span className="[TAILWIND_CLASSES_REMOVED]">
+                      <Clock size={11} />
+                      {ev.time}
+                    </span>
+                    {ev.intensity && (
+                      <span className="[TAILWIND_CLASSES_REMOVED]">
+                        {ev.intensity}
+                      </span>
+                    )}
+                  </div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <MapPin size={11} />
+                    <span className="truncate">{ev.zone}</span>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Vista principal del perfil ────────────────────────────────────────────
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
       {/* Hero */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          <button className="[TAILWIND_CLASSES_REMOVED]">
+          <button
+            onClick={onEdit}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          >
             <Edit3 size={16} />
           </button>
           <button className="[TAILWIND_CLASSES_REMOVED]">
@@ -1809,12 +3058,30 @@ export function ProfileScreen() {
           </button>
         </div>
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            AR
-          </div>
+          {user?.user_metadata?.avatar_url ? (
+            <img
+              src={user.user_metadata.avatar_url}
+              alt="Avatar"
+              className="[TAILWIND_CLASSES_REMOVED]"
+            />
+          ) : (
+            <div
+              className="[TAILWIND_CLASSES_REMOVED]"
+              style={{[INLINE_STYLES_REMOVED]}}
+            >
+              {initials}
+            </div>
+          )}
           <div>
-            <h1 className="[TAILWIND_CLASSES_REMOVED]">Alejandro Reyes</h1>
-            <p className="[TAILWIND_CLASSES_REMOVED]">Caracas · Chacao</p>
+            <h1 className="[TAILWIND_CLASSES_REMOVED]">
+              {name}
+              {user?.user_metadata?.is_organizer && (
+                <span className="[TAILWIND_CLASSES_REMOVED]">
+                  <Star size={10} className="fill-amber-500" /> Organizador
+                </span>
+              )}
+            </h1>
+            <p className="[TAILWIND_CLASSES_REMOVED]">{email}</p>
             <div className="[TAILWIND_CLASSES_REMOVED]">
               <Star size={11} className="fill-primary" /> Jugador verificado
             </div>
@@ -1841,37 +3108,42 @@ export function ProfileScreen() {
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <h2 className="[TAILWIND_CLASSES_REMOVED]">Mis deportes</h2>
         <div className="space-y-2">
-          {sports.map((s) => (
-            <div
-              key={s.name}
-              className="[TAILWIND_CLASSES_REMOVED]"
-            >
-              <div className={`grid h-11 w-11 place-items-center rounded-xl ${s.color}`}>
-                <Trophy size={18} />
-              </div>
-              <div className="flex-1">
-                <div className="[TAILWIND_CLASSES_REMOVED]">{s.name}</div>
-                <div className="[TAILWIND_CLASSES_REMOVED]">Nivel {s.level}</div>
-              </div>
-              <div className="[TAILWIND_CLASSES_REMOVED]">Editar</div>
+          {sportGroups.length > 0 ? (
+            sportGroups.map((g) => (
+              <button
+                key={g.sportId}
+                onClick={() => setSelectedGroup(g)}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  {g.emoji}
+                </div>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <div className="[TAILWIND_CLASSES_REMOVED]">{g.name}</div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    {g.count} partido{g.count !== 1 ? "s" : ""}
+                  </div>
+                </div>
+                <ChevronRight size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+              </button>
+            ))
+          ) : (
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              No has escogido ningún deporte
             </div>
-          ))}
+          )}
         </div>
       </div>
 
-      {/* Achievements */}
+      {/* Logout */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
-        <h2 className="[TAILWIND_CLASSES_REMOVED]">Logros</h2>
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          {["🥇", "🔥", "⚡", "🏆", "⭐", "🎯", "💪", "🚀"].map((emoji, i) => (
-            <div
-              key={i}
-              className="[TAILWIND_CLASSES_REMOVED]"
-            >
-              {emoji}
-            </div>
-          ))}
-        </div>
+        <button
+          onClick={handleLogout}
+          className="[TAILWIND_CLASSES_REMOVED]"
+        >
+          <LogOut size={18} />
+          Cerrar Sesión
+        </button>
       </div>
     </div>
   );
@@ -1884,9 +3156,9 @@ export function ProfileScreen() {
 
 
 ================================================================================
-// FILE 12 of 75
+// FILE 13 of 76
 // PATH: src\components\teammatch\SportBadge.tsx
-// SIZE: 777 characters
+// SIZE: 976 characters
 ================================================================================
 
 /**
@@ -1896,16 +3168,19 @@ export function ProfileScreen() {
  * PURPOSE: This file is located in teammatch directory.
  */
 
-const map: Record<Sport, { bg: string; label: string }> = {
+const map: Record<string, { bg: string; label: string }> = {
   Running: { bg: "bg-primary text-secondary", label: "🏃" },
   Senderismo: { bg: "bg-accent text-secondary", label: "🥾" },
   Pádel: { bg: "bg-secondary text-primary-foreground", label: "🎾" },
   Tenis: { bg: "bg-warning text-warning-foreground", label: "🎾" },
   Vóleibol: { bg: "bg-chart-3 text-secondary-foreground", label: "🏐" },
+  Fútbol: { bg: "bg-emerald-500 text-white", label: "⚽" },
+  Golf: { bg: "bg-emerald-700 text-white", label: "⛳" },
+  Otro: { bg: "bg-muted text-muted-foreground", label: "🏅" },
 };
 
-export function SportBadge({ sport, withEmoji = true }: { sport: Sport; withEmoji?: boolean }) {
-  const m = map[sport];
+export function SportBadge({ sport, withEmoji = true }: { sport: string; withEmoji?: boolean }) {
+  const m = map[sport] || map["Otro"];
   return (
     <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${m.bg}`}>
       {withEmoji && <span>{m.label}</span>}
@@ -1921,7 +3196,7 @@ export function SportBadge({ sport, withEmoji = true }: { sport: Sport; withEmoj
 
 
 ================================================================================
-// FILE 13 of 75
+// FILE 14 of 76
 // PATH: src\components\teammatch\WelcomeScreen.tsx
 // SIZE: 4224 characters
 ================================================================================
@@ -2027,7 +3302,7 @@ export function WelcomeScreen({
 
 
 ================================================================================
-// FILE 14 of 75
+// FILE 15 of 76
 // PATH: src\components\teammatch\data.ts
 // SIZE: 1808 characters
 ================================================================================
@@ -2125,9 +3400,9 @@ export const events: SportEvent[] = [
 
 
 ================================================================================
-// FILE 15 of 75
+// FILE 16 of 76
 // PATH: src\components\teammatch\types-nav.ts
-// SIZE: 74 characters
+// SIZE: 90 characters
 ================================================================================
 
 /**
@@ -2137,7 +3412,7 @@ export const events: SportEvent[] = [
  * PURPOSE: This file is located in teammatch directory.
  */
 
-export type Screen = "map" | "events" | "create" | "profile" | "detail";
+export type Screen = "map" | "events" | "create" | "detail" | "profile" | "editProfile";
 
 
 ================================================================================
@@ -2146,7 +3421,7 @@ export type Screen = "map" | "events" | "create" | "profile" | "detail";
 
 
 ================================================================================
-// FILE 16 of 75
+// FILE 17 of 76
 // PATH: src\components\teammatch\types.ts
 // SIZE: 488 characters
 ================================================================================
@@ -2188,7 +3463,7 @@ export interface SportEvent {
 
 
 ================================================================================
-// FILE 17 of 75
+// FILE 18 of 76
 // PATH: src\components\ui\accordion.tsx
 // SIZE: 2051 characters
 ================================================================================
@@ -2254,7 +3529,7 @@ export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
 
 
 ================================================================================
-// FILE 18 of 75
+// FILE 19 of 76
 // PATH: src\components\ui\alert-dialog.tsx
 // SIZE: 4466 characters
 ================================================================================
@@ -2384,7 +3659,7 @@ export {
 
 
 ================================================================================
-// FILE 19 of 75
+// FILE 20 of 76
 // PATH: src\components\ui\alert.tsx
 // SIZE: 1638 characters
 ================================================================================
@@ -2449,7 +3724,7 @@ export { Alert, AlertTitle, AlertDescription };
 
 
 ================================================================================
-// FILE 20 of 75
+// FILE 21 of 76
 // PATH: src\components\ui\aspect-ratio.tsx
 // SIZE: 148 characters
 ================================================================================
@@ -2472,7 +3747,7 @@ export { AspectRatio };
 
 
 ================================================================================
-// FILE 21 of 75
+// FILE 22 of 76
 // PATH: src\components\ui\avatar.tsx
 // SIZE: 1460 characters
 ================================================================================
@@ -2540,7 +3815,7 @@ export { Avatar, AvatarImage, AvatarFallback };
 
 
 ================================================================================
-// FILE 22 of 75
+// FILE 23 of 76
 // PATH: src\components\ui\badge.tsx
 // SIZE: 1155 characters
 ================================================================================
@@ -2588,7 +3863,7 @@ export { Badge, badgeVariants };
 
 
 ================================================================================
-// FILE 23 of 75
+// FILE 24 of 76
 // PATH: src\components\ui\breadcrumb.tsx
 // SIZE: 2850 characters
 ================================================================================
@@ -2704,7 +3979,7 @@ export {
 
 
 ================================================================================
-// FILE 24 of 75
+// FILE 25 of 76
 // PATH: src\components\ui\button.tsx
 // SIZE: 1900 characters
 ================================================================================
@@ -2768,7 +4043,7 @@ export { Button, buttonVariants };
 
 
 ================================================================================
-// FILE 25 of 75
+// FILE 26 of 76
 // PATH: src\components\ui\calendar.tsx
 // SIZE: 7387 characters
 ================================================================================
@@ -2967,7 +4242,7 @@ export { Calendar, CalendarDayButton };
 
 
 ================================================================================
-// FILE 26 of 75
+// FILE 27 of 76
 // PATH: src\components\ui\card.tsx
 // SIZE: 1872 characters
 ================================================================================
@@ -3039,7 +4314,7 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 
 
 ================================================================================
-// FILE 27 of 75
+// FILE 28 of 76
 // PATH: src\components\ui\carousel.tsx
 // SIZE: 6440 characters
 ================================================================================
@@ -3294,7 +4569,7 @@ export {
 
 
 ================================================================================
-// FILE 28 of 75
+// FILE 29 of 76
 // PATH: src\components\ui\chart.tsx
 // SIZE: 10901 characters
 ================================================================================
@@ -3638,7 +4913,7 @@ export {
 
 
 ================================================================================
-// FILE 29 of 75
+// FILE 30 of 76
 // PATH: src\components\ui\checkbox.tsx
 // SIZE: 1054 characters
 ================================================================================
@@ -3679,7 +4954,7 @@ export { Checkbox };
 
 
 ================================================================================
-// FILE 30 of 75
+// FILE 31 of 76
 // PATH: src\components\ui\collapsible.tsx
 // SIZE: 346 characters
 ================================================================================
@@ -3710,7 +4985,7 @@ export { Collapsible, CollapsibleTrigger, CollapsibleContent };
 
 
 ================================================================================
-// FILE 31 of 75
+// FILE 32 of 76
 // PATH: src\components\ui\command.tsx
 // SIZE: 5019 characters
 ================================================================================
@@ -3874,7 +5149,7 @@ export {
 
 
 ================================================================================
-// FILE 32 of 75
+// FILE 33 of 76
 // PATH: src\components\ui\context-menu.tsx
 // SIZE: 7578 characters
 ================================================================================
@@ -4076,7 +5351,7 @@ export {
 
 
 ================================================================================
-// FILE 33 of 75
+// FILE 34 of 76
 // PATH: src\components\ui\dialog.tsx
 // SIZE: 3905 characters
 ================================================================================
@@ -4201,7 +5476,7 @@ export {
 
 
 ================================================================================
-// FILE 34 of 75
+// FILE 35 of 76
 // PATH: src\components\ui\drawer.tsx
 // SIZE: 3071 characters
 ================================================================================
@@ -4315,7 +5590,7 @@ export {
 
 
 ================================================================================
-// FILE 35 of 75
+// FILE 36 of 76
 // PATH: src\components\ui\dropdown-menu.tsx
 // SIZE: 7784 characters
 ================================================================================
@@ -4524,7 +5799,7 @@ export {
 
 
 ================================================================================
-// FILE 36 of 75
+// FILE 37 of 76
 // PATH: src\components\ui\form.tsx
 // SIZE: 4372 characters
 ================================================================================
@@ -4701,7 +5976,7 @@ export {
 
 
 ================================================================================
-// FILE 37 of 75
+// FILE 38 of 76
 // PATH: src\components\ui\hover-card.tsx
 // SIZE: 1273 characters
 ================================================================================
@@ -4744,7 +6019,7 @@ export { HoverCard, HoverCardTrigger, HoverCardContent };
 
 
 ================================================================================
-// FILE 38 of 75
+// FILE 39 of 76
 // PATH: src\components\ui\input-otp.tsx
 // SIZE: 2230 characters
 ================================================================================
@@ -4828,7 +6103,7 @@ export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
 
 
 ================================================================================
-// FILE 39 of 75
+// FILE 40 of 76
 // PATH: src\components\ui\input.tsx
 // SIZE: 798 characters
 ================================================================================
@@ -4867,7 +6142,7 @@ export { Input };
 
 
 ================================================================================
-// FILE 40 of 75
+// FILE 41 of 76
 // PATH: src\components\ui\label.tsx
 // SIZE: 737 characters
 ================================================================================
@@ -4909,7 +6184,7 @@ export { Label };
 
 
 ================================================================================
-// FILE 41 of 75
+// FILE 42 of 76
 // PATH: src\components\ui\menubar.tsx
 // SIZE: 8775 characters
 ================================================================================
@@ -5153,7 +6428,7 @@ export {
 
 
 ================================================================================
-// FILE 42 of 75
+// FILE 43 of 76
 // PATH: src\components\ui\navigation-menu.tsx
 // SIZE: 5229 characters
 ================================================================================
@@ -5287,7 +6562,7 @@ export {
 
 
 ================================================================================
-// FILE 43 of 75
+// FILE 44 of 76
 // PATH: src\components\ui\pagination.tsx
 // SIZE: 2837 characters
 ================================================================================
@@ -5400,7 +6675,7 @@ export {
 
 
 ================================================================================
-// FILE 44 of 75
+// FILE 45 of 76
 // PATH: src\components\ui\popover.tsx
 // SIZE: 1383 characters
 ================================================================================
@@ -5447,7 +6722,7 @@ export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };
 
 
 ================================================================================
-// FILE 45 of 75
+// FILE 46 of 76
 // PATH: src\components\ui\progress.tsx
 // SIZE: 806 characters
 ================================================================================
@@ -5493,7 +6768,7 @@ export { Progress };
 
 
 ================================================================================
-// FILE 46 of 75
+// FILE 47 of 76
 // PATH: src\components\ui\radio-group.tsx
 // SIZE: 1426 characters
 ================================================================================
@@ -5544,7 +6819,7 @@ export { RadioGroup, RadioGroupItem };
 
 
 ================================================================================
-// FILE 47 of 75
+// FILE 48 of 76
 // PATH: src\components\ui\resizable.tsx
 // SIZE: 1589 characters
 ================================================================================
@@ -5596,7 +6871,7 @@ export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
 
 
 ================================================================================
-// FILE 48 of 75
+// FILE 49 of 76
 // PATH: src\components\ui\scroll-area.tsx
 // SIZE: 1679 characters
 ================================================================================
@@ -5656,7 +6931,7 @@ export { ScrollArea, ScrollBar };
 
 
 ================================================================================
-// FILE 49 of 75
+// FILE 50 of 76
 // PATH: src\components\ui\select.tsx
 // SIZE: 5886 characters
 ================================================================================
@@ -5829,7 +7104,7 @@ export {
 
 
 ================================================================================
-// FILE 50 of 75
+// FILE 51 of 76
 // PATH: src\components\ui\separator.tsx
 // SIZE: 747 characters
 ================================================================================
@@ -5869,7 +7144,7 @@ export { Separator };
 
 
 ================================================================================
-// FILE 51 of 75
+// FILE 52 of 76
 // PATH: src\components\ui\sheet.tsx
 // SIZE: 4355 characters
 ================================================================================
@@ -6012,7 +7287,7 @@ export {
 
 
 ================================================================================
-// FILE 52 of 75
+// FILE 53 of 76
 // PATH: src\components\ui\sidebar.tsx
 // SIZE: 24603 characters
 ================================================================================
@@ -6758,7 +8033,7 @@ export {
 
 
 ================================================================================
-// FILE 53 of 75
+// FILE 54 of 76
 // PATH: src\components\ui\skeleton.tsx
 // SIZE: 246 characters
 ================================================================================
@@ -6783,7 +8058,7 @@ export { Skeleton };
 
 
 ================================================================================
-// FILE 54 of 75
+// FILE 55 of 76
 // PATH: src\components\ui\slider.tsx
 // SIZE: 1048 characters
 ================================================================================
@@ -6822,7 +8097,7 @@ export { Slider };
 
 
 ================================================================================
-// FILE 55 of 75
+// FILE 56 of 76
 // PATH: src\components\ui\sonner.tsx
 // SIZE: 757 characters
 ================================================================================
@@ -6863,7 +8138,7 @@ export { Toaster };
 
 
 ================================================================================
-// FILE 56 of 75
+// FILE 57 of 76
 // PATH: src\components\ui\switch.tsx
 // SIZE: 1183 characters
 ================================================================================
@@ -6906,7 +8181,7 @@ export { Switch };
 
 
 ================================================================================
-// FILE 57 of 75
+// FILE 58 of 76
 // PATH: src\components\ui\table.tsx
 // SIZE: 2914 characters
 ================================================================================
@@ -7017,7 +8292,7 @@ export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 
 
 ================================================================================
-// FILE 58 of 75
+// FILE 59 of 76
 // PATH: src\components\ui\tabs.tsx
 // SIZE: 1944 characters
 ================================================================================
@@ -7086,7 +8361,7 @@ export { Tabs, TabsList, TabsTrigger, TabsContent };
 
 
 ================================================================================
-// FILE 59 of 75
+// FILE 60 of 76
 // PATH: src\components\ui\textarea.tsx
 // SIZE: 698 characters
 ================================================================================
@@ -7124,7 +8399,7 @@ export { Textarea };
 
 
 ================================================================================
-// FILE 60 of 75
+// FILE 61 of 76
 // PATH: src\components\ui\toggle-group.tsx
 // SIZE: 1809 characters
 ================================================================================
@@ -7202,7 +8477,7 @@ export { ToggleGroup, ToggleGroupItem };
 
 
 ================================================================================
-// FILE 61 of 75
+// FILE 62 of 76
 // PATH: src\components\ui\toggle.tsx
 // SIZE: 1533 characters
 ================================================================================
@@ -7259,7 +8534,7 @@ export { Toggle, toggleVariants };
 
 
 ================================================================================
-// FILE 62 of 75
+// FILE 63 of 76
 // PATH: src\components\ui\tooltip.tsx
 // SIZE: 1310 characters
 ================================================================================
@@ -7312,7 +8587,7 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
 
 
 ================================================================================
-// FILE 63 of 75
+// FILE 64 of 76
 // PATH: src\hooks\use-mobile.tsx
 // SIZE: 595 characters
 ================================================================================
@@ -7351,7 +8626,7 @@ export function useIsMobile() {
 
 
 ================================================================================
-// FILE 64 of 75
+// FILE 65 of 76
 // PATH: src\lib\error-capture.ts
 // SIZE: 933 characters
 ================================================================================
@@ -7395,7 +8670,7 @@ export function consumeLastCapturedError(): unknown {
 
 
 ================================================================================
-// FILE 65 of 75
+// FILE 66 of 76
 // PATH: src\lib\error-page.ts
 // SIZE: 1401 characters
 ================================================================================
@@ -7445,7 +8720,7 @@ export function renderErrorPage(): string {
 
 
 ================================================================================
-// FILE 66 of 75
+// FILE 67 of 76
 // PATH: src\lib\supabase.ts
 // SIZE: 497 characters
 ================================================================================
@@ -7476,7 +8751,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 
 ================================================================================
-// FILE 67 of 75
+// FILE 68 of 76
 // PATH: src\lib\utils.ts
 // SIZE: 175 characters
 ================================================================================
@@ -7500,7 +8775,7 @@ export function cn(...inputs: ClassValue[]) {
 
 
 ================================================================================
-// FILE 68 of 75
+// FILE 69 of 76
 // PATH: src\routeTree.gen.ts
 // SIZE: 1797 characters
 ================================================================================
@@ -7589,7 +8864,7 @@ declare module '@tanstack/react-start' {
 
 
 ================================================================================
-// FILE 69 of 75
+// FILE 70 of 76
 // PATH: src\router.tsx
 // SIZE: 410 characters
 ================================================================================
@@ -7621,7 +8896,7 @@ export const getRouter = () => {
 
 
 ================================================================================
-// FILE 70 of 75
+// FILE 71 of 76
 // PATH: src\routes\__root.tsx
 // SIZE: 3781 characters
 ================================================================================
@@ -7748,9 +9023,9 @@ function RootComponent() {
 
 
 ================================================================================
-// FILE 71 of 75
+// FILE 72 of 76
 // PATH: src\routes\index.tsx
-// SIZE: 6499 characters
+// SIZE: 6770 characters
 ================================================================================
 
 /**
@@ -7784,7 +9059,7 @@ function Index() {
   
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
-  const [creating, setCreating] = useState(false);
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -7833,18 +9108,20 @@ function Index() {
       );
     }
 
-    if (creating) return <CreateEventScreen onClose={() => setCreating(false)} />;
+
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
-    if (screen === "profile") return <ProfileScreen />;
+    if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
+    if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
     return <MapScreen onSelect={openDetail} />;
   };
 
   return (
-    <main className="[TAILWIND_CLASSES_REMOVED]">
+    <main className="[TAILWIND_CLASSES_REMOVED]"> 
       <div className="[TAILWIND_CLASSES_REMOVED]">
         {/* Panel lateral solo en desktop */}
+        {appState !== "app" && (
         <aside className="[TAILWIND_CLASSES_REMOVED]">
           <div className="[TAILWIND_CLASSES_REMOVED]" />
           <div className="[TAILWIND_CLASSES_REMOVED]" />
@@ -7887,19 +9164,25 @@ function Index() {
           </div>
 
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            👉 Usa la app a la derecha — totalmente responsive.
+            👉 ¡A jugar ya!
           </div>
         </aside>
+        )}
 
         {/* Área de la app: pantalla completa en móvil, columna derecha en desktop */}
-        <section className="[TAILWIND_CLASSES_REMOVED]">
+        <section 
+          className={`relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${
+            appState !== "app" 
+              ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" 
+              : "flex-1"
+          }`}
+        >
           <div className="[TAILWIND_CLASSES_REMOVED]">
             {renderScreen()}
-            {appState === "app" && !creating && screen !== "detail" && (
+            {appState === "app" && screen !== "detail" && screen !== "editProfile" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}
-                onCreate={() => setCreating(true)}
               />
             )}
           </div>
@@ -7916,7 +9199,7 @@ function Index() {
 
 
 ================================================================================
-// FILE 72 of 75
+// FILE 73 of 76
 // PATH: src\server.ts
 // SIZE: 2569 characters
 ================================================================================
@@ -8012,7 +9295,7 @@ export default {
 
 
 ================================================================================
-// FILE 73 of 75
+// FILE 74 of 76
 // PATH: src\start.ts
 // SIZE: 641 characters
 ================================================================================
@@ -8050,7 +9333,7 @@ export const startInstance = createStart(() => ({
 
 
 ================================================================================
-// FILE 74 of 75
+// FILE 75 of 76
 // PATH: src\vite-env.d.ts
 // SIZE: 45 characters
 ================================================================================
@@ -8070,9 +9353,9 @@ export const startInstance = createStart(() => ({
 
 
 ================================================================================
-// FILE 75 of 75
+// FILE 76 of 76
 // PATH: vite.config.ts
-// SIZE: 834 characters
+// SIZE: 867 characters
 ================================================================================
 
 /**
@@ -8089,6 +9372,8 @@ export default defineConfig({
   },
 });
 
+// Force Vite cache clear (1)
+
 
 ================================================================================
 // END OF FILE: vite.config.ts
@@ -8098,6 +9383,6 @@ export default defineConfig({
 
 /**
  * END OF COMBINED FILES
- * Total files processed: 75
- * Total size: 269328 characters
+ * Total files processed: 76
+ * Total size: 316540 characters
  */

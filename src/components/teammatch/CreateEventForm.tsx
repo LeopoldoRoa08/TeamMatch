@@ -1,7 +1,6 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft,
-  MapPin,
   Calendar,
   Clock,
   Users,
@@ -9,24 +8,9 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
-  ChevronRight,
-  Trophy,
+  MapPin,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { CanchasScreen, type Cancha } from "./CanchasScreen";
-
-const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
-
-function MapSkeleton() {
-  return (
-    <div className="flex h-[250px] w-full items-center justify-center bg-muted">
-      <div className="flex flex-col items-center gap-3 text-muted-foreground">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        <span className="text-xs font-medium">Cargando mapa…</span>
-      </div>
-    </div>
-  );
-}
 
 // ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
@@ -65,27 +49,88 @@ const INITIAL_FORM = {
   longitude: "",
   address: "",
   maxCapacity: "",
+  canchaId: "",
 };
 
 type FormState = typeof INITIAL_FORM;
 type FieldError = Partial<Record<keyof FormState, string>>;
 
+// Helper function to parse location coordinates (same robust parser as LeafletMap)
+function parseLocation(location: any): { lat: number; lng: number } | null {
+  if (!location) return null;
+  if (typeof location === "object") {
+    if (typeof location.lat === "number" && typeof location.lng === "number") {
+      return { lat: location.lat, lng: location.lng };
+    }
+    if (Array.isArray(location) && location.length >= 2) {
+      return { lat: location[0], lng: location[1] };
+    }
+    if (location.type === "Point" && Array.isArray(location.coordinates) && location.coordinates.length >= 2) {
+      return { lat: location.coordinates[1], lng: location.coordinates[0] };
+    }
+  }
+  if (typeof location === "string") {
+    if (location.toUpperCase().includes("POINT")) {
+      const cleaned = location.toUpperCase().replace("POINT", "").replace("(", "").replace(")", "").trim();
+      const coords = cleaned.split(/\s+/);
+      if (coords.length >= 2) {
+        let lng = parseFloat(coords[0]);
+        let lat = parseFloat(coords[1]);
+        if (lat < -20 && lng > 0) {
+          const temp = lat;
+          lat = lng;
+          lng = temp;
+        }
+        return { lat, lng };
+      }
+    } else if (/^[0-9A-Fa-f]+$/.test(location) && location.length >= 50) {
+      try {
+        const hex = location;
+        const buffer = new Uint8Array(hex.match(/../g)!.map((h: string) => parseInt(h, 16))).buffer;
+        const view = new DataView(buffer);
+        let lng = view.getFloat64(9, true);
+        let lat = view.getFloat64(17, true);
+        if (lat < -20 && lng > 0) {
+          const temp = lat;
+          lat = lng;
+          lng = temp;
+        }
+        return { lat, lng };
+      } catch (err) {
+        console.error("Error decodificando WKB Hex de PostGIS en CreateEventForm:", err);
+      }
+    }
+  }
+  return null;
+}
+
 // ─── Componente principal ────────────────────────────────────────────────────
 export function CreateEventForm({ onClose, onEventCreated }: Props) {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
-  const [errors, setErrors] = useState<FieldError>({});
+  const [errors, setErrors] = useState<FieldError>( {});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
-  const [isOrganizer, setIsOrganizer] = useState(false);
-  const [selectedCancha, setSelectedCancha] = useState<Cancha | null>(null);
-  const [showCanchas, setShowCanchas] = useState(false);
+  
+  const [canchas, setCanchas] = useState<any[]>([]);
+  const [loadingCanchas, setLoadingCanchas] = useState(true);
 
+  // ── Cargar canchas al montar ───────────────────────────────────────────────
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        setIsOrganizer(data.user.user_metadata?.is_organizer === true);
+    async function loadCanchas() {
+      try {
+        const { data, error } = await supabase
+          .from("canchas")
+          .select("*")
+          .order("name", { ascending: true });
+        if (error) throw error;
+        if (data) setCanchas(data);
+      } catch (err) {
+        console.error("Error cargando canchas para el formulario:", err);
+      } finally {
+        setLoadingCanchas(false);
       }
-    });
+    }
+    loadCanchas();
   }, []);
 
   // ── Actualizar campo ──────────────────────────────────────────────────────
@@ -93,28 +138,6 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     setForm((prev) => ({ ...prev, [key]: value }));
     // limpiar error individual al editar
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
-  }
-
-  // ── Manejar click en el mapa ──────────────────────────────────────────────
-  async function handleMapClick(lat: number, lng: number) {
-    setField("latitude", lat.toString());
-    setField("longitude", lng.toString());
-    setField("address", "Buscando dirección...");
-
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-      const data = await res.json();
-      if (data && data.display_name) {
-        // Extraemos un nombre amigable: calle, barrio, o la primera parte del display_name
-        const name = data.address?.road || data.address?.suburb || data.display_name.split(',')[0];
-        setField("address", name);
-      } else {
-        setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-      }
-    } catch (e) {
-      console.error("Geocoding error:", e);
-      setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-    }
   }
 
   // ── Validación ────────────────────────────────────────────────────────────
@@ -125,16 +148,7 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     if (!form.intensity) newErrors.intensity = "Selecciona la intensidad";
     if (!form.date) newErrors.date = "La fecha es obligatoria";
     if (!form.time) newErrors.time = "La hora es obligatoria";
-    if (!form.latitude || !form.longitude) {
-      newErrors.latitude = "Ingresa latitud y longitud";
-    } else {
-      const lat = parseFloat(form.latitude);
-      const lng = parseFloat(form.longitude);
-      if (isNaN(lat) || lat < -90 || lat > 90)
-        newErrors.latitude = "Latitud inválida (-90 a 90)";
-      if (isNaN(lng) || lng < -180 || lng > 180)
-        newErrors.longitude = "Longitud inválida (-180 a 180)";
-    }
+    if (!form.canchaId) newErrors.canchaId = "Selecciona una cancha obligatoriamente";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -151,7 +165,7 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
       // Combinar fecha y hora en ISO 8601
       const eventDate = new Date(`${form.date}T${form.time}:00`).toISOString();
 
-      // Formatear ubicación como WKT POINT para PostGIS / columna text
+      // Formatear ubicación como WKT POINT para PostGIS
       const location = `POINT(${parseFloat(form.longitude)} ${parseFloat(form.latitude)})`;
 
       // Obtener usuario autenticado
@@ -166,13 +180,6 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         return;
       }
 
-
-      // ── Payload del insert (esquema real de la tabla events) ────────────
-      // Columnas: id, creator_username, sport_id, location (geography),
-      //           event_date, max_capacity, status (enum), intensity (enum),
-      //           description_after_arrival, created_at
-      // creator_username debe coincidir exactamente con el registro en la tabla profiles
-      // Usamos user.email como fuente de verdad (FK estricta)
       if (!user.email) {
         setServerError("No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
         setStatus("error");
@@ -180,33 +187,18 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
       }
 
       const payload = {
-        // creator_username: email exacto del usuario (Foreign Key → tabla profiles)
         creator_username: user.email,
-
-        // sport_id: entero — form.sportId ya viene del catálogo numérico (1-4)
         sport_id: form.sportId,
-
-        // location: geography Point — formato WKT aceptado por PostGIS/Supabase
         location,
-
-        // event_date: timestamp ISO 8601
         event_date: eventDate,
-
-        // max_capacity: entero opcional
         max_capacity: form.maxCapacity ? parseInt(form.maxCapacity, 10) : null,
-
-        // intensity: enum intensity_level — 'Principiante' | 'Intermedio' | 'Pro'
         intensity: form.intensity,
-
-        // status: enum event_status — 'abierto' | 'lleno' | 'cancelado' | 'finalizado'
         status: "abierto",
       };
 
-      // 🔍 Debug: verificar el payload exacto antes de enviarlo a Supabase
-      console.log("Payload a enviar:", payload);
+      console.log("Payload de evento a enviar:", payload);
 
       const { error: insertError } = await supabase.from("events").insert(payload);
-
       if (insertError) throw insertError;
 
       setStatus("success");
@@ -219,26 +211,19 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         onClose();
       }, 1500);
     } catch (err: unknown) {
-      // Loggear el error completo de Supabase (PostgrestError) para diagnóstico
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err as { message: string; details?: string; hint?: string; code?: string };
-        console.error("❌ Supabase insert error:", {
-          message: pgErr.message,
-          details: pgErr.details,
-          hint: pgErr.hint,
-          code: pgErr.code,
-        });
-        setServerError(
-          `Error al crear el evento: ${pgErr.message}${pgErr.hint ? ` — ${pgErr.hint}` : ""}`,
-        );
+        console.error("❌ Supabase insert error:", pgErr);
+        setServerError(`Error al crear el evento: ${pgErr.message}`);
       } else {
         console.error("❌ Error inesperado:", err);
-        setServerError("Error inesperado al crear el evento. Revisa la consola para más detalles.");
+        setServerError("Error inesperado al crear el evento.");
       }
       setStatus("error");
     }
   }
 
+  // ─── Render ───────────────────────────────────────────────────────────────
   if (status === "success") {
     return (
       <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
@@ -255,22 +240,8 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     );
   }
 
-  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="relative flex h-full flex-col overflow-hidden bg-background">
-      {/* ── Panel de canchas (overlay) ── */}
-      {showCanchas && (
-        <div className="absolute inset-0 z-50 bg-background">
-          <CanchasScreen
-            isOrganizer={isOrganizer}
-            onBack={() => setShowCanchas(false)}
-            onSelect={(cancha) => {
-              setSelectedCancha(cancha);
-              setShowCanchas(false);
-            }}
-          />
-        </div>
-      )}
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/90 px-4 pb-3 pt-12 backdrop-blur">
         <button
@@ -380,69 +351,63 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
           </FormSection>
         </div>
 
-        {/* Ubicación */}
+        {/* Selección de Cancha */}
         <FormSection
-          title="Ubicación"
+          title="Instalación / Cancha"
           icon={<MapPin size={13} />}
-          error={errors.latitude || errors.longitude}
+          error={errors.canchaId}
           required
         >
-          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
-            <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3">
-              <MapPin size={16} className="text-primary shrink-0" />
-              <span className="text-xs font-semibold text-muted-foreground line-clamp-1">
-                {form.address || "Toca el mapa para elegir el lugar"}
+          {loadingCanchas ? (
+            <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-soft animate-pulse">
+              <Loader2 size={16} className="animate-spin text-primary shrink-0" />
+              <span className="text-xs font-semibold text-muted-foreground">
+                Cargando canchas disponibles...
               </span>
             </div>
-            
-            {/* Mapa Leaflet interactivo */}
-            <div className="relative z-0 h-[250px] w-full">
-              <Suspense fallback={<MapSkeleton />}>
-                <LeafletMap 
-                  events={[]} 
-                  onLocationSelect={handleMapClick}
-                />
-              </Suspense>
+          ) : canchas.length === 0 ? (
+            <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-center">
+              <p className="text-xs font-semibold text-destructive">No hay canchas registradas en la app.</p>
+              <p className="text-[10px] text-muted-foreground mt-1">Registra primero una cancha en la sección de Canchas.</p>
             </div>
-
-            {(form.latitude || form.longitude) && !errors.latitude && !errors.longitude && (
-              <div className="flex items-center gap-1.5 border-t border-border bg-emerald-50 px-3 py-2">
-                <CheckCircle2 size={12} className="text-emerald-600" />
-                <span className="text-[11px] font-medium text-emerald-700">
-                  Guardará como: POINT({parseFloat(form.longitude).toFixed(4)} {parseFloat(form.latitude).toFixed(4)})
-                </span>
-              </div>
-            )}
-          </div>
-        </FormSection>
-
-        {/* Cancha (opcional) */}
-        <FormSection title="Cancha" icon={<Trophy size={13} />}>
-          <button
-            id="select-cancha-btn"
-            type="button"
-            onClick={() => setShowCanchas(true)}
-            className={`w-full flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-sm font-semibold transition-all active:scale-[0.97] ${
-              selectedCancha
-                ? "border-primary/40 bg-primary/5 text-secondary"
-                : "border-border bg-card text-muted-foreground hover:border-primary/40"
-            }`}
-          >
-            <Trophy size={16} className="shrink-0 text-muted-foreground" />
-            <span className="flex-1 text-left">
-              {selectedCancha ? selectedCancha.name : "Seleccionar cancha (opcional)"}
-            </span>
-            {selectedCancha && (
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setSelectedCancha(null); }}
-                className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-bold text-muted-foreground hover:text-destructive"
+          ) : (
+            <div className="relative">
+              <select
+                id="cancha-select"
+                value={form.canchaId}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setField("canchaId", val);
+                  const selectedCancha = canchas.find((c) => c.id.toString() === val);
+                  if (selectedCancha) {
+                    const coords = parseLocation(selectedCancha.location);
+                    if (coords) {
+                      setField("latitude", coords.lat.toString());
+                      setField("longitude", coords.lng.toString());
+                      setField("address", selectedCancha.name);
+                    }
+                  } else {
+                    setField("latitude", "");
+                    setField("longitude", "");
+                    setField("address", "");
+                  }
+                }}
+                className={`w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft ${
+                  errors.canchaId ? "border-destructive" : "border-border"
+                }`}
               >
-                ✕
-              </button>
-            )}
-            <ChevronRight size={16} className="shrink-0 text-muted-foreground" />
-          </button>
+                <option value="">-- Selecciona una cancha --</option>
+                {canchas.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} {c.price ? `(Bs. ${c.price}/h)` : ""}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground">
+                <MapPin size={16} />
+              </div>
+            </div>
+          )}
         </FormSection>
 
         {/* Capacidad máxima (opcional) */}
@@ -505,21 +470,28 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         <button
           id="publish-event-btn"
           onClick={handleSubmit}
-          disabled={status === "loading"}
+          disabled={status === "loading" || status === "success"}
           className={`w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${
-            status === "loading"
-              ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
-              : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
+            status === "success"
+              ? "bg-emerald-500 text-white"
+              : status === "loading"
+                ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
+                : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
           }`}
         >
-          {status === "loading" ? (
+          {status === "loading" && (
             <span className="flex items-center justify-center gap-2">
               <Loader2 size={16} className="animate-spin" />
               Publicando evento…
             </span>
-          ) : (
-            "Publicar evento"
           )}
+          {status === "success" && (
+            <span className="flex items-center justify-center gap-2">
+              <CheckCircle2 size={16} />
+              ¡Evento publicado!
+            </span>
+          )}
+          {(status === "idle" || status === "error") && "Publicar evento"}
         </button>
       </div>
     </div>
