@@ -43,7 +43,7 @@ export interface Cancha {
 }
 
 // ── AddCanchaForm ─────────────────────────────────────────────────────────────
-function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () => void }) {
+export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: (cancha?: any) => void }) {
   const [name, setName] = useState("");
   const [sportId, setSportId] = useState<SportId | null>(null);
   const [description, setDescription] = useState("");
@@ -94,14 +94,14 @@ function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () =>
 
     const location = `POINT(${parseFloat(longitude)} ${parseFloat(latitude)})`;
 
-    const { error } = await supabase.from("canchas").insert({
+    const { data: newCanchas, error } = await supabase.from("canchas").insert({
       name: name.trim(),
       sport_id: sportId,
       location,
       description: description.trim() || null,
       price: price ? parseFloat(price) : null,
       created_by: user?.email,
-    });
+    }).select();
 
     if (error) {
       console.error(error);
@@ -109,7 +109,8 @@ function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () =>
       setStatus("error");
     } else {
       setStatus("success");
-      setTimeout(onSaved, 1200);
+      const newCancha = newCanchas?.[0];
+      setTimeout(() => onSaved(newCancha), 1200);
     }
   }
 
@@ -208,7 +209,7 @@ function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () =>
             </div>
             <div className="relative z-0 h-[220px] w-full">
               <Suspense fallback={<MapSkeleton />}>
-                <LeafletMap events={[]} onLocationSelect={handleMapClick} />
+                <LeafletMap onLocationSelect={handleMapClick} />
               </Suspense>
             </div>
             {latitude && longitude && (

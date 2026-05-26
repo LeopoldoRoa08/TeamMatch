@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { AddCanchaForm } from "./CanchasScreen";
 
 // ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
@@ -113,24 +114,34 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
   
   const [canchas, setCanchas] = useState<any[]>([]);
   const [loadingCanchas, setLoadingCanchas] = useState(true);
+  const [showAddCanchaForm, setShowAddCanchaForm] = useState(false);
+  const [isOrganizer, setIsOrganizer] = useState(false);
 
   // ── Cargar canchas al montar ───────────────────────────────────────────────
-  useEffect(() => {
-    async function loadCanchas() {
-      try {
-        const { data, error } = await supabase
-          .from("canchas")
-          .select("*")
-          .order("name", { ascending: true });
-        if (error) throw error;
-        if (data) setCanchas(data);
-      } catch (err) {
-        console.error("Error cargando canchas para el formulario:", err);
-      } finally {
-        setLoadingCanchas(false);
-      }
+  async function loadCanchas() {
+    setLoadingCanchas(true);
+    try {
+      const { data, error } = await supabase
+        .from("canchas")
+        .select("*")
+        .order("name", { ascending: true });
+      if (error) throw error;
+      if (data) setCanchas(data);
+    } catch (err) {
+      console.error("Error cargando canchas para el formulario:", err);
+    } finally {
+      setLoadingCanchas(false);
     }
+  }
+
+  useEffect(() => {
     loadCanchas();
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        setIsOrganizer(!!data.user.user_metadata?.is_organizer);
+      }
+    });
   }, []);
 
   // ── Actualizar campo ──────────────────────────────────────────────────────
@@ -194,12 +205,32 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         max_capacity: form.maxCapacity ? parseInt(form.maxCapacity, 10) : null,
         intensity: form.intensity,
         status: "abierto",
+        joined: 1,
       };
 
       console.log("Payload de evento a enviar:", payload);
 
-      const { error: insertError } = await supabase.from("events").insert(payload);
+      const { data: newEvents, error: insertError } = await supabase
+        .from("events")
+        .insert(payload)
+        .select();
+
       if (insertError) throw insertError;
+
+      const newEvent = newEvents?.[0];
+      if (newEvent) {
+        // Automatically join the creator to the event
+        const { error: joinError } = await supabase
+          .from("event_participants")
+          .insert({
+            event_id: newEvent.id,
+            user_username: user.email,
+            status: "aceptado"
+          });
+        if (joinError) {
+          console.error("Error adding creator as participant:", joinError);
+        }
+      }
 
       setStatus("success");
 
@@ -224,6 +255,27 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
   }
 
   // ─── Render ───────────────────────────────────────────────────────────────
+  if (showAddCanchaForm) {
+    return (
+      <AddCanchaForm
+        onBack={() => setShowAddCanchaForm(false)}
+        onSaved={async (newCancha) => {
+          setShowAddCanchaForm(false);
+          await loadCanchas();
+          if (newCancha) {
+            setField("canchaId", newCancha.id.toString());
+            const coords = parseLocation(newCancha.location);
+            if (coords) {
+              setField("latitude", coords.lat.toString());
+              setField("longitude", coords.lng.toString());
+              setField("address", newCancha.name);
+            }
+          }
+        }}
+      />
+    );
+  }
+
   if (status === "success") {
     return (
       <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
@@ -369,43 +421,63 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
             <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-center">
               <p className="text-xs font-semibold text-destructive">No hay canchas registradas en la app.</p>
               <p className="text-[10px] text-muted-foreground mt-1">Registra primero una cancha en la sección de Canchas.</p>
+              {isOrganizer && (
+                <button
+                  type="button"
+                  onClick={() => setShowAddCanchaForm(true)}
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
+                >
+                  + Crear nueva cancha
+                </button>
+              )}
             </div>
           ) : (
-            <div className="relative">
-              <select
-                id="cancha-select"
-                value={form.canchaId}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setField("canchaId", val);
-                  const selectedCancha = canchas.find((c) => c.id.toString() === val);
-                  if (selectedCancha) {
-                    const coords = parseLocation(selectedCancha.location);
-                    if (coords) {
-                      setField("latitude", coords.lat.toString());
-                      setField("longitude", coords.lng.toString());
-                      setField("address", selectedCancha.name);
+            <div className="space-y-2">
+              <div className="relative">
+                <select
+                  id="cancha-select"
+                  value={form.canchaId}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setField("canchaId", val);
+                    const selectedCancha = canchas.find((c) => c.id.toString() === val);
+                    if (selectedCancha) {
+                      const coords = parseLocation(selectedCancha.location);
+                      if (coords) {
+                        setField("latitude", coords.lat.toString());
+                        setField("longitude", coords.lng.toString());
+                        setField("address", selectedCancha.name);
+                      }
+                    } else {
+                      setField("latitude", "");
+                      setField("longitude", "");
+                      setField("address", "");
                     }
-                  } else {
-                    setField("latitude", "");
-                    setField("longitude", "");
-                    setField("address", "");
-                  }
-                }}
-                className={`w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft ${
-                  errors.canchaId ? "border-destructive" : "border-border"
-                }`}
-              >
-                <option value="">-- Selecciona una cancha --</option>
-                {canchas.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name} {c.price ? `(Bs. ${c.price}/h)` : ""}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground">
-                <MapPin size={16} />
+                  }}
+                  className={`w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft ${
+                    errors.canchaId ? "border-destructive" : "border-border"
+                  }`}
+                >
+                  <option value="">-- Selecciona una cancha --</option>
+                  {canchas.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} {c.price ? `(Bs. ${c.price}/h)` : ""}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground">
+                  <MapPin size={16} />
+                </div>
               </div>
+              {isOrganizer && (
+                <button
+                  type="button"
+                  onClick={() => setShowAddCanchaForm(true)}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline animate-fade-in"
+                >
+                  + Crear nueva cancha
+                </button>
+              )}
             </div>
           )}
         </FormSection>
@@ -470,28 +542,21 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         <button
           id="publish-event-btn"
           onClick={handleSubmit}
-          disabled={status === "loading" || status === "success"}
+          disabled={status === "loading"}
           className={`w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${
-            status === "success"
-              ? "bg-emerald-500 text-white"
-              : status === "loading"
-                ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
-                : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
+            status === "loading"
+              ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
+              : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
           }`}
         >
-          {status === "loading" && (
+          {status === "loading" ? (
             <span className="flex items-center justify-center gap-2">
               <Loader2 size={16} className="animate-spin" />
               Publicando evento…
             </span>
+          ) : (
+            "Publicar evento"
           )}
-          {status === "success" && (
-            <span className="flex items-center justify-center gap-2">
-              <CheckCircle2 size={16} />
-              ¡Evento publicado!
-            </span>
-          )}
-          {(status === "idle" || status === "error") && "Publicar evento"}
         </button>
       </div>
     </div>

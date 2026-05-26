@@ -4,6 +4,18 @@ import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Star } from "lucide-react";
+import footballField from "@/assets/football-field.jpg";
+import padelCourt from "@/assets/padel-court.jpg";
+import hikingTrail from "@/assets/hiking-trail.jpg";
+import runningTrail from "@/assets/running-trail.jpg";
+
+const getSportImage = (sportId: number) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 4) return padelCourt;
+  if (sportId === 2) return padelCourt; // tenis fallback
+  if (sportId === 3) return hikingTrail; // golf fallback
+  return runningTrail;
+};
 
 const tabs = ["Próximos", "Solicitudes", "Historial"] as const;
 
@@ -27,7 +39,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
       date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
-      image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+      image: getSportImage(row.sport_id),
       distanceKm: 2.5,
       joined: row.joined ?? 1,
       spots: row.max_capacity || 10,
@@ -49,7 +61,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
   async function fetchCreated(email: string | undefined) {
     if (!email) return;
-    const { data } = await supabase.from("events").select("*").eq("creator_username", email).order("created_at", { ascending: false });
+    const { data } = await supabase.from("events").select("*").neq("creator_username", email).order("created_at", { ascending: false });
     if (data) setCreatedEvents(data.map(formatEvent).filter(Boolean));
   }
 

@@ -1,18 +1,19 @@
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
-// ── Props ─────────────────────────────────────────────────────────────────────
 interface LeafletMapProps {
   canchas?: any[];
   onCanchaClick?: (cancha: any) => void;
+  onLocationSelect?: (lat: number, lng: number) => void;
 }
 
 // ── Componente principal exportado ────────────────────────────────────────────
 export default function LeafletMap({
   canchas = [],
   onCanchaClick,
+  onLocationSelect,
 }: LeafletMapProps) {
   // BLOQUEO ABSOLUTO DE SSR — Leaflet necesita window
   if (typeof window === "undefined") return null;
@@ -55,6 +56,8 @@ export default function LeafletMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
+      <MapClickHandler onLocationSelect={onLocationSelect} />
+
       {/* Renderizar Canchas (Pines Verdes) usando lat/lng ya procesados */}
       {canchas.map((c: any) => {
         // Las canchas vienen pre-procesadas desde MapScreen con lat/lng numéricos
@@ -83,4 +86,15 @@ export default function LeafletMap({
       })}
     </MapContainer>
   );
+}
+
+function MapClickHandler({ onLocationSelect }: { onLocationSelect?: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      if (onLocationSelect) {
+        onLocationSelect(e.latlng.lat, e.latlng.lng);
+      }
+    },
+  });
+  return null;
 }

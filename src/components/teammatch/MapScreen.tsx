@@ -2,6 +2,18 @@ import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Search, SlidersHorizontal, Bell, Plus, X, MapPin } from "lucide-react";
 import { CreateEventForm } from "./CreateEventForm";
 import { supabase } from "@/lib/supabase";
+import footballField from "@/assets/football-field.jpg";
+import padelCourt from "@/assets/padel-court.jpg";
+import hikingTrail from "@/assets/hiking-trail.jpg";
+import runningTrail from "@/assets/running-trail.jpg";
+
+const getSportImage = (sportId: number) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 4) return padelCourt;
+  if (sportId === 2) return padelCourt; // tenis fallback
+  if (sportId === 3) return hikingTrail; // golf fallback
+  return runningTrail;
+};
 
 // ── Carga diferida de Leaflet (solo client, nunca SSR) ────────────────────────
 const LeafletMap = lazy(() =>
@@ -82,6 +94,13 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
   const [canchas, setCanchas] = useState<any[]>([]);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUser(data.user);
+    });
+  }, []);
 
   // ── Fetch de datos ──────────────────────────────────────────────────────────
   const fetchData = useCallback(async () => {
@@ -137,6 +156,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
                 weekday: "short", day: "numeric", month: "short",
               })
             : "Próximamente",
+          image: getSportImage(row.sport_id),
           joined: row.joined ?? 1,
           spots: row.max_capacity || 10,
           price: 0,
@@ -163,7 +183,9 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
     return () => { supabase.removeChannel(channel); };
   }, [fetchEvents]);
 
-  const filtered = active === "Todos" ? events : events.filter((e) => e.sport === active);
+  const filtered = active === "Todos"
+    ? events.filter((e) => !currentUser || e.creator_username !== currentUser.email)
+    : events.filter((e) => e.sport === active && (!currentUser || e.creator_username !== currentUser.email));
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
