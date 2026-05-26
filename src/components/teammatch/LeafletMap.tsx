@@ -1,12 +1,22 @@
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
-import { MapPin } from "lucide-react";
+import { MapPin, Navigation } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
 interface LeafletMapProps {
   canchas?: any[];
   onCanchaClick?: (cancha: any) => void;
   onLocationSelect?: (lat: number, lng: number) => void;
+  userLocation?: { lat: number; lng: number } | null;
+}
+
+// ── Componente que vuela el mapa a la ubicación del usuario ──────────────────
+function FlyToUser({ location }: { location: { lat: number; lng: number } | null }) {
+  const map = useMap();
+  if (location) {
+    map.flyTo([location.lat, location.lng], 16, { duration: 1.5 });
+  }
+  return null;
 }
 
 // ── Componente principal exportado ────────────────────────────────────────────
@@ -14,6 +24,7 @@ export default function LeafletMap({
   canchas = [],
   onCanchaClick,
   onLocationSelect,
+  userLocation,
 }: LeafletMapProps) {
   // BLOQUEO ABSOLUTO DE SSR — Leaflet necesita window
   if (typeof window === "undefined") return null;
@@ -42,7 +53,34 @@ export default function LeafletMap({
     });
   }
 
+  // ── Construir ícono "Pin Azul" para la ubicación del usuario ───────────────
+  function buildUserIcon() {
+    if (!(window as any).L) return null;
+
+    const html = renderToStaticMarkup(
+      <div className="user-location-pin">
+        {/* Anillo pulsante exterior */}
+        <div className="user-pulse-ring" />
+        {/* Pin principal */}
+        <div className="user-pin-body">
+          <Navigation size={18} style={{ transform: "rotate(0deg)" }} />
+        </div>
+        {/* Punta inferior del pin */}
+        <div className="user-pin-tip" />
+      </div>
+    );
+
+    const L = (window as any).L;
+    return L.divIcon({
+      className: "custom-leaflet-icon bg-transparent border-none",
+      html,
+      iconSize: [52, 52],
+      iconAnchor: [26, 52],
+    });
+  }
+
   const canchaIcon = buildCanchaIcon();
+  const userIcon = buildUserIcon();
 
   return (
     <MapContainer
@@ -57,6 +95,19 @@ export default function LeafletMap({
       />
 
       <MapClickHandler onLocationSelect={onLocationSelect} />
+
+      {/* Volar al usuario cuando se active su ubicación */}
+      {userLocation && <FlyToUser location={userLocation} />}
+
+      {/* Renderizar la ubicación del usuario (Pin Azul) */}
+      {userLocation && userIcon && (
+        <Marker
+          key="user-location"
+          position={[userLocation.lat, userLocation.lng]}
+          icon={userIcon}
+          interactive={false}
+        />
+      )}
 
       {/* Renderizar Canchas (Pines Verdes) usando lat/lng ya procesados */}
       {canchas.map((c: any) => {
