@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SportEvent } from "./types";
 import { parseLocation } from "./MapScreen";
+import { PlayerLevelBar } from "./PlayerLevelBar";
 
 const SPORT_NAMES: Record<number, string> = {
   1: "Fútbol",
@@ -264,6 +265,11 @@ export function ProfileScreen({
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Barra de Experiencia y Nivel */}
+      <div className="px-5 pt-4">
+        <PlayerLevelBar initialEventsCount={totalEvents} />
       </div>
 
       {/* Sports */}

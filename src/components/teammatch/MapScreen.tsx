@@ -150,15 +150,6 @@ export function MapScreen({
         setLocationError(msg);
         setLocating(false);
       },
-      (error) => {
-        console.error("❌ Error GPS:", error);
-        let msg = "No se pudo obtener tu ubicación";
-        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
-        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
-        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
-        setLocationError(msg);
-        setLocating(false);
-      },
       {
         enableHighAccuracy: true,
         timeout: 10000,
