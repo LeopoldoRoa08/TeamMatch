@@ -4,7 +4,6 @@ import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Star } from "lucide-react";
-import { UserAvatar } from "./UserAvatar";
 import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
 import hikingTrail from "@/assets/hiking-trail.jpg";
@@ -42,7 +41,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
       lng,
       sport: sportName,
       title: row.title || `Evento de ${sportName}`,
-      host: row.creator_username || "Usuario",
+      hostName: row.creator_username || "Usuario",
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
       date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
@@ -68,7 +67,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
   async function fetchCreated(email: string | undefined) {
     if (!email) return;
-    const { data } = await supabase.from("events").select("*").eq("creator_username", email).order("created_at", { ascending: false });
+    const { data } = await supabase.from("events").select("*").neq("creator_username", email).order("created_at", { ascending: false });
     if (data) setCreatedEvents(data.map(formatEvent).filter(Boolean));
   }
 
@@ -101,12 +100,6 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
-    const req = pendingRequests.find(r => r.id === participantId);
-    if (!req || req.events?.creator_username !== currentUser?.email) {
-      alert("No tienes permiso para realizar esta acción.");
-      return;
-    }
-
     setActionLoading(participantId.toString());
     const { error } = await supabase
       .from("event_participants")
@@ -124,19 +117,14 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
   return (
     <div className="h-full overflow-y-auto bg-background pb-24">
-      <header className="flex items-center justify-between px-5 pb-3 pt-12">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
-          <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
-        </div>
-        <UserAvatar size="md" />
+      <header className="px-5 pb-3 pt-12">
+        <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
+        <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
       </header>
 
       <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
         <div className="flex gap-1 rounded-full bg-muted p-1">
           {tabs.map((t) => {
-            // Only show 'Solicitudes' tab if the user has created at least one event
-            if (t === "Solicitudes" && createdEvents.length === 0) return null;
             return (
               <button
                 key={t}

@@ -1,14 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { UserProvider } from "@/lib/UserContext";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
 import { EditProfileScreen } from "@/components/teammatch/EditProfileScreen";
 
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
-import { MySportsScreen } from "@/components/teammatch/MySportsScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
 import { AuthScreen, type AuthMode } from "@/components/teammatch/AuthScreen";
 import { BottomNav } from "@/components/teammatch/BottomNav";
@@ -33,14 +31,6 @@ export const Route = createFileRoute("/")({
 type AppState = "checking" | "welcome" | "auth" | "app";
 
 function Index() {
-  return (
-    <UserProvider>
-      <AppContent />
-    </UserProvider>
-  );
-}
-
-function AppContent() {
   const [appState, setAppState] = useState<AppState>("checking");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   
@@ -100,7 +90,6 @@ function AppContent() {
     if (screen === "detail" && selected)
       return <EventDetailScreen event={selected} onBack={() => setScreen("map")} userLocation={userLocation} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
-    if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
     if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
     return <MapScreen onSelect={openDetail} userLocation={userLocation} setUserLocation={setUserLocation} />;
