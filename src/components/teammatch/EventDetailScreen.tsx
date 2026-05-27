@@ -186,8 +186,8 @@ export function EventDetailScreen({
         <div>
           <h3 className="mb-2 text-sm font-bold text-secondary">Descripción</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores
-            con experiencia, ambiente respetuoso y competitivo.
+            {event.description_after_arrival || 
+              "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo."}
           </p>
         </div>
 

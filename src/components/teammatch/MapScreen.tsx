@@ -226,6 +226,7 @@ export function MapScreen({
           spots: row.max_capacity || 10,
           price: 0,
           zone: "Caracas",
+          description_after_arrival: row.description_after_arrival,
         };
       });
 

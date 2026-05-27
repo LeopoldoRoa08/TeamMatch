@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   AlertCircle,
   MapPin,
+  FileText,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { AddCanchaForm } from "./CanchasScreen";
@@ -51,6 +52,7 @@ const INITIAL_FORM = {
   address: "",
   maxCapacity: "",
   canchaId: "",
+  descriptionAfterArrival: "",
 };
 
 type FormState = typeof INITIAL_FORM;
@@ -206,6 +208,7 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         intensity: form.intensity,
         status: "abierto",
         joined: 1,
+        description_after_arrival: form.descriptionAfterArrival || null,
       };
 
       console.log("Payload de evento a enviar:", payload);
@@ -499,6 +502,27 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
               onChange={(e) => setField("maxCapacity", e.target.value)}
               className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
             />
+          </div>
+        </FormSection>
+
+        {/* Descripción (opcional, máx 150 caracteres) */}
+        <FormSection
+          title="Descripción"
+          icon={<FileText size={13} />}
+        >
+          <div className="flex flex-col gap-1 rounded-2xl border border-border bg-card px-4 py-3 shadow-soft focus-within:border-primary transition-colors">
+            <textarea
+              id="event-description-input"
+              maxLength={150}
+              rows={3}
+              placeholder="Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)"
+              value={form.descriptionAfterArrival}
+              onChange={(e) => setField("descriptionAfterArrival", e.target.value)}
+              className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50 resize-none py-1"
+            />
+            <div className="text-[10px] text-muted-foreground text-right">
+              {form.descriptionAfterArrival.length}/150
+            </div>
           </div>
         </FormSection>
 
