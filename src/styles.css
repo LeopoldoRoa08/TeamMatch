@@ -147,3 +147,63 @@
     background-color: oklch(1 0 0 / 0.75);
   }
 }
+
+/* ── Pin de ubicación del usuario (GPS) ────────────────────────────────────── */
+.user-location-pin {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+}
+
+.user-pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: rgba(59, 130, 246, 0.18);
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.user-pin-body {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  box-shadow:
+    0 0 0 4px white,
+    0 8px 24px -4px rgba(37, 99, 235, 0.5);
+}
+
+.user-pin-tip {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  transform: translateX(-50%) rotate(45deg);
+  background: #2563eb;
+  box-shadow: 0 0 0 2px white;
+}
+
+@keyframes pulse-ring {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+}

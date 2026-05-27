@@ -4,7 +4,15 @@ import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 
-export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack: () => void }) {
+export function EventDetailScreen({
+  event,
+  onBack,
+  userLocation,
+}: {
+  event: SportEvent;
+  onBack: () => void;
+  userLocation?: { lat: number; lng: number } | null;
+}) {
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [joining, setJoining] = useState(false);
@@ -137,9 +145,42 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
         <div className="grid grid-cols-2 gap-3">
           <InfoTile icon={Calendar} label="Fecha" value={event.date} />
           <InfoTile icon={Clock} label="Hora" value={event.time} />
-          <InfoTile icon={MapPin} label="Lugar" value={event.location} />
+          <InfoTile 
+            icon={MapPin} 
+            label="Lugar" 
+            value={event.location} 
+            onClick={() => {
+              const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
+              const destination = `${event.lat},${event.lng}`;
+              const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+              window.open(url, '_blank');
+            }}
+          />
           <InfoTile icon={Users} label="Cupos" value={`${approvedPlayers.length}/${event.spots}`} />
         </div>
+
+        {/* Botón de Google Maps */}
+        <button
+          onClick={() => {
+            const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
+            const destination = `${event.lat},${event.lng}`;
+            const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+            window.open(url, '_blank');
+          }}
+          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-secondary/10 hover:bg-secondary/20 active:scale-[0.98] py-3 text-xs font-bold text-secondary transition-all border border-secondary/20 shadow-soft"
+        >
+          <MapPin size={16} className="text-primary" />
+          <span>Cómo llegar con Google Maps</span>
+          {userLocation ? (
+            <span className="ml-1 rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary animate-pulse">
+              En tiempo real
+            </span>
+          ) : (
+            <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-[9px] font-medium text-muted-foreground">
+              Desde tu ubicación
+            </span>
+          )}
+        </button>
 
         {/* Description */}
         <div>
@@ -258,18 +299,32 @@ function InfoTile({
   icon: Icon,
   label,
   value,
+  onClick,
 }: {
   icon: typeof MapPin;
   label: string;
   value: string;
+  onClick?: () => void;
 }) {
   return (
-    <div className="rounded-2xl bg-card p-3 shadow-soft">
-      <div className="mb-1 grid h-8 w-8 place-items-center rounded-lg bg-muted">
-        <Icon size={15} className="text-primary" />
+    <div 
+      onClick={onClick}
+      className={`rounded-2xl bg-card p-3 shadow-soft transition-all ${
+        onClick ? "cursor-pointer hover:border-primary/20 active:scale-95 border border-transparent hover:bg-card/90" : ""
+      }`}
+    >
+      <div className="mb-1 flex items-center justify-between">
+        <div className="grid h-8 w-8 place-items-center rounded-lg bg-muted">
+          <Icon size={15} className="text-primary" />
+        </div>
+        {onClick && (
+          <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
+            Ver Ruta
+          </span>
+        )}
       </div>
       <div className="text-[11px] font-medium text-muted-foreground">{label}</div>
-      <div className="text-sm font-bold text-secondary">{value}</div>
+      <div className="text-sm font-bold text-secondary truncate">{value}</div>
     </div>
   );
 }

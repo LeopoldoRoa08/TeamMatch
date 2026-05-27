@@ -36,6 +36,7 @@ function Index() {
   
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
 
   useEffect(() => {
@@ -87,11 +88,11 @@ function Index() {
 
 
     if (screen === "detail" && selected)
-      return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
+      return <EventDetailScreen event={selected} onBack={() => setScreen("map")} userLocation={userLocation} />;
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
     if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
-    return <MapScreen onSelect={openDetail} />;
+    return <MapScreen onSelect={openDetail} userLocation={userLocation} setUserLocation={setUserLocation} />;
   };
 
   return (

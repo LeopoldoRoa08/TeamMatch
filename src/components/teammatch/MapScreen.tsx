@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
-import { Search, SlidersHorizontal, Bell, Plus, X, MapPin } from "lucide-react";
+import { Search, SlidersHorizontal, Bell, Plus, X, MapPin, Crosshair } from "lucide-react";
 import { CreateEventForm } from "./CreateEventForm";
 import { supabase } from "@/lib/supabase";
 import footballField from "@/assets/football-field.jpg";
@@ -38,7 +38,7 @@ function MapSkeleton() {
 const sports = ["Todos", "Fútbol", "Tenis", "Golf", "Pádel"] as const;
 
 // ── Helper: parsear WKT/WKB/GeoJSON a {lat, lng} ─────────────────────────────
-function parseLocation(location: any): { lat: number; lng: number } | null {
+export function parseLocation(location: any): { lat: number; lng: number } | null {
   if (!location) return null;
 
   if (typeof location === "object") {
@@ -88,7 +88,15 @@ function parseLocation(location: any): { lat: number; lng: number } | null {
 }
 
 // ── Componente principal ──────────────────────────────────────────────────────
-export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
+export function MapScreen({
+  onSelect,
+  userLocation: propUserLocation,
+  setUserLocation: propSetUserLocation,
+}: {
+  onSelect: (e: any) => void;
+  userLocation?: { lat: number; lng: number } | null;
+  setUserLocation?: (loc: { lat: number; lng: number } | null) => void;
+}) {
   const [active, setActive] = useState<string>("Todos");
   const [events, setEvents] = useState<any[]>([]);
   const [canchas, setCanchas] = useState<any[]>([]);
@@ -96,11 +104,68 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
+  const [localUserLocation, setLocalUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const userLocation = propUserLocation !== undefined ? propUserLocation : localUserLocation;
+  const setUserLocation = propSetUserLocation !== undefined ? propSetUserLocation : setLocalUserLocation;
+
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setCurrentUser(data.user);
     });
   }, []);
+
+  // ── Obtener ubicación GPS del usuario ──────────────────────────────────────
+  const handleLocateUser = useCallback(() => {
+    // Si ya tiene ubicación, desactivarla (toggle)
+    if (userLocation) {
+      setUserLocation(null);
+      setLocationError(null);
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      setLocationError("Tu navegador no soporta geolocalización");
+      return;
+    }
+
+    setLocating(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log("📍 Ubicación GPS del usuario:", { lat: latitude, lng: longitude });
+        setUserLocation({ lat: latitude, lng: longitude });
+        setLocating(false);
+      },
+      (error) => {
+        console.error("❌ Error GPS:", error);
+        let msg = "No se pudo obtener tu ubicación";
+        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
+        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
+        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
+        setLocationError(msg);
+        setLocating(false);
+      },
+      (error) => {
+        console.error("❌ Error GPS:", error);
+        let msg = "No se pudo obtener tu ubicación";
+        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
+        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
+        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
+        setLocationError(msg);
+        setLocating(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000,
+      }
+    );
+  }, [userLocation, setUserLocation]);
 
   // ── Fetch de datos ──────────────────────────────────────────────────────────
   const fetchData = useCallback(async () => {
@@ -108,7 +173,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
     const { data: canchasData, error: canchasError } = await supabase
       .from("canchas")
       .select("*");
-    console.log("🕵️♂️ CANCHAS DATA (raw):", canchasData);
+    console.log("🕵️‍♂️ CANCHAS DATA (raw):", canchasData);
     if (canchasError) console.error("❌ ERROR CANCHAS:", canchasError);
     if (canchasData) {
       const processedCanchas = canchasData.map((c: any) => {
@@ -197,6 +262,11 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
           <LeafletMap
             canchas={canchas}
             onCanchaClick={(cancha: any) => setSelectedCancha(cancha)}
+            userLocation={userLocation}
+            onLocationSelect={(lat, lng) => {
+              console.log("📍 Ubicación seleccionada en mapa:", { lat, lng });
+              setUserLocation({ lat, lng });
+            }}
           />
         </Suspense>
       </div>
@@ -331,6 +401,42 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
                 </div>
               );
             })()}
+          </div>
+        </div>
+      )}
+
+      {/* ── Botón GPS — Mi ubicación ── */}
+      {!selectedCancha && (
+        <button
+          id="btn-locate-user"
+          onClick={handleLocateUser}
+          className={`absolute bottom-40 right-4 z-30 grid h-12 w-12 place-items-center rounded-2xl shadow-soft transition-all active:scale-90 hover:scale-105 ${
+            userLocation
+              ? "bg-blue-500 text-white shadow-[0_8px_25px_-4px_rgba(59,130,246,0.5)]"
+              : "glass text-secondary"
+          }`}
+          aria-label="Mi ubicación"
+          title="Mi ubicación GPS"
+        >
+          {locating ? (
+            <div className="h-5 w-5 rounded-full border-2 border-current border-t-transparent animate-spin" />
+          ) : (
+            <Crosshair size={20} strokeWidth={2.5} />
+          )}
+        </button>
+      )}
+
+      {/* ── Toast de error de ubicación ── */}
+      {locationError && (
+        <div className="absolute bottom-40 left-4 right-20 z-30 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="rounded-2xl bg-destructive/90 px-4 py-3 text-xs font-semibold text-destructive-foreground shadow-soft backdrop-blur-sm">
+            {locationError}
+            <button
+              onClick={() => setLocationError(null)}
+              className="ml-2 underline opacity-80 hover:opacity-100"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       )}
