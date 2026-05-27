@@ -27,6 +27,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
   const [myEvents, setMyEvents] = useState<any[]>([]);
   const [pastEvents, setPastEvents] = useState<any[]>([]);
+  const [createdEvents, setCreatedEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -114,6 +115,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
     setMyEvents(upcoming);
     setPastEvents(past);
+    setCreatedEvents(created);
     setLoading(false);
   }
 
