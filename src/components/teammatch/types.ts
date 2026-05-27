@@ -19,4 +19,5 @@ export interface SportEvent {
   distanceKm: number;
   lat: number;
   lng: number;
+  description_after_arrival?: string | null;
 }

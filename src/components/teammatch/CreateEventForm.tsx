@@ -65,6 +65,11 @@ const INITIAL_FORM = {
   longitude: "",
   address: "",
   maxCapacity: "",
+<<<<<<< Updated upstream
+=======
+  canchaId: "",
+  descriptionAfterArrival: "",
+>>>>>>> Stashed changes
 };
 
 type FormState = typeof INITIAL_FORM;
@@ -136,6 +141,13 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         newErrors.longitude = "Longitud inválida (-180 a 180)";
     }
 
+    const descLen = form.descriptionAfterArrival ? form.descriptionAfterArrival.trim().length : 0;
+    if (descLen === 0) {
+      newErrors.descriptionAfterArrival = "La descripción de llegada es obligatoria";
+    } else if (descLen < 30 || descLen > 200) {
+      newErrors.descriptionAfterArrival = "La descripción debe tener entre 30 y 200 caracteres";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -200,6 +212,11 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
 
         // status: enum event_status — 'abierto' | 'lleno' | 'cancelado' | 'finalizado'
         status: "abierto",
+<<<<<<< Updated upstream
+=======
+        joined: 1,
+        description_after_arrival: form.descriptionAfterArrival,
+>>>>>>> Stashed changes
       };
 
       // 🔍 Debug: verificar el payload exacto antes de enviarlo a Supabase
@@ -462,6 +479,50 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
               onChange={(e) => setField("maxCapacity", e.target.value)}
               className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
             />
+          </div>
+        </FormSection>
+
+        {/* Descripción de llegada */}
+        <FormSection
+          title="Descripción o indicaciones de llegada"
+          icon={<AlertCircle size={13} />}
+          error={errors.descriptionAfterArrival}
+          required
+        >
+          <div className="space-y-1">
+            <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4 shadow-soft focus-within:border-primary transition-colors">
+              <textarea
+                id="event-description-after-arrival"
+                rows={3}
+                placeholder="Ej. Nos vemos al lado de la cafetería, llevamos chalecos verdes. El partido empieza puntual..."
+                value={form.descriptionAfterArrival}
+                onChange={(e) => setField("descriptionAfterArrival", e.target.value)}
+                className="w-full bg-transparent text-sm font-medium text-secondary outline-none resize-none placeholder:text-muted-foreground/50"
+              />
+              
+              <div className="flex justify-between items-center text-[10px] pt-2 border-t border-border/40">
+                {(() => {
+                  const len = form.descriptionAfterArrival ? form.descriptionAfterArrival.length : 0;
+                  if (len === 0) {
+                    return <span className="text-amber-500 font-semibold animate-pulse">Se requiere descripción (mín. 30 carac.)</span>;
+                  } 
+                  if (len < 30) {
+                    return <span className="text-amber-500 font-semibold">Faltan {30 - len} caracteres</span>;
+                  }
+                  if (len <= 200) {
+                    return <span className="text-emerald-600 font-bold">✓ Longitud válida</span>;
+                  }
+                  return <span className="text-destructive font-bold">Excede el límite por {len - 200} carac.</span>;
+                })()}
+                <span className={`font-semibold ${
+                  form.descriptionAfterArrival && form.descriptionAfterArrival.length >= 30 && form.descriptionAfterArrival.length <= 200 
+                    ? "text-emerald-600 font-bold" 
+                    : "text-muted-foreground"
+                }`}>
+                  {form.descriptionAfterArrival ? form.descriptionAfterArrival.length : 0} / 200
+                </span>
+              </div>
+            </div>
           </div>
         </FormSection>
 
