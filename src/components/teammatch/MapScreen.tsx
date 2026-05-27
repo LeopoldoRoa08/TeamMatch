@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Search, SlidersHorizontal, Bell, Plus, X, MapPin, Crosshair } from "lucide-react";
 import { CreateEventForm } from "./CreateEventForm";
 import { supabase } from "@/lib/supabase";
+import { UserAvatar } from "./UserAvatar";
 import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
 import hikingTrail from "@/assets/hiking-trail.jpg";
@@ -211,7 +212,7 @@ export function MapScreen({
           lng,
           sport: sportName,
           title: row.title || `Evento de ${sportName}`,
-          hostName: row.creator_username || "Usuario",
+          host: row.creator_username || "Usuario",
           hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
           time: row.event_date
             ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
@@ -275,6 +276,7 @@ export function MapScreen({
       {/* ── Top bar ── */}
       <div className="absolute inset-x-0 top-0 z-20 px-4 pt-12 pointer-events-none">
         <div className="flex items-center gap-2 pointer-events-auto">
+          <UserAvatar size="sm" className="shrink-0" />
           <div className="flex flex-1 items-center gap-2 rounded-2xl glass px-4 py-3 shadow-soft">
             <Search size={18} className="text-muted-foreground" />
             <input
