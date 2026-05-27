@@ -8,6 +8,7 @@ import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
 import hikingTrail from "@/assets/hiking-trail.jpg";
 import runningTrail from "@/assets/running-trail.jpg";
+import { parseLocation } from "./MapScreen";
 
 const getSportImage = (sportId: number) => {
   if (sportId === 1) return footballField;
@@ -30,9 +31,14 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
   const formatEvent = (row: any) => {
     if (!row) return null;
+    const coords = parseLocation(row.location);
+    const lat = coords?.lat ?? 0;
+    const lng = coords?.lng ?? 0;
     const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
     return {
       ...row,
+      lat,
+      lng,
       sport: sportName,
       title: row.title || `Evento de ${sportName}`,
       hostName: row.creator_username || "Usuario",

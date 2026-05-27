@@ -38,7 +38,7 @@ function MapSkeleton() {
 const sports = ["Todos", "Fútbol", "Tenis", "Golf", "Pádel"] as const;
 
 // ── Helper: parsear WKT/WKB/GeoJSON a {lat, lng} ─────────────────────────────
-function parseLocation(location: any): { lat: number; lng: number } | null {
+export function parseLocation(location: any): { lat: number; lng: number } | null {
   if (!location) return null;
 
   if (typeof location === "object") {
@@ -88,14 +88,26 @@ function parseLocation(location: any): { lat: number; lng: number } | null {
 }
 
 // ── Componente principal ──────────────────────────────────────────────────────
-export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
+export function MapScreen({
+  onSelect,
+  userLocation: propUserLocation,
+  setUserLocation: propSetUserLocation,
+}: {
+  onSelect: (e: any) => void;
+  userLocation?: { lat: number; lng: number } | null;
+  setUserLocation?: (loc: { lat: number; lng: number } | null) => void;
+}) {
   const [active, setActive] = useState<string>("Todos");
   const [events, setEvents] = useState<any[]>([]);
   const [canchas, setCanchas] = useState<any[]>([]);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
+  const [localUserLocation, setLocalUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const userLocation = propUserLocation !== undefined ? propUserLocation : localUserLocation;
+  const setUserLocation = propSetUserLocation !== undefined ? propSetUserLocation : setLocalUserLocation;
+
   const [locating, setLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
 
@@ -138,13 +150,22 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
         setLocationError(msg);
         setLocating(false);
       },
+      (error) => {
+        console.error("❌ Error GPS:", error);
+        let msg = "No se pudo obtener tu ubicación";
+        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
+        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
+        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
+        setLocationError(msg);
+        setLocating(false);
+      },
       {
         enableHighAccuracy: true,
         timeout: 10000,
         maximumAge: 60000,
       }
     );
-  }, [userLocation]);
+  }, [userLocation, setUserLocation]);
 
   // ── Fetch de datos ──────────────────────────────────────────────────────────
   const fetchData = useCallback(async () => {
@@ -152,7 +173,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
     const { data: canchasData, error: canchasError } = await supabase
       .from("canchas")
       .select("*");
-    console.log("🕵️♂️ CANCHAS DATA (raw):", canchasData);
+    console.log("🕵️‍♂️ CANCHAS DATA (raw):", canchasData);
     if (canchasError) console.error("❌ ERROR CANCHAS:", canchasError);
     if (canchasData) {
       const processedCanchas = canchasData.map((c: any) => {
@@ -242,6 +263,10 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
             canchas={canchas}
             onCanchaClick={(cancha: any) => setSelectedCancha(cancha)}
             userLocation={userLocation}
+            onLocationSelect={(lat, lng) => {
+              console.log("📍 Ubicación seleccionada en mapa:", { lat, lng });
+              setUserLocation({ lat, lng });
+            }}
           />
         </Suspense>
       </div>

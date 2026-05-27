@@ -2,6 +2,7 @@ import { Settings, Trophy, Star, Calendar, Edit3, LogOut, Loader2, ArrowLeft, Ma
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SportEvent } from "./types";
+import { parseLocation } from "./MapScreen";
 
 const SPORT_NAMES: Record<number, string> = {
   1: "Fútbol",
@@ -33,9 +34,14 @@ interface SportGroup {
 
 function formatEvent(row: any): any {
   if (!row) return null;
+  const coords = parseLocation(row.location);
+  const lat = coords?.lat ?? 0;
+  const lng = coords?.lng ?? 0;
   const sportName = SPORT_NAMES[row.sport_id] || "Deporte";
   return {
     ...row,
+    lat,
+    lng,
     sport: sportName,
     title: row.title || `Partido de ${sportName}`,
     hostName: row.creator_username || "Usuario",
