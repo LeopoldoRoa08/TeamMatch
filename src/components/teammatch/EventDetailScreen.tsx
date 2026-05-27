@@ -73,6 +73,11 @@ export function EventDetailScreen({
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
+    if (!currentUser?.email || (currentUser.email !== event.host && currentUser.email !== (event as any).hostName)) {
+      alert("Solo el creador del evento puede aceptar o rechazar solicitudes.");
+      return;
+    }
+
     setActionLoading(participantId.toString());
     const { error } = await supabase
       .from("event_participants")
@@ -191,8 +196,8 @@ export function EventDetailScreen({
           </p>
         </div>
 
-        {/* Pending Requests (Mocked as Organizer) */}
-        {pendingRequests.length > 0 && (
+        {/* Pending Requests */}
+        {pendingRequests.length > 0 && currentUser?.email && (currentUser.email === event.host || currentUser.email === (event as any).hostName) && (
           <div>
             <h3 className="mb-3 text-sm font-bold text-secondary flex items-center gap-2">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] text-white">
