@@ -90,6 +90,7 @@ function parseLocation(location: any): { lat: number; lng: number } | null {
 // ── Componente principal ──────────────────────────────────────────────────────
 export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
   const [active, setActive] = useState<string>("Todos");
+  const [selectedSport, setSelectedSport] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [canchas, setCanchas] = useState<any[]>([]);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
@@ -184,8 +185,21 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
   }, [fetchEvents]);
 
   const filtered = active === "Todos"
-    ? events.filter((e) => !currentUser || e.creator_username !== currentUser.email)
-    : events.filter((e) => e.sport === active && (!currentUser || e.creator_username !== currentUser.email));
+    ? events
+    : events.filter((e) => e.sport === active);
+
+  const filteredCanchas = selectedSport
+    ? canchas.filter((c) => {
+        const sportIdMap: Record<string, number> = {
+          "Fútbol": 1,
+          "Tenis": 2,
+          "Golf": 3,
+          "Pádel": 4,
+        };
+        const targetId = sportIdMap[selectedSport];
+        return c.sport_id === targetId || c.sport === selectedSport;
+      })
+    : canchas;
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -195,7 +209,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
       <div className="absolute inset-0 z-0">
         <Suspense fallback={<MapSkeleton />}>
           <LeafletMap
-            canchas={canchas}
+            canchas={filteredCanchas}
             onCanchaClick={(cancha: any) => setSelectedCancha(cancha)}
           />
         </Suspense>
@@ -222,22 +236,40 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
 
         {/* Filtros de deporte */}
         <div className="mt-3 flex gap-2 overflow-x-auto pb-1 pointer-events-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {sports.map((s) => (
-            <button
-              key={s}
-              onClick={() => setActive(s)}
-              className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-soft transition-all ${
-                active === s ? "bg-secondary text-primary-foreground" : "glass text-secondary"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
+          {sports.map((s) => {
+            const isActive = s === "Todos" ? selectedSport === null : selectedSport === s;
+            return (
+              <button
+                key={s}
+                onClick={() => {
+                  if (s === "Todos") {
+                    setSelectedSport(null);
+                    setActive("Todos");
+                  } else {
+                    if (selectedSport === s) {
+                      setSelectedSport(null);
+                      setActive("Todos");
+                    } else {
+                      setSelectedSport(s);
+                      setActive(s);
+                    }
+                  }
+                }}
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-soft transition-all border ${
+                  isActive
+                    ? "bg-secondary text-white border-secondary"
+                    : "glass text-secondary border-transparent"
+                }`}
+              >
+                {s}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* ── Panel emergente de cancha ── */}
-      {selectedCancha && (
+      {selectedCancha && !showCreateForm && (
         <div className="absolute bottom-0 inset-x-0 z-40 bg-background rounded-t-3xl shadow-2xl px-5 pt-4 pb-10 border-t border-border animate-in slide-in-from-bottom duration-300">
           {/* Drag handle */}
           <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted-foreground/20" />
@@ -297,7 +329,7 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
                       No hay partidos programados aquí
                     </p>
                     <button
-                      onClick={() => { setSelectedCancha(null); setShowCreateForm(true); }}
+                      onClick={() => { setShowCreateForm(true); }}
                       className="mt-3 text-[11px] font-bold text-primary hover:underline"
                     >
                       + Crear un partido aquí
@@ -336,11 +368,11 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
       )}
 
       {/* ── FAB — Crear evento ── */}
-      {!selectedCancha && (
+      {!showCreateForm && (
         <button
           id="fab-create-event-btn"
           onClick={() => setShowCreateForm(true)}
-          className="absolute bottom-24 right-4 z-30 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+          className="absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
           aria-label="Crear evento"
         >
           <Plus size={18} strokeWidth={2.5} />
@@ -352,8 +384,15 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
       {showCreateForm && (
         <div className="absolute inset-0 z-40 bg-background">
           <CreateEventForm
-            onClose={() => setShowCreateForm(false)}
-            onEventCreated={fetchEvents}
+            onClose={() => {
+              setShowCreateForm(false);
+              setSelectedCancha(null);
+            }}
+            onEventCreated={() => {
+              fetchEvents();
+              setSelectedCancha(null);
+            }}
+            initialCancha={selectedCancha}
           />
         </div>
       )}

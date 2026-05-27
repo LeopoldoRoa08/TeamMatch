@@ -38,6 +38,7 @@ const INTENSITY_STYLE: Record<Intensity, string> = {
 interface Props {
   onClose: () => void;
   onEventCreated: () => void;
+  initialCancha?: any;
 }
 
 // ─── Estado inicial del formulario ───────────────────────────────────────────
@@ -106,7 +107,7 @@ function parseLocation(location: any): { lat: number; lng: number } | null {
 }
 
 // ─── Componente principal ────────────────────────────────────────────────────
-export function CreateEventForm({ onClose, onEventCreated }: Props) {
+export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Props) {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [errors, setErrors] = useState<FieldError>( {});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -143,6 +144,20 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (initialCancha) {
+      const coords = parseLocation(initialCancha.location);
+      setForm((prev) => ({
+        ...prev,
+        sportId: initialCancha.sport_id ? (initialCancha.sport_id as SportId) : null,
+        canchaId: initialCancha.id ? initialCancha.id.toString() : "",
+        latitude: coords?.lat ? coords.lat.toString() : "",
+        longitude: coords?.lng ? coords.lng.toString() : "",
+        address: initialCancha.name || "",
+      }));
+    }
+  }, [initialCancha]);
 
   // ── Actualizar campo ──────────────────────────────────────────────────────
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
