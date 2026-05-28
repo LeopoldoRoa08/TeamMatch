@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { UserProvider } from "@/lib/UserContext";
+import { UserProvider, useCurrentUser } from "@/lib/UserContext";
+import { Sparkles } from "lucide-react";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
@@ -182,6 +183,7 @@ function AppContent() {
         >
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
+            {appState === "app" && <RpgNotificationManager />}
             {appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
               <BottomNav
                 current={screen}
@@ -192,5 +194,173 @@ function AppContent() {
         </section>
       </div>
     </main>
+  );
+}
+
+function RpgNotificationManager() {
+  const { xpNotification, clearNotification } = useCurrentUser();
+  const [chestState, setChestState] = useState<"closed" | "opening" | "opened">("closed");
+
+  useEffect(() => {
+    if (xpNotification) {
+      setChestState("closed");
+    }
+  }, [xpNotification]);
+
+  if (!xpNotification) return null;
+
+  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
+
+  // Si es subida de nivel
+  if (isLevelUp) {
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-6 py-4 animate-in fade-in duration-300">
+        <div className="absolute inset-0 sunburst-rays opacity-25 pointer-events-none" />
+        
+        <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 text-center shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col items-center">
+          <div className="absolute -top-12 flex h-24 w-24 items-center justify-center rounded-full bg-primary text-secondary neon-border-legendary animate-bounce">
+            <Sparkles size={48} className="animate-spin duration-3000" />
+          </div>
+
+          <div className="mt-12 space-y-4 w-full">
+            <span className="inline-flex rounded-full bg-primary/20 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-primary animate-pulse border border-primary/30">
+              ¡Hazaña Lograda!
+            </span>
+            
+            <div className="space-y-1">
+              <h2 className="text-3xl font-black tracking-tight text-white drop-shadow">
+                ¡SUBISTE DE NIVEL!
+              </h2>
+              <p className="text-sm font-bold text-primary">
+                Has alcanzado el Nivel {newLevel} 🏆
+              </p>
+            </div>
+
+            <p className="text-xs text-secondary-foreground/85 leading-relaxed bg-white/5 p-3.5 rounded-2xl border border-white/5">
+              "{reason}" <br/>
+              <span className="text-[10px] text-white/50 block mt-1">
+                ¡Tus atributos físicos y mágicos STR, WIS, CON y CHA han aumentado!
+              </span>
+            </p>
+
+            {newCoupon && (
+              <div className="rounded-2xl border border-dashed border-amber-500/40 bg-amber-500/5 p-3.5 space-y-2 animate-in slide-in-from-bottom duration-500">
+                <span className="inline-flex rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-amber-500 border border-amber-500/30">
+                  ¡Recompensa de Nivel Desbloqueada! 🎁
+                </span>
+                <h4 className="text-xs font-black text-white">{newCoupon.title}</h4>
+                <p className="text-[10px] text-amber-500 font-extrabold">{newCoupon.discount}</p>
+                <div className="font-mono text-[9px] font-bold text-white/70 bg-white/5 py-1 rounded">
+                  Código: {newCoupon.code}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={clearNotification}
+              className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 hover:shadow-lg"
+            >
+              Cerrar y Continuar Aventura ⚔️
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no es subida de nivel, pero tiene un nuevo cupón (Cofre del Tesoro del 5to uso)
+  if (newCoupon) {
+    return (
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 px-6 py-4 animate-in fade-in duration-300">
+        <div className="absolute inset-0 sunburst-rays opacity-25 pointer-events-none" />
+
+        <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/20 p-6 text-center shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col items-center">
+          
+          {chestState === "closed" && (
+            <div className="space-y-6 py-6 w-full flex flex-col items-center">
+              <span className="inline-flex rounded-full bg-amber-500/25 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-amber-500 border border-amber-500/20 animate-pulse">
+                ¡FIDELIDAD RECOMPENSADA! 📜
+              </span>
+              
+              <div className="text-7xl chest-shake cursor-pointer">
+                🎁
+              </div>
+              
+              <div className="space-y-1">
+                <h3 className="text-lg font-black text-white">¡Has ganado un Cofre del Tesoro!</h3>
+                <p className="text-xs text-secondary-foreground/75 px-4">
+                  Por tu excelente fidelidad usando TeamMatch, has obtenido un cofre de recompensa.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setChestState("opening")}
+                className="w-full rounded-2xl bg-amber-500 hover:bg-amber-600 text-secondary py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95"
+              >
+                Abrir Cofre 🔓
+              </button>
+            </div>
+          )}
+
+          {chestState === "opening" && (
+            <div className="space-y-6 py-12 flex flex-col items-center justify-center w-full">
+              <div className="text-7xl animate-ping opacity-75">
+                🌟
+              </div>
+              <p className="text-xs font-bold text-primary animate-pulse uppercase tracking-widest mt-4">
+                Desbloqueando magia...
+              </p>
+              {(() => {
+                setTimeout(() => setChestState("opened"), 1000);
+                return null;
+              })()}
+            </div>
+          )}
+
+          {chestState === "opened" && (
+            <div className="space-y-5 w-full flex flex-col items-center chest-open-effect">
+              <span className="inline-flex rounded-full bg-emerald-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-400 border border-emerald-500/20">
+                ¡OBJETO OBTENIDO! 💎
+              </span>
+
+              <div className="text-6xl animate-bounce">
+                📜
+              </div>
+
+              <div className="space-y-1.5 w-full">
+                <h4 className="text-sm font-black text-white">{newCoupon.title}</h4>
+                <p className="text-[10px] text-secondary-foreground/80 leading-relaxed px-2">
+                  {newCoupon.description}
+                </p>
+                <div className="mt-3 p-3 rounded-2xl bg-white/5 border border-white/5 space-y-2 w-full">
+                  <div className="text-base font-black text-primary">{newCoupon.discount}</div>
+                  <div className="font-mono text-xs font-bold text-white/70 py-1 bg-white/5 rounded-xl select-all text-center">
+                    CÓDIGO: {newCoupon.code}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={clearNotification}
+                className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95"
+              >
+                Equipar en Inventario y Cerrar 💼
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] bg-secondary/95 border border-primary/20 backdrop-blur px-4 py-2.5 rounded-full flex items-center gap-2 shadow-pop animate-in fade-in slide-in-from-bottom duration-300">
+      <span className="text-xs text-primary font-black animate-pulse">⚡ +{xp} XP</span>
+      <span className="text-[10px] text-white font-medium">"{reason}"</span>
+      {(() => {
+        setTimeout(clearNotification, 2500);
+        return null;
+      })()}
+    </div>
   );
 }

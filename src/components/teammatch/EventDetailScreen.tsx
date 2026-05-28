@@ -3,6 +3,7 @@ import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2, Star, Check, X, Load
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
+import { useCurrentUser } from "@/lib/UserContext";
 
 export function EventDetailScreen({
   event,
@@ -19,6 +20,8 @@ export function EventDetailScreen({
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showFloatXp, setShowFloatXp] = useState(false);
+  const { addXp } = useCurrentUser();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
@@ -68,10 +71,15 @@ export function EventDetailScreen({
       else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
     } else {
       setShowSuccess(true);
+      setShowFloatXp(true);
+      addXp(15, `Unirse al partido de ${event.sport}: ${event.title} 👟`);
       fetchParticipants();
       setTimeout(() => {
         setShowSuccess(false);
       }, 2000);
+      setTimeout(() => {
+        setShowFloatXp(false);
+      }, 1200);
     }
     setJoining(false);
   }
@@ -299,7 +307,12 @@ export function EventDetailScreen({
       </div>
 
       {/* Sticky CTA */}
-      <div className="absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4">
+      <div className="absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative">
+        {showFloatXp && (
+          <div className="float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50">
+            +15 XP ⚡
+          </div>
+        )}
         <div className="flex items-center gap-3">
           <div>
             <div className="text-[11px] font-medium text-muted-foreground">Aporte</div>

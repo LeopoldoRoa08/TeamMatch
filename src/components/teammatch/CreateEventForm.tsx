@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { AddCanchaForm } from "./CanchasScreen";
+import { useCurrentUser } from "@/lib/UserContext";
 
 // ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
@@ -114,6 +115,8 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
   const [errors, setErrors] = useState<FieldError>( {});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
+  const [showFloatXp, setShowFloatXp] = useState(false);
+  const { addXp } = useCurrentUser();
   
   const [canchas, setCanchas] = useState<any[]>([]);
   const [loadingCanchas, setLoadingCanchas] = useState(true);
@@ -251,6 +254,12 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       }
 
       setStatus("success");
+      setShowFloatXp(true);
+      const sportLabel = SPORTS.find((s) => s.id === form.sportId)?.label || "Deporte";
+      addXp(25, `Organizar partido de ${sportLabel} en ${form.address || "Caracas"} ⚽`);
+      setTimeout(() => {
+        setShowFloatXp(false);
+      }, 1200);
 
       // Limpiar formulario tras éxito
       setTimeout(() => {
@@ -551,7 +560,12 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       </div>
 
       {/* ── Footer con botón de acción ── */}
-      <div className="absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4">
+      <div className="absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative">
+        {showFloatXp && (
+          <div className="float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50">
+            +25 XP ⚡
+          </div>
+        )}
         {/* Resumen rápido */}
         {form.sportId && form.intensity && (
           <div className="mb-3 flex items-center gap-2 text-[11px] text-muted-foreground">

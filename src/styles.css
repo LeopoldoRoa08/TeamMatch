@@ -207,3 +207,184 @@
     opacity: 0;
   }
 }
+
+/* ==========================================================================
+   RPG GAMIFICATION & REWARDS STYLES (PREMIUM MODERN AESTHETICS)
+   ========================================================================== */
+
+/* Neon Borders for RPG level badges */
+.neon-border-gold {
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.4), inset 0 0 5px rgba(250, 204, 21, 0.2);
+  border: 1px solid rgba(250, 204, 21, 0.6);
+}
+
+.neon-border-bronze {
+  box-shadow: 0 0 10px rgba(217, 119, 6, 0.3), inset 0 0 5px rgba(217, 119, 6, 0.15);
+  border: 1px solid rgba(217, 119, 6, 0.5);
+}
+
+.neon-border-silver {
+  box-shadow: 0 0 10px rgba(148, 163, 184, 0.3), inset 0 0 5px rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.neon-border-legendary {
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 8px rgba(168, 85, 247, 0.3);
+  border: 1px solid rgba(168, 85, 247, 0.7);
+  animation: border-pulse 2s infinite alternate;
+}
+
+@keyframes border-pulse {
+  0% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.4), inset 0 0 4px rgba(168, 85, 247, 0.2); }
+  100% { box-shadow: 0 0 18px rgba(168, 85, 247, 0.8), inset 0 0 10px rgba(168, 85, 247, 0.4); }
+}
+
+/* XP Glowing Progress Bar */
+.bar-xp-container {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-xp-glowing {
+  background: linear-gradient(90deg, #32CD32, #00FF7F, #32CD32);
+  background-size: 200% 100%;
+  animation: shine-progress 1.5s linear infinite;
+  box-shadow: 0 0 8px rgba(50, 205, 50, 0.6);
+  position: relative;
+}
+
+.bar-xp-glowing::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-100%);
+  animation: reflection 2.5s infinite;
+}
+
+@keyframes shine-progress {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes reflection {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Floating XP Gain Badge */
+.float-xp {
+  position: absolute;
+  color: #32CD32;
+  font-weight: 800;
+  font-size: 1.25rem;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(50, 205, 50, 0.6);
+  pointer-events: none;
+  z-index: 100;
+  animation: float-up-fade 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes float-up-fade {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* RPG Magic Scroll / Items */
+.magic-scroll {
+  background: radial-gradient(circle at top right, rgba(254, 243, 199, 0.15), rgba(254, 243, 199, 0.05)), var(--color-card);
+  border: 1px dashed rgba(251, 191, 36, 0.4);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.magic-scroll::before {
+  content: '📜';
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 3rem;
+  opacity: 0.06;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.magic-scroll:hover {
+  border-color: rgba(251, 191, 36, 0.8);
+  box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.15);
+  transform: translateY(-2px);
+}
+
+.magic-scroll:hover::before {
+  opacity: 0.1;
+  transform: rotate(-5deg) scale(1.1);
+}
+
+/* Magic Scroll Legendary (Level 5 Reward) */
+.magic-scroll-legendary {
+  background: radial-gradient(circle at top right, rgba(243, 232, 255, 0.2), rgba(243, 232, 255, 0.05)), var(--color-card);
+  border: 1px dashed rgba(168, 85, 247, 0.4);
+}
+
+.magic-scroll-legendary::before {
+  content: '🌟';
+}
+
+.magic-scroll-legendary:hover {
+  border-color: rgba(168, 85, 247, 0.8);
+  box-shadow: 0 10px 25px -5px rgba(168, 85, 247, 0.25);
+}
+
+/* Chest shaking / opening */
+.chest-shake {
+  animation: chest-wiggle 1.2s ease-in-out infinite;
+}
+
+@keyframes chest-wiggle {
+  0%, 100% { transform: rotate(0) scale(1); }
+  10%, 30%, 50%, 70%, 90% { transform: rotate(-5deg) scale(1.05); }
+  20%, 40%, 60%, 80% { transform: rotate(5deg) scale(1.05); }
+}
+
+.chest-open-effect {
+  animation: chest-blast 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes chest-blast {
+  0% { transform: scale(0.3); opacity: 0; filter: brightness(2); }
+  50% { transform: scale(1.1); opacity: 0.8; filter: brightness(1.5); }
+  100% { transform: scale(1); opacity: 1; filter: brightness(1); }
+}
+
+/* Particles / Rays background */
+.sunburst-rays {
+  background-image: repeating-conic-gradient(
+    from 0deg,
+    rgba(251, 191, 36, 0.06) 0deg 15deg,
+    transparent 15deg 30deg
+  );
+  animation: sunburst-spin 20s linear infinite;
+}
+
+@keyframes sunburst-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
