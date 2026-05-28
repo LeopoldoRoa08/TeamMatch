@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2, Star, Check, X, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2, Star, Check, X, Loader2, CheckCircle2 } from "lucide-react";
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
@@ -18,6 +18,7 @@ export function EventDetailScreen({
   const [joining, setJoining] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
@@ -66,8 +67,11 @@ export function EventDetailScreen({
       if (error.code === '23505') alert("Ya enviaste una solicitud");
       else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
     } else {
-      alert("Solicitud enviada al organizador");
+      setShowSuccess(true);
       fetchParticipants();
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
     }
     setJoining(false);
   }
@@ -100,6 +104,22 @@ export function EventDetailScreen({
 
   const isUserPending = participants.some(p => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
   const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
+
+  if (showSuccess) {
+    return (
+      <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
+        <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
+          <CheckCircle2 size={48} strokeWidth={2.5} />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-secondary">¡Solicitud enviada!</h2>
+          <p className="text-sm text-muted-foreground">
+            Tu solicitud para unirte al partido de {event.sport} ha sido enviada con éxito.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-full overflow-y-auto bg-background">

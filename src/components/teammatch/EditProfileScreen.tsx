@@ -13,6 +13,7 @@ export function EditProfileScreen({ onBack }: Props) {
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -25,6 +26,7 @@ export function EditProfileScreen({ onBack }: Props) {
         setName(user.user_metadata?.full_name || user.email?.split('@')[0] || "");
         setEmail(user.email || "");
         setAvatarUrl(user.user_metadata?.avatar_url || null);
+        setIsOrganizer(!!user.user_metadata?.is_organizer);
       }
       setLoading(false);
     });
@@ -69,9 +71,9 @@ export function EditProfileScreen({ onBack }: Props) {
     setSuccess("");
 
     try {
-      // Update metadata (name and avatar)
+      // Update metadata (name, avatar, and is_organizer)
       const { error: updateError } = await supabase.auth.updateUser({
-        data: { full_name: name, avatar_url: avatarUrl },
+        data: { full_name: name, avatar_url: avatarUrl, is_organizer: isOrganizer },
         // If email is different, we also update it, but it sends a confirmation email.
         ...(email !== user.email && { email })
       });
@@ -170,6 +172,25 @@ export function EditProfileScreen({ onBack }: Props) {
             <p className="text-[10px] text-muted-foreground">
               Al cambiar el correo electrónico, se enviará un mensaje de confirmación.
             </p>
+          </div>
+
+          <div className="pt-2">
+            <label className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 cursor-pointer transition-all hover:border-primary/50 active:scale-[0.99]">
+              <input
+                type="checkbox"
+                checked={isOrganizer}
+                onChange={(e) => setIsOrganizer(e.target.checked)}
+                className="h-4 w-4 rounded border-border text-primary accent-primary"
+              />
+              <div className="text-left">
+                <span className="text-sm font-bold text-secondary block">
+                  Modo Organizador
+                </span>
+                <span className="text-[10px] text-muted-foreground">
+                  Te permite registrar y gestionar tus propias instalaciones y canchas
+                </span>
+              </div>
+            </label>
           </div>
         </div>
 

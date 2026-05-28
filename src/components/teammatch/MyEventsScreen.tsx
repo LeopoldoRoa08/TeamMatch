@@ -19,7 +19,7 @@ const getSportImage = (sportId: number) => {
   return runningTrail;
 };
 
-const tabs = ["Disponibles", "Mis Partidos", "Solicitudes", "Historial"] as const;
+const tabs = ["Disponibles", "Mis Partidos", "Solicitudes"] as const;
 
 export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
   const [tab, setTab] = useState<(typeof tabs)[number]>("Disponibles");
@@ -201,7 +201,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
           ) : (
             pendingRequests.map((req) => {
               const isPremium = req.profiles?.is_premium;
-              const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
+              const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
 
               return (
                 <div key={req.id} className="rounded-2xl bg-card p-4 shadow-soft">
@@ -274,18 +274,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
               )}
             </>
           )}
-          {tab === "Historial" && (
-            <>
-              {pastEvents.map((e) => (
-                <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
-              ))}
-              {pastEvents.length === 0 && (
-                <div className="text-center text-sm text-muted-foreground p-5 mt-10">
-                  No has jugado ningún partido todavía
-                </div>
-              )}
-            </>
-          )}
+          {/* Historial tab removed */}
         </div>
       )}
     </div>

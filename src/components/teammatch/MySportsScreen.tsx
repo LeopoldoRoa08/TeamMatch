@@ -7,7 +7,7 @@ import type { SportEvent } from "./types";
 const SPORT_NAMES: Record<number, string> = {
   1: "Fútbol",
   2: "Tenis",
-  3: "Baloncesto",
+  3: "Golf",
   4: "Pádel",
   5: "Senderismo",
   6: "Running",
@@ -17,7 +17,7 @@ const SPORT_NAMES: Record<number, string> = {
 const SPORT_EMOJIS: Record<number, string> = {
   1: "⚽",
   2: "🎾",
-  3: "🏀",
+  3: "⛳",
   4: "🏓",
   5: "🥾",
   6: "🏃",
