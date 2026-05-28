@@ -21,7 +21,8 @@ export function EventDetailScreen({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFloatXp, setShowFloatXp] = useState(false);
-  const { addXp } = useCurrentUser();
+  const { addXp, coupons, claimCoupon } = useCurrentUser();
+  const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
@@ -72,6 +73,9 @@ export function EventDetailScreen({
     } else {
       setShowSuccess(true);
       setShowFloatXp(true);
+      if (selectedCouponCode) {
+        await claimCoupon(selectedCouponCode);
+      }
       addXp(15, `Unirse al partido de ${event.sport}: ${event.title} 👟`);
       fetchParticipants();
       setTimeout(() => {
@@ -109,6 +113,28 @@ export function EventDetailScreen({
   const approvedPlayers = participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status); // Fallback si status no existe
   const pendingRequests = participants.filter(p => p.status === "pending" || p.status === "pendiente");
   const emptySpots = Math.max(0, event.spots - approvedPlayers.length);
+
+  const activeCoupons = coupons.filter((c: any) => !c.claimed);
+  let finalPrice = event.price;
+  let appliedDiscountText = "";
+  if (selectedCouponCode) {
+    const coupon = coupons.find((c: any) => c.code === selectedCouponCode);
+    if (coupon) {
+      if (coupon.code === "FIDELIDAD5") {
+        finalPrice = Math.max(0, event.price - 5);
+        appliedDiscountText = "-$5 USD";
+      } else if (coupon.code === "ASPIRANTE2") {
+        finalPrice = Math.max(0, event.price * 0.9);
+        appliedDiscountText = "-10%";
+      } else if (coupon.code === "GUERRERO3") {
+        finalPrice = Math.max(0, event.price * 0.85);
+        appliedDiscountText = "-15%";
+      } else if (coupon.code === "LEYENDA5") {
+        finalPrice = 0;
+        appliedDiscountText = "-100%";
+      }
+    }
+  }
 
   const isUserPending = participants.some(p => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
   const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
@@ -313,11 +339,36 @@ export function EventDetailScreen({
             +15 XP ⚡
           </div>
         )}
+        
+        {/* Selector de cupones si el evento es de pago */}
+        {event.price > 0 && activeCoupons.length > 0 && (
+          <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-3">
+            <span className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
+              📜 Aplicar Cupón RPG:
+            </span>
+            <select
+              value={selectedCouponCode}
+              onChange={(e) => setSelectedCouponCode(e.target.value)}
+              className="text-xs font-bold text-secondary border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]"
+            >
+              <option value="">-- Sin cupón --</option>
+              {activeCoupons.map((c: any) => (
+                <option key={c.code} value={c.code}>
+                  {c.title} ({c.discount})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="flex items-center gap-3">
           <div>
-            <div className="text-[11px] font-medium text-muted-foreground">Aporte</div>
+            <div className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+              Aporte {selectedCouponCode && <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-1 rounded-full">{appliedDiscountText}</span>}
+            </div>
             <div className="text-lg font-bold text-secondary">
-              {event.price === 0 ? "Gratis" : `$${event.price} USD`}
+              {finalPrice === 0 ? "Gratis" : `$${finalPrice.toFixed(2)} USD`}
+              {selectedCouponCode && <span className="text-[10px] text-muted-foreground line-through ml-1.5">${event.price}</span>}
             </div>
           </div>
           <button

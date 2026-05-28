@@ -41,6 +41,7 @@ export function ProfileScreen({
 
   const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history">("stats");
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [showClaimSuccess, setShowClaimSuccess] = useState<{ title: string; discount: string } | null>(null);
 
   const handleLogout = async () => {
     const { supabase } = await import("@/lib/supabase");
@@ -101,6 +102,26 @@ export function ProfileScreen({
   const con = 10 + useCount;
   const cha = 10 + Math.round((user.user_metadata?.rating || 4.8) * 2);
 
+  if (showClaimSuccess) {
+    return (
+      <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
+        <div className="absolute inset-0 sunburst-rays opacity-10 pointer-events-none" />
+        <div className="grid h-24 w-24 place-items-center rounded-full bg-primary text-secondary shadow-pop ring-8 ring-primary/20 animate-bounce">
+          <Check size={48} strokeWidth={3} className="text-secondary" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-black text-secondary uppercase tracking-wide">¡Objeto Canjeado! 💎</h2>
+          <p className="text-sm font-bold text-primary">
+            {showClaimSuccess.title}
+          </p>
+          <p className="text-xs text-muted-foreground max-w-[285px] mx-auto leading-relaxed">
+            El beneficio de **{showClaimSuccess.discount}** ha sido activado con éxito para tu próxima reserva de cancha o partido.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full overflow-y-auto bg-background pb-28">
       {/* Hero / RPG Avatar Section */}
@@ -146,6 +167,11 @@ export function ProfileScreen({
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <h1 className="text-xl font-black text-white flex items-center justify-center sm:justify-start gap-2">
                 {displayName}
+                {user?.user_metadata?.is_organizer && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-500 shadow-pop border border-amber-500/30">
+                    <Star size={9} className="fill-amber-500 text-amber-500" /> Organizador
+                  </span>
+                )}
               </h1>
               <span
                 className={`inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`}
@@ -352,11 +378,10 @@ export function ProfileScreen({
                             <button
                               onClick={async () => {
                                 await claimCoupon(c.code);
-                                alert(
-                                  "¡Objeto canjeado con éxito! 🏆 Disfruta de tu beneficio en el alquiler de canchas."
-                                );
+                                setShowClaimSuccess({ title: c.title, discount: c.discount });
+                                setTimeout(() => setShowClaimSuccess(null), 3000);
                               }}
-                              className="rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-secondary transition-all active:scale-95 shadow-sm"
+                              className="rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-secondary transition-all active:scale-95 shadow-sm cursor-pointer"
                             >
                               Canjear
                             </button>
