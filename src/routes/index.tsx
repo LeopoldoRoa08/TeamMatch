@@ -6,6 +6,7 @@ import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
 import { EditProfileScreen } from "@/components/teammatch/EditProfileScreen";
+import { CanchaCommentsScreen } from "@/components/teammatch/CanchaCommentsScreen";
 
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { MySportsScreen } from "@/components/teammatch/MySportsScreen";
@@ -46,6 +47,7 @@ function AppContent() {
   
   const [screen, setScreen] = useState<Screen>("map");
   const [selected, setSelected] = useState<SportEvent | null>(null);
+  const [selectedCancha, setSelectedCancha] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
 
@@ -103,7 +105,19 @@ function AppContent() {
     if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
     if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
-    return <MapScreen onSelect={openDetail} userLocation={userLocation} setUserLocation={setUserLocation} />;
+    if (screen === "comments" && selectedCancha)
+      return <CanchaCommentsScreen cancha={selectedCancha} onBack={() => setScreen("map")} />;
+    return (
+      <MapScreen
+        onSelect={openDetail}
+        userLocation={userLocation}
+        setUserLocation={setUserLocation}
+        onNavigateToComments={(cancha) => {
+          setSelectedCancha(cancha);
+          setScreen("comments");
+        }}
+      />
+    );
   };
 
   return (
@@ -168,7 +182,7 @@ function AppContent() {
         >
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
-            {appState === "app" && screen !== "detail" && screen !== "editProfile" && (
+            {appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}

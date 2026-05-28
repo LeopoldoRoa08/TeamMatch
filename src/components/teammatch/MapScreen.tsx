@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
-import { Search, SlidersHorizontal, Bell, Plus, X, MapPin, Crosshair } from "lucide-react";
+import { Search, SlidersHorizontal, Bell, Plus, X, MapPin, Crosshair, MessageSquare, ChevronRight } from "lucide-react";
 import { CreateEventForm } from "./CreateEventForm";
 import { supabase } from "@/lib/supabase";
 import { UserAvatar } from "./UserAvatar";
@@ -93,10 +93,12 @@ export function MapScreen({
   onSelect,
   userLocation: propUserLocation,
   setUserLocation: propSetUserLocation,
+  onNavigateToComments,
 }: {
   onSelect: (e: any) => void;
   userLocation?: { lat: number; lng: number } | null;
   setUserLocation?: (loc: { lat: number; lng: number } | null) => void;
+  onNavigateToComments: (cancha: any) => void;
 }) {
   const [active, setActive] = useState<string>("Todos");
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
@@ -366,6 +368,25 @@ export function MapScreen({
               <X size={16} strokeWidth={2.5} />
             </button>
           </div>
+
+          {/* Caja de Comentarios */}
+          <button
+            onClick={() => onNavigateToComments(selectedCancha)}
+            className="w-full flex items-center justify-between mt-4 rounded-2xl bg-secondary/5 hover:bg-secondary/10 p-3.5 border border-secondary/15 transition-all active:scale-[0.98] text-left group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-secondary/10 text-secondary group-hover:scale-105 transition-transform">
+                <MessageSquare size={20} className="text-primary" />
+              </div>
+              <div>
+                <div className="font-bold text-xs text-secondary">Comentarios de la cancha</div>
+                <div className="text-[10px] text-muted-foreground mt-0.5">
+                  Mira opiniones o escribe sobre esta cancha
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={16} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform" />
+          </button>
 
           {/* Partidos en esta cancha */}
           <div className="mt-5 space-y-3">
