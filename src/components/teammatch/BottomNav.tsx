@@ -8,8 +8,8 @@ interface Props {
 
 export function BottomNav({ current, onChange }: Props) {
   const items: { id: Screen; label: string; icon: typeof Map }[] = [
-    { id: "map", label: "Explorar", icon: Map },
     { id: "events", label: "Eventos", icon: CalendarCheck },
+    { id: "map", label: "Explorar", icon: Map },
     { id: "sports", label: "Deportes", icon: Trophy as any },
     { id: "profile", label: "Perfil", icon: User as any },
   ];

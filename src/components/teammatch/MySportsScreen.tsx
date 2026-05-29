@@ -60,7 +60,7 @@ function formatEvent(row: any): any {
   };
 }
 
-export function MySportsScreen({ onSelectEvent }: { onSelectEvent?: (e: SportEvent) => void }) {
+export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelectEvent?: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
   const [loading, setLoading] = useState(true);
   const [sportGroups, setSportGroups] = useState<SportGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<SportGroup | null>(null);
@@ -184,7 +184,7 @@ export function MySportsScreen({ onSelectEvent }: { onSelectEvent?: (e: SportEve
           </h1>
           <p className="text-sm text-muted-foreground">Tus estadísticas y partidos por disciplina</p>
         </div>
-        <UserAvatar size="md" />
+        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
       </header>
 
       <div className="px-5 pt-6">

@@ -94,11 +94,13 @@ export function MapScreen({
   userLocation: propUserLocation,
   setUserLocation: propSetUserLocation,
   onNavigateToComments,
+  onNavigateToProfile,
 }: {
   onSelect: (e: any) => void;
   userLocation?: { lat: number; lng: number } | null;
   setUserLocation?: (loc: { lat: number; lng: number } | null) => void;
   onNavigateToComments: (cancha: any) => void;
+  onNavigateToProfile?: () => void;
 }) {
   const [active, setActive] = useState<string>("Todos");
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
@@ -281,27 +283,14 @@ export function MapScreen({
       </div>
 
       {/* ── Top bar ── */}
-      <div className="absolute inset-x-0 top-0 z-20 px-4 pt-12 pointer-events-none">
-        <div className="flex items-center gap-2 pointer-events-auto">
-          <UserAvatar size="sm" className="shrink-0" />
-          <div className="flex flex-1 items-center gap-2 rounded-2xl glass px-4 py-3 shadow-soft">
-            <Search size={18} className="text-muted-foreground" />
-            <input
-              placeholder="Buscar deporte, zona…"
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
-            <button className="grid h-7 w-7 place-items-center rounded-lg bg-secondary text-primary-foreground">
-              <SlidersHorizontal size={14} />
-            </button>
-          </div>
-          <button className="relative grid h-12 w-12 place-items-center rounded-2xl glass shadow-soft">
-            <Bell size={18} className="text-secondary" />
-            <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-accent" />
-          </button>
+      <div className="absolute inset-x-0 top-0 z-20 pt-12 pointer-events-none flex flex-col">
+        {/* User avatar on the left */}
+        <div className="px-4 mb-3 pointer-events-auto w-fit">
+          <UserAvatar size="sm" className="shadow-lg ring-2 ring-primary/20 bg-background/90 backdrop-blur-sm cursor-pointer" onClick={onNavigateToProfile} />
         </div>
 
         {/* Filtros de deporte */}
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1 pointer-events-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="w-full flex gap-3 overflow-x-auto px-4 pb-4 pointer-events-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x">
           {sports.map((s) => {
             const isActive = s === "Todos" ? selectedSport === null : selectedSport === s;
             return (
@@ -321,10 +310,10 @@ export function MapScreen({
                     }
                   }
                 }}
-                className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-soft transition-all border ${
+                className={`snap-center shrink-0 whitespace-nowrap rounded-3xl px-6 py-3.5 text-sm font-black tracking-wide shadow-xl transition-all border-2 ${
                   isActive
-                    ? "bg-secondary text-white border-secondary"
-                    : "glass text-secondary border-transparent"
+                    ? "bg-primary text-secondary border-primary scale-[1.02]"
+                    : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"
                 }`}
               >
                 {s}

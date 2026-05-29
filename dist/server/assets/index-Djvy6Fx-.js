@@ -1,29 +1,289 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { useState, useEffect, createContext, useContext, Suspense, lazy, useCallback, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, Search, SlidersHorizontal, Bell, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Settings, Trophy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, User, Mail, Lock, EyeOff, Eye, Map as Map$1 } from "lucide-react";
+import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, User, Mail, Lock, EyeOff, Eye, Map as Map$1 } from "lucide-react";
 const supabaseUrl = "https://aknwdkjzodhkhzxjvipu.supabase.co";
 const supabaseAnonKey = "sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  supabase
+}, Symbol.toStringTag, { value: "Module" }));
 const UserContext = createContext({
   user: null,
   avatarUrl: null,
   displayName: "",
-  initials: ""
+  initials: "",
+  xp: 0,
+  level: 1,
+  useCount: 0,
+  coupons: [],
+  xpHistory: [],
+  joinedEventsCount: 0,
+  createdEventsCount: 0,
+  xpNotification: null,
+  clearNotification: () => {
+  },
+  addXp: async () => {
+  },
+  claimCoupon: async () => {
+  }
 });
+function getCouponForLevel(level) {
+  if (level === 2) {
+    return {
+      id: "ASPIRANTE2",
+      code: "ASPIRANTE2",
+      title: "Pase de Aspirante ⚡",
+      discount: "10% de Descuento",
+      description: "Otorgado automáticamente por alcanzar el Nivel 2.",
+      date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+      claimed: false
+    };
+  }
+  if (level === 3) {
+    return {
+      id: "GUERRERO3",
+      code: "GUERRERO3",
+      title: "Pergamino de Guerrero 🏋️‍♂️",
+      discount: "15% de Descuento",
+      description: "Otorgado automáticamente por alcanzar el Nivel 3.",
+      date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+      claimed: false
+    };
+  }
+  if (level === 5) {
+    return {
+      id: "LEYENDA5",
+      code: "LEYENDA5",
+      title: "Medalla de Leyenda 🌟",
+      discount: "Partido Gratis (100% Off)",
+      description: "Otorgado automáticamente por alcanzar el Nivel 5.",
+      date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+      claimed: false
+    };
+  }
+  return null;
+}
 function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [xpNotification, setXpNotification] = useState(null);
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setUser(data.user);
+        initializeAndTrackUse(data.user);
+      }
+    });
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) {
+        initializeAndTrackUse(u);
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
+  const initializeAndTrackUse = async (currentUser) => {
+    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
+    const meta = currentUser?.user_metadata || {};
+    const isBrandNew = meta.xp === void 0 || meta.level === void 0;
+    if (isBrandNew) {
+      const initialMetadata = {
+        xp: 0,
+        level: 1,
+        use_count: 1,
+        coupons: [],
+        joined_events_count: 0,
+        created_events_count: 0,
+        xp_history: [
+          {
+            id: "init_" + Date.now(),
+            title: "Creación de Personaje 🎮",
+            xp: 0,
+            date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+            type: "system"
+          }
+        ]
+      };
+      const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+        data: initialMetadata
+      });
+      if (updatedUser) setUser(updatedUser);
+      sessionStorage.setItem("teammatch_session_counted", "true");
+      return;
+    }
+    if (!wasCounted) {
+      sessionStorage.setItem("teammatch_session_counted", "true");
+      const currentUseCount = (meta.use_count || 0) + 1;
+      const currentXp = meta.xp || 0;
+      const currentLevel = meta.level || 1;
+      const xpGained = 10;
+      let newXp = currentXp + xpGained;
+      let newLevel = currentLevel;
+      let isLevelUp = false;
+      while (newXp >= newLevel * 100) {
+        newXp -= newLevel * 100;
+        newLevel += 1;
+        isLevelUp = true;
+      }
+      const newHistory = [
+        {
+          id: "use_" + Date.now(),
+          title: `Aventura Diaria (Uso #${currentUseCount}) ⚡`,
+          xp: xpGained,
+          date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+          type: "use"
+        },
+        ...meta.xp_history || []
+      ];
+      let newCoupons = [...meta.coupons || []];
+      let awardedCoupon = null;
+      if (currentUseCount >= 5 && !newCoupons.some((c) => c.code === "FIDELIDAD5")) {
+        awardedCoupon = {
+          id: "FIDELIDAD5",
+          code: "FIDELIDAD5",
+          title: "Pergamino de Fidelidad 📜",
+          discount: "$5 USD de Descuento",
+          description: "Otorgado automáticamente tras tu 5to uso de la app.",
+          date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+          claimed: false
+        };
+        newCoupons.push(awardedCoupon);
+      }
+      if (isLevelUp) {
+        const levelCoupon = getCouponForLevel(newLevel);
+        if (levelCoupon && !newCoupons.some((c) => c.code === levelCoupon.code)) {
+          newCoupons.push(levelCoupon);
+          if (!awardedCoupon) awardedCoupon = levelCoupon;
+        }
+      }
+      const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+        data: {
+          xp: newXp,
+          level: newLevel,
+          use_count: currentUseCount,
+          coupons: newCoupons,
+          xp_history: newHistory
+        }
+      });
+      if (updatedUser) setUser(updatedUser);
+      setXpNotification({
+        xp: xpGained,
+        reason: `¡Uso diario #${currentUseCount} de la app!`,
+        isLevelUp,
+        newLevel: isLevelUp ? newLevel : void 0,
+        newCoupon: awardedCoupon
+      });
+    }
+  };
+  const addXp = async (amount, reason) => {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    const currentXp = meta.xp || 0;
+    const currentLevel = meta.level || 1;
+    let newXp = currentXp + amount;
+    let newLevel = currentLevel;
+    let isLevelUp = false;
+    while (newXp >= newLevel * 100) {
+      newXp -= newLevel * 100;
+      newLevel += 1;
+      isLevelUp = true;
+    }
+    let newCoupons = [...meta.coupons || []];
+    let awardedCoupon = null;
+    if (isLevelUp) {
+      const levelCoupon = getCouponForLevel(newLevel);
+      if (levelCoupon && !newCoupons.some((c) => c.code === levelCoupon.code)) {
+        newCoupons.push(levelCoupon);
+        awardedCoupon = levelCoupon;
+      }
+    }
+    const type = reason.includes("unirse") || reason.includes("Unirse") ? "join" : reason.includes("crear") || reason.includes("Organizar") ? "create" : "system";
+    const newHistory = [
+      {
+        id: "xp_" + Date.now(),
+        title: reason,
+        xp: amount,
+        date: (/* @__PURE__ */ new Date()).toLocaleDateString(),
+        type
+      },
+      ...meta.xp_history || []
+    ];
+    const joinedDelta = type === "join" ? 1 : 0;
+    const createdDelta = type === "create" ? 1 : 0;
+    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+      data: {
+        xp: newXp,
+        level: newLevel,
+        coupons: newCoupons,
+        xp_history: newHistory,
+        joined_events_count: (meta.joined_events_count || 0) + joinedDelta,
+        created_events_count: (meta.created_events_count || 0) + createdDelta
+      }
+    });
+    if (updatedUser) setUser(updatedUser);
+    setXpNotification({
+      xp: amount,
+      reason,
+      isLevelUp,
+      newLevel: isLevelUp ? newLevel : void 0,
+      newCoupon: awardedCoupon
+    });
+  };
+  const claimCoupon = async (code) => {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    const currentCoupons = meta.coupons || [];
+    const newCoupons = currentCoupons.map((c) => {
+      if (c.code === code) {
+        return { ...c, claimed: true };
+      }
+      return c;
+    });
+    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+      data: {
+        coupons: newCoupons
+      }
+    });
+    if (updatedUser) setUser(updatedUser);
+  };
+  const clearNotification = () => setXpNotification(null);
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
   const initials = displayName.substring(0, 2).toUpperCase();
   const avatarUrl = user?.user_metadata?.avatar_url ?? null;
-  return /* @__PURE__ */ jsx(UserContext.Provider, { value: { user, avatarUrl, displayName, initials }, children });
+  const xp = user?.user_metadata?.xp || 0;
+  const level = user?.user_metadata?.level || 1;
+  const useCount = user?.user_metadata?.use_count || 0;
+  const coupons = user?.user_metadata?.coupons || [];
+  const xpHistory = user?.user_metadata?.xp_history || [];
+  const joinedEventsCount = user?.user_metadata?.joined_events_count || 0;
+  const createdEventsCount = user?.user_metadata?.created_events_count || 0;
+  return /* @__PURE__ */ jsx(
+    UserContext.Provider,
+    {
+      value: {
+        user,
+        avatarUrl,
+        displayName,
+        initials,
+        xp,
+        level,
+        useCount,
+        coupons,
+        xpHistory,
+        joinedEventsCount,
+        createdEventsCount,
+        xpNotification,
+        clearNotification,
+        addXp,
+        claimCoupon
+      },
+      children
+    }
+  );
 }
 function useCurrentUser() {
   return useContext(UserContext);
@@ -322,6 +582,8 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle");
   const [serverError, setServerError] = useState(null);
+  const [showFloatXp, setShowFloatXp] = useState(false);
+  const { addXp } = useCurrentUser();
   const [canchas, setCanchas] = useState([]);
   const [loadingCanchas, setLoadingCanchas] = useState(true);
   const [showAddCanchaForm, setShowAddCanchaForm] = useState(false);
@@ -420,6 +682,12 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
         }
       }
       setStatus("success");
+      setShowFloatXp(true);
+      const sportLabel = SPORTS.find((s) => s.id === form.sportId)?.label || "Deporte";
+      addXp(25, `Organizar partido de ${sportLabel} en ${form.address || "Caracas"} ⚽`);
+      setTimeout(() => {
+        setShowFloatXp(false);
+      }, 1200);
       setTimeout(() => {
         setForm(INITIAL_FORM);
         setStatus("idle");
@@ -691,7 +959,8 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
         /* @__PURE__ */ jsx("p", { className: "text-sm text-destructive", children: serverError })
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4", children: [
+    /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative", children: [
+      showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50", children: "+25 XP ⚡" }),
       form.sportId && form.intensity && /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center gap-2 text-[11px] text-muted-foreground", children: [
         /* @__PURE__ */ jsxs("span", { className: "font-semibold text-secondary", children: [
           SPORTS.find((s) => s.id === form.sportId)?.emoji,
@@ -850,7 +1119,8 @@ function MapScreen({
   onSelect,
   userLocation: propUserLocation,
   setUserLocation: propSetUserLocation,
-  onNavigateToComments
+  onNavigateToComments,
+  onNavigateToProfile
 }) {
   const [active, setActive] = useState("Todos");
   const [selectedSport, setSelectedSport] = useState(null);
@@ -985,26 +1255,9 @@ function MapScreen({
         }
       }
     ) }) }),
-    /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 top-0 z-20 px-4 pt-12 pointer-events-none", children: [
-      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 pointer-events-auto", children: [
-        /* @__PURE__ */ jsx(UserAvatar, { size: "sm", className: "shrink-0" }),
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-1 items-center gap-2 rounded-2xl glass px-4 py-3 shadow-soft", children: [
-          /* @__PURE__ */ jsx(Search, { size: 18, className: "text-muted-foreground" }),
-          /* @__PURE__ */ jsx(
-            "input",
-            {
-              placeholder: "Buscar deporte, zona…",
-              className: "flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            }
-          ),
-          /* @__PURE__ */ jsx("button", { className: "grid h-7 w-7 place-items-center rounded-lg bg-secondary text-primary-foreground", children: /* @__PURE__ */ jsx(SlidersHorizontal, { size: 14 }) })
-        ] }),
-        /* @__PURE__ */ jsxs("button", { className: "relative grid h-12 w-12 place-items-center rounded-2xl glass shadow-soft", children: [
-          /* @__PURE__ */ jsx(Bell, { size: 18, className: "text-secondary" }),
-          /* @__PURE__ */ jsx("span", { className: "absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-accent" })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsx("div", { className: "mt-3 flex gap-2 overflow-x-auto pb-1 pointer-events-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", children: sports.map((s) => {
+    /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 top-0 z-20 pt-12 pointer-events-none flex flex-col", children: [
+      /* @__PURE__ */ jsx("div", { className: "px-4 mb-3 pointer-events-auto w-fit", children: /* @__PURE__ */ jsx(UserAvatar, { size: "sm", className: "shadow-lg ring-2 ring-primary/20 bg-background/90 backdrop-blur-sm cursor-pointer", onClick: onNavigateToProfile }) }),
+      /* @__PURE__ */ jsx("div", { className: "w-full flex gap-3 overflow-x-auto px-4 pb-4 pointer-events-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x", children: sports.map((s) => {
         const isActive = s === "Todos" ? selectedSport === null : selectedSport === s;
         return /* @__PURE__ */ jsx(
           "button",
@@ -1023,7 +1276,7 @@ function MapScreen({
                 }
               }
             },
-            className: `whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-soft transition-all border ${isActive ? "bg-secondary text-white border-secondary" : "glass text-secondary border-transparent"}`,
+            className: `snap-center shrink-0 whitespace-nowrap rounded-3xl px-6 py-3.5 text-sm font-black tracking-wide shadow-xl transition-all border-2 ${isActive ? "bg-primary text-secondary border-primary scale-[1.02]" : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"}`,
             children: s
           },
           s
@@ -1206,6 +1459,24 @@ function EventDetailScreen({
   const [joining, setJoining] = useState(false);
   const [actionLoading, setActionLoading] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFloatXp, setShowFloatXp] = useState(false);
+  const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
+  const [selectedCouponCode, setSelectedCouponCode] = useState("");
+  const renderAvatar = (username, sizeClass = "h-10 w-10") => {
+    const isCurrentUser = currentUser?.email === username || currentUser?.user_metadata?.full_name === username;
+    if (isCurrentUser && currentUserAvatar) {
+      return /* @__PURE__ */ jsx(
+        "img",
+        {
+          src: currentUserAvatar,
+          alt: username,
+          className: `${sizeClass} rounded-full object-cover shadow-soft ring-2 ring-primary/30`
+        }
+      );
+    }
+    return /* @__PURE__ */ jsx("div", { className: `${sizeClass} grid place-items-center rounded-full gradient-primary text-sm font-bold text-secondary shadow-soft ring-2 ring-primary/30`, children: (username || "U").substring(0, 2).toUpperCase() });
+  };
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
     fetchParticipants();
@@ -1240,8 +1511,19 @@ function EventDetailScreen({
       if (error.code === "23505") alert("Ya enviaste una solicitud");
       else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
     } else {
-      alert("Solicitud enviada al organizador");
+      setShowSuccess(true);
+      setShowFloatXp(true);
+      if (selectedCouponCode) {
+        await claimCoupon(selectedCouponCode);
+      }
+      addXp(15, `Unirse al partido de ${event.sport}: ${event.title} 👟`);
       fetchParticipants();
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2e3);
+      setTimeout(() => {
+        setShowFloatXp(false);
+      }, 1200);
     }
     setJoining(false);
   }
@@ -1263,8 +1545,42 @@ function EventDetailScreen({
   const approvedPlayers = participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status);
   const pendingRequests = participants.filter((p) => p.status === "pending" || p.status === "pendiente");
   const emptySpots = Math.max(0, event.spots - approvedPlayers.length);
+  const activeCoupons = coupons.filter((c) => !c.claimed);
+  let finalPrice = event.price;
+  let appliedDiscountText = "";
+  if (selectedCouponCode) {
+    const coupon = coupons.find((c) => c.code === selectedCouponCode);
+    if (coupon) {
+      if (coupon.code === "FIDELIDAD5") {
+        finalPrice = Math.max(0, event.price - 5);
+        appliedDiscountText = "-$5 USD";
+      } else if (coupon.code === "ASPIRANTE2") {
+        finalPrice = Math.max(0, event.price * 0.9);
+        appliedDiscountText = "-10%";
+      } else if (coupon.code === "GUERRERO3") {
+        finalPrice = Math.max(0, event.price * 0.85);
+        appliedDiscountText = "-15%";
+      } else if (coupon.code === "LEYENDA5") {
+        finalPrice = 0;
+        appliedDiscountText = "-100%";
+      }
+    }
+  }
   const isUserPending = participants.some((p) => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
   const isUserApproved = participants.some((p) => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
+  if (showSuccess) {
+    return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500", children: [
+      /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: "¡Solicitud enviada!" }),
+        /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground", children: [
+          "Tu solicitud para unirte al partido de ",
+          event.sport,
+          " ha sido enviada con éxito."
+        ] })
+      ] })
+    ] });
+  }
   return /* @__PURE__ */ jsxs("div", { className: "relative h-full overflow-y-auto bg-background", children: [
     /* @__PURE__ */ jsxs("div", { className: "relative h-64 w-full overflow-hidden", children: [
       /* @__PURE__ */ jsx("img", { src: event.image, alt: event.title, className: "h-full w-full object-cover" }),
@@ -1290,7 +1606,7 @@ function EventDetailScreen({
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "space-y-4 p-5 pb-32", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-2xl bg-card p-3 shadow-soft", children: [
-        /* @__PURE__ */ jsx("div", { className: "grid h-11 w-11 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary", children: event.hostAvatar }),
+        renderAvatar(event.host, "h-11 w-11"),
         /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
           /* @__PURE__ */ jsx("div", { className: "text-[11px] font-medium text-muted-foreground", children: "Organizador" }),
           /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: event.host })
@@ -1347,7 +1663,7 @@ function EventDetailScreen({
         ] }),
         /* @__PURE__ */ jsx("div", { className: "space-y-2", children: pendingRequests.map((req) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full bg-secondary text-xs font-bold text-primary-foreground", children: (req.user_username || "U").substring(0, 2).toUpperCase() }),
+            renderAvatar(req.user_username || "Usuario", "h-10 w-10"),
             /* @__PURE__ */ jsxs("div", { children: [
               /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: req.user_username?.split("@")[0] || "Usuario" }),
               /* @__PURE__ */ jsxs("div", { className: "text-[11px] text-muted-foreground flex items-center gap-1", children: [
@@ -1387,15 +1703,7 @@ function EventDetailScreen({
           ] })
         ] }),
         /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: loading ? /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: "Cargando jugadores..." }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-          approvedPlayers.map((p, i) => /* @__PURE__ */ jsx(
-            "div",
-            {
-              title: p.user_username,
-              className: "grid h-10 w-10 place-items-center rounded-full bg-secondary text-[11px] font-bold text-primary-foreground",
-              children: (p.user_username || "U").substring(0, 2).toUpperCase()
-            },
-            p.id || i
-          )),
+          approvedPlayers.map((p, i) => /* @__PURE__ */ jsx("div", { title: p.user_username, children: renderAvatar(p.user_username || "Usuario", "h-10 w-10") }, p.id || i)),
           Array.from({ length: emptySpots }).map((_, i) => /* @__PURE__ */ jsx(
             "div",
             {
@@ -1407,21 +1715,53 @@ function EventDetailScreen({
         ] }) })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
-      /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("div", { className: "text-[11px] font-medium text-muted-foreground", children: "Aporte" }),
-        /* @__PURE__ */ jsx("div", { className: "text-lg font-bold text-secondary", children: event.price === 0 ? "Gratis" : `$${event.price} USD` })
+    /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative", children: [
+      showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50", children: "+15 XP ⚡" }),
+      event.price > 0 && activeCoupons.length > 0 && /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-3", children: [
+        /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1", children: "📜 Aplicar Cupón RPG:" }),
+        /* @__PURE__ */ jsxs(
+          "select",
+          {
+            value: selectedCouponCode,
+            onChange: (e) => setSelectedCouponCode(e.target.value),
+            className: "text-xs font-bold text-secondary border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]",
+            children: [
+              /* @__PURE__ */ jsx("option", { value: "", children: "-- Sin cupón --" }),
+              activeCoupons.map((c) => /* @__PURE__ */ jsxs("option", { value: c.code, children: [
+                c.title,
+                " (",
+                c.discount,
+                ")"
+              ] }, c.code))
+            ]
+          }
+        )
       ] }),
-      /* @__PURE__ */ jsx(
-        "button",
-        {
-          disabled: joining || emptySpots === 0 || isUserPending || isUserApproved,
-          onClick: handleJoin,
-          className: "ml-auto flex-1 rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed",
-          children: joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Solicitud enviada" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
-        }
-      )
-    ] }) })
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsxs("div", { className: "text-[11px] font-medium text-muted-foreground flex items-center gap-1", children: [
+            "Aporte ",
+            selectedCouponCode && /* @__PURE__ */ jsx("span", { className: "text-[9px] font-extrabold text-primary bg-primary/10 px-1 rounded-full", children: appliedDiscountText })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "text-lg font-bold text-secondary", children: [
+            finalPrice === 0 ? "Gratis" : `$${finalPrice.toFixed(2)} USD`,
+            selectedCouponCode && /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-muted-foreground line-through ml-1.5", children: [
+              "$",
+              event.price
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            disabled: joining || emptySpots === 0 || isUserPending || isUserApproved,
+            onClick: handleJoin,
+            className: "ml-auto flex-1 rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed",
+            children: joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Solicitud enviada" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
+          }
+        )
+      ] })
+    ] })
   ] });
 }
 function InfoTile({
@@ -1450,90 +1790,402 @@ function ProfileScreen({
   onEdit,
   onSelectEvent
 }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    supabase.auth.getUser().then(async ({ data: { user: user2 } }) => {
-      if (user2) {
-        setUser(user2);
-      }
-      setLoading(false);
-    });
-  }, []);
+  const {
+    user,
+    avatarUrl,
+    displayName,
+    xp,
+    level,
+    useCount,
+    coupons,
+    xpHistory,
+    joinedEventsCount,
+    createdEventsCount,
+    claimCoupon
+  } = useCurrentUser();
+  const [activeTab, setActiveTab] = useState("stats");
+  const [copiedCode, setCopiedCode] = useState(null);
+  const [showClaimSuccess, setShowClaimSuccess] = useState(null);
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    const { supabase: supabase2 } = await Promise.resolve().then(() => supabase$1);
+    await supabase2.auth.signOut();
   };
-  const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
-  const email = user?.email || "";
-  const initials = name.substring(0, 2).toUpperCase();
-  if (loading) {
+  const handleCopy = (code) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2e3);
+  };
+  if (!user) {
     return /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center bg-background", children: /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }) });
   }
-  const stats = [
-    { label: "Rating", value: "4.9", icon: Star },
-    { label: "Trofeos", value: "7", icon: Trophy }
-  ];
-  return /* @__PURE__ */ jsxs("div", { className: "h-full overflow-y-auto bg-background pb-24", children: [
-    /* @__PURE__ */ jsxs("div", { className: "relative gradient-dark px-5 pb-20 pt-12 text-primary-foreground", children: [
+  const email = user.email || "";
+  const initials = displayName.substring(0, 2).toUpperCase();
+  const xpNeeded = level * 100;
+  const xpPercentage = Math.min(100, Math.max(0, xp / xpNeeded * 100));
+  let rpgClass = "Recluta Novato 👟";
+  let borderClass = "neon-border-bronze";
+  let rarityLabel = "Novato";
+  let rarityColor = "text-amber-600 bg-amber-500/10 border-amber-500/20";
+  if (level === 2) {
+    rpgClass = "Aspirante Activo ⚡";
+    borderClass = "neon-border-bronze";
+    rarityLabel = "Común";
+    rarityColor = "text-gray-400 bg-gray-500/10 border-gray-500/20";
+  } else if (level === 3) {
+    rpgClass = "Guerrero del Fitness 🏋️‍♂️";
+    borderClass = "neon-border-silver";
+    rarityLabel = "Raro";
+    rarityColor = "text-blue-400 bg-blue-500/10 border-blue-500/20";
+  } else if (level === 4) {
+    rpgClass = "Maestro del Match 🏆";
+    borderClass = "neon-border-gold";
+    rarityLabel = "Épico";
+    rarityColor = "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
+  } else if (level >= 5) {
+    rpgClass = "Leyenda de Caracas 🌟";
+    borderClass = "neon-border-legendary";
+    rarityLabel = "Legendario";
+    rarityColor = "text-purple-400 bg-purple-500/10 border-purple-500/20";
+  }
+  const str = 10 + joinedEventsCount * 2;
+  const wis = 10 + createdEventsCount * 5;
+  const con = 10 + useCount;
+  const cha = 10 + Math.round((user.user_metadata?.rating || 4.8) * 2);
+  if (showClaimSuccess) {
+    return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-10 pointer-events-none" }),
+      /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-primary text-secondary shadow-pop ring-8 ring-primary/20 animate-bounce", children: /* @__PURE__ */ jsx(Check, { size: 48, strokeWidth: 3, className: "text-secondary" }) }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-black text-secondary uppercase tracking-wide", children: "¡Objeto Canjeado! 💎" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-primary", children: showClaimSuccess.title }),
+        /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground max-w-[285px] mx-auto leading-relaxed", children: [
+          "El beneficio de **",
+          showClaimSuccess.discount,
+          "** ha sido activado con éxito para tu próxima reserva de cancha o partido."
+        ] })
+      ] })
+    ] });
+  }
+  return /* @__PURE__ */ jsxs("div", { className: "h-full overflow-y-auto bg-background pb-28", children: [
+    /* @__PURE__ */ jsxs("div", { className: "relative gradient-dark px-5 pb-24 pt-12 text-primary-foreground", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
         /* @__PURE__ */ jsx(
           "button",
           {
             onClick: onEdit,
-            className: "grid h-10 w-10 place-items-center rounded-full bg-card/10 text-[#32CD32] transition-transform active:scale-95",
+            className: "grid h-10 w-10 place-items-center rounded-full bg-card/10 text-primary transition-transform active:scale-95",
             children: /* @__PURE__ */ jsx(Edit3, { size: 16 })
           }
         ),
+        /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft", children: [
+          /* @__PURE__ */ jsx(Sparkles, { size: 11, className: "animate-pulse" }),
+          " Modo RPG Activo"
+        ] }),
         /* @__PURE__ */ jsx("button", { className: "grid h-10 w-10 place-items-center rounded-full bg-card/10", children: /* @__PURE__ */ jsx(Settings, { size: 16 }) })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "mt-4 flex items-center gap-4", children: [
-        user?.user_metadata?.avatar_url ? /* @__PURE__ */ jsx(
-          "img",
-          {
-            src: user.user_metadata.avatar_url,
-            alt: "Avatar",
-            className: "h-20 w-20 rounded-full object-cover ring-4 ring-card/20 shadow-pop"
-          }
-        ) : /* @__PURE__ */ jsx(
+      /* @__PURE__ */ jsxs("div", { className: "mt-6 flex flex-col sm:flex-row items-center gap-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "relative shrink-0", children: [
+          /* @__PURE__ */ jsx("div", { className: `h-22 w-22 rounded-full overflow-hidden p-1 bg-card ${borderClass}`, children: avatarUrl ? /* @__PURE__ */ jsx(
+            "img",
+            {
+              src: avatarUrl,
+              alt: "Avatar",
+              className: "h-full w-full rounded-full object-cover shadow-inner"
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "grid h-full w-full place-items-center rounded-full bg-secondary text-2xl font-black text-primary shadow-inner", children: initials }) }),
+          /* @__PURE__ */ jsx("div", { className: "absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-black text-secondary ring-2 ring-card shadow-pop", children: level })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "flex-1 text-center sm:text-left space-y-1.5", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center gap-2", children: [
+            /* @__PURE__ */ jsxs("h1", { className: "text-xl font-black text-white flex items-center justify-center sm:justify-start gap-2", children: [
+              displayName,
+              user?.user_metadata?.is_organizer && /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-500 shadow-pop border border-amber-500/30", children: [
+                /* @__PURE__ */ jsx(Star, { size: 9, className: "fill-amber-500 text-amber-500" }),
+                " Organizador"
+              ] })
+            ] }),
+            /* @__PURE__ */ jsx(
+              "span",
+              {
+                className: `inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`,
+                children: rarityLabel
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-xs text-white/70 font-semibold", children: rpgClass }),
+          /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: email })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "mt-8 space-y-1.5 bg-card/5 backdrop-blur-md p-3.5 rounded-2xl border border-white/5", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-xs font-black text-white", children: [
+          /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1.5", children: [
+            /* @__PURE__ */ jsx(Trophy, { size: 13, className: "text-primary animate-pulse" }),
+            " Puntos de Experiencia"
+          ] }),
+          /* @__PURE__ */ jsxs("span", { className: "font-mono", children: [
+            xp,
+            " / ",
+            xpNeeded,
+            " XP"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "h-3.5 w-full rounded-full bar-xp-container shadow-inner", children: /* @__PURE__ */ jsx(
           "div",
           {
-            className: "grid h-20 w-20 place-items-center rounded-full bg-card text-2xl font-bold ring-4 ring-card/20 shadow-pop",
-            style: { color: "#32CD32" },
-            children: initials
+            className: "h-full rounded-full bar-xp-glowing transition-all duration-500 ease-out",
+            style: { width: `${xpPercentage}%` }
           }
-        ),
-        /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsxs("h1", { className: "text-xl font-bold text-white flex items-center gap-2", children: [
-            name,
-            user?.user_metadata?.is_organizer && /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-500 shadow-pop", children: [
-              /* @__PURE__ */ jsx(Star, { size: 10, className: "fill-amber-500" }),
-              " Organizador"
-            ] })
+        ) }),
+        /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center text-[9px] text-white/60 font-semibold", children: [
+          /* @__PURE__ */ jsxs("span", { children: [
+            "Nivel ",
+            level
           ] }),
-          /* @__PURE__ */ jsx("p", { className: "text-xs text-white/80", children: email }),
-          /* @__PURE__ */ jsxs("div", { className: "mt-1 inline-flex items-center gap-1 rounded-full bg-primary/20 px-2 py-0.5 text-[11px] font-semibold text-primary", children: [
-            /* @__PURE__ */ jsx(Star, { size: 11, className: "fill-primary" }),
-            " Jugador verificado"
+          /* @__PURE__ */ jsxs("span", { children: [
+            "+",
+            xpNeeded - xp,
+            " XP para Nivel ",
+            level + 1
           ] })
         ] })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "-mt-12 px-5", children: /* @__PURE__ */ jsx("div", { className: "grid grid-cols-3 gap-2 rounded-2xl bg-card p-4 shadow-pop", children: stats.map((s) => /* @__PURE__ */ jsxs("div", { className: "text-center", children: [
-      /* @__PURE__ */ jsx("div", { className: "mx-auto mb-1 grid h-9 w-9 place-items-center rounded-xl bg-muted", children: /* @__PURE__ */ jsx(s.icon, { size: 16, className: "text-primary" }) }),
-      /* @__PURE__ */ jsx("div", { className: "text-lg font-bold text-secondary", children: s.value }),
-      /* @__PURE__ */ jsx("div", { className: "text-[11px] text-muted-foreground", children: s.label })
-    ] }, s.label)) }) }),
+    /* @__PURE__ */ jsx("div", { className: "px-5 -mt-8", children: /* @__PURE__ */ jsx("div", { className: "grid grid-cols-3 gap-1 rounded-2xl bg-card p-1.5 shadow-pop border border-border", children: [
+      { id: "stats", label: "Hoja de Stats", icon: Shield },
+      { id: "inventory", label: "Inventario", icon: Trophy },
+      { id: "history", label: "Aventuras", icon: BookOpen }
+    ].map((t) => {
+      const ActiveIcon = t.icon;
+      const isSelected = activeTab === t.id;
+      return /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: () => setActiveTab(t.id),
+          className: `flex flex-col items-center gap-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 ${isSelected ? "bg-secondary text-primary shadow-sm" : "text-muted-foreground hover:bg-muted/50 hover:text-secondary"}`,
+          children: [
+            /* @__PURE__ */ jsx(ActiveIcon, { size: 14, className: isSelected ? "text-primary" : "" }),
+            t.label
+          ]
+        },
+        t.id
+      );
+    }) }) }),
+    /* @__PURE__ */ jsxs("div", { className: "mt-6 px-5", children: [
+      activeTab === "stats" && /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx(Award, { size: 14, className: "text-primary" }),
+          " Atributos del Jugador"
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+          /* @__PURE__ */ jsx(
+            StatCard,
+            {
+              icon: Flame,
+              label: "Fuerza (STR)",
+              value: str,
+              colorClass: "text-red-500",
+              bgClass: "bg-red-500/5 border-red-500/10",
+              description: "Aumenta al unirte a partidos (+2 XP/partido)"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            StatCard,
+            {
+              icon: BookOpen,
+              label: "Sabiduría (WIS)",
+              value: wis,
+              colorClass: "text-blue-500",
+              bgClass: "bg-blue-500/5 border-blue-500/10",
+              description: "Aumenta al crear partidos (+5 XP/partido)"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            StatCard,
+            {
+              icon: Shield,
+              label: "Constitución (CON)",
+              value: con,
+              colorClass: "text-emerald-500",
+              bgClass: "bg-emerald-500/5 border-emerald-500/10",
+              description: "Aumenta con el uso diario de la app"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            StatCard,
+            {
+              icon: Sparkles,
+              label: "Carisma (CHA)",
+              value: cha,
+              colorClass: "text-amber-500",
+              bgClass: "bg-amber-500/5 border-amber-500/10",
+              description: "Calculado según tu reputación deportiva"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-4 shadow-soft", children: [
+          /* @__PURE__ */ jsx("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary mb-1", children: "Resumen de Campaña" }),
+          /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: [
+            "Has completado **",
+            joinedEventsCount,
+            " partidos** como luchador y has guiado a otros jugadores creando **",
+            createdEventsCount,
+            " eventos**. Tu constancia te ha otorgado **",
+            useCount,
+            " días de entrenamiento** activo."
+          ] })
+        ] })
+      ] }),
+      activeTab === "inventory" && /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+            /* @__PURE__ */ jsx(Trophy, { size: 14, className: "text-primary" }),
+            " Cofre de Objetos Mágicos"
+          ] }),
+          /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-bold text-muted-foreground", children: [
+            coupons.filter((c) => !c.claimed).length,
+            " Activos"
+          ] })
+        ] }),
+        coupons.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center space-y-2 animate-fade-in", children: [
+          /* @__PURE__ */ jsx("div", { className: "text-4xl", children: "🎁" }),
+          /* @__PURE__ */ jsx("h4", { className: "text-sm font-bold text-secondary", children: "Cofre Vacío" }),
+          /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground max-w-[240px] mx-auto", children: "No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app diariamente para ganar cofres sorpresa!" })
+        ] }) : /* @__PURE__ */ jsx("div", { className: "grid gap-3", children: coupons.map((c) => {
+          const isLegendary = c.id === "LEYENDA5";
+          return /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: `rounded-2xl p-4 transition-all shadow-soft flex flex-col justify-between magic-scroll ${isLegendary ? "magic-scroll-legendary" : ""} ${c.claimed ? "opacity-60 grayscale border-border bg-muted/30 pointer-events-none" : ""}`,
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-3", children: [
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx(
+                      "span",
+                      {
+                        className: `inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider mb-2 ${isLegendary ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" : "bg-amber-500/20 text-amber-500 border border-amber-500/30"}`,
+                        children: isLegendary ? "Objeto Legendario ⭐" : "Objeto Épico 📜"
+                      }
+                    ),
+                    /* @__PURE__ */ jsx("h4", { className: "text-xs font-black text-secondary", children: c.title }),
+                    /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-0.5 leading-tight", children: c.description })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "text-right shrink-0", children: [
+                    /* @__PURE__ */ jsx("div", { className: "text-sm font-black text-primary drop-shadow-sm", children: c.discount }),
+                    /* @__PURE__ */ jsx("div", { className: "text-[9px] text-muted-foreground font-semibold mt-0.5", children: c.date })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "mt-4 flex items-center justify-between gap-3 pt-3.5 border-t border-dashed border-border/60", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "font-mono text-[10px] font-black text-muted-foreground bg-muted px-2 py-1 rounded-lg", children: [
+                    "Código: ",
+                    /* @__PURE__ */ jsx("span", { className: "text-secondary select-all", children: c.code })
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex gap-2", children: [
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        onClick: () => handleCopy(c.code),
+                        className: "flex items-center gap-1 rounded-xl bg-card border border-border px-2.5 py-1.5 text-[10px] font-black text-secondary transition-all hover:bg-muted active:scale-95 shadow-sm",
+                        children: copiedCode === c.code ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                          /* @__PURE__ */ jsx(Check, { size: 11, className: "text-emerald-500" }),
+                          /* @__PURE__ */ jsx("span", { children: "Copiado" })
+                        ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+                          /* @__PURE__ */ jsx(Copy, { size: 11 }),
+                          /* @__PURE__ */ jsx("span", { children: "Copiar" })
+                        ] })
+                      }
+                    ),
+                    !c.claimed ? /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        onClick: async () => {
+                          await claimCoupon(c.code);
+                          setShowClaimSuccess({ title: c.title, discount: c.discount });
+                          setTimeout(() => setShowClaimSuccess(null), 3e3);
+                        },
+                        className: "rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-secondary transition-all active:scale-95 shadow-sm cursor-pointer",
+                        children: "Canjear"
+                      }
+                    ) : /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black text-muted-foreground px-2 py-1.5 bg-muted/80 rounded-xl", children: "Usado" })
+                  ] })
+                ] })
+              ]
+            },
+            c.code
+          );
+        }) })
+      ] }),
+      activeTab === "history" && /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx(Calendar, { size: 14, className: "text-primary" }),
+          " Registro de Aventuras (XP Log)"
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "space-y-2", children: xpHistory.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center py-8 text-xs text-muted-foreground", children: "Aún no has ganado experiencia. ¡Explora el mapa y únete a un partido!" }) : xpHistory.map((h) => {
+          let typeEmoji = "🎮";
+          let typeBg = "bg-purple-500/10 text-purple-500 border border-purple-500/20";
+          if (h.type === "join") {
+            typeEmoji = "👟";
+            typeBg = "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+          } else if (h.type === "create") {
+            typeEmoji = "⚽";
+            typeBg = "bg-blue-500/10 text-blue-500 border border-blue-500/20";
+          } else if (h.type === "use") {
+            typeEmoji = "⚡";
+            typeBg = "bg-amber-500/10 text-amber-500 border border-amber-500/20";
+          }
+          return /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft",
+              children: [
+                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+                  /* @__PURE__ */ jsx(
+                    "div",
+                    {
+                      className: `grid h-8 w-8 place-items-center rounded-xl text-sm shrink-0 ${typeBg}`,
+                      children: typeEmoji
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("div", { className: "text-xs font-black text-secondary leading-tight", children: h.title }),
+                    /* @__PURE__ */ jsx("div", { className: "text-[9px] text-muted-foreground font-semibold mt-0.5", children: h.date })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsx("div", { className: "text-xs font-black text-primary bg-primary/10 px-2 py-0.5 rounded-full", children: h.xp > 0 ? `+${h.xp} XP` : `0 XP` })
+              ]
+            },
+            h.id
+          );
+        }) })
+      ] })
+    ] }),
     /* @__PURE__ */ jsx("div", { className: "px-5 pt-8", children: /* @__PURE__ */ jsxs(
       "button",
       {
         onClick: handleLogout,
-        className: "flex w-full items-center justify-center gap-2 rounded-2xl bg-red-500/10 py-4 text-sm font-bold text-red-500 transition-colors hover:bg-red-500/20",
+        className: "flex w-full items-center justify-center gap-2 rounded-2xl bg-red-500/10 py-4 text-xs font-black uppercase tracking-wider text-red-500 transition-colors hover:bg-red-500/20",
         children: [
-          /* @__PURE__ */ jsx(LogOut, { size: 18 }),
-          "Cerrar Sesión"
+          /* @__PURE__ */ jsx(LogOut, { size: 16 }),
+          "Cerrar Sesión del Héroe"
         ]
       }
     ) })
+  ] });
+}
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  colorClass,
+  bgClass,
+  description
+}) {
+  return /* @__PURE__ */ jsxs("div", { className: `rounded-2xl border p-3 shadow-soft flex flex-col ${bgClass}`, children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center mb-1", children: [
+      /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black uppercase tracking-wide text-muted-foreground truncate", children: label }),
+      /* @__PURE__ */ jsx(Icon, { size: 14, className: colorClass })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "text-xl font-black text-secondary leading-none my-1", children: value }),
+    /* @__PURE__ */ jsx("p", { className: "text-[9px] text-muted-foreground leading-tight", children: description })
   ] });
 }
 function EditProfileScreen({ onBack }) {
@@ -1542,6 +2194,7 @@ function EditProfileScreen({ onBack }) {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -1553,6 +2206,7 @@ function EditProfileScreen({ onBack }) {
         setName(user2.user_metadata?.full_name || user2.email?.split("@")[0] || "");
         setEmail(user2.email || "");
         setAvatarUrl(user2.user_metadata?.avatar_url || null);
+        setIsOrganizer(!!user2.user_metadata?.is_organizer);
       }
       setLoading(false);
     });
@@ -1587,7 +2241,7 @@ function EditProfileScreen({ onBack }) {
     setSuccess("");
     try {
       const { error: updateError } = await supabase.auth.updateUser({
-        data: { full_name: name, avatar_url: avatarUrl },
+        data: { full_name: name, avatar_url: avatarUrl, is_organizer: isOrganizer },
         // If email is different, we also update it, but it sends a confirmation email.
         ...email !== user.email && { email }
       });
@@ -1668,7 +2322,22 @@ function EditProfileScreen({ onBack }) {
             }
           ),
           /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground", children: "Al cambiar el correo electrónico, se enviará un mensaje de confirmación." })
-        ] })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "pt-2", children: /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 cursor-pointer transition-all hover:border-primary/50 active:scale-[0.99]", children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "checkbox",
+              checked: isOrganizer,
+              onChange: (e) => setIsOrganizer(e.target.checked),
+              className: "h-4 w-4 rounded border-border text-primary accent-primary"
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
+            /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary block", children: "Modo Organizador" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground", children: "Te permite registrar y gestionar tus propias instalaciones y canchas" })
+          ] })
+        ] }) })
       ] }),
       /* @__PURE__ */ jsx(
         "button",
@@ -2063,9 +2732,9 @@ const getSportImage = (sportId) => {
   if (sportId === 3) return hikingTrail;
   return runningTrail;
 };
-const tabs = ["Disponibles", "Mis Partidos", "Solicitudes", "Historial"];
-function MyEventsScreen({ onSelect }) {
-  const [tab, setTab] = useState("Disponibles");
+const tabs = ["Próximos", "Mis Partidos", "Solicitudes"];
+function MyEventsScreen({ onSelect, onNavigateToProfile }) {
+  const [tab, setTab] = useState("Mis Partidos");
   const [pendingRequests, setPendingRequests] = useState([]);
   const [availableEvents, setAvailableEvents] = useState([]);
   const [myEvents, setMyEvents] = useState([]);
@@ -2138,6 +2807,7 @@ function MyEventsScreen({ onSelect }) {
     setPastEvents(past);
     setCreatedEvents(created);
     setLoading(false);
+    setTab(upcoming.length > 0 ? "Mis Partidos" : "Próximos");
   }
   async function fetchRequests(email) {
     if (!email) return;
@@ -2176,7 +2846,7 @@ function MyEventsScreen({ onSelect }) {
         /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Mis eventos" }),
         /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tu agenda deportiva" })
       ] }),
-      /* @__PURE__ */ jsx(UserAvatar, { size: "md" })
+      /* @__PURE__ */ jsx(UserAvatar, { size: "md", className: "cursor-pointer", onClick: onNavigateToProfile })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur", children: /* @__PURE__ */ jsx("div", { className: "flex gap-1 rounded-full bg-muted p-1", children: tabs.map((t) => {
       if (t === "Solicitudes" && createdEvents.length === 0) return null;
@@ -2192,7 +2862,7 @@ function MyEventsScreen({ onSelect }) {
     }) }) }),
     tab === "Solicitudes" ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
       const isPremium = req.profiles?.is_premium;
-      const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
+      const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
       return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl bg-card p-4 shadow-soft", children: [
         /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center gap-3", children: [
           /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary", children: (req.user_username || "U").substring(0, 2).toUpperCase() }),
@@ -2232,17 +2902,13 @@ function MyEventsScreen({ onSelect }) {
         ] })
       ] }, req.id);
     }) }) : /* @__PURE__ */ jsxs("div", { className: "space-y-3 px-5 pt-3", children: [
-      tab === "Disponibles" && /* @__PURE__ */ jsxs(Fragment, { children: [
+      tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
       ] }),
       tab === "Mis Partidos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         myEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos próximos programados" })
-      ] }),
-      tab === "Historial" && /* @__PURE__ */ jsxs(Fragment, { children: [
-        pastEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
-        pastEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5 mt-10", children: "No has jugado ningún partido todavía" })
       ] })
     ] })
   ] });
@@ -2250,7 +2916,7 @@ function MyEventsScreen({ onSelect }) {
 const SPORT_NAMES = {
   1: "Fútbol",
   2: "Tenis",
-  3: "Baloncesto",
+  3: "Golf",
   4: "Pádel",
   5: "Senderismo",
   6: "Running",
@@ -2259,7 +2925,7 @@ const SPORT_NAMES = {
 const SPORT_EMOJIS = {
   1: "⚽",
   2: "🎾",
-  3: "🏀",
+  3: "⛳",
   4: "🏓",
   5: "🥾",
   6: "🏃",
@@ -2288,7 +2954,7 @@ function formatEvent(row) {
     zone: "Caracas"
   };
 }
-function MySportsScreen({ onSelectEvent }) {
+function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
   const [loading, setLoading] = useState(true);
   const [sportGroups, setSportGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -2388,7 +3054,7 @@ function MySportsScreen({ onSelectEvent }) {
         ] }),
         /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tus estadísticas y partidos por disciplina" })
       ] }),
-      /* @__PURE__ */ jsx(UserAvatar, { size: "md" })
+      /* @__PURE__ */ jsx(UserAvatar, { size: "md", className: "cursor-pointer", onClick: onNavigateToProfile })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "px-5 pt-6", children: /* @__PURE__ */ jsx("div", { className: "space-y-2", children: sportGroups.length > 0 ? sportGroups.map((g) => /* @__PURE__ */ jsxs(
       "button",
@@ -2759,8 +3425,8 @@ function InputField({
 }
 function BottomNav({ current, onChange }) {
   const items = [
-    { id: "map", label: "Explorar", icon: Map$1 },
     { id: "events", label: "Eventos", icon: CalendarCheck },
+    { id: "map", label: "Explorar", icon: Map$1 },
     { id: "sports", label: "Deportes", icon: Trophy },
     { id: "profile", label: "Perfil", icon: User }
   ];
@@ -2796,7 +3462,7 @@ function Index() {
 function AppContent() {
   const [appState, setAppState] = useState("checking");
   const [authMode, setAuthMode] = useState("login");
-  const [screen, setScreen] = useState("map");
+  const [screen, setScreen] = useState("events");
   const [selected, setSelected] = useState(null);
   const [selectedCancha, setSelectedCancha] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
@@ -2837,13 +3503,13 @@ function AppContent() {
     if (appState === "auth") {
       return /* @__PURE__ */ jsx(AuthScreen, { initialMode: authMode, onSuccess: () => setAppState("app"), onClose: () => setAppState("welcome") });
     }
-    if (screen === "detail" && selected) return /* @__PURE__ */ jsx(EventDetailScreen, { event: selected, onBack: () => setScreen("map"), userLocation });
-    if (screen === "events") return /* @__PURE__ */ jsx(MyEventsScreen, { onSelect: openDetail });
-    if (screen === "sports") return /* @__PURE__ */ jsx(MySportsScreen, { onSelectEvent: openDetail });
+    if (screen === "detail" && selected) return /* @__PURE__ */ jsx(EventDetailScreen, { event: selected, onBack: () => setScreen("events"), userLocation });
+    if (screen === "events") return /* @__PURE__ */ jsx(MyEventsScreen, { onSelect: openDetail, onNavigateToProfile: () => setScreen("profile") });
+    if (screen === "sports") return /* @__PURE__ */ jsx(MySportsScreen, { onSelectEvent: openDetail, onNavigateToProfile: () => setScreen("profile") });
     if (screen === "editProfile") return /* @__PURE__ */ jsx(EditProfileScreen, { onBack: () => setScreen("profile") });
     if (screen === "profile") return /* @__PURE__ */ jsx(ProfileScreen, { onEdit: () => setScreen("editProfile"), onSelectEvent: openDetail });
     if (screen === "comments" && selectedCancha) return /* @__PURE__ */ jsx(CanchaCommentsScreen, { cancha: selectedCancha, onBack: () => setScreen("map") });
-    return /* @__PURE__ */ jsx(MapScreen, { onSelect: openDetail, userLocation, setUserLocation, onNavigateToComments: (cancha) => {
+    return /* @__PURE__ */ jsx(MapScreen, { onSelect: openDetail, userLocation, setUserLocation, onNavigateToProfile: () => setScreen("profile"), onNavigateToComments: (cancha) => {
       setSelectedCancha(cancha);
       setScreen("comments");
     } });
@@ -2882,9 +3548,122 @@ function AppContent() {
     ] }),
     /* @__PURE__ */ jsx("section", { className: `relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState !== "app" ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" : "flex-1"}`, children: /* @__PURE__ */ jsxs("div", { className: "relative h-[100dvh] w-full overflow-hidden", children: [
       renderScreen(),
+      appState === "app" && /* @__PURE__ */ jsx(RpgNotificationManager, {}),
       appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && /* @__PURE__ */ jsx(BottomNav, { current: screen, onChange: setScreen })
     ] }) })
   ] }) });
+}
+function RpgNotificationManager() {
+  const {
+    xpNotification,
+    clearNotification
+  } = useCurrentUser();
+  const [chestState, setChestState] = useState("closed");
+  useEffect(() => {
+    if (xpNotification) {
+      setChestState("closed");
+    }
+  }, [xpNotification]);
+  if (!xpNotification) return null;
+  const {
+    xp,
+    reason,
+    isLevelUp,
+    newLevel,
+    newCoupon
+  } = xpNotification;
+  if (isLevelUp) {
+    return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-6 py-4 animate-in fade-in duration-300", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-25 pointer-events-none" }),
+      /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 text-center shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col items-center", children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute -top-12 flex h-24 w-24 items-center justify-center rounded-full bg-primary text-secondary neon-border-legendary animate-bounce", children: /* @__PURE__ */ jsx(Sparkles, { size: 48, className: "animate-spin duration-3000" }) }),
+        /* @__PURE__ */ jsxs("div", { className: "mt-12 space-y-4 w-full", children: [
+          /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-primary animate-pulse border border-primary/30", children: "¡Hazaña Lograda!" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+            /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black tracking-tight text-white drop-shadow", children: "¡SUBISTE DE NIVEL!" }),
+            /* @__PURE__ */ jsxs("p", { className: "text-sm font-bold text-primary", children: [
+              "Has alcanzado el Nivel ",
+              newLevel,
+              " 🏆"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("p", { className: "text-xs text-secondary-foreground/85 leading-relaxed bg-white/5 p-3.5 rounded-2xl border border-white/5", children: [
+            '"',
+            reason,
+            '" ',
+            /* @__PURE__ */ jsx("br", {}),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-white/50 block mt-1", children: "¡Tus atributos físicos y mágicos STR, WIS, CON y CHA han aumentado!" })
+          ] }),
+          newCoupon && /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-amber-500/40 bg-amber-500/5 p-3.5 space-y-2 animate-in slide-in-from-bottom duration-500", children: [
+            /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-amber-500/20 px-2.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-amber-500 border border-amber-500/30", children: "¡Recompensa de Nivel Desbloqueada! 🎁" }),
+            /* @__PURE__ */ jsx("h4", { className: "text-xs font-black text-white", children: newCoupon.title }),
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-amber-500 font-extrabold", children: newCoupon.discount }),
+            /* @__PURE__ */ jsxs("div", { className: "font-mono text-[9px] font-bold text-white/70 bg-white/5 py-1 rounded", children: [
+              "Código: ",
+              newCoupon.code
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("button", { onClick: clearNotification, className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 hover:shadow-lg", children: "Cerrar y Continuar Aventura ⚔️" })
+        ] })
+      ] })
+    ] });
+  }
+  if (newCoupon) {
+    return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 px-6 py-4 animate-in fade-in duration-300", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-25 pointer-events-none" }),
+      /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/20 p-6 text-center shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col items-center", children: [
+        chestState === "closed" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 py-6 w-full flex flex-col items-center", children: [
+          /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-amber-500/25 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-amber-500 border border-amber-500/20 animate-pulse", children: "¡FIDELIDAD RECOMPENSADA! 📜" }),
+          /* @__PURE__ */ jsx("div", { className: "text-7xl chest-shake cursor-pointer", children: "🎁" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+            /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-white", children: "¡Has ganado un Cofre del Tesoro!" }),
+            /* @__PURE__ */ jsx("p", { className: "text-xs text-secondary-foreground/75 px-4", children: "Por tu excelente fidelidad usando TeamMatch, has obtenido un cofre de recompensa." })
+          ] }),
+          /* @__PURE__ */ jsx("button", { onClick: () => setChestState("opening"), className: "w-full rounded-2xl bg-amber-500 hover:bg-amber-600 text-secondary py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95", children: "Abrir Cofre 🔓" })
+        ] }),
+        chestState === "opening" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 py-12 flex flex-col items-center justify-center w-full", children: [
+          /* @__PURE__ */ jsx("div", { className: "text-7xl animate-ping opacity-75", children: "🌟" }),
+          /* @__PURE__ */ jsx("p", { className: "text-xs font-bold text-primary animate-pulse uppercase tracking-widest mt-4", children: "Desbloqueando magia..." }),
+          (() => {
+            setTimeout(() => setChestState("opened"), 1e3);
+            return null;
+          })()
+        ] }),
+        chestState === "opened" && /* @__PURE__ */ jsxs("div", { className: "space-y-5 w-full flex flex-col items-center chest-open-effect", children: [
+          /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/20 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-400 border border-emerald-500/20", children: "¡OBJETO OBTENIDO! 💎" }),
+          /* @__PURE__ */ jsx("div", { className: "text-6xl animate-bounce", children: "📜" }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-1.5 w-full", children: [
+            /* @__PURE__ */ jsx("h4", { className: "text-sm font-black text-white", children: newCoupon.title }),
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-secondary-foreground/80 leading-relaxed px-2", children: newCoupon.description }),
+            /* @__PURE__ */ jsxs("div", { className: "mt-3 p-3 rounded-2xl bg-white/5 border border-white/5 space-y-2 w-full", children: [
+              /* @__PURE__ */ jsx("div", { className: "text-base font-black text-primary", children: newCoupon.discount }),
+              /* @__PURE__ */ jsxs("div", { className: "font-mono text-xs font-bold text-white/70 py-1 bg-white/5 rounded-xl select-all text-center", children: [
+                "CÓDIGO: ",
+                newCoupon.code
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("button", { onClick: clearNotification, className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95", children: "Equipar en Inventario y Cerrar 💼" })
+        ] })
+      ] })
+    ] });
+  }
+  return /* @__PURE__ */ jsxs("div", { className: "fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] bg-secondary/95 border border-primary/20 backdrop-blur px-4 py-2.5 rounded-full flex items-center gap-2 shadow-pop animate-in fade-in slide-in-from-bottom duration-300", children: [
+    /* @__PURE__ */ jsxs("span", { className: "text-xs text-primary font-black animate-pulse", children: [
+      "⚡ +",
+      xp,
+      " XP"
+    ] }),
+    /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-white font-medium", children: [
+      '"',
+      reason,
+      '"'
+    ] }),
+    (() => {
+      setTimeout(clearNotification, 2500);
+      return null;
+    })()
+  ] });
 }
 export {
   Index as component

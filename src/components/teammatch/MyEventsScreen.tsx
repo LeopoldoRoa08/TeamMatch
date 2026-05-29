@@ -19,10 +19,10 @@ const getSportImage = (sportId: number) => {
   return runningTrail;
 };
 
-const tabs = ["Disponibles", "Mis Partidos", "Solicitudes"] as const;
+const tabs = ["Próximos", "Mis Partidos", "Solicitudes"] as const;
 
-export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
-  const [tab, setTab] = useState<(typeof tabs)[number]>("Disponibles");
+export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
+  const [tab, setTab] = useState<(typeof tabs)[number]>("Mis Partidos");
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
   const [myEvents, setMyEvents] = useState<any[]>([]);
@@ -117,6 +117,8 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
     setPastEvents(past);
     setCreatedEvents(created);
     setLoading(false);
+
+    setTab(upcoming.length > 0 ? "Mis Partidos" : "Próximos");
   }
 
   async function fetchRequests(email: string | undefined) {
@@ -170,7 +172,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
           <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
           <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
         </div>
-        <UserAvatar size="md" />
+        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
       </header>
 
       <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
@@ -250,7 +252,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
         </div>
       ) : (
         <div className="space-y-3 px-5 pt-3">
-          {tab === "Disponibles" && (
+          {tab === "Próximos" && (
             <>
               {availableEvents.map((e) => (
                 <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />

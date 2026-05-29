@@ -46,7 +46,7 @@ function AppContent() {
   const [appState, setAppState] = useState<AppState>("checking");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   
-  const [screen, setScreen] = useState<Screen>("map");
+  const [screen, setScreen] = useState<Screen>("events");
   const [selected, setSelected] = useState<SportEvent | null>(null);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -101,9 +101,9 @@ function AppContent() {
 
 
     if (screen === "detail" && selected)
-      return <EventDetailScreen event={selected} onBack={() => setScreen("map")} userLocation={userLocation} />;
-    if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
-    if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} />;
+      return <EventDetailScreen event={selected} onBack={() => setScreen("events")} userLocation={userLocation} />;
+    if (screen === "events") return <MyEventsScreen onSelect={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
+    if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
     if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
     if (screen === "comments" && selectedCancha)
@@ -113,6 +113,7 @@ function AppContent() {
         onSelect={openDetail}
         userLocation={userLocation}
         setUserLocation={setUserLocation}
+        onNavigateToProfile={() => setScreen("profile")}
         onNavigateToComments={(cancha) => {
           setSelectedCancha(cancha);
           setScreen("comments");

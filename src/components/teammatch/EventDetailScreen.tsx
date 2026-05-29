@@ -21,8 +21,26 @@ export function EventDetailScreen({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFloatXp, setShowFloatXp] = useState(false);
-  const { addXp, coupons, claimCoupon } = useCurrentUser();
+  const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
+
+  const renderAvatar = (username: string, sizeClass = "h-10 w-10") => {
+    const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
+    if (isCurrentUser && currentUserAvatar) {
+      return (
+        <img 
+          src={currentUserAvatar} 
+          alt={username}
+          className={`${sizeClass} rounded-full object-cover shadow-soft ring-2 ring-primary/30`} 
+        />
+      );
+    }
+    return (
+      <div className={`${sizeClass} grid place-items-center rounded-full gradient-primary text-sm font-bold text-secondary shadow-soft ring-2 ring-primary/30`}>
+        {(username || "U").substring(0, 2).toUpperCase()}
+      </div>
+    );
+  };
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
@@ -188,9 +206,7 @@ export function EventDetailScreen({
       <div className="space-y-4 p-5 pb-32">
         {/* Host */}
         <div className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-soft">
-          <div className="grid h-11 w-11 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary">
-            {event.hostAvatar}
-          </div>
+          {renderAvatar(event.host, "h-11 w-11")}
           <div className="flex-1">
             <div className="text-[11px] font-medium text-muted-foreground">Organizador</div>
             <div className="text-sm font-bold text-secondary">{event.host}</div>
@@ -263,9 +279,7 @@ export function EventDetailScreen({
               {pendingRequests.map(req => (
                 <div key={req.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft">
                   <div className="flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-xs font-bold text-primary-foreground">
-                      {(req.user_username || "U").substring(0, 2).toUpperCase()}
-                    </div>
+                    {renderAvatar(req.user_username || "Usuario", "h-10 w-10")}
                     <div>
                       <div className="text-sm font-bold text-secondary">
                         {req.user_username?.split('@')[0] || "Usuario"}
@@ -310,12 +324,8 @@ export function EventDetailScreen({
             ) : (
               <>
                 {approvedPlayers.map((p, i) => (
-                  <div
-                    key={p.id || i}
-                    title={p.user_username}
-                    className="grid h-10 w-10 place-items-center rounded-full bg-secondary text-[11px] font-bold text-primary-foreground"
-                  >
-                    {(p.user_username || "U").substring(0, 2).toUpperCase()}
+                  <div key={p.id || i} title={p.user_username}>
+                    {renderAvatar(p.user_username || "Usuario", "h-10 w-10")}
                   </div>
                 ))}
                 {Array.from({ length: emptySpots }).map((_, i) => (
