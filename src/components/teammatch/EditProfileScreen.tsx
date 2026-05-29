@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Loader2, Save, Camera } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useCurrentUser } from "@/lib/UserContext";
 
 interface Props {
   onBack: () => void;
 }
 
 export function EditProfileScreen({ onBack }: Props) {
+  const { user: currentUser, updateProfile } = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -20,17 +22,27 @@ export function EditProfileScreen({ onBack }: Props) {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setUser(user);
-        setName(user.user_metadata?.full_name || user.email?.split('@')[0] || "");
-        setEmail(user.email || "");
-        setAvatarUrl(user.user_metadata?.avatar_url || null);
-        setIsOrganizer(!!user.user_metadata?.is_organizer);
-      }
+    if (currentUser) {
+      setUser(currentUser);
+      setName(currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || "");
+      setEmail(currentUser.email || "");
+      setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
+      setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
       setLoading(false);
-    });
-  }, []);
+    } else {
+      // Fallback in case context hasn't loaded yet
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user) {
+          setUser(user);
+          setName(user.user_metadata?.full_name || user.email?.split('@')[0] || "");
+          setEmail(user.email || "");
+          setAvatarUrl(user.user_metadata?.avatar_url || null);
+          setIsOrganizer(!!user.user_metadata?.is_organizer);
+        }
+        setLoading(false);
+      });
+    }
+  }, [currentUser]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -71,14 +83,12 @@ export function EditProfileScreen({ onBack }: Props) {
     setSuccess("");
 
     try {
-      // Update metadata (name, avatar, and is_organizer)
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: { full_name: name, avatar_url: avatarUrl, is_organizer: isOrganizer },
-        // If email is different, we also update it, but it sends a confirmation email.
-        ...(email !== user.email && { email })
+      await updateProfile({
+        name,
+        avatarUrl,
+        isOrganizer,
+        email: email !== user?.email ? email : undefined
       });
-
-      if (updateError) throw updateError;
       
       setSuccess("Perfil actualizado correctamente");
       setTimeout(() => {

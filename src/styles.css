@@ -388,3 +388,54 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Premium XP Toast and countdown progress bar styles */
+.xp-toast-glass {
+  backdrop-filter: blur(20px) saturate(200%);
+  background-color: oklch(0.2 0.03 240 / 0.85); /* Sleek glass dark-navy background */
+  border: 1px solid rgba(50, 205, 50, 0.45);
+  box-shadow: 
+    0 12px 40px -10px rgba(50, 205, 50, 0.25), 
+    0 0 15px rgba(50, 205, 50, 0.15),
+    inset 0 0 12px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.xp-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #32CD32, #00FF7F, #32CD32);
+  background-size: 200% 100%;
+  animation: 
+    xp-progress-countdown 6.5s linear forwards,
+    shine-progress 1.5s linear infinite;
+  box-shadow: 0 0 8px rgba(50, 205, 50, 0.7);
+  width: 100%;
+}
+
+@keyframes xp-progress-countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.xp-pulse-icon {
+  animation: xp-icon-pulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes xp-icon-pulse {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px rgba(50, 205, 50, 0.4));
+  }
+  100% {
+    transform: scale(1.18);
+    filter: drop-shadow(0 0 12px rgba(50, 205, 50, 0.9));
+  }
+}
+
+

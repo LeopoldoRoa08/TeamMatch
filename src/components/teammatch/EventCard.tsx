@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MapPin, Clock, Users, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
@@ -16,8 +16,67 @@ export function EventCard({
 }) {
   const [joining, setJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const pct = (event.joined / event.spots) * 100;
   const isFull = event.joined >= event.spots;
+
+  useEffect(() => {
+    let channel: any;
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user && user.email) {
+        setCurrentUser(user);
+        const fetchStatus = async () => {
+          const { data } = await supabase
+            .from("event_participants")
+            .select("status")
+            .eq("event_id", event.id)
+            .eq("user_username", user.email)
+            .maybeSingle();
+          if (data) {
+            setStatus(data.status);
+          } else {
+            setStatus(null);
+          }
+        };
+
+        fetchStatus();
+
+        channel = supabase
+          .channel(`participant_status_${event.id}_${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "event_participants",
+              filter: `event_id=eq.${event.id}`,
+            },
+            (payload: any) => {
+              if (payload.new && payload.new.user_username === user.email) {
+                setStatus(payload.new.status);
+              } else if (payload.eventType === "DELETE" && payload.old && payload.old.user_username === user.email) {
+                setStatus(null);
+              } else {
+                fetchStatus();
+              }
+            }
+          )
+          .subscribe();
+      }
+    });
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [event.id]);
+
+  const isHost = currentUser && (event.host === currentUser.email || (event as any).creator_username === currentUser.email);
+  const isAccepted = status === "aceptado" || status === "approved" || status === "aprobado" || isHost;
+  const isPending = status === "pendiente" || status === "pending";
 
   async function handleJoin(e: React.MouseEvent) {
     e.stopPropagation(); // Evitar click redundante en la card
@@ -79,9 +138,19 @@ export function EventCard({
 
             <button
               onClick={handleJoin}
-              className="mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 bg-secondary text-primary-foreground shadow-pop hover:bg-secondary/90"
+              className={`mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${
+                isAccepted
+                  ? "bg-primary text-secondary hover:bg-primary/90"
+                  : isPending
+                    ? "bg-amber-500/20 text-amber-500 border border-amber-500/30 hover:bg-amber-500/30"
+                    : "bg-secondary text-primary-foreground hover:bg-secondary/90"
+              }`}
             >
-              Unirse al evento
+              {isAccepted
+                ? "Ver evento"
+                : isPending
+                  ? "Esperando solicitud"
+                  : "Unirse al evento"}
             </button>
           </>
         )}

@@ -1,7 +1,7 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
-import { useState, useEffect, createContext, useContext, Suspense, lazy, useCallback, useRef } from "react";
+import { useState, useRef, useEffect, createContext, useContext, Suspense, lazy, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, User, Mail, Lock, EyeOff, Eye, Map as Map$1 } from "lucide-react";
+import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
 const supabaseUrl = "https://aknwdkjzodhkhzxjvipu.supabase.co";
 const supabaseAnonKey = "sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -22,11 +22,16 @@ const UserContext = createContext({
   joinedEventsCount: 0,
   createdEventsCount: 0,
   xpNotification: null,
+  eventNotification: null,
   clearNotification: () => {
+  },
+  clearEventNotification: () => {
   },
   addXp: async () => {
   },
   claimCoupon: async () => {
+  },
+  updateProfile: async () => {
   }
 });
 function getCouponForLevel(level) {
@@ -68,6 +73,11 @@ function getCouponForLevel(level) {
 function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [xpNotification, setXpNotification] = useState(null);
+  const [eventNotification, setEventNotification] = useState(null);
+  const addXpRef = useRef(async () => {
+  });
+  const previousStatuses = useRef({});
+  const isFirstFetch = useRef(true);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
@@ -89,6 +99,17 @@ function UserProvider({ children }) {
   const initializeAndTrackUse = async (currentUser) => {
     const wasCounted = sessionStorage.getItem("teammatch_session_counted");
     const meta = currentUser?.user_metadata || {};
+    try {
+      await supabase.from("profiles").upsert({
+        id: currentUser.id,
+        username: currentUser.email || "",
+        avatar_url: meta.avatar_url || null,
+        rating: meta.rating || 4.8,
+        is_premium: meta.is_premium || false
+      });
+    } catch (e) {
+      console.error("Error upserting public profile:", e);
+    }
     const isBrandNew = meta.xp === void 0 || meta.level === void 0;
     if (isBrandNew) {
       const initialMetadata = {
@@ -250,7 +271,113 @@ function UserProvider({ children }) {
     });
     if (updatedUser) setUser(updatedUser);
   };
+  const updateProfile = async (updates) => {
+    if (!user) return;
+    const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({
+      data: {
+        full_name: updates.name,
+        avatar_url: updates.avatarUrl,
+        is_organizer: updates.isOrganizer
+      },
+      ...updates.email && updates.email !== user.email && { email: updates.email }
+    });
+    if (updateError) throw updateError;
+    try {
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        username: (updates.email || user.email || "").trim(),
+        avatar_url: updates.avatarUrl,
+        rating: user.user_metadata?.rating || 4.8,
+        is_premium: user.user_metadata?.is_premium || false
+      });
+      if (profileError) {
+        console.warn("Failed to update public profiles table due to RLS, but continuing:", profileError);
+      }
+    } catch (e) {
+      console.error("Error upserting public profile:", e);
+    }
+    if (updatedUser) {
+      setUser(updatedUser);
+    }
+  };
   const clearNotification = () => setXpNotification(null);
+  const clearEventNotification = () => setEventNotification(null);
+  useEffect(() => {
+    addXpRef.current = addXp;
+  });
+  const checkStatusChanges = async () => {
+    if (!user?.email) return;
+    try {
+      const { data, error } = await supabase.from("event_participants").select("id, event_id, status").eq("user_username", user.email);
+      if (error || !data) return;
+      const newStatuses = {};
+      const changes = [];
+      data.forEach((item) => {
+        newStatuses[item.id] = item.status;
+        const oldStatus = previousStatuses.current[item.id];
+        if (!isFirstFetch.current && oldStatus === "pendiente" && item.status !== "pendiente") {
+          changes.push({ id: item.id, eventId: item.event_id, status: item.status });
+        }
+      });
+      previousStatuses.current = { ...previousStatuses.current, ...newStatuses };
+      isFirstFetch.current = false;
+      for (const change of changes) {
+        if (change.status === "aceptado" || change.status === "rechazado") {
+          const { data: eventData } = await supabase.from("events").select("title, sport_id").eq("id", change.eventId).maybeSingle();
+          const sportName = eventData?.sport_id === 1 ? "Fútbol" : eventData?.sport_id === 2 ? "Tenis" : eventData?.sport_id === 3 ? "Golf" : eventData?.sport_id === 4 ? "Pádel" : "Deporte";
+          const eventTitle = eventData?.title || `Evento de ${sportName}`;
+          if (change.status === "aceptado") {
+            setEventNotification({ type: "accepted", eventTitle, sport: sportName });
+            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} 👟`);
+          } else if (change.status === "rechazado") {
+            setEventNotification({ type: "rejected", eventTitle, sport: sportName });
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Error in status check:", e);
+    }
+  };
+  useEffect(() => {
+    if (!user?.email) return;
+    isFirstFetch.current = true;
+    previousStatuses.current = {};
+    checkStatusChanges();
+    const interval = setInterval(checkStatusChanges, 4e3);
+    const channel = supabase.channel(`user_event_status_${user.id}`).on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "event_participants",
+        filter: `user_username=eq.${user.email}`
+      },
+      async (payload) => {
+        const newStatus = payload.new?.status;
+        const oldStatus = payload.old?.status;
+        if (!newStatus || newStatus === oldStatus) return;
+        if (newStatus !== "aceptado" && newStatus !== "rechazado") return;
+        const eventId = payload.new?.event_id;
+        if (!eventId) return;
+        const { data: eventData } = await supabase.from("events").select("title, sport_id").eq("id", eventId).maybeSingle();
+        const sportName = eventData?.sport_id === 1 ? "Fútbol" : eventData?.sport_id === 2 ? "Tenis" : eventData?.sport_id === 3 ? "Golf" : eventData?.sport_id === 4 ? "Pádel" : "Deporte";
+        const eventTitle = eventData?.title || `Evento de ${sportName}`;
+        if (newStatus === "aceptado") {
+          setEventNotification({ type: "accepted", eventTitle, sport: sportName });
+          addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} 👟`);
+        } else if (newStatus === "rechazado") {
+          setEventNotification({ type: "rejected", eventTitle, sport: sportName });
+        }
+        if (payload.new?.id) {
+          previousStatuses.current[payload.new.id] = newStatus;
+        }
+      }
+    ).subscribe();
+    return () => {
+      clearInterval(interval);
+      supabase.removeChannel(channel);
+    };
+  }, [user?.email, user?.id]);
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
   const initials = displayName.substring(0, 2).toUpperCase();
   const avatarUrl = user?.user_metadata?.avatar_url ?? null;
@@ -277,9 +404,12 @@ function UserProvider({ children }) {
         joinedEventsCount,
         createdEventsCount,
         xpNotification,
+        eventNotification,
         clearNotification,
+        clearEventNotification,
         addXp,
-        claimCoupon
+        claimCoupon,
+        updateProfile
       },
       children
     }
@@ -1463,13 +1593,15 @@ function EventDetailScreen({
   const [showFloatXp, setShowFloatXp] = useState(false);
   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState("");
-  const renderAvatar = (username, sizeClass = "h-10 w-10") => {
+  const [hostProfile, setHostProfile] = useState(null);
+  const renderAvatar = (username, sizeClass = "h-10 w-10", explicitAvatarUrl) => {
     const isCurrentUser = currentUser?.email === username || currentUser?.user_metadata?.full_name === username;
-    if (isCurrentUser && currentUserAvatar) {
+    const url = isCurrentUser ? currentUserAvatar || explicitAvatarUrl : explicitAvatarUrl;
+    if (url) {
       return /* @__PURE__ */ jsx(
         "img",
         {
-          src: currentUserAvatar,
+          src: url,
           alt: username,
           className: `${sizeClass} rounded-full object-cover shadow-soft ring-2 ring-primary/30`
         }
@@ -1480,6 +1612,7 @@ function EventDetailScreen({
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
     fetchParticipants();
+    fetchHostProfile();
     const channel = supabase.channel(`participants_${event.id}`).on(
       "postgres_changes",
       { event: "*", schema: "public", table: "event_participants", filter: `event_id=eq.${event.id}` },
@@ -1489,9 +1622,19 @@ function EventDetailScreen({
       supabase.removeChannel(channel);
     };
   }, [event.id]);
+  async function fetchHostProfile() {
+    try {
+      const { data } = await supabase.from("profiles").select("avatar_url, rating").eq("username", event.host).maybeSingle();
+      if (data) {
+        setHostProfile(data);
+      }
+    } catch (e) {
+      console.error("Error fetching host profile:", e);
+    }
+  }
   async function fetchParticipants() {
     setLoading(true);
-    const { data, error } = await supabase.from("event_participants").select("*, profiles(username, rating)").eq("event_id", event.id);
+    const { data, error } = await supabase.from("event_participants").select("*, profiles(username, rating, avatar_url)").eq("event_id", event.id);
     if (!error && data) {
       setParticipants(data);
     }
@@ -1512,18 +1655,13 @@ function EventDetailScreen({
       else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
     } else {
       setShowSuccess(true);
-      setShowFloatXp(true);
       if (selectedCouponCode) {
         await claimCoupon(selectedCouponCode);
       }
-      addXp(15, `Unirse al partido de ${event.sport}: ${event.title} 👟`);
       fetchParticipants();
       setTimeout(() => {
         setShowSuccess(false);
       }, 2e3);
-      setTimeout(() => {
-        setShowFloatXp(false);
-      }, 1200);
     }
     setJoining(false);
   }
@@ -1566,8 +1704,9 @@ function EventDetailScreen({
       }
     }
   }
+  const isHost = currentUser && (event.host === currentUser.email || event.hostName === currentUser.email);
   const isUserPending = participants.some((p) => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
-  const isUserApproved = participants.some((p) => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
+  const isUserApproved = participants.some((p) => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status)) || isHost;
   if (showSuccess) {
     return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500", children: [
       /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
@@ -1606,7 +1745,7 @@ function EventDetailScreen({
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "space-y-4 p-5 pb-32", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-2xl bg-card p-3 shadow-soft", children: [
-        renderAvatar(event.host, "h-11 w-11"),
+        renderAvatar(event.host, "h-11 w-11", hostProfile?.avatar_url),
         /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
           /* @__PURE__ */ jsx("div", { className: "text-[11px] font-medium text-muted-foreground", children: "Organizador" }),
           /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: event.host })
@@ -1663,7 +1802,7 @@ function EventDetailScreen({
         ] }),
         /* @__PURE__ */ jsx("div", { className: "space-y-2", children: pendingRequests.map((req) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
-            renderAvatar(req.user_username || "Usuario", "h-10 w-10"),
+            renderAvatar(req.user_username || "Usuario", "h-10 w-10", req.profiles?.avatar_url),
             /* @__PURE__ */ jsxs("div", { children: [
               /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: req.user_username?.split("@")[0] || "Usuario" }),
               /* @__PURE__ */ jsxs("div", { className: "text-[11px] text-muted-foreground flex items-center gap-1", children: [
@@ -1703,7 +1842,7 @@ function EventDetailScreen({
           ] })
         ] }),
         /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: loading ? /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: "Cargando jugadores..." }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-          approvedPlayers.map((p, i) => /* @__PURE__ */ jsx("div", { title: p.user_username, children: renderAvatar(p.user_username || "Usuario", "h-10 w-10") }, p.id || i)),
+          approvedPlayers.map((p, i) => /* @__PURE__ */ jsx("div", { title: p.user_username, children: renderAvatar(p.user_username || "Usuario", "h-10 w-10", p.profiles?.avatar_url) }, p.id || i)),
           Array.from({ length: emptySpots }).map((_, i) => /* @__PURE__ */ jsx(
             "div",
             {
@@ -1756,8 +1895,8 @@ function EventDetailScreen({
           {
             disabled: joining || emptySpots === 0 || isUserPending || isUserApproved,
             onClick: handleJoin,
-            className: "ml-auto flex-1 rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed",
-            children: joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Solicitud enviada" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
+            className: `ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 ${isUserApproved ? "bg-primary text-secondary" : isUserPending ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" : emptySpots === 0 ? "bg-muted text-muted-foreground cursor-not-allowed" : "gradient-primary text-secondary"}`,
+            children: joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Esperando solicitud" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
           }
         )
       ] })
@@ -2189,6 +2328,7 @@ function StatCard({
   ] });
 }
 function EditProfileScreen({ onBack }) {
+  const { user: currentUser, updateProfile } = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState(null);
@@ -2200,17 +2340,26 @@ function EditProfileScreen({ onBack }) {
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user: user2 } }) => {
-      if (user2) {
-        setUser(user2);
-        setName(user2.user_metadata?.full_name || user2.email?.split("@")[0] || "");
-        setEmail(user2.email || "");
-        setAvatarUrl(user2.user_metadata?.avatar_url || null);
-        setIsOrganizer(!!user2.user_metadata?.is_organizer);
-      }
+    if (currentUser) {
+      setUser(currentUser);
+      setName(currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "");
+      setEmail(currentUser.email || "");
+      setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
+      setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
       setLoading(false);
-    });
-  }, []);
+    } else {
+      supabase.auth.getUser().then(({ data: { user: user2 } }) => {
+        if (user2) {
+          setUser(user2);
+          setName(user2.user_metadata?.full_name || user2.email?.split("@")[0] || "");
+          setEmail(user2.email || "");
+          setAvatarUrl(user2.user_metadata?.avatar_url || null);
+          setIsOrganizer(!!user2.user_metadata?.is_organizer);
+        }
+        setLoading(false);
+      });
+    }
+  }, [currentUser]);
   const handleImageUpload = async (e) => {
     try {
       setUploadingImage(true);
@@ -2240,12 +2389,12 @@ function EditProfileScreen({ onBack }) {
     setError("");
     setSuccess("");
     try {
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: { full_name: name, avatar_url: avatarUrl, is_organizer: isOrganizer },
-        // If email is different, we also update it, but it sends a confirmation email.
-        ...email !== user.email && { email }
+      await updateProfile({
+        name,
+        avatarUrl,
+        isOrganizer,
+        email: email !== user?.email ? email : void 0
       });
-      if (updateError) throw updateError;
       setSuccess("Perfil actualizado correctamente");
       setTimeout(() => {
         onBack();
@@ -2647,8 +2796,53 @@ function EventCard({
 }) {
   const [joining, setJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const pct = event.joined / event.spots * 100;
   event.joined >= event.spots;
+  useEffect(() => {
+    let channel;
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user && user.email) {
+        setCurrentUser(user);
+        const fetchStatus = async () => {
+          const { data } = await supabase.from("event_participants").select("status").eq("event_id", event.id).eq("user_username", user.email).maybeSingle();
+          if (data) {
+            setStatus(data.status);
+          } else {
+            setStatus(null);
+          }
+        };
+        fetchStatus();
+        channel = supabase.channel(`participant_status_${event.id}_${user.id}`).on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "event_participants",
+            filter: `event_id=eq.${event.id}`
+          },
+          (payload) => {
+            if (payload.new && payload.new.user_username === user.email) {
+              setStatus(payload.new.status);
+            } else if (payload.eventType === "DELETE" && payload.old && payload.old.user_username === user.email) {
+              setStatus(null);
+            } else {
+              fetchStatus();
+            }
+          }
+        ).subscribe();
+      }
+    });
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [event.id]);
+  const isHost = currentUser && (event.host === currentUser.email || event.creator_username === currentUser.email);
+  const isAccepted = status === "aceptado" || status === "approved" || status === "aprobado" || isHost;
+  const isPending = status === "pendiente" || status === "pending";
   async function handleJoin(e) {
     e.stopPropagation();
     if (onClick) onClick();
@@ -2715,8 +2909,8 @@ function EventCard({
               "button",
               {
                 onClick: handleJoin,
-                className: "mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 bg-secondary text-primary-foreground shadow-pop hover:bg-secondary/90",
-                children: "Unirse al evento"
+                className: `mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${isAccepted ? "bg-primary text-secondary hover:bg-primary/90" : isPending ? "bg-amber-500/20 text-amber-500 border border-amber-500/30 hover:bg-amber-500/30" : "bg-secondary text-primary-foreground hover:bg-secondary/90"}`,
+                children: isAccepted ? "Ver evento" : isPending ? "Esperando solicitud" : "Unirse al evento"
               }
             )
           ] })
@@ -2791,7 +2985,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     if (!email) return;
     setLoading(true);
     const { data: createdData } = await supabase.from("events").select("*").eq("creator_username", email);
-    const { data: joinedData } = await supabase.from("event_participants").select("events(*)").eq("user_username", email);
+    const { data: joinedData } = await supabase.from("event_participants").select("events(*)").eq("user_username", email).neq("status", "rechazado");
     const created = (createdData || []).map(formatEvent2).filter(Boolean);
     const joined = (joinedData || []).map((d) => formatEvent2(d.events)).filter(Boolean);
     const allUserEventsMap = /* @__PURE__ */ new Map();
@@ -2817,7 +3011,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
         user_username, 
         status,
         events!inner(id, creator_username, sport_id),
-        profiles(is_premium, rating)
+        profiles(is_premium, rating, avatar_url)
       `).eq("status", "pendiente").eq("events.creator_username", email);
     if (!error && data) {
       setPendingRequests(data);
@@ -2865,7 +3059,14 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
       const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
       return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl bg-card p-4 shadow-soft", children: [
         /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center gap-3", children: [
-          /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary", children: (req.user_username || "U").substring(0, 2).toUpperCase() }),
+          req.profiles?.avatar_url ? /* @__PURE__ */ jsx(
+            "img",
+            {
+              src: req.profiles.avatar_url,
+              alt: "Avatar",
+              className: "h-10 w-10 rounded-full object-cover shadow-soft ring-2 ring-primary/30"
+            }
+          ) : /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary", children: (req.user_username || "U").substring(0, 2).toUpperCase() }),
           /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
               /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: req.user_username?.split("@")[0] || "Usuario" }),
@@ -3549,6 +3750,7 @@ function AppContent() {
     /* @__PURE__ */ jsx("section", { className: `relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState !== "app" ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" : "flex-1"}`, children: /* @__PURE__ */ jsxs("div", { className: "relative h-[100dvh] w-full overflow-hidden", children: [
       renderScreen(),
       appState === "app" && /* @__PURE__ */ jsx(RpgNotificationManager, {}),
+      appState === "app" && /* @__PURE__ */ jsx(EventNotificationBanner, {}),
       appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && /* @__PURE__ */ jsx(BottomNav, { current: screen, onChange: setScreen })
     ] }) })
   ] }) });
@@ -3572,6 +3774,14 @@ function RpgNotificationManager() {
     newLevel,
     newCoupon
   } = xpNotification;
+  useEffect(() => {
+    if (xpNotification && !isLevelUp && !newCoupon) {
+      const timer = setTimeout(() => {
+        clearNotification();
+      }, 6500);
+      return () => clearTimeout(timer);
+    }
+  }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
   if (isLevelUp) {
     return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-6 py-4 animate-in fade-in duration-300", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-25 pointer-events-none" }),
@@ -3648,19 +3858,42 @@ function RpgNotificationManager() {
       ] })
     ] });
   }
-  return /* @__PURE__ */ jsxs("div", { className: "fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] bg-secondary/95 border border-primary/20 backdrop-blur px-4 py-2.5 rounded-full flex items-center gap-2 shadow-pop animate-in fade-in slide-in-from-bottom duration-300", children: [
-    /* @__PURE__ */ jsxs("span", { className: "text-xs text-primary font-black animate-pulse", children: [
-      "⚡ +",
-      xp,
-      " XP"
+  return /* @__PURE__ */ jsxs("div", { className: "fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-[360px] rounded-2xl xp-toast-glass px-4 py-3.5 flex flex-col shadow-pop animate-in fade-in slide-in-from-bottom duration-500 overflow-hidden", children: [
+    /* @__PURE__ */ jsx("div", { className: "xp-toast-progress" }),
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+      /* @__PURE__ */ jsx("div", { className: "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/30 text-primary xp-pulse-icon", children: /* @__PURE__ */ jsx(Zap, { size: 18, className: "fill-current text-[#32CD32]" }) }),
+      /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-1.5", children: [
+          /* @__PURE__ */ jsxs("span", { className: "text-[11px] font-black text-[#32CD32] tracking-wide uppercase drop-shadow-[0_0_6px_rgba(50,205,50,0.5)]", children: [
+            "+",
+            xp,
+            " XP GANADO!"
+          ] }),
+          /* @__PURE__ */ jsx("span", { className: "text-[8px] text-white/50 font-bold uppercase tracking-wider", children: "¡Logro!" })
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-white/95 font-semibold truncate mt-0.5", title: reason, children: reason })
+      ] }),
+      /* @__PURE__ */ jsx("button", { onClick: clearNotification, className: "grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors active:scale-95", "aria-label": "Cerrar notificación", children: /* @__PURE__ */ jsx(X, { size: 12 }) })
+    ] })
+  ] });
+}
+function EventNotificationBanner() {
+  const {
+    eventNotification,
+    clearEventNotification
+  } = useCurrentUser();
+  if (!eventNotification) return null;
+  const isAccepted = eventNotification.type === "accepted";
+  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[99999] flex flex-col items-center justify-center space-y-6 bg-background/98 backdrop-blur-md px-6 text-center animate-in fade-in zoom-in duration-500", children: [
+    /* @__PURE__ */ jsx("div", { className: `pointer-events-none absolute top-1/4 h-72 w-72 rounded-full blur-3xl opacity-20 ${isAccepted ? "bg-emerald-500" : "bg-red-500"}` }),
+    /* @__PURE__ */ jsx("div", { className: `grid h-24 w-24 place-items-center rounded-full text-white shadow-pop ring-8 animate-bounce ${isAccepted ? "bg-emerald-500 ring-emerald-500/20" : "bg-red-500 ring-red-500/20"}`, children: isAccepted ? /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) : /* @__PURE__ */ jsx(XCircle, { size: 48, strokeWidth: 2.5 }) }),
+    /* @__PURE__ */ jsxs("div", { className: "space-y-2 max-w-xs relative z-10", children: [
+      /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: isAccepted ? "¡Has sido aceptado!" : "No has sido aceptado" }),
+      /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground leading-relaxed", children: isAccepted ? `Tu solicitud para unirte al partido "${eventNotification.eventTitle}" ha sido aprobada. ¡Prepárate para jugar!` : `Tu solicitud para unirte al partido "${eventNotification.eventTitle}" ha sido rechazada. El evento ha sido removido de tus deportes.` })
     ] }),
-    /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-white font-medium", children: [
-      '"',
-      reason,
-      '"'
-    ] }),
+    /* @__PURE__ */ jsx("button", { onClick: clearEventNotification, className: `relative z-10 mt-4 min-w-[140px] rounded-2xl py-3.5 px-6 text-sm font-black text-white shadow-pop transition-all active:scale-95 ${isAccepted ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" : "bg-red-500 hover:bg-red-600 shadow-red-500/20"}`, children: "Entendido" }),
     (() => {
-      setTimeout(clearNotification, 2500);
+      setTimeout(clearEventNotification, 8e3);
       return null;
     })()
   ] });

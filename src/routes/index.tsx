@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { UserProvider, useCurrentUser } from "@/lib/UserContext";
-import { Sparkles } from "lucide-react";
+import { Sparkles, CheckCircle2, XCircle, Zap, X } from "lucide-react";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
@@ -185,6 +185,7 @@ function AppContent() {
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
             {appState === "app" && <RpgNotificationManager />}
+            {appState === "app" && <EventNotificationBanner />}
             {appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
               <BottomNav
                 current={screen}
@@ -211,6 +212,16 @@ function RpgNotificationManager() {
   if (!xpNotification) return null;
 
   const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
+
+  // Timed dismiss for normal XP gain toast
+  useEffect(() => {
+    if (xpNotification && !isLevelUp && !newCoupon) {
+      const timer = setTimeout(() => {
+        clearNotification();
+      }, 6500);
+      return () => clearTimeout(timer);
+    }
+  }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
 
   // Si es subida de nivel
   if (isLevelUp) {
@@ -355,11 +366,88 @@ function RpgNotificationManager() {
   }
 
   return (
-    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[9999] bg-secondary/95 border border-primary/20 backdrop-blur px-4 py-2.5 rounded-full flex items-center gap-2 shadow-pop animate-in fade-in slide-in-from-bottom duration-300">
-      <span className="text-xs text-primary font-black animate-pulse">⚡ +{xp} XP</span>
-      <span className="text-[10px] text-white font-medium">"{reason}"</span>
+    <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-[360px] rounded-2xl xp-toast-glass px-4 py-3.5 flex flex-col shadow-pop animate-in fade-in slide-in-from-bottom duration-500 overflow-hidden">
+      {/* Timer progress bar at the bottom */}
+      <div className="xp-toast-progress" />
+
+      {/* Main content row */}
+      <div className="flex items-center gap-3">
+        {/* Animated icon container */}
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/30 text-primary xp-pulse-icon">
+          <Zap size={18} className="fill-current text-[#32CD32]" />
+        </div>
+
+        {/* Text Area */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-[11px] font-black text-[#32CD32] tracking-wide uppercase drop-shadow-[0_0_6px_rgba(50,205,50,0.5)]">
+              +{xp} XP GANADO!
+            </span>
+            <span className="text-[8px] text-white/50 font-bold uppercase tracking-wider">
+              ¡Logro!
+            </span>
+          </div>
+          <p className="text-[11px] text-white/95 font-semibold truncate mt-0.5" title={reason}>
+            {reason}
+          </p>
+        </div>
+
+        {/* Manual Close Button */}
+        <button
+          onClick={clearNotification}
+          className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-colors active:scale-95"
+          aria-label="Cerrar notificación"
+        >
+          <X size={12} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EventNotificationBanner() {
+  const { eventNotification, clearEventNotification } = useCurrentUser();
+
+  if (!eventNotification) return null;
+
+  const isAccepted = eventNotification.type === "accepted";
+
+  return (
+    <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center space-y-6 bg-background/98 backdrop-blur-md px-6 text-center animate-in fade-in zoom-in duration-500">
+      {/* Decorative Glows */}
+      <div className={`pointer-events-none absolute top-1/4 h-72 w-72 rounded-full blur-3xl opacity-20 ${isAccepted ? "bg-emerald-500" : "bg-red-500"}`} />
+      
+      <div
+        className={`grid h-24 w-24 place-items-center rounded-full text-white shadow-pop ring-8 animate-bounce ${
+          isAccepted ? "bg-emerald-500 ring-emerald-500/20" : "bg-red-500 ring-red-500/20"
+        }`}
+      >
+        {isAccepted ? <CheckCircle2 size={48} strokeWidth={2.5} /> : <XCircle size={48} strokeWidth={2.5} />}
+      </div>
+      
+      <div className="space-y-2 max-w-xs relative z-10">
+        <h2 className="text-2xl font-bold text-secondary">
+          {isAccepted ? "¡Has sido aceptado!" : "No has sido aceptado"}
+        </h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {isAccepted
+            ? `Tu solicitud para unirte al partido "${eventNotification.eventTitle}" ha sido aprobada. ¡Prepárate para jugar!`
+            : `Tu solicitud para unirte al partido "${eventNotification.eventTitle}" ha sido rechazada. El evento ha sido removido de tus deportes.`}
+        </p>
+      </div>
+
+      <button
+        onClick={clearEventNotification}
+        className={`relative z-10 mt-4 min-w-[140px] rounded-2xl py-3.5 px-6 text-sm font-black text-white shadow-pop transition-all active:scale-95 ${
+          isAccepted ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" : "bg-red-500 hover:bg-red-600 shadow-red-500/20"
+        }`}
+      >
+        Entendido
+      </button>
+
+      {/* Auto-dismiss fallback */}
       {(() => {
-        setTimeout(clearNotification, 2500);
+        setTimeout(clearEventNotification, 8000);
         return null;
       })()}
     </div>

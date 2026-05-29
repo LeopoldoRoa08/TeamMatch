@@ -24,12 +24,15 @@ export function EventDetailScreen({
   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
 
-  const renderAvatar = (username: string, sizeClass = "h-10 w-10") => {
+  const [hostProfile, setHostProfile] = useState<any>(null);
+
+  const renderAvatar = (username: string, sizeClass = "h-10 w-10", explicitAvatarUrl?: string | null) => {
     const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
-    if (isCurrentUser && currentUserAvatar) {
+    const url = isCurrentUser ? (currentUserAvatar || explicitAvatarUrl) : explicitAvatarUrl;
+    if (url) {
       return (
         <img 
-          src={currentUserAvatar} 
+          src={url} 
           alt={username}
           className={`${sizeClass} rounded-full object-cover shadow-soft ring-2 ring-primary/30`} 
         />
@@ -45,6 +48,7 @@ export function EventDetailScreen({
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
     fetchParticipants();
+    fetchHostProfile();
 
     // Suscripción a cambios en tiempo real
     const channel = supabase
@@ -59,12 +63,27 @@ export function EventDetailScreen({
     return () => { supabase.removeChannel(channel); };
   }, [event.id]);
 
+  async function fetchHostProfile() {
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("avatar_url, rating")
+        .eq("username", event.host)
+        .maybeSingle();
+      if (data) {
+        setHostProfile(data);
+      }
+    } catch (e) {
+      console.error("Error fetching host profile:", e);
+    }
+  }
+
   async function fetchParticipants() {
     setLoading(true);
     // Asumimos que la tabla event_participants tiene una columna 'status' (pending, approved, rejected)
     const { data, error } = await supabase
       .from("event_participants")
-      .select("*, profiles(username, rating)")
+      .select("*, profiles(username, rating, avatar_url)")
       .eq("event_id", event.id);
 
     if (!error && data) {
@@ -90,18 +109,13 @@ export function EventDetailScreen({
       else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
     } else {
       setShowSuccess(true);
-      setShowFloatXp(true);
       if (selectedCouponCode) {
         await claimCoupon(selectedCouponCode);
       }
-      addXp(15, `Unirse al partido de ${event.sport}: ${event.title} 👟`);
       fetchParticipants();
       setTimeout(() => {
         setShowSuccess(false);
       }, 2000);
-      setTimeout(() => {
-        setShowFloatXp(false);
-      }, 1200);
     }
     setJoining(false);
   }
@@ -154,8 +168,9 @@ export function EventDetailScreen({
     }
   }
 
+  const isHost = currentUser && (event.host === currentUser.email || (event as any).hostName === currentUser.email);
   const isUserPending = participants.some(p => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
-  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
+  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status)) || isHost;
 
   if (showSuccess) {
     return (
@@ -206,7 +221,7 @@ export function EventDetailScreen({
       <div className="space-y-4 p-5 pb-32">
         {/* Host */}
         <div className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-soft">
-          {renderAvatar(event.host, "h-11 w-11")}
+          {renderAvatar(event.host, "h-11 w-11", hostProfile?.avatar_url)}
           <div className="flex-1">
             <div className="text-[11px] font-medium text-muted-foreground">Organizador</div>
             <div className="text-sm font-bold text-secondary">{event.host}</div>
@@ -279,7 +294,7 @@ export function EventDetailScreen({
               {pendingRequests.map(req => (
                 <div key={req.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft">
                   <div className="flex items-center gap-3">
-                    {renderAvatar(req.user_username || "Usuario", "h-10 w-10")}
+                    {renderAvatar(req.user_username || "Usuario", "h-10 w-10", req.profiles?.avatar_url)}
                     <div>
                       <div className="text-sm font-bold text-secondary">
                         {req.user_username?.split('@')[0] || "Usuario"}
@@ -325,7 +340,7 @@ export function EventDetailScreen({
               <>
                 {approvedPlayers.map((p, i) => (
                   <div key={p.id || i} title={p.user_username}>
-                    {renderAvatar(p.user_username || "Usuario", "h-10 w-10")}
+                    {renderAvatar(p.user_username || "Usuario", "h-10 w-10", p.profiles?.avatar_url)}
                   </div>
                 ))}
                 {Array.from({ length: emptySpots }).map((_, i) => (
@@ -384,9 +399,25 @@ export function EventDetailScreen({
           <button
             disabled={joining || emptySpots === 0 || isUserPending || isUserApproved}
             onClick={handleJoin}
-            className="ml-auto flex-1 rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 ${
+              isUserApproved
+                ? "bg-primary text-secondary"
+                : isUserPending
+                  ? "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                  : emptySpots === 0
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : "gradient-primary text-secondary"
+            }`}
           >
-            {joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Solicitud enviada" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"}
+            {joining 
+              ? "Enviando..." 
+              : isUserApproved 
+                ? "Ya estás dentro" 
+                : isUserPending 
+                  ? "Esperando solicitud" 
+                  : emptySpots === 0 
+                    ? "Evento Lleno" 
+                    : "Solicitar unirme"}
           </button>
         </div>
       </div>

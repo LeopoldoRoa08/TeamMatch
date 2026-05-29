@@ -96,7 +96,8 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
     const { data: joinedData } = await supabase
       .from("event_participants")
       .select("events(*)")
-      .eq("user_username", email);
+      .eq("user_username", email)
+      .neq("status", "rechazado");
 
     const created = (createdData || []).map(formatEvent).filter(Boolean);
     const joined = (joinedData || []).map((d: any) => formatEvent(d.events)).filter(Boolean);
@@ -132,7 +133,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
         user_username, 
         status,
         events!inner(id, creator_username, sport_id),
-        profiles(is_premium, rating)
+        profiles(is_premium, rating, avatar_url)
       `)
       .eq("status", "pendiente")
       .eq("events.creator_username", email);
@@ -208,9 +209,17 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
               return (
                 <div key={req.id} className="rounded-2xl bg-card p-4 shadow-soft">
                   <div className="mb-3 flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary">
-                      {(req.user_username || "U").substring(0, 2).toUpperCase()}
-                    </div>
+                    {req.profiles?.avatar_url ? (
+                      <img
+                        src={req.profiles.avatar_url}
+                        alt="Avatar"
+                        className="h-10 w-10 rounded-full object-cover shadow-soft ring-2 ring-primary/30"
+                      />
+                    ) : (
+                      <div className="grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary">
+                        {(req.user_username || "U").substring(0, 2).toUpperCase()}
+                      </div>
+                    )}
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5">
                         <div className="text-sm font-bold text-secondary">
