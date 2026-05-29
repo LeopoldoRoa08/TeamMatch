@@ -9,13 +9,15 @@ import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
 import hikingTrail from "@/assets/hiking-trail.jpg";
 import runningTrail from "@/assets/running-trail.jpg";
+import tennisCourt from "@/assets/tennis-court.png";
+import golfCourse from "@/assets/golf-course.png";
 import { parseLocation } from "./MapScreen";
 
 const getSportImage = (sportId: number) => {
   if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
   if (sportId === 4) return padelCourt;
-  if (sportId === 2) return padelCourt; // tenis fallback
-  if (sportId === 3) return hikingTrail; // golf fallback
   return runningTrail;
 };
 

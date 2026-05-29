@@ -1,7 +1,7 @@
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, useRouter, Link, Outlet, HeadContent, Scripts, createFileRoute, lazyRouteComponent, createRouter } from "@tanstack/react-router";
 import { jsx, jsxs } from "react/jsx-runtime";
-const appCss = "/assets/styles-M5h5-S8G.css";
+const appCss = "/assets/styles-pUn0i05b.css";
 function NotFoundComponent() {
   return /* @__PURE__ */ jsx("div", { className: "flex min-h-screen items-center justify-center bg-background px-4", children: /* @__PURE__ */ jsxs("div", { className: "max-w-md text-center", children: [
     /* @__PURE__ */ jsx("h1", { className: "text-7xl font-bold text-foreground", children: "404" }),
@@ -85,7 +85,7 @@ function RootComponent() {
   const { queryClient } = Route$1.useRouteContext();
   return /* @__PURE__ */ jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsx(Outlet, {}) });
 }
-const $$splitComponentImporter = () => import("./index-D-fQ-jqE.js");
+const $$splitComponentImporter = () => import("./index-VdJyidi0.js");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component"),
   head: () => ({

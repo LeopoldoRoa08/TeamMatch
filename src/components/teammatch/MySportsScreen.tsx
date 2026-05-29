@@ -3,6 +3,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { UserAvatar } from "./UserAvatar";
 import type { SportEvent } from "./types";
+import footballField from "@/assets/football-field.jpg";
+import padelCourt from "@/assets/padel-court.jpg";
+import hikingTrail from "@/assets/hiking-trail.jpg";
+import runningTrail from "@/assets/running-trail.jpg";
+import tennisCourt from "@/assets/tennis-court.png";
+import golfCourse from "@/assets/golf-course.png";
 
 const SPORT_NAMES: Record<number, string> = {
   1: "Fútbol",
@@ -32,6 +38,15 @@ interface SportGroup {
   events: any[];
 }
 
+const getSportImage = (sportId: number) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
+  if (sportId === 4) return padelCourt;
+  if (sportId === 5) return hikingTrail;
+  return runningTrail;
+};
+
 function formatEvent(row: any): any {
   if (!row) return null;
   const sportName = SPORT_NAMES[row.sport_id] || "Deporte";
@@ -51,7 +66,7 @@ function formatEvent(row: any): any {
           month: "short",
         })
       : "Próximamente",
-    image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+    image: getSportImage(row.sport_id),
     distanceKm: 2.5,
     joined: row.joined ?? 1,
     spots: row.max_capacity || 10,

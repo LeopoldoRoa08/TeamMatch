@@ -1182,13 +1182,14 @@ function UserAvatar({ size = "md", className = "", onClick }) {
 }
 const footballField = "/assets/football-field-C0emToIf.jpg";
 const padelCourt = "/assets/padel-court-CALSJD4S.jpg";
-const hikingTrail = "/assets/hiking-trail-BbQuy3Lk.jpg";
 const runningTrail = "/assets/running-trail-B8Oay5hI.jpg";
-const getSportImage$1 = (sportId) => {
+const tennisCourt = "/assets/tennis-court-DN_fDHme.png";
+const golfCourse = "/assets/golf-course-CNvN28v6.png";
+const getSportImage$2 = (sportId) => {
   if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
   if (sportId === 4) return padelCourt;
-  if (sportId === 2) return padelCourt;
-  if (sportId === 3) return hikingTrail;
   return runningTrail;
 };
 const LeafletMap = lazy(
@@ -1341,7 +1342,7 @@ function MapScreen({
             day: "numeric",
             month: "short"
           }) : "Próximamente",
-          image: getSportImage$1(row.sport_id),
+          image: getSportImage$2(row.sport_id),
           joined: row.joined ?? 1,
           spots: row.max_capacity || 10,
           price: 0,
@@ -2919,11 +2920,11 @@ function EventCard({
     }
   );
 }
-const getSportImage = (sportId) => {
+const getSportImage$1 = (sportId) => {
   if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
   if (sportId === 4) return padelCourt;
-  if (sportId === 2) return padelCourt;
-  if (sportId === 3) return hikingTrail;
   return runningTrail;
 };
 const tabs = ["Próximos", "Mis Partidos", "Solicitudes"];
@@ -2953,7 +2954,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
       date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
-      image: getSportImage(row.sport_id),
+      image: getSportImage$1(row.sport_id),
       distanceKm: 2.5,
       joined: row.joined ?? 1,
       spots: row.max_capacity || 10,
@@ -3114,6 +3115,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     ] })
   ] });
 }
+const hikingTrail = "/assets/hiking-trail-BbQuy3Lk.jpg";
 const SPORT_NAMES = {
   1: "Fútbol",
   2: "Tenis",
@@ -3132,6 +3134,14 @@ const SPORT_EMOJIS = {
   6: "🏃",
   7: "🏐"
 };
+const getSportImage = (sportId) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
+  if (sportId === 4) return padelCourt;
+  if (sportId === 5) return hikingTrail;
+  return runningTrail;
+};
 function formatEvent(row) {
   if (!row) return null;
   const sportName = SPORT_NAMES[row.sport_id] || "Deporte";
@@ -3147,7 +3157,7 @@ function formatEvent(row) {
       day: "numeric",
       month: "short"
     }) : "Próximamente",
-    image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+    image: getSportImage(row.sport_id),
     distanceKm: 2.5,
     joined: row.joined ?? 1,
     spots: row.max_capacity || 10,
@@ -3652,10 +3662,7 @@ function BottomNav({ current, onChange }) {
       }
     );
   };
-  return /* @__PURE__ */ jsx("nav", { className: "absolute inset-x-0 bottom-0 z-30 glass border-t border-border", children: /* @__PURE__ */ jsxs("div", { className: "flex items-end px-2 pb-2 pt-1", children: [
-    items.map((it) => /* @__PURE__ */ jsx(Btn, { id: it.id, label: it.label, Icon: it.icon }, it.id)),
-    /* @__PURE__ */ jsx("div", { className: "flex-1" })
-  ] }) });
+  return /* @__PURE__ */ jsx("nav", { className: "absolute inset-x-0 bottom-0 z-30 glass border-t border-border", children: /* @__PURE__ */ jsx("div", { className: "flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-1", children: items.map((it) => /* @__PURE__ */ jsx(Btn, { id: it.id, label: it.label, Icon: it.icon }, it.id)) }) });
 }
 function Index() {
   return /* @__PURE__ */ jsx(UserProvider, { children: /* @__PURE__ */ jsx(AppContent, {}) });

@@ -35,12 +35,10 @@ export function BottomNav({ current, onChange }: Props) {
 
   return (
     <nav className="absolute inset-x-0 bottom-0 z-30 glass border-t border-border">
-      <div className="flex items-end px-2 pb-2 pt-1">
+      <div className="flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-1">
         {items.map((it) => (
           <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
         ))}
-
-        <div className="flex-1" />
       </div>
     </nav>
   );
