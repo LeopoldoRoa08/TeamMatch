@@ -400,13 +400,15 @@ export function MapScreen({
 
               if (canchaEvents.length === 0) {
                 return (
-                  <div className="rounded-2xl border border-dashed border-border p-5 text-center">
-                    <p className="text-xs font-medium text-muted-foreground">
+                  <div className="rounded-2xl border border-dashed border-border p-6 text-center">
+                    <p className="text-sm font-medium text-muted-foreground mb-1">
                       No hay partidos programados aquí
                     </p>
+                    <p className="text-xs text-muted-foreground mb-4">¡Sé el primero en organizar uno!</p>
                     <button
                       onClick={() => { setShowCreateForm(true); }}
-                      className="mt-3 text-[11px] font-bold text-primary hover:underline"
+                      className="w-full py-3 px-5 rounded-xl font-bold text-sm text-white"
+                      style={{background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))", boxShadow: "0 4px 16px rgba(99,102,241,0.35)"}}
                     >
                       + Crear un partido aquí
                     </button>
@@ -484,11 +486,12 @@ export function MapScreen({
         <button
           id="fab-create-event-btn"
           onClick={() => setShowCreateForm(true)}
-          className="absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+          className="absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-5 py-4 text-base font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
           aria-label="Crear evento"
+          style={{boxShadow: "0 6px 24px rgba(99,102,241,0.45)"}}
         >
-          <Plus size={18} strokeWidth={2.5} />
-          Crear
+          <Plus size={20} strokeWidth={2.5} />
+          Crear partido
         </button>
       )}
 

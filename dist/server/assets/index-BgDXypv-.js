@@ -2852,9 +2852,9 @@ function EventCard({
     "button",
     {
       onClick,
-      className: "group relative w-full overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98]",
+      className: "group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98] flex-1 min-w-[280px] w-full sm:w-[calc(50%-8px)] md:w-[calc(33.33%-11px)]",
       children: [
-        /* @__PURE__ */ jsxs("div", { className: "relative h-28 w-full overflow-hidden", children: [
+        /* @__PURE__ */ jsxs("div", { className: "relative h-28 w-full overflow-hidden shrink-0", children: [
           /* @__PURE__ */ jsx(
             "img",
             {
@@ -2872,8 +2872,8 @@ function EventCard({
             /* @__PURE__ */ jsx("div", { className: "text-base font-bold leading-tight drop-shadow", children: event.title })
           ] }) })
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: "space-y-2 p-3", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-xs text-muted-foreground", children: [
+        /* @__PURE__ */ jsxs("div", { className: "p-3 flex-1 flex flex-col justify-between w-full space-y-3", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 text-xs text-muted-foreground flex-wrap", children: [
             /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1", children: [
               /* @__PURE__ */ jsx(Clock, { size: 12 }),
               " ",
@@ -2889,7 +2889,7 @@ function EventCard({
               " km"
             ] })
           ] }),
-          variant === "full" && /* @__PURE__ */ jsxs(Fragment, { children: [
+          variant === "full" && /* @__PURE__ */ jsxs("div", { className: "w-full flex flex-col gap-2 mt-auto", children: [
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
               /* @__PURE__ */ jsx("div", { className: "h-1.5 flex-1 overflow-hidden rounded-full bg-muted", children: /* @__PURE__ */ jsx(
                 "div",
@@ -2910,7 +2910,7 @@ function EventCard({
               "button",
               {
                 onClick: handleJoin,
-                className: `mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${isAccepted ? "bg-primary text-secondary hover:bg-primary/90" : isPending ? "bg-amber-500/20 text-amber-500 border border-amber-500/30 hover:bg-amber-500/30" : "bg-secondary text-primary-foreground hover:bg-secondary/90"}`,
+                className: `w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${isAccepted ? "bg-primary text-secondary hover:bg-primary/90" : isPending ? "bg-amber-500/20 text-amber-500 border border-amber-500/30 hover:bg-amber-500/30" : "bg-secondary text-primary-foreground hover:bg-secondary/90"}`,
                 children: isAccepted ? "Ver evento" : isPending ? "Esperando solicitud" : "Unirse al evento"
               }
             )
@@ -3103,14 +3103,14 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
           )
         ] })
       ] }, req.id);
-    }) }) : /* @__PURE__ */ jsxs("div", { className: "space-y-3 px-5 pt-3", children: [
+    }) }) : /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap gap-4 px-5 pt-3", children: [
       tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
-        availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
+        availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
       ] }),
       tab === "Mis Partidos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         myEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
-        myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos próximos programados" })
+        myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos próximos programados" })
       ] })
     ] })
   ] });

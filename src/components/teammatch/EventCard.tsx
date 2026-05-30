@@ -85,9 +85,9 @@ export function EventCard({
   return (
     <button
       onClick={onClick}
-      className="group relative w-full overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98]"
+      className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98] w-full"
     >
-      <div className="relative h-28 w-full overflow-hidden">
+      <div className="relative h-28 w-full overflow-hidden shrink-0">
         <img
           src={event.image}
           alt={event.title}
@@ -109,8 +109,8 @@ export function EventCard({
         </div>
       </div>
 
-      <div className="space-y-2 p-3">
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="p-3 flex-1 flex flex-col justify-between w-full space-y-3">
+        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
           <span className="inline-flex items-center gap-1">
             <Clock size={12} /> {event.time}
           </span>
@@ -123,7 +123,7 @@ export function EventCard({
         </div>
 
         {variant === "full" && (
-          <>
+          <div className="w-full flex flex-col gap-2 mt-auto">
             <div className="flex items-center gap-2">
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                 <div
@@ -138,7 +138,7 @@ export function EventCard({
 
             <button
               onClick={handleJoin}
-              className={`mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${
+              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${
                 isAccepted
                   ? "bg-primary text-secondary hover:bg-primary/90"
                   : isPending
@@ -152,7 +152,7 @@ export function EventCard({
                   ? "Esperando solicitud"
                   : "Unirse al evento"}
             </button>
-          </>
+          </div>
         )}
       </div>
     </button>

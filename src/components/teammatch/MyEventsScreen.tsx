@@ -262,14 +262,14 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
           )}
         </div>
       ) : (
-        <div className="space-y-3 px-5 pt-3">
+        <div className="grid grid-cols-3 gap-4 px-5 pt-3">
           {tab === "Próximos" && (
             <>
               {availableEvents.map((e) => (
                 <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
               ))}
               {availableEvents.length === 0 && (
-                <div className="text-center text-sm text-muted-foreground p-5 mt-10">
+                <div className="w-full text-center text-sm text-muted-foreground p-5 mt-10">
                   No hay eventos disponibles
                 </div>
               )}
@@ -281,7 +281,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                 <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
               ))}
               {myEvents.length === 0 && (
-                <div className="text-center text-sm text-muted-foreground p-5 mt-10">
+                <div className="w-full text-center text-sm text-muted-foreground p-5 mt-10">
                   No tienes partidos próximos programados
                 </div>
               )}
