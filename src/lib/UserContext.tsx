@@ -142,7 +142,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const initializeAndTrackUse = async (currentUser: any) => {
-    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
+    // sessionStorage / localStorage are not available on the server (SSR).
+    // Guard all storage access inside a try/catch.
+    let wasCounted = false;
+    const todayKey = `teammatch_daily_xp_${new Date().toLocaleDateString()}`;
+    try {
+      wasCounted = !!localStorage.getItem(todayKey);
+    } catch {
+      // SSR or privacy mode — skip
+      return;
+    }
+
     const meta = currentUser?.user_metadata || {};
     
     // Synchronize to public.profiles table
@@ -184,17 +194,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         data: initialMetadata,
       });
       if (updatedUser) setUser(updatedUser);
-      sessionStorage.setItem("teammatch_session_counted", "true");
+      try { localStorage.setItem(todayKey, "true"); } catch { /* ignore */ }
       return;
     }
 
-    // Si ya existe pero no se ha contado esta sesión, incrementar use_count
+    // Si ya existe pero no se ha contado hoy, incrementar use_count y dar XP
     if (!wasCounted) {
-      sessionStorage.setItem("teammatch_session_counted", "true");
+      try { localStorage.setItem(todayKey, "true"); } catch { /* ignore */ }
       const currentUseCount = (meta.use_count || 0) + 1;
       const currentXp = meta.xp || 0;
       const currentLevel = meta.level || 1;
-      const xpGained = 10; // +10 XP por uso de la app
+      const xpGained = 10; // +10 XP por uso diario de la app
 
       let newXp = currentXp + xpGained;
       let newLevel = currentLevel;
