@@ -419,7 +419,7 @@ function useCurrentUser() {
   return useContext(UserContext);
 }
 const LeafletMap$1 = lazy(
-  () => import("./LeafletMap-B9-Od04Y.js").then((m) => ({ default: m.default }))
+  () => import("./LeafletMap-DGs4gWld.js").then((m) => ({ default: m.default }))
 );
 function MapSkeleton$1() {
   return /* @__PURE__ */ jsx("div", { className: "flex h-[220px] w-full items-center justify-center bg-muted", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3 text-muted-foreground", children: [
@@ -1193,7 +1193,7 @@ const getSportImage$2 = (sportId) => {
   return runningTrail;
 };
 const LeafletMap = lazy(
-  () => import("./LeafletMap-B9-Od04Y.js").then((m) => ({ default: m.default }))
+  () => import("./LeafletMap-DGs4gWld.js").then((m) => ({ default: m.default }))
 );
 function MapSkeleton() {
   return /* @__PURE__ */ jsx("div", { className: "h-full w-full animate-pulse bg-muted", children: /* @__PURE__ */ jsx("div", { className: "flex h-full items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3 text-muted-foreground", children: [
@@ -1468,15 +1468,17 @@ function MapScreen({
             return diffLat < 1e-4 && diffLng < 1e-4;
           });
           if (canchaEvents.length === 0) {
-            return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border p-5 text-center", children: [
-              /* @__PURE__ */ jsx("p", { className: "text-xs font-medium text-muted-foreground", children: "No hay partidos programados aquí" }),
+            return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border p-6 text-center", children: [
+              /* @__PURE__ */ jsx("p", { className: "text-sm font-medium text-muted-foreground mb-1", children: "No hay partidos programados aquí" }),
+              /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "¡Sé el primero en organizar uno!" }),
               /* @__PURE__ */ jsx(
                 "button",
                 {
                   onClick: () => {
                     setShowCreateForm(true);
                   },
-                  className: "mt-3 text-[11px] font-bold text-primary hover:underline",
+                  className: "w-full py-3 px-5 rounded-xl font-bold text-sm text-white",
+                  style: { background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))", boxShadow: "0 4px 16px rgba(99,102,241,0.35)" },
                   children: "+ Crear un partido aquí"
                 }
               )
@@ -1539,11 +1541,12 @@ function MapScreen({
       {
         id: "fab-create-event-btn",
         onClick: () => setShowCreateForm(true),
-        className: "absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105",
+        className: "absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-5 py-4 text-base font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105",
         "aria-label": "Crear evento",
+        style: { boxShadow: "0 6px 24px rgba(99,102,241,0.45)" },
         children: [
-          /* @__PURE__ */ jsx(Plus, { size: 18, strokeWidth: 2.5 }),
-          "Crear"
+          /* @__PURE__ */ jsx(Plus, { size: 20, strokeWidth: 2.5 }),
+          "Crear partido"
         ]
       }
     ),
@@ -2852,7 +2855,7 @@ function EventCard({
     "button",
     {
       onClick,
-      className: "group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98] flex-1 min-w-[280px] w-full sm:w-[calc(50%-8px)] md:w-[calc(33.33%-11px)]",
+      className: "group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98] w-full",
       children: [
         /* @__PURE__ */ jsxs("div", { className: "relative h-28 w-full overflow-hidden shrink-0", children: [
           /* @__PURE__ */ jsx(
@@ -3103,7 +3106,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
           )
         ] })
       ] }, req.id);
-    }) }) : /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap gap-4 px-5 pt-3", children: [
+    }) }) : /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-4 px-5 pt-3", children: [
       tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
@@ -3773,6 +3776,14 @@ function RpgNotificationManager() {
       setChestState("closed");
     }
   }, [xpNotification]);
+  useEffect(() => {
+    if (xpNotification && !xpNotification.isLevelUp && !xpNotification.newCoupon) {
+      const timer = setTimeout(() => {
+        clearNotification();
+      }, 6500);
+      return () => clearTimeout(timer);
+    }
+  }, [xpNotification, clearNotification]);
   if (!xpNotification) return null;
   const {
     xp,
@@ -3781,14 +3792,6 @@ function RpgNotificationManager() {
     newLevel,
     newCoupon
   } = xpNotification;
-  useEffect(() => {
-    if (xpNotification && !isLevelUp && !newCoupon) {
-      const timer = setTimeout(() => {
-        clearNotification();
-      }, 6500);
-      return () => clearTimeout(timer);
-    }
-  }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
   if (isLevelUp) {
     return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-6 py-4 animate-in fade-in duration-300", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-25 pointer-events-none" }),

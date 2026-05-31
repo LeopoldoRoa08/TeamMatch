@@ -1,7 +1,7 @@
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, useRouter, Link, Outlet, HeadContent, Scripts, createFileRoute, lazyRouteComponent, createRouter } from "@tanstack/react-router";
 import { jsx, jsxs } from "react/jsx-runtime";
-const appCss = "/assets/styles-t_fCw0pa.css";
+const appCss = "/assets/styles-BLCczLnC.css";
 function NotFoundComponent() {
   return /* @__PURE__ */ jsx("div", { className: "flex min-h-screen items-center justify-center bg-background px-4", children: /* @__PURE__ */ jsxs("div", { className: "max-w-md text-center", children: [
     /* @__PURE__ */ jsx("h1", { className: "text-7xl font-bold text-foreground", children: "404" }),
@@ -20,9 +20,16 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }) {
   console.error(error);
   const router = useRouter();
-  return /* @__PURE__ */ jsx("div", { className: "flex min-h-screen items-center justify-center bg-background px-4", children: /* @__PURE__ */ jsxs("div", { className: "max-w-md text-center", children: [
+  return /* @__PURE__ */ jsx("div", { className: "flex min-h-screen items-center justify-center bg-background px-4 py-8", children: /* @__PURE__ */ jsxs("div", { className: "max-w-2xl text-center", children: [
     /* @__PURE__ */ jsx("h1", { className: "text-xl font-semibold tracking-tight text-foreground", children: "This page didn't load" }),
     /* @__PURE__ */ jsx("p", { className: "mt-2 text-sm text-muted-foreground", children: "Something went wrong on our end. You can try refreshing or head back home." }),
+    /* @__PURE__ */ jsxs("div", { className: "mt-4 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-left text-xs font-mono text-destructive overflow-auto max-h-[300px]", children: [
+      /* @__PURE__ */ jsxs("p", { className: "font-bold text-sm mb-2", children: [
+        "Error: ",
+        error?.message || String(error)
+      ] }),
+      /* @__PURE__ */ jsx("pre", { className: "whitespace-pre-wrap", children: error?.stack })
+    ] }),
     /* @__PURE__ */ jsxs("div", { className: "mt-6 flex flex-wrap justify-center gap-2", children: [
       /* @__PURE__ */ jsx(
         "button",
@@ -85,7 +92,7 @@ function RootComponent() {
   const { queryClient } = Route$1.useRouteContext();
   return /* @__PURE__ */ jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsx(Outlet, {}) });
 }
-const $$splitComponentImporter = () => import("./index-BgDXypv-.js");
+const $$splitComponentImporter = () => import("./index-C3wRwPFJ.js");
 const Route = createFileRoute("/")({
   component: lazyRouteComponent($$splitComponentImporter, "component"),
   head: () => ({

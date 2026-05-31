@@ -209,19 +209,19 @@ function RpgNotificationManager() {
     }
   }, [xpNotification]);
 
-  if (!xpNotification) return null;
-
-  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
-
   // Timed dismiss for normal XP gain toast
   useEffect(() => {
-    if (xpNotification && !isLevelUp && !newCoupon) {
+    if (xpNotification && !xpNotification.isLevelUp && !xpNotification.newCoupon) {
       const timer = setTimeout(() => {
         clearNotification();
       }, 6500);
       return () => clearTimeout(timer);
     }
-  }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
+  }, [xpNotification, clearNotification]);
+
+  if (!xpNotification) return null;
+
+  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
 
   // Si es subida de nivel
   if (isLevelUp) {
