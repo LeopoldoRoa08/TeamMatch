@@ -278,6 +278,52 @@ export function ProfileScreen({
               />
             </div>
 
+            {/* Información Personal (Edad, Ubicación, Género, Deportes, Bio) */}
+            <div className="rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4">
+              <h4 className="text-xs font-black uppercase tracking-wider text-secondary flex items-center gap-1.5 border-b border-border pb-2">
+                <Sparkles size={14} className="text-primary animate-pulse" /> Información de Perfil
+              </h4>
+              
+              <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
+                  <span className="text-[10px] text-muted-foreground block font-bold">Edad</span>
+                  <span className="font-black text-secondary">{user.user_metadata?.age ? `${user.user_metadata.age} años` : "—"}</span>
+                </div>
+                <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
+                  <span className="text-[10px] text-muted-foreground block font-bold">Género</span>
+                  <span className="font-black text-secondary">{user.user_metadata?.gender || "—"}</span>
+                </div>
+                <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
+                  <span className="text-[10px] text-muted-foreground block font-bold">Ubicación</span>
+                  <span className="font-black text-secondary truncate block" title={user.user_metadata?.location || ""}>
+                    {user.user_metadata?.location || "—"}
+                  </span>
+                </div>
+              </div>
+
+              {user.user_metadata?.description && (
+                <div className="space-y-1">
+                  <span className="text-[10px] text-muted-foreground font-bold">Sobre mí</span>
+                  <p className="text-xs leading-relaxed text-secondary-foreground/80 bg-muted/20 p-3 rounded-xl border border-border/30">
+                    {user.user_metadata.description}
+                  </p>
+                </div>
+              )}
+
+              {user.user_metadata?.preferred_sports && user.user_metadata.preferred_sports.length > 0 && (
+                <div className="space-y-1.5">
+                  <span className="text-[10px] text-muted-foreground font-bold block">Deportes favoritos</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {user.user_metadata.preferred_sports.map((sport: string) => (
+                      <span key={sport} className="rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                        {sport}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
               <h4 className="text-xs font-black uppercase tracking-wider text-secondary mb-1">
                 Resumen de Campaña

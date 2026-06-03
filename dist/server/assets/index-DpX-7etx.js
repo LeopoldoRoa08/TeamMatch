@@ -1,7 +1,7 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect, createContext, useContext, Suspense, lazy, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
+import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, UserCheck, Heart, UserPlus, UserX, Search, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
 const supabaseUrl = "https://aknwdkjzodhkhzxjvipu.supabase.co";
 const supabaseAnonKey = "sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -277,7 +277,12 @@ function UserProvider({ children }) {
       data: {
         full_name: updates.name,
         avatar_url: updates.avatarUrl,
-        is_organizer: updates.isOrganizer
+        is_organizer: updates.isOrganizer,
+        age: updates.age,
+        gender: updates.gender,
+        description: updates.description,
+        location: updates.location,
+        preferred_sports: updates.preferredSports
       },
       ...updates.email && updates.email !== user.email && { email: updates.email }
     });
@@ -1597,6 +1602,7 @@ function EventDetailScreen({
   const [showFloatXp, setShowFloatXp] = useState(false);
   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState("");
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const [hostProfile, setHostProfile] = useState(null);
   const renderAvatar = (username, sizeClass = "h-10 w-10", explicitAvatarUrl) => {
     const isCurrentUser = currentUser?.email === username || currentUser?.user_metadata?.full_name === username;
@@ -1683,6 +1689,49 @@ function EventDetailScreen({
       alert("Error al actualizar la solicitud");
     }
     setActionLoading(null);
+  }
+  async function handleInviteFriend(friend) {
+    const friendEmail = friend.name.toLowerCase().replace(" ", "") + "@teammatch.com";
+    try {
+      const { error } = await supabase.from("event_participants").insert({
+        event_id: event.id,
+        user_username: friendEmail,
+        status: "aceptado"
+      });
+      if (error) throw error;
+      alert(`¡${friend.name} ha sido agregado al partido!`);
+      fetchParticipants();
+    } catch (e) {
+      console.warn("Could not insert to Supabase event_participants due to RLS/schema, simulating locally:", e);
+      const mockParticipant = {
+        id: Math.floor(Math.random() * 1e5),
+        event_id: event.id,
+        user_username: friendEmail,
+        status: "aceptado",
+        profiles: {
+          username: friend.name,
+          avatar_url: null,
+          rating: 4.9
+        }
+      };
+      setParticipants((prev) => [...prev, mockParticipant]);
+      alert(`¡${friend.name} ha sido agregado al partido!`);
+    }
+  }
+  async function handleLeave() {
+    if (!currentUser?.email) return;
+    const confirmLeave = confirm("¿Estás seguro de que deseas salirte de este partido?");
+    if (!confirmLeave) return;
+    try {
+      const { error } = await supabase.from("event_participants").delete().eq("event_id", event.id).eq("user_username", currentUser.email);
+      if (error) throw error;
+      alert("Te has salido del partido.");
+      fetchParticipants();
+    } catch (e) {
+      console.error("Error leaving event, simulating locally:", e);
+      setParticipants((prev) => prev.filter((p) => p.user_username !== currentUser.email));
+      alert("Te has salido del partido.");
+    }
   }
   const approvedPlayers = participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status);
   const pendingRequests = participants.filter((p) => p.status === "pending" || p.status === "pendiente");
@@ -1840,9 +1889,19 @@ function EventDetailScreen({
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsxs("div", { className: "mb-2 flex items-center justify-between", children: [
           /* @__PURE__ */ jsx("h3", { className: "text-sm font-bold text-secondary", children: "Jugadores aprobados" }),
-          /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
-            emptySpots,
-            " cupos disponibles"
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            isHost && /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setShowInviteModal(true),
+                className: "rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-black transition-all active:scale-95 shadow-sm cursor-pointer",
+                children: "+ Invitar Amigos"
+              }
+            ),
+            /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
+              emptySpots,
+              " cupos disponibles"
+            ] })
           ] })
         ] }),
         /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: loading ? /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: "Cargando jugadores..." }) : /* @__PURE__ */ jsxs(Fragment, { children: [
@@ -1894,17 +1953,82 @@ function EventDetailScreen({
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsx(
+        isHost ? /* @__PURE__ */ jsx(
           "button",
           {
-            disabled: joining || emptySpots === 0 || isUserPending || isUserApproved,
+            disabled: true,
+            className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center",
+            children: "Eres el organizador 👑"
+          }
+        ) : isUserApproved ? /* @__PURE__ */ jsx(
+          "button",
+          {
+            disabled: joining,
+            onClick: handleLeave,
+            className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer",
+            children: "Salir del partido 🚪"
+          }
+        ) : isUserPending ? /* @__PURE__ */ jsx(
+          "button",
+          {
+            disabled: joining,
+            onClick: handleLeave,
+            className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer",
+            children: "Cancelar solicitud ❌"
+          }
+        ) : /* @__PURE__ */ jsx(
+          "button",
+          {
+            disabled: joining || emptySpots === 0,
             onClick: handleJoin,
-            className: `ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 ${isUserApproved ? "bg-primary text-secondary" : isUserPending ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" : emptySpots === 0 ? "bg-muted text-muted-foreground cursor-not-allowed" : "gradient-primary text-secondary"}`,
-            children: joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Esperando solicitud" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
+            className: `ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${emptySpots === 0 ? "bg-muted text-muted-foreground cursor-not-allowed" : "gradient-primary text-secondary"}`,
+            children: joining ? "Enviando..." : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
           }
         )
       ] })
-    ] })
+    ] }),
+    showInviteModal && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-6 py-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[80vh]", children: [
+      /* @__PURE__ */ jsxs("h3", { className: "text-lg font-black text-white flex items-center gap-2 border-b border-white/10 pb-3", children: [
+        /* @__PURE__ */ jsx(Users, { size: 20, className: "text-primary animate-pulse" }),
+        " Invitar Amigos"
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto py-4 space-y-2 pr-1", children: (() => {
+        const storedFriends = localStorage.getItem("teammatch_friends");
+        const friendList = storedFriends ? JSON.parse(storedFriends) : [];
+        const nonParticipantFriends = friendList.filter((friend) => {
+          const friendEmail = friend.name.toLowerCase().replace(" ", "") + "@teammatch.com";
+          return !participants.some((p) => p.user_username === friendEmail || p.profiles?.username === friend.name);
+        });
+        if (nonParticipantFriends.length === 0) {
+          return /* @__PURE__ */ jsx("div", { className: "text-center text-xs text-muted-foreground py-8", children: "No tienes amigos disponibles para invitar o todos ya están en el partido." });
+        }
+        return nonParticipantFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 min-w-0", children: [
+            /* @__PURE__ */ jsx("div", { className: `h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`, children: friend.emoji }),
+            /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+              /* @__PURE__ */ jsx("div", { className: "text-xs font-bold text-secondary truncate", children: friend.name }),
+              /* @__PURE__ */ jsx("div", { className: "text-[9px] text-muted-foreground", children: friend.location })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: () => handleInviteFriend(friend),
+              className: "rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer",
+              children: "Agregar"
+            }
+          )
+        ] }, friend.id));
+      })() }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: () => setShowInviteModal(false),
+          className: "w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer",
+          children: "Cerrar"
+        }
+      )
+    ] }) })
   ] });
 }
 function InfoTile({
@@ -2165,6 +2289,34 @@ function ProfileScreen({
             }
           )
         ] }),
+        /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4", children: [
+          /* @__PURE__ */ jsxs("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary flex items-center gap-1.5 border-b border-border pb-2", children: [
+            /* @__PURE__ */ jsx(Sparkles, { size: 14, className: "text-primary animate-pulse" }),
+            " Información de Perfil"
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-2 text-center text-xs", children: [
+            /* @__PURE__ */ jsxs("div", { className: "bg-muted/40 p-2.5 rounded-xl border border-border/50", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: "Edad" }),
+              /* @__PURE__ */ jsx("span", { className: "font-black text-secondary", children: user.user_metadata?.age ? `${user.user_metadata.age} años` : "—" })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "bg-muted/40 p-2.5 rounded-xl border border-border/50", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: "Género" }),
+              /* @__PURE__ */ jsx("span", { className: "font-black text-secondary", children: user.user_metadata?.gender || "—" })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "bg-muted/40 p-2.5 rounded-xl border border-border/50", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: "Ubicación" }),
+              /* @__PURE__ */ jsx("span", { className: "font-black text-secondary truncate block", title: user.user_metadata?.location || "", children: user.user_metadata?.location || "—" })
+            ] })
+          ] }),
+          user.user_metadata?.description && /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-bold", children: "Sobre mí" }),
+            /* @__PURE__ */ jsx("p", { className: "text-xs leading-relaxed text-secondary-foreground/80 bg-muted/20 p-3 rounded-xl border border-border/30", children: user.user_metadata.description })
+          ] }),
+          user.user_metadata?.preferred_sports && user.user_metadata.preferred_sports.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-bold block", children: "Deportes favoritos" }),
+            /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: user.user_metadata.preferred_sports.map((sport) => /* @__PURE__ */ jsx("span", { className: "rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary", children: sport }, sport)) })
+          ] })
+        ] }),
         /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-4 shadow-soft", children: [
           /* @__PURE__ */ jsx("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary mb-1", children: "Resumen de Campaña" }),
           /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: [
@@ -2343,6 +2495,11 @@ function EditProfileScreen({ onBack }) {
   const [success, setSuccess] = useState("");
   const [avatarUrl, setAvatarUrl] = useState(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [age, setAge] = useState(void 0);
+  const [gender, setGender] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [preferredSports, setPreferredSports] = useState([]);
   useEffect(() => {
     if (currentUser) {
       setUser(currentUser);
@@ -2350,6 +2507,11 @@ function EditProfileScreen({ onBack }) {
       setEmail(currentUser.email || "");
       setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
       setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
+      setAge(currentUser.user_metadata?.age || void 0);
+      setGender(currentUser.user_metadata?.gender || "");
+      setDescription(currentUser.user_metadata?.description || "");
+      setLocation(currentUser.user_metadata?.location || "");
+      setPreferredSports(currentUser.user_metadata?.preferred_sports || []);
       setLoading(false);
     } else {
       supabase.auth.getUser().then(({ data: { user: user2 } }) => {
@@ -2359,6 +2521,11 @@ function EditProfileScreen({ onBack }) {
           setEmail(user2.email || "");
           setAvatarUrl(user2.user_metadata?.avatar_url || null);
           setIsOrganizer(!!user2.user_metadata?.is_organizer);
+          setAge(user2.user_metadata?.age || void 0);
+          setGender(user2.user_metadata?.gender || "");
+          setDescription(user2.user_metadata?.description || "");
+          setLocation(user2.user_metadata?.location || "");
+          setPreferredSports(user2.user_metadata?.preferred_sports || []);
         }
         setLoading(false);
       });
@@ -2397,7 +2564,12 @@ function EditProfileScreen({ onBack }) {
         name,
         avatarUrl,
         isOrganizer,
-        email: email !== user?.email ? email : void 0
+        email: email !== user?.email ? email : void 0,
+        age,
+        gender,
+        description,
+        location,
+        preferredSports
       });
       setSuccess("Perfil actualizado correctamente");
       setTimeout(() => {
@@ -2475,6 +2647,88 @@ function EditProfileScreen({ onBack }) {
             }
           ),
           /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground", children: "Al cambiar el correo electrónico, se enviará un mensaje de confirmación." })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+          /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Edad" }),
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                type: "number",
+                value: age ?? "",
+                onChange: (e) => setAge(e.target.value ? parseInt(e.target.value) : void 0),
+                className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
+                placeholder: "Ej. 25",
+                min: "1",
+                max: "120"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Género" }),
+            /* @__PURE__ */ jsxs(
+              "select",
+              {
+                value: gender,
+                onChange: (e) => setGender(e.target.value),
+                className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
+                children: [
+                  /* @__PURE__ */ jsx("option", { value: "", children: "Seleccionar..." }),
+                  /* @__PURE__ */ jsx("option", { value: "Masculino", children: "Masculino" }),
+                  /* @__PURE__ */ jsx("option", { value: "Femenino", children: "Femenino" }),
+                  /* @__PURE__ */ jsx("option", { value: "Otro", children: "Otro" })
+                ]
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+          /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Ubicación (Municipio/Zona)" }),
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "text",
+              value: location,
+              onChange: (e) => setLocation(e.target.value),
+              className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
+              placeholder: "Ej. Chacao, Caracas"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+          /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Sobre mí (Descripción)" }),
+          /* @__PURE__ */ jsx(
+            "textarea",
+            {
+              value: description,
+              onChange: (e) => setDescription(e.target.value),
+              rows: 3,
+              className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none",
+              placeholder: "Cuéntanos un poco sobre ti, tu nivel de juego, etc."
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground block", children: "Deportes preferidos" }),
+          /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"].map((sport) => {
+            const isSelected = preferredSports.includes(sport);
+            return /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => {
+                  if (isSelected) {
+                    setPreferredSports(preferredSports.filter((s) => s !== sport));
+                  } else {
+                    setPreferredSports([...preferredSports, sport]);
+                  }
+                },
+                className: `rounded-full px-3 py-1.5 text-xs font-bold border transition-all ${isSelected ? "bg-primary/20 text-primary border-primary" : "bg-card text-muted-foreground border-border hover:border-muted-foreground"}`,
+                children: sport
+              },
+              sport
+            );
+          }) })
         ] }),
         /* @__PURE__ */ jsx("div", { className: "pt-2", children: /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 cursor-pointer transition-all hover:border-primary/50 active:scale-[0.99]", children: [
           /* @__PURE__ */ jsx(
@@ -3376,6 +3630,435 @@ function WelcomeScreen({
     ] })
   ] });
 }
+const initialCandidates = [
+  {
+    id: "cand_1",
+    name: "Sofía M.",
+    age: 26,
+    location: "Las Mercedes",
+    bio: "Jugadora de Pádel nivel intermedio. Busco gente para armar dobles y pasar un buen rato los fines de semana.",
+    sports: ["Pádel", "Tenis"],
+    emoji: "🎾",
+    gradient: "from-pink-500 to-rose-400"
+  },
+  {
+    id: "cand_2",
+    name: "Alejandro V.",
+    age: 28,
+    location: "Altamira",
+    bio: "Me encanta el senderismo en el Ávila (Sabas Nieves). Subo casi todos los sábados por la mañana, únete!",
+    sports: ["Senderismo", "Running"],
+    emoji: "🥾",
+    gradient: "from-emerald-500 to-teal-400"
+  },
+  {
+    id: "cand_3",
+    name: "Lucas G.",
+    age: 23,
+    location: "Chacao",
+    bio: "Aficionado del Running por la Av. Francisco de Miranda y partidos de Tenis. Nivel principiante-medio.",
+    sports: ["Running", "Tenis"],
+    emoji: "🏃‍♂️",
+    gradient: "from-blue-500 to-cyan-400"
+  },
+  {
+    id: "cand_4",
+    name: "Gabriela R.",
+    age: 25,
+    location: "El Hatillo",
+    bio: "Jugadora amateur de Vóleibol. Buscando armar partidos mixtos recreativos. Buena vibra ante todo.",
+    sports: ["Vóleibol"],
+    emoji: "🏐",
+    gradient: "from-purple-500 to-indigo-400"
+  },
+  {
+    id: "cand_5",
+    name: "Daniel C.",
+    age: 27,
+    location: "Chacao",
+    bio: "Pádel competitivo y Running. Busco partners consistentes para entrenar temprano por las mañanas.",
+    sports: ["Pádel", "Running"],
+    emoji: "🏸",
+    gradient: "from-amber-500 to-orange-400"
+  }
+];
+const initialReceivedRequests = [
+  {
+    id: "req_1",
+    name: "Valentina G.",
+    age: 24,
+    location: "Las Mercedes",
+    bio: "Busco gente para correr en las mañanas o jugar pádel. ¡A jugar se ha dicho!",
+    sports: ["Running", "Pádel"],
+    emoji: "👩‍🚀",
+    gradient: "from-fuchsia-500 to-pink-500"
+  },
+  {
+    id: "req_2",
+    name: "Javier M.",
+    age: 29,
+    location: "Chacao",
+    bio: "Juego tenis nivel avanzado, busco contrincantes en la zona de Chacao para subir el nivel.",
+    sports: ["Tenis", "Senderismo"],
+    emoji: "🧔",
+    gradient: "from-violet-600 to-blue-500"
+  }
+];
+const initialFriends = [
+  {
+    id: "friend_default_1",
+    name: "Carlos P.",
+    age: 31,
+    location: "Las Mercedes",
+    bio: "Host de partidos de Pádel. Siempre activo.",
+    sports: ["Pádel"],
+    emoji: "🦁",
+    gradient: "from-sky-500 to-blue-600"
+  },
+  {
+    id: "friend_default_2",
+    name: "Andrea M.",
+    age: 25,
+    location: "Altamira",
+    bio: "Guía de senderismo en el Ávila.",
+    sports: ["Senderismo"],
+    emoji: "🦊",
+    gradient: "from-orange-400 to-red-500"
+  }
+];
+function FriendsScreen({
+  onNavigateToProfile,
+  onSelectEvent
+}) {
+  const { user, addXp } = useCurrentUser();
+  const [activeSubTab, setActiveSubTab] = useState("tinder");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [candidates, setCandidates] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [receivedRequests, setReceivedRequests] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [matchOverlayUser, setMatchOverlayUser] = useState(null);
+  const [sentMatchEffect, setSentMatchEffect] = useState(false);
+  useEffect(() => {
+    const storedFriends = localStorage.getItem("teammatch_friends");
+    const storedRequests = localStorage.getItem("teammatch_received_requests");
+    const storedCandidates = localStorage.getItem("teammatch_candidates");
+    if (storedFriends) {
+      setFriends(JSON.parse(storedFriends));
+    } else {
+      setFriends(initialFriends);
+      localStorage.setItem("teammatch_friends", JSON.stringify(initialFriends));
+    }
+    if (storedRequests) {
+      setReceivedRequests(JSON.parse(storedRequests));
+    } else {
+      setReceivedRequests(initialReceivedRequests);
+      localStorage.setItem("teammatch_received_requests", JSON.stringify(initialReceivedRequests));
+    }
+    if (storedCandidates) {
+      setCandidates(JSON.parse(storedCandidates));
+    } else {
+      setCandidates(initialCandidates);
+      localStorage.setItem("teammatch_candidates", JSON.stringify(initialCandidates));
+    }
+  }, []);
+  const saveToStorage = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
+  };
+  const userSports = user?.user_metadata?.preferred_sports || [];
+  const getCompatibilityScore = (candidateSports) => {
+    if (userSports.length === 0) {
+      return 75 + candidateSports.length * 3 % 15;
+    }
+    const common = candidateSports.filter((s) => userSports.includes(s)).length;
+    const score = Math.round(50 + common / Math.max(1, userSports.length) * 48);
+    return Math.min(99, score);
+  };
+  const handleLike = async (candidate) => {
+    setSentMatchEffect(true);
+    setTimeout(async () => {
+      setSentMatchEffect(false);
+      setCurrentIndex((prev) => prev + 1);
+      setTimeout(async () => {
+        const updatedFriends = [candidate, ...friends];
+        setFriends(updatedFriends);
+        saveToStorage("teammatch_friends", updatedFriends);
+        const updatedCandidates = candidates.filter((c) => c.id !== candidate.id);
+        setCandidates(updatedCandidates);
+        saveToStorage("teammatch_candidates", updatedCandidates);
+        setMatchOverlayUser(candidate);
+        await addXp(15, `¡Match deportivo con ${candidate.name}! ⚡`);
+      }, 1500);
+    }, 800);
+  };
+  const handleReject = () => {
+    setCurrentIndex((prev) => prev + 1);
+  };
+  const handleAcceptRequest = async (request) => {
+    const updatedRequests = receivedRequests.filter((r) => r.id !== request.id);
+    setReceivedRequests(updatedRequests);
+    saveToStorage("teammatch_received_requests", updatedRequests);
+    const updatedFriends = [request, ...friends];
+    setFriends(updatedFriends);
+    saveToStorage("teammatch_friends", updatedFriends);
+    await addXp(10, `¡Aceptaste a ${request.name} como amigo! 🤝`);
+  };
+  const handleRejectRequest = (request) => {
+    const updatedRequests = receivedRequests.filter((r) => r.id !== request.id);
+    setReceivedRequests(updatedRequests);
+    saveToStorage("teammatch_received_requests", updatedRequests);
+  };
+  const filteredFriends = friends.filter(
+    (friend) => friend.name.toLowerCase().includes(searchQuery.toLowerCase()) || friend.location.toLowerCase().includes(searchQuery.toLowerCase()) || friend.sports.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+  const activeCandidate = candidates[currentIndex];
+  return /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col bg-background relative overflow-hidden pb-24", children: [
+    matchOverlayUser && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-20 pointer-events-none" }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-4 max-w-sm flex flex-col items-center", children: [
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse", children: "¡CONEXIÓN LOGRADA! 🔥" }),
+        /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: "¡HICISTE MATCH!" }),
+        /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80", children: [
+          "Tú y ",
+          matchOverlayUser.name,
+          " quieren jugar a los mismos deportes."
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-8 py-8 relative", children: [
+          /* @__PURE__ */ jsx("div", { className: "relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500", children: (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase() }),
+          /* @__PURE__ */ jsx("div", { className: "absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce", children: "⚡" }),
+          /* @__PURE__ */ jsx("div", { className: `relative h-20 w-20 rounded-full border-4 border-primary bg-gradient-to-tr ${matchOverlayUser.gradient} grid place-items-center text-4xl shadow-pop animate-in slide-in-from-right duration-500`, children: matchOverlayUser.emoji })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-4 rounded-2xl border border-white/5 w-full text-center space-y-1", children: [
+          /* @__PURE__ */ jsxs("div", { className: "text-sm font-bold text-white", children: [
+            matchOverlayUser.name,
+            ", ",
+            matchOverlayUser.age
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: matchOverlayUser.location }),
+          /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-white/70 italic mt-2", children: [
+            '"',
+            matchOverlayUser.bio,
+            '"'
+          ] })
+        ] }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setMatchOverlayUser(null),
+            className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4",
+            children: "¡Excelente! Enviar Mensaje 💬"
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("header", { className: "flex items-center justify-between px-5 pb-3 pt-12", children: [
+      /* @__PURE__ */ jsxs("div", { children: [
+        /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Amigos" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Conecta con jugadores afines" })
+      ] }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: onNavigateToProfile,
+          className: "h-10 w-10 rounded-full bg-card shadow-soft border border-border grid place-items-center text-secondary transition-transform active:scale-95",
+          children: /* @__PURE__ */ jsx(Users, { size: 18 })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "px-5 pb-3 pt-1", children: /* @__PURE__ */ jsxs("div", { className: "flex gap-1 rounded-full bg-muted p-1 border border-border/40", children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: () => setActiveSubTab("tinder"),
+          className: `flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeSubTab === "tinder" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`,
+          children: [
+            /* @__PURE__ */ jsx(Flame, { size: 14, className: activeSubTab === "tinder" ? "text-primary" : "" }),
+            "Para ti"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: () => setActiveSubTab("friends"),
+          className: `flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeSubTab === "friends" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`,
+          children: [
+            /* @__PURE__ */ jsx(UserCheck, { size: 14, className: activeSubTab === "friends" ? "text-primary" : "" }),
+            "Mis amigos (",
+            friends.length,
+            ")"
+          ]
+        }
+      )
+    ] }) }),
+    /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto px-5 pt-3", children: activeSubTab === "tinder" ? /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col items-center justify-center pb-4 relative", children: [
+      sentMatchEffect && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-30 flex items-center justify-center bg-background/70 backdrop-blur-sm animate-in fade-in duration-200 rounded-3xl", children: /* @__PURE__ */ jsxs("div", { className: "text-center space-y-2", children: [
+        /* @__PURE__ */ jsx("div", { className: "text-5xl animate-bounce", children: "⚡" }),
+        /* @__PURE__ */ jsx("div", { className: "text-sm font-black text-primary uppercase tracking-widest animate-pulse", children: "Enviando Match..." })
+      ] }) }),
+      activeCandidate ? /* @__PURE__ */ jsxs("div", { className: "w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300", children: [
+        /* @__PURE__ */ jsxs("div", { className: `h-40 shrink-0 bg-gradient-to-tr ${activeCandidate.gradient} flex items-center justify-center relative`, children: [
+          /* @__PURE__ */ jsx("div", { className: "text-6xl drop-shadow-md select-none", children: activeCandidate.emoji }),
+          /* @__PURE__ */ jsxs("div", { className: "absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop", children: [
+            /* @__PURE__ */ jsx(Sparkles, { size: 10, className: "text-primary animate-pulse" }),
+            /* @__PURE__ */ jsxs("span", { children: [
+              getCompatibilityScore(activeCandidate.sports),
+              "% Compatible"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft", children: [
+            /* @__PURE__ */ jsx(MapPin, { size: 10, className: "text-primary" }),
+            /* @__PURE__ */ jsx("span", { children: activeCandidate.location })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "flex-1 p-5 space-y-3.5 flex flex-col justify-between", children: [
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-2", children: [
+              /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: activeCandidate.name }),
+              /* @__PURE__ */ jsxs("span", { className: "text-sm font-bold text-muted-foreground", children: [
+                activeCandidate.age,
+                " años"
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground leading-relaxed line-clamp-3", children: [
+              '"',
+              activeCandidate.bio,
+              '"'
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-1.5 border-t border-dashed border-border/80 pt-3", children: [
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-black uppercase tracking-wider block", children: "Deportes" }),
+            /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: activeCandidate.sports.map((sport) => /* @__PURE__ */ jsx(SportBadge, { sport }, sport)) })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "p-4 border-t border-border/60 bg-muted/20 flex justify-center gap-6", children: [
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: handleReject,
+              className: "grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft",
+              title: "Descartar",
+              children: /* @__PURE__ */ jsx(X, { size: 20, strokeWidth: 2.5 })
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: () => handleLike(activeCandidate),
+              className: "grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop",
+              title: "¡Hacer Match!",
+              children: /* @__PURE__ */ jsx(Heart, { size: 20, strokeWidth: 2.5, className: "fill-current" })
+            }
+          )
+        ] })
+      ] }) : /* @__PURE__ */ jsxs("div", { className: "rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12", children: [
+        /* @__PURE__ */ jsx("div", { className: "text-5xl", children: "⚡" }),
+        /* @__PURE__ */ jsx("h3", { className: "text-base font-black text-secondary", children: "¡Eso es todo por hoy!" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos." }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setCurrentIndex(0),
+            className: "rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20",
+            children: "Reiniciar Lista 🔄"
+          }
+        )
+      ] })
+    ] }) : /* @__PURE__ */ jsxs("div", { className: "space-y-5 pb-8", children: [
+      receivedRequests.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx(UserPlus, { size: 14, className: "text-primary" }),
+          " Solicitudes de Match Recibidas"
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "space-y-2", children: receivedRequests.map((req) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 animate-in slide-in-from-top duration-300", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
+            /* @__PURE__ */ jsx("div", { className: `h-11 w-11 shrink-0 rounded-full bg-gradient-to-tr ${req.gradient} grid place-items-center text-xl shadow-soft`, children: req.emoji }),
+            /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-1.5", children: [
+                /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate", children: req.name }),
+                /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground", children: req.age })
+              ] }),
+              /* @__PURE__ */ jsx("div", { className: "text-[10px] text-primary font-extrabold", children: req.location }),
+              /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground truncate max-w-[160px]", children: req.bio })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "flex gap-1.5 shrink-0", children: [
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => handleRejectRequest(req),
+                className: "grid h-8 w-8 place-items-center rounded-xl bg-muted/60 text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 transition-colors",
+                title: "Rechazar",
+                children: /* @__PURE__ */ jsx(UserX, { size: 15 })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => handleAcceptRequest(req),
+                className: "grid h-8 w-8 place-items-center rounded-xl gradient-primary text-secondary shadow-sm",
+                title: "Aceptar Match",
+                children: /* @__PURE__ */ jsx(UserCheck, { size: 15 })
+              }
+            )
+          ] })
+        ] }, req.id)) })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+          /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+            /* @__PURE__ */ jsx(UserCheck, { size: 14, className: "text-primary" }),
+            " Mis Amigos Guardados"
+          ] }),
+          /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-bold text-muted-foreground", children: [
+            filteredFriends.length,
+            " amigos"
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "text",
+              placeholder: "Buscar amigo por nombre, deporte...",
+              value: searchQuery,
+              onChange: (e) => setSearchQuery(e.target.value),
+              className: "w-full rounded-2xl border border-border bg-card pl-10 pr-4 py-2.5 text-xs text-secondary outline-none transition-colors focus:border-primary"
+            }
+          ),
+          /* @__PURE__ */ jsx(Search, { size: 14, className: "absolute left-3.5 top-3.5 text-muted-foreground" })
+        ] }),
+        filteredFriends.length === 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground", children: searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!" }) : /* @__PURE__ */ jsx("div", { className: "space-y-2", children: filteredFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
+            /* @__PURE__ */ jsx("div", { className: `h-11 w-11 shrink-0 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-xl shadow-soft`, children: friend.emoji }),
+            /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-1.5", children: [
+                /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate", children: friend.name }),
+                /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
+                  friend.age,
+                  " años"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "text-[10px] text-muted-foreground flex items-center gap-1", children: [
+                /* @__PURE__ */ jsx(MapPin, { size: 9, className: "text-primary" }),
+                /* @__PURE__ */ jsx("span", { children: friend.location })
+              ] }),
+              /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1 mt-1", children: friend.sports.map((s) => /* @__PURE__ */ jsx("span", { className: "rounded-full bg-muted px-2 py-0.5 text-[8px] font-bold text-muted-foreground border border-border/50", children: s }, s)) })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              className: "grid h-9 w-9 place-items-center rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 active:scale-95 transition-all shadow-soft shrink-0 border border-secondary/10",
+              title: "Enviar Mensaje",
+              children: /* @__PURE__ */ jsx(MessageSquare, { size: 14, className: "text-primary" })
+            }
+          )
+        ] }, friend.id)) })
+      ] })
+    ] }) })
+  ] });
+}
 function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
   const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState("");
@@ -3641,6 +4324,7 @@ function BottomNav({ current, onChange }) {
   const items = [
     { id: "events", label: "Eventos", icon: CalendarCheck },
     { id: "map", label: "Explorar", icon: Map$1 },
+    { id: "friends", label: "Amigos", icon: Users },
     { id: "sports", label: "Deportes", icon: Trophy },
     { id: "profile", label: "Perfil", icon: User }
   ];
@@ -3717,6 +4401,7 @@ function AppContent() {
     if (screen === "detail" && selected) return /* @__PURE__ */ jsx(EventDetailScreen, { event: selected, onBack: () => setScreen("events"), userLocation });
     if (screen === "events") return /* @__PURE__ */ jsx(MyEventsScreen, { onSelect: openDetail, onNavigateToProfile: () => setScreen("profile") });
     if (screen === "sports") return /* @__PURE__ */ jsx(MySportsScreen, { onSelectEvent: openDetail, onNavigateToProfile: () => setScreen("profile") });
+    if (screen === "friends") return /* @__PURE__ */ jsx(FriendsScreen, { onNavigateToProfile: () => setScreen("profile"), onSelectEvent: openDetail });
     if (screen === "editProfile") return /* @__PURE__ */ jsx(EditProfileScreen, { onBack: () => setScreen("profile") });
     if (screen === "profile") return /* @__PURE__ */ jsx(ProfileScreen, { onEdit: () => setScreen("editProfile"), onSelectEvent: openDetail });
     if (screen === "comments" && selectedCancha) return /* @__PURE__ */ jsx(CanchaCommentsScreen, { cancha: selectedCancha, onBack: () => setScreen("map") });

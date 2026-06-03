@@ -21,6 +21,13 @@ export function EditProfileScreen({ onBack }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  // Nuevos campos de perfil
+  const [age, setAge] = useState<number | undefined>(undefined);
+  const [gender, setGender] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [preferredSports, setPreferredSports] = useState<string[]>([]);
+
   useEffect(() => {
     if (currentUser) {
       setUser(currentUser);
@@ -28,6 +35,13 @@ export function EditProfileScreen({ onBack }: Props) {
       setEmail(currentUser.email || "");
       setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
       setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
+      
+      setAge(currentUser.user_metadata?.age || undefined);
+      setGender(currentUser.user_metadata?.gender || "");
+      setDescription(currentUser.user_metadata?.description || "");
+      setLocation(currentUser.user_metadata?.location || "");
+      setPreferredSports(currentUser.user_metadata?.preferred_sports || []);
+      
       setLoading(false);
     } else {
       // Fallback in case context hasn't loaded yet
@@ -38,11 +52,18 @@ export function EditProfileScreen({ onBack }: Props) {
           setEmail(user.email || "");
           setAvatarUrl(user.user_metadata?.avatar_url || null);
           setIsOrganizer(!!user.user_metadata?.is_organizer);
+          
+          setAge(user.user_metadata?.age || undefined);
+          setGender(user.user_metadata?.gender || "");
+          setDescription(user.user_metadata?.description || "");
+          setLocation(user.user_metadata?.location || "");
+          setPreferredSports(user.user_metadata?.preferred_sports || []);
         }
         setLoading(false);
       });
     }
   }, [currentUser]);
+
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -87,7 +108,12 @@ export function EditProfileScreen({ onBack }: Props) {
         name,
         avatarUrl,
         isOrganizer,
-        email: email !== user?.email ? email : undefined
+        email: email !== user?.email ? email : undefined,
+        age,
+        gender,
+        description,
+        location,
+        preferredSports
       });
       
       setSuccess("Perfil actualizado correctamente");
@@ -100,6 +126,7 @@ export function EditProfileScreen({ onBack }: Props) {
       setSaving(false);
     }
   };
+
 
   if (loading) {
     return (
@@ -184,6 +211,85 @@ export function EditProfileScreen({ onBack }: Props) {
             </p>
           </div>
 
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-muted-foreground">Edad</label>
+              <input
+                type="number"
+                value={age ?? ""}
+                onChange={(e) => setAge(e.target.value ? parseInt(e.target.value) : undefined)}
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+                placeholder="Ej. 25"
+                min="1"
+                max="120"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-muted-foreground">Género</label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+              >
+                <option value="">Seleccionar...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-muted-foreground">Ubicación (Municipio/Zona)</label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+              placeholder="Ej. Chacao, Caracas"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-muted-foreground">Sobre mí (Descripción)</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none"
+              placeholder="Cuéntanos un poco sobre ti, tu nivel de juego, etc."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-muted-foreground block">Deportes preferidos</label>
+            <div className="flex flex-wrap gap-2">
+              {["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"].map((sport) => {
+                const isSelected = preferredSports.includes(sport);
+                return (
+                  <button
+                    key={sport}
+                    type="button"
+                    onClick={() => {
+                      if (isSelected) {
+                        setPreferredSports(preferredSports.filter((s) => s !== sport));
+                      } else {
+                        setPreferredSports([...preferredSports, sport]);
+                      }
+                    }}
+                    className={`rounded-full px-3 py-1.5 text-xs font-bold border transition-all ${
+                      isSelected
+                        ? "bg-primary/20 text-primary border-primary"
+                        : "bg-card text-muted-foreground border-border hover:border-muted-foreground"
+                    }`}
+                  >
+                    {sport}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="pt-2">
             <label className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 cursor-pointer transition-all hover:border-primary/50 active:scale-[0.99]">
               <input
@@ -203,6 +309,7 @@ export function EditProfileScreen({ onBack }: Props) {
             </label>
           </div>
         </div>
+
 
         <button
           type="submit"

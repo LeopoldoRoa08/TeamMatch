@@ -1,0 +1,573 @@
+import { useState, useEffect } from "react";
+import { 
+  Users, 
+  UserPlus, 
+  Sparkles, 
+  MapPin, 
+  Heart, 
+  X, 
+  Search, 
+  MessageSquare, 
+  UserCheck, 
+  UserX,
+  Flame,
+  Check
+} from "lucide-react";
+import { useCurrentUser } from "@/lib/UserContext";
+import { SportBadge } from "./SportBadge";
+
+interface Friend {
+  id: string;
+  name: string;
+  age: number;
+  location: string;
+  bio: string;
+  sports: string[];
+  emoji: string;
+  gradient: string;
+}
+
+const initialCandidates: Friend[] = [
+  {
+    id: "cand_1",
+    name: "Sofía M.",
+    age: 26,
+    location: "Las Mercedes",
+    bio: "Jugadora de Pádel nivel intermedio. Busco gente para armar dobles y pasar un buen rato los fines de semana.",
+    sports: ["Pádel", "Tenis"],
+    emoji: "🎾",
+    gradient: "from-pink-500 to-rose-400"
+  },
+  {
+    id: "cand_2",
+    name: "Alejandro V.",
+    age: 28,
+    location: "Altamira",
+    bio: "Me encanta el senderismo en el Ávila (Sabas Nieves). Subo casi todos los sábados por la mañana, únete!",
+    sports: ["Senderismo", "Running"],
+    emoji: "🥾",
+    gradient: "from-emerald-500 to-teal-400"
+  },
+  {
+    id: "cand_3",
+    name: "Lucas G.",
+    age: 23,
+    location: "Chacao",
+    bio: "Aficionado del Running por la Av. Francisco de Miranda y partidos de Tenis. Nivel principiante-medio.",
+    sports: ["Running", "Tenis"],
+    emoji: "🏃‍♂️",
+    gradient: "from-blue-500 to-cyan-400"
+  },
+  {
+    id: "cand_4",
+    name: "Gabriela R.",
+    age: 25,
+    location: "El Hatillo",
+    bio: "Jugadora amateur de Vóleibol. Buscando armar partidos mixtos recreativos. Buena vibra ante todo.",
+    sports: ["Vóleibol"],
+    emoji: "🏐",
+    gradient: "from-purple-500 to-indigo-400"
+  },
+  {
+    id: "cand_5",
+    name: "Daniel C.",
+    age: 27,
+    location: "Chacao",
+    bio: "Pádel competitivo y Running. Busco partners consistentes para entrenar temprano por las mañanas.",
+    sports: ["Pádel", "Running"],
+    emoji: "🏸",
+    gradient: "from-amber-500 to-orange-400"
+  }
+];
+
+const initialReceivedRequests: Friend[] = [
+  {
+    id: "req_1",
+    name: "Valentina G.",
+    age: 24,
+    location: "Las Mercedes",
+    bio: "Busco gente para correr en las mañanas o jugar pádel. ¡A jugar se ha dicho!",
+    sports: ["Running", "Pádel"],
+    emoji: "👩‍🚀",
+    gradient: "from-fuchsia-500 to-pink-500"
+  },
+  {
+    id: "req_2",
+    name: "Javier M.",
+    age: 29,
+    location: "Chacao",
+    bio: "Juego tenis nivel avanzado, busco contrincantes en la zona de Chacao para subir el nivel.",
+    sports: ["Tenis", "Senderismo"],
+    emoji: "🧔",
+    gradient: "from-violet-600 to-blue-500"
+  }
+];
+
+const initialFriends: Friend[] = [
+  {
+    id: "friend_default_1",
+    name: "Carlos P.",
+    age: 31,
+    location: "Las Mercedes",
+    bio: "Host de partidos de Pádel. Siempre activo.",
+    sports: ["Pádel"],
+    emoji: "🦁",
+    gradient: "from-sky-500 to-blue-600"
+  },
+  {
+    id: "friend_default_2",
+    name: "Andrea M.",
+    age: 25,
+    location: "Altamira",
+    bio: "Guía de senderismo en el Ávila.",
+    sports: ["Senderismo"],
+    emoji: "🦊",
+    gradient: "from-orange-400 to-red-500"
+  }
+];
+
+export function FriendsScreen({ 
+  onNavigateToProfile,
+  onSelectEvent 
+}: { 
+  onNavigateToProfile?: () => void;
+  onSelectEvent?: (e: any) => void;
+}) {
+  const { user, addXp } = useCurrentUser();
+  const [activeSubTab, setActiveSubTab] = useState<"tinder" | "friends">("tinder");
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  // Storage states
+  const [candidates, setCandidates] = useState<Friend[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [receivedRequests, setReceivedRequests] = useState<Friend[]>([]);
+  
+  // Tinder state
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [matchOverlayUser, setMatchOverlayUser] = useState<Friend | null>(null);
+  const [sentMatchEffect, setSentMatchEffect] = useState(false);
+
+  // Initialize from LocalStorage or default mock data
+  useEffect(() => {
+    const storedFriends = localStorage.getItem("teammatch_friends");
+    const storedRequests = localStorage.getItem("teammatch_received_requests");
+    const storedCandidates = localStorage.getItem("teammatch_candidates");
+
+    if (storedFriends) {
+      setFriends(JSON.parse(storedFriends));
+    } else {
+      setFriends(initialFriends);
+      localStorage.setItem("teammatch_friends", JSON.stringify(initialFriends));
+    }
+
+    if (storedRequests) {
+      setReceivedRequests(JSON.parse(storedRequests));
+    } else {
+      setReceivedRequests(initialReceivedRequests);
+      localStorage.setItem("teammatch_received_requests", JSON.stringify(initialReceivedRequests));
+    }
+
+    if (storedCandidates) {
+      setCandidates(JSON.parse(storedCandidates));
+    } else {
+      setCandidates(initialCandidates);
+      localStorage.setItem("teammatch_candidates", JSON.stringify(initialCandidates));
+    }
+  }, []);
+
+  // Save changes helper
+  const saveToStorage = (key: string, data: any) => {
+    localStorage.setItem(key, JSON.stringify(data));
+  };
+
+  // Get user preferred sports for compatibility check
+  const userSports = user?.user_metadata?.preferred_sports || [];
+
+  // Compatibility score calculation
+  const getCompatibilityScore = (candidateSports: string[]) => {
+    if (userSports.length === 0) {
+      // Retornar un número determinista basado en el nombre para variedad
+      return 75 + (candidateSports.length * 3) % 15;
+    }
+    const common = candidateSports.filter(s => userSports.includes(s)).length;
+    const score = Math.round(50 + (common / Math.max(1, userSports.length)) * 48);
+    return Math.min(99, score);
+  };
+
+  // Handle Tinder match (Like/Heart click)
+  const handleLike = async (candidate: Friend) => {
+    setSentMatchEffect(true);
+    
+    // Simular que el match se envía con una animación de 1 segundo
+    setTimeout(async () => {
+      setSentMatchEffect(false);
+      
+      // Pasar a la siguiente tarjeta
+      setCurrentIndex(prev => prev + 1);
+
+      // Simular un Match Mutuo instantáneo o diferido de 2 segundos para hacer la demo interactiva y espectacular!
+      setTimeout(async () => {
+        // Añadir a amigos
+        const updatedFriends = [candidate, ...friends];
+        setFriends(updatedFriends);
+        saveToStorage("teammatch_friends", updatedFriends);
+
+        // Remover de candidatos
+        const updatedCandidates = candidates.filter(c => c.id !== candidate.id);
+        setCandidates(updatedCandidates);
+        saveToStorage("teammatch_candidates", updatedCandidates);
+
+        // Gatillar modal de Match exitoso
+        setMatchOverlayUser(candidate);
+        
+        // XP Reward
+        await addXp(15, `¡Match deportivo con ${candidate.name}! ⚡`);
+      }, 1500);
+
+    }, 800);
+  };
+
+  // Handle Tinder Reject (X click)
+  const handleReject = () => {
+    setCurrentIndex(prev => prev + 1);
+  };
+
+  // Handle Accept received match request
+  const handleAcceptRequest = async (request: Friend) => {
+    // Remover de solicitudes recibidas
+    const updatedRequests = receivedRequests.filter(r => r.id !== request.id);
+    setReceivedRequests(updatedRequests);
+    saveToStorage("teammatch_received_requests", updatedRequests);
+
+    // Agregar a amigos
+    const updatedFriends = [request, ...friends];
+    setFriends(updatedFriends);
+    saveToStorage("teammatch_friends", updatedFriends);
+
+    // XP Reward
+    await addXp(10, `¡Aceptaste a ${request.name} como amigo! 🤝`);
+  };
+
+  // Handle Reject received match request
+  const handleRejectRequest = (request: Friend) => {
+    const updatedRequests = receivedRequests.filter(r => r.id !== request.id);
+    setReceivedRequests(updatedRequests);
+    saveToStorage("teammatch_received_requests", updatedRequests);
+  };
+
+  // Filter friends list by search query
+  const filteredFriends = friends.filter(friend => 
+    friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    friend.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    friend.sports.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const activeCandidate = candidates[currentIndex];
+
+  return (
+    <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
+      {/* Match mutuo full-screen overlay */}
+      {matchOverlayUser && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300">
+          <div className="absolute inset-0 sunburst-rays opacity-20 pointer-events-none" />
+          
+          <div className="space-y-4 max-w-sm flex flex-col items-center">
+            <span className="inline-flex rounded-full bg-primary/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse">
+              ¡CONEXIÓN LOGRADA! 🔥
+            </span>
+            
+            <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
+              ¡HICISTE MATCH!
+            </h2>
+            <p className="text-sm text-white/80">
+              Tú y {matchOverlayUser.name} quieren jugar a los mismos deportes.
+            </p>
+
+            {/* Avatars comparison */}
+            <div className="flex items-center justify-center gap-8 py-8 relative">
+              <div className="relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500">
+                {(user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase()}
+              </div>
+              <div className="absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce">
+                ⚡
+              </div>
+              <div className={`relative h-20 w-20 rounded-full border-4 border-primary bg-gradient-to-tr ${matchOverlayUser.gradient} grid place-items-center text-4xl shadow-pop animate-in slide-in-from-right duration-500`}>
+                {matchOverlayUser.emoji}
+              </div>
+            </div>
+
+            <div className="bg-white/5 p-4 rounded-2xl border border-white/5 w-full text-center space-y-1">
+              <div className="text-sm font-bold text-white">{matchOverlayUser.name}, {matchOverlayUser.age}</div>
+              <div className="text-xs text-muted-foreground">{matchOverlayUser.location}</div>
+              <p className="text-[11px] text-white/70 italic mt-2">"{matchOverlayUser.bio}"</p>
+            </div>
+
+            <button
+              onClick={() => setMatchOverlayUser(null)}
+              className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4"
+            >
+              ¡Excelente! Enviar Mensaje 💬
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
+      <header className="flex items-center justify-between px-5 pb-3 pt-12">
+        <div>
+          <h1 className="text-2xl font-bold text-secondary">Amigos</h1>
+          <p className="text-sm text-muted-foreground">Conecta con jugadores afines</p>
+        </div>
+        <button 
+          onClick={onNavigateToProfile}
+          className="h-10 w-10 rounded-full bg-card shadow-soft border border-border grid place-items-center text-secondary transition-transform active:scale-95"
+        >
+          <Users size={18} />
+        </button>
+      </header>
+
+      {/* Navigation Sub-Tabs */}
+      <div className="px-5 pb-3 pt-1">
+        <div className="flex gap-1 rounded-full bg-muted p-1 border border-border/40">
+          <button
+            onClick={() => setActiveSubTab("tinder")}
+            className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+              activeSubTab === "tinder" 
+                ? "bg-card text-secondary shadow-soft border border-border/20" 
+                : "text-muted-foreground"
+            }`}
+          >
+            <Flame size={14} className={activeSubTab === "tinder" ? "text-primary" : ""} />
+            Para ti
+          </button>
+          <button
+            onClick={() => setActiveSubTab("friends")}
+            className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+              activeSubTab === "friends" 
+                ? "bg-card text-secondary shadow-soft border border-border/20" 
+                : "text-muted-foreground"
+            }`}
+          >
+            <UserCheck size={14} className={activeSubTab === "friends" ? "text-primary" : ""} />
+            Mis amigos ({friends.length})
+          </button>
+        </div>
+      </div>
+
+      {/* Sub-Tab content */}
+      <div className="flex-1 overflow-y-auto px-5 pt-3">
+        {activeSubTab === "tinder" ? (
+          <div className="h-full flex flex-col items-center justify-center pb-4 relative">
+            {sentMatchEffect && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center bg-background/70 backdrop-blur-sm animate-in fade-in duration-200 rounded-3xl">
+                <div className="text-center space-y-2">
+                  <div className="text-5xl animate-bounce">⚡</div>
+                  <div className="text-sm font-black text-primary uppercase tracking-widest animate-pulse">
+                    Enviando Match...
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeCandidate ? (
+              <div className="w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300">
+                {/* Image / Header Gradient block */}
+                <div className={`h-40 shrink-0 bg-gradient-to-tr ${activeCandidate.gradient} flex items-center justify-center relative`}>
+                  <div className="text-6xl drop-shadow-md select-none">{activeCandidate.emoji}</div>
+                  
+                  {/* Compatibility Badge */}
+                  <div className="absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop">
+                    <Sparkles size={10} className="text-primary animate-pulse" />
+                    <span>{getCompatibilityScore(activeCandidate.sports)}% Compatible</span>
+                  </div>
+
+                  {/* Location floating tag */}
+                  <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft">
+                    <MapPin size={10} className="text-primary" />
+                    <span>{activeCandidate.location}</span>
+                  </div>
+                </div>
+
+                {/* Profile Card Body */}
+                <div className="flex-1 p-5 space-y-3.5 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-baseline gap-2">
+                      <h3 className="text-lg font-black text-secondary">{activeCandidate.name}</h3>
+                      <span className="text-sm font-bold text-muted-foreground">{activeCandidate.age} años</span>
+                    </div>
+
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                      "{activeCandidate.bio}"
+                    </p>
+                  </div>
+
+                  {/* Sports tags */}
+                  <div className="space-y-1.5 border-t border-dashed border-border/80 pt-3">
+                    <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider block">Deportes</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {activeCandidate.sports.map(sport => (
+                        <SportBadge key={sport} sport={sport as any} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tinder Buttons row */}
+                <div className="p-4 border-t border-border/60 bg-muted/20 flex justify-center gap-6">
+                  {/* Reject button */}
+                  <button
+                    onClick={handleReject}
+                    className="grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft"
+                    title="Descartar"
+                  >
+                    <X size={20} strokeWidth={2.5} />
+                  </button>
+
+                  {/* Like/Match button */}
+                  <button
+                    onClick={() => handleLike(activeCandidate)}
+                    className="grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop"
+                    title="¡Hacer Match!"
+                  >
+                    <Heart size={20} strokeWidth={2.5} className="fill-current" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12">
+                <div className="text-5xl">⚡</div>
+                <h3 className="text-base font-black text-secondary">¡Eso es todo por hoy!</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos.
+                </p>
+                <button
+                  onClick={() => setCurrentIndex(0)}
+                  className="rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20"
+                >
+                  Reiniciar Lista 🔄
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-5 pb-8">
+            {/* Received Requests block */}
+            {receivedRequests.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <UserPlus size={14} className="text-primary" /> Solicitudes de Match Recibidas
+                </h3>
+
+                <div className="space-y-2">
+                  {receivedRequests.map(req => (
+                    <div key={req.id} className="rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 animate-in slide-in-from-top duration-300">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Avatar */}
+                        <div className={`h-11 w-11 shrink-0 rounded-full bg-gradient-to-tr ${req.gradient} grid place-items-center text-xl shadow-soft`}>
+                          {req.emoji}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-sm font-bold text-secondary truncate">{req.name}</span>
+                            <span className="text-xs text-muted-foreground">{req.age}</span>
+                          </div>
+                          <div className="text-[10px] text-primary font-extrabold">{req.location}</div>
+                          <p className="text-[10px] text-muted-foreground truncate max-w-[160px]">{req.bio}</p>
+                        </div>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex gap-1.5 shrink-0">
+                        <button
+                          onClick={() => handleRejectRequest(req)}
+                          className="grid h-8 w-8 place-items-center rounded-xl bg-muted/60 text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 transition-colors"
+                          title="Rechazar"
+                        >
+                          <UserX size={15} />
+                        </button>
+                        <button
+                          onClick={() => handleAcceptRequest(req)}
+                          className="grid h-8 w-8 place-items-center rounded-xl gradient-primary text-secondary shadow-sm"
+                          title="Aceptar Match"
+                        >
+                          <UserCheck size={15} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Friends list block */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <UserCheck size={14} className="text-primary" /> Mis Amigos Guardados
+                </h3>
+                <span className="text-[10px] font-bold text-muted-foreground">{filteredFriends.length} amigos</span>
+              </div>
+
+              {/* Search bar */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Buscar amigo por nombre, deporte..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full rounded-2xl border border-border bg-card pl-10 pr-4 py-2.5 text-xs text-secondary outline-none transition-colors focus:border-primary"
+                />
+                <Search size={14} className="absolute left-3.5 top-3.5 text-muted-foreground" />
+              </div>
+
+              {/* Friends list */}
+              {filteredFriends.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground">
+                  {searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!"}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {filteredFriends.map(friend => (
+                    <div key={friend.id} className="rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Avatar */}
+                        <div className={`h-11 w-11 shrink-0 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-xl shadow-soft`}>
+                          {friend.emoji}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-sm font-bold text-secondary truncate">{friend.name}</span>
+                            <span className="text-xs text-muted-foreground">{friend.age} años</span>
+                          </div>
+                          <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                            <MapPin size={9} className="text-primary" />
+                            <span>{friend.location}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {friend.sports.map(s => (
+                              <span key={s} className="rounded-full bg-muted px-2 py-0.5 text-[8px] font-bold text-muted-foreground border border-border/50">
+                                {s}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Chat action button */}
+                      <button
+                        className="grid h-9 w-9 place-items-center rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 active:scale-95 transition-all shadow-soft shrink-0 border border-secondary/10"
+                        title="Enviar Mensaje"
+                      >
+                        <MessageSquare size={14} className="text-primary" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

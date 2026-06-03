@@ -51,8 +51,19 @@ interface UserContextValue {
   clearEventNotification: () => void;
   addXp: (amount: number, reason: string) => Promise<void>;
   claimCoupon: (code: string) => Promise<void>;
-  updateProfile: (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => Promise<void>;
+  updateProfile: (updates: {
+    name: string;
+    avatarUrl: string | null;
+    isOrganizer: boolean;
+    email?: string;
+    age?: number;
+    gender?: string;
+    description?: string;
+    location?: string;
+    preferredSports?: string[];
+  }) => Promise<void>;
 }
+
 
 const UserContext = createContext<UserContextValue>({
   user: null,
@@ -354,17 +365,33 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (updatedUser) setUser(updatedUser);
   };
 
-  const updateProfile = async (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => {
+  const updateProfile = async (updates: {
+    name: string;
+    avatarUrl: string | null;
+    isOrganizer: boolean;
+    email?: string;
+    age?: number;
+    gender?: string;
+    description?: string;
+    location?: string;
+    preferredSports?: string[];
+  }) => {
     if (!user) return;
 
     const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({
       data: {
         full_name: updates.name,
         avatar_url: updates.avatarUrl,
-        is_organizer: updates.isOrganizer
+        is_organizer: updates.isOrganizer,
+        age: updates.age,
+        gender: updates.gender,
+        description: updates.description,
+        location: updates.location,
+        preferred_sports: updates.preferredSports
       },
       ...(updates.email && updates.email !== user.email && { email: updates.email })
     });
+
 
     if (updateError) throw updateError;
 
