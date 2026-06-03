@@ -100,13 +100,29 @@ function UserProvider({ children }) {
     const wasCounted = sessionStorage.getItem("teammatch_session_counted");
     const meta = currentUser?.user_metadata || {};
     try {
-      await supabase.from("profiles").upsert({
+      const profileData = {
         id: currentUser.id,
         username: currentUser.email || "",
         avatar_url: meta.avatar_url || null,
         rating: meta.rating || 4.8,
-        is_premium: meta.is_premium || false
-      });
+        is_premium: meta.is_premium || false,
+        age: meta.age || null,
+        gender: meta.gender || null,
+        description: meta.description || null,
+        location: meta.location || null,
+        preferred_sports: meta.preferred_sports || null
+      };
+      const { error } = await supabase.from("profiles").upsert(profileData);
+      if (error) {
+        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", error);
+        await supabase.from("profiles").upsert({
+          id: currentUser.id,
+          username: currentUser.email || "",
+          avatar_url: meta.avatar_url || null,
+          rating: meta.rating || 4.8,
+          is_premium: meta.is_premium || false
+        });
+      }
     } catch (e) {
       console.error("Error upserting public profile:", e);
     }
@@ -288,15 +304,31 @@ function UserProvider({ children }) {
     });
     if (updateError) throw updateError;
     try {
-      const { error: profileError } = await supabase.from("profiles").upsert({
+      const profileData = {
         id: user.id,
         username: (updates.email || user.email || "").trim(),
         avatar_url: updates.avatarUrl,
         rating: user.user_metadata?.rating || 4.8,
-        is_premium: user.user_metadata?.is_premium || false
-      });
+        is_premium: user.user_metadata?.is_premium || false,
+        age: updates.age || user.user_metadata?.age || null,
+        gender: updates.gender || user.user_metadata?.gender || null,
+        description: updates.description || user.user_metadata?.description || null,
+        location: updates.location || user.user_metadata?.location || null,
+        preferred_sports: updates.preferredSports || user.user_metadata?.preferred_sports || null
+      };
+      const { error: profileError } = await supabase.from("profiles").upsert(profileData);
       if (profileError) {
-        console.warn("Failed to update public profiles table due to RLS, but continuing:", profileError);
+        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", profileError);
+        const { error: fallbackError } = await supabase.from("profiles").upsert({
+          id: user.id,
+          username: (updates.email || user.email || "").trim(),
+          avatar_url: updates.avatarUrl,
+          rating: user.user_metadata?.rating || 4.8,
+          is_premium: user.user_metadata?.is_premium || false
+        });
+        if (fallbackError) {
+          console.warn("Failed to update core profiles table due to RLS, but continuing:", fallbackError);
+        }
       }
     } catch (e) {
       console.error("Error upserting public profile:", e);
@@ -3630,58 +3662,6 @@ function WelcomeScreen({
     ] })
   ] });
 }
-const initialCandidates = [
-  {
-    id: "cand_1",
-    name: "Sofía M.",
-    age: 26,
-    location: "Las Mercedes",
-    bio: "Jugadora de Pádel nivel intermedio. Busco gente para armar dobles y pasar un buen rato los fines de semana.",
-    sports: ["Pádel", "Tenis"],
-    emoji: "🎾",
-    gradient: "from-pink-500 to-rose-400"
-  },
-  {
-    id: "cand_2",
-    name: "Alejandro V.",
-    age: 28,
-    location: "Altamira",
-    bio: "Me encanta el senderismo en el Ávila (Sabas Nieves). Subo casi todos los sábados por la mañana, únete!",
-    sports: ["Senderismo", "Running"],
-    emoji: "🥾",
-    gradient: "from-emerald-500 to-teal-400"
-  },
-  {
-    id: "cand_3",
-    name: "Lucas G.",
-    age: 23,
-    location: "Chacao",
-    bio: "Aficionado del Running por la Av. Francisco de Miranda y partidos de Tenis. Nivel principiante-medio.",
-    sports: ["Running", "Tenis"],
-    emoji: "🏃‍♂️",
-    gradient: "from-blue-500 to-cyan-400"
-  },
-  {
-    id: "cand_4",
-    name: "Gabriela R.",
-    age: 25,
-    location: "El Hatillo",
-    bio: "Jugadora amateur de Vóleibol. Buscando armar partidos mixtos recreativos. Buena vibra ante todo.",
-    sports: ["Vóleibol"],
-    emoji: "🏐",
-    gradient: "from-purple-500 to-indigo-400"
-  },
-  {
-    id: "cand_5",
-    name: "Daniel C.",
-    age: 27,
-    location: "Chacao",
-    bio: "Pádel competitivo y Running. Busco partners consistentes para entrenar temprano por las mañanas.",
-    sports: ["Pádel", "Running"],
-    emoji: "🏸",
-    gradient: "from-amber-500 to-orange-400"
-  }
-];
 const initialReceivedRequests = [
   {
     id: "req_1",
@@ -3736,13 +3716,16 @@ function FriendsScreen({
   const [candidates, setCandidates] = useState([]);
   const [friends, setFriends] = useState([]);
   const [receivedRequests, setReceivedRequests] = useState([]);
+  const [loadingProfiles, setLoadingProfiles] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchOverlayUser, setMatchOverlayUser] = useState(null);
   const [sentMatchEffect, setSentMatchEffect] = useState(false);
+  const saveToStorage = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
+  };
   useEffect(() => {
     const storedFriends = localStorage.getItem("teammatch_friends");
     const storedRequests = localStorage.getItem("teammatch_received_requests");
-    const storedCandidates = localStorage.getItem("teammatch_candidates");
     if (storedFriends) {
       setFriends(JSON.parse(storedFriends));
     } else {
@@ -3755,16 +3738,83 @@ function FriendsScreen({
       setReceivedRequests(initialReceivedRequests);
       localStorage.setItem("teammatch_received_requests", JSON.stringify(initialReceivedRequests));
     }
-    if (storedCandidates) {
-      setCandidates(JSON.parse(storedCandidates));
-    } else {
-      setCandidates(initialCandidates);
-      localStorage.setItem("teammatch_candidates", JSON.stringify(initialCandidates));
+    async function fetchRealProfiles() {
+      try {
+        setLoadingProfiles(true);
+        const { data: dbProfiles, error } = await supabase.from("profiles").select("*");
+        if (error) throw error;
+        const filtered = (dbProfiles || []).filter(
+          (p) => p.username !== user?.email && p.id !== user?.id
+        );
+        const mappedCandidates = filtered.map((p, index) => {
+          const idHash = p.id ? p.id.split("-").join("") : p.username;
+          let charCodeSum = 0;
+          for (let i = 0; i < idHash.length; i++) {
+            charCodeSum += idHash.charCodeAt(i);
+          }
+          const age = p.age || 20 + charCodeSum % 15;
+          const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
+          const location = p.location || locations[charCodeSum % locations.length];
+          const sportsPool = ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"];
+          const sportsCount = 1 + charCodeSum % 3;
+          const sports2 = p.preferred_sports || [];
+          if (sports2.length === 0) {
+            for (let i = 0; i < sportsCount; i++) {
+              const sport = sportsPool[(charCodeSum + i) % sportsPool.length];
+              if (!sports2.includes(sport)) {
+                sports2.push(sport);
+              }
+            }
+          }
+          const emojis = ["🏃‍♂️", "🎾", "🥾", "🏐", "👩‍🚀", "🧔", "🦁", "🦊", "🐯", "🐼"];
+          const emoji = emojis[charCodeSum % emojis.length];
+          const gradients = [
+            "from-pink-500 to-rose-400",
+            "from-emerald-500 to-teal-400",
+            "from-blue-500 to-cyan-400",
+            "from-purple-500 to-indigo-400",
+            "from-amber-500 to-orange-400",
+            "from-sky-500 to-blue-600",
+            "from-orange-400 to-red-500"
+          ];
+          const gradient = gradients[charCodeSum % gradients.length];
+          const bios = [
+            "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
+            "Siempre activo para jugar un partido de pádel o tenis.",
+            "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
+            "Running y entrenamiento funcional. Busco motivar y que me motiven.",
+            "Jugador recreativo de vóleibol y fútbol. Buena vibra."
+          ];
+          const bio = p.description || bios[charCodeSum % bios.length];
+          const name = p.username.includes("@") ? p.username.split("@")[0].split(".").map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") : p.username;
+          return {
+            id: p.id || `profile_${index}`,
+            name: name || "Deportista",
+            age,
+            location,
+            bio,
+            sports: sports2,
+            emoji,
+            gradient
+          };
+        });
+        const currentFriends = storedFriends ? JSON.parse(storedFriends) : initialFriends;
+        const currentFriendNames = new Set(currentFriends.map((f) => f.name.toLowerCase()));
+        const finalCandidates = mappedCandidates.filter((c) => !currentFriendNames.has(c.name.toLowerCase()));
+        setCandidates(finalCandidates);
+        saveToStorage("teammatch_candidates", finalCandidates);
+      } catch (err) {
+        console.error("Error loading profiles from Supabase profiles:", err);
+      } finally {
+        setLoadingProfiles(false);
+      }
     }
-  }, []);
-  const saveToStorage = (key, data) => {
-    localStorage.setItem(key, JSON.stringify(data));
-  };
+    if (user) {
+      fetchRealProfiles();
+    } else {
+      setLoadingProfiles(false);
+    }
+  }, [user]);
   const userSports = user?.user_metadata?.preferred_sports || [];
   const getCompatibilityScore = (candidateSports) => {
     if (userSports.length === 0) {
@@ -3896,7 +3946,10 @@ function FriendsScreen({
         /* @__PURE__ */ jsx("div", { className: "text-5xl animate-bounce", children: "⚡" }),
         /* @__PURE__ */ jsx("div", { className: "text-sm font-black text-primary uppercase tracking-widest animate-pulse", children: "Enviando Match..." })
       ] }) }),
-      activeCandidate ? /* @__PURE__ */ jsxs("div", { className: "w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300", children: [
+      loadingProfiles ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center gap-3 py-12", children: [
+        /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse", children: "Cargando perfiles reales..." })
+      ] }) : activeCandidate ? /* @__PURE__ */ jsxs("div", { className: "w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300", children: [
         /* @__PURE__ */ jsxs("div", { className: `h-40 shrink-0 bg-gradient-to-tr ${activeCandidate.gradient} flex items-center justify-center relative`, children: [
           /* @__PURE__ */ jsx("div", { className: "text-6xl drop-shadow-md select-none", children: activeCandidate.emoji }),
           /* @__PURE__ */ jsxs("div", { className: "absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop", children: [

@@ -11,10 +11,13 @@ import {
   UserCheck, 
   UserX,
   Flame,
-  Check
+  Check,
+  Loader2
 } from "lucide-react";
 import { useCurrentUser } from "@/lib/UserContext";
 import { SportBadge } from "./SportBadge";
+import { supabase } from "@/lib/supabase";
+
 
 interface Friend {
   id: string;
@@ -27,104 +30,10 @@ interface Friend {
   gradient: string;
 }
 
-const initialCandidates: Friend[] = [
-  {
-    id: "cand_1",
-    name: "Sofía M.",
-    age: 26,
-    location: "Las Mercedes",
-    bio: "Jugadora de Pádel nivel intermedio. Busco gente para armar dobles y pasar un buen rato los fines de semana.",
-    sports: ["Pádel", "Tenis"],
-    emoji: "🎾",
-    gradient: "from-pink-500 to-rose-400"
-  },
-  {
-    id: "cand_2",
-    name: "Alejandro V.",
-    age: 28,
-    location: "Altamira",
-    bio: "Me encanta el senderismo en el Ávila (Sabas Nieves). Subo casi todos los sábados por la mañana, únete!",
-    sports: ["Senderismo", "Running"],
-    emoji: "🥾",
-    gradient: "from-emerald-500 to-teal-400"
-  },
-  {
-    id: "cand_3",
-    name: "Lucas G.",
-    age: 23,
-    location: "Chacao",
-    bio: "Aficionado del Running por la Av. Francisco de Miranda y partidos de Tenis. Nivel principiante-medio.",
-    sports: ["Running", "Tenis"],
-    emoji: "🏃‍♂️",
-    gradient: "from-blue-500 to-cyan-400"
-  },
-  {
-    id: "cand_4",
-    name: "Gabriela R.",
-    age: 25,
-    location: "El Hatillo",
-    bio: "Jugadora amateur de Vóleibol. Buscando armar partidos mixtos recreativos. Buena vibra ante todo.",
-    sports: ["Vóleibol"],
-    emoji: "🏐",
-    gradient: "from-purple-500 to-indigo-400"
-  },
-  {
-    id: "cand_5",
-    name: "Daniel C.",
-    age: 27,
-    location: "Chacao",
-    bio: "Pádel competitivo y Running. Busco partners consistentes para entrenar temprano por las mañanas.",
-    sports: ["Pádel", "Running"],
-    emoji: "🏸",
-    gradient: "from-amber-500 to-orange-400"
-  }
-];
+const initialCandidates: Friend[] = [];
+const initialReceivedRequests: Friend[] = [];
+const initialFriends: Friend[] = [];
 
-const initialReceivedRequests: Friend[] = [
-  {
-    id: "req_1",
-    name: "Valentina G.",
-    age: 24,
-    location: "Las Mercedes",
-    bio: "Busco gente para correr en las mañanas o jugar pádel. ¡A jugar se ha dicho!",
-    sports: ["Running", "Pádel"],
-    emoji: "👩‍🚀",
-    gradient: "from-fuchsia-500 to-pink-500"
-  },
-  {
-    id: "req_2",
-    name: "Javier M.",
-    age: 29,
-    location: "Chacao",
-    bio: "Juego tenis nivel avanzado, busco contrincantes en la zona de Chacao para subir el nivel.",
-    sports: ["Tenis", "Senderismo"],
-    emoji: "🧔",
-    gradient: "from-violet-600 to-blue-500"
-  }
-];
-
-const initialFriends: Friend[] = [
-  {
-    id: "friend_default_1",
-    name: "Carlos P.",
-    age: 31,
-    location: "Las Mercedes",
-    bio: "Host de partidos de Pádel. Siempre activo.",
-    sports: ["Pádel"],
-    emoji: "🦁",
-    gradient: "from-sky-500 to-blue-600"
-  },
-  {
-    id: "friend_default_2",
-    name: "Andrea M.",
-    age: 25,
-    location: "Altamira",
-    bio: "Guía de senderismo en el Ávila.",
-    sports: ["Senderismo"],
-    emoji: "🦊",
-    gradient: "from-orange-400 to-red-500"
-  }
-];
 
 export function FriendsScreen({ 
   onNavigateToProfile,
@@ -141,44 +50,141 @@ export function FriendsScreen({
   const [candidates, setCandidates] = useState<Friend[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [receivedRequests, setReceivedRequests] = useState<Friend[]>([]);
+  const [loadingProfiles, setLoadingProfiles] = useState(true);
   
   // Tinder state
   const [currentIndex, setCurrentIndex] = useState(0);
   const [matchOverlayUser, setMatchOverlayUser] = useState<Friend | null>(null);
   const [sentMatchEffect, setSentMatchEffect] = useState(false);
 
-  // Initialize from LocalStorage or default mock data
-  useEffect(() => {
-    const storedFriends = localStorage.getItem("teammatch_friends");
-    const storedRequests = localStorage.getItem("teammatch_received_requests");
-    const storedCandidates = localStorage.getItem("teammatch_candidates");
-
-    if (storedFriends) {
-      setFriends(JSON.parse(storedFriends));
-    } else {
-      setFriends(initialFriends);
-      localStorage.setItem("teammatch_friends", JSON.stringify(initialFriends));
-    }
-
-    if (storedRequests) {
-      setReceivedRequests(JSON.parse(storedRequests));
-    } else {
-      setReceivedRequests(initialReceivedRequests);
-      localStorage.setItem("teammatch_received_requests", JSON.stringify(initialReceivedRequests));
-    }
-
-    if (storedCandidates) {
-      setCandidates(JSON.parse(storedCandidates));
-    } else {
-      setCandidates(initialCandidates);
-      localStorage.setItem("teammatch_candidates", JSON.stringify(initialCandidates));
-    }
-  }, []);
-
   // Save changes helper
   const saveToStorage = (key: string, data: any) => {
     localStorage.setItem(key, JSON.stringify(data));
   };
+
+  // Initialize from LocalStorage and fetch profiles from Supabase profiles table
+  useEffect(() => {
+    // 1. Cargar amigos y solicitudes recibidas guardadas y limpiar cuentas falsas previas
+    const storedFriends = localStorage.getItem("teammatch_friends");
+    const storedRequests = localStorage.getItem("teammatch_received_requests");
+
+    let loadedFriends: Friend[] = storedFriends ? JSON.parse(storedFriends) : [];
+    loadedFriends = loadedFriends.filter(
+      (f: any) => !f.id.startsWith("friend_default_") && !f.id.startsWith("req_") && !f.id.startsWith("cand_")
+    );
+    setFriends(loadedFriends);
+    localStorage.setItem("teammatch_friends", JSON.stringify(loadedFriends));
+
+    let loadedRequests: Friend[] = storedRequests ? JSON.parse(storedRequests) : [];
+    loadedRequests = loadedRequests.filter(
+      (r: any) => !r.id.startsWith("friend_default_") && !r.id.startsWith("req_") && !r.id.startsWith("cand_")
+    );
+    setReceivedRequests(loadedRequests);
+    localStorage.setItem("teammatch_received_requests", JSON.stringify(loadedRequests));
+
+
+    // 2. Consultar perfiles reales registrados de public.profiles en Supabase
+    async function fetchRealProfiles() {
+      try {
+        setLoadingProfiles(true);
+        const { data: dbProfiles, error } = await supabase
+          .from("profiles")
+          .select("*");
+
+        if (error) throw error;
+
+        // Filtrar al propio usuario logueado
+        const filtered = (dbProfiles || []).filter(
+          (p: any) => p.username !== user?.email && p.id !== user?.id
+        );
+
+        // Mapear a formato Tinder candidate con fallbacks deterministas
+        const mappedCandidates: Friend[] = filtered.map((p: any, index: number) => {
+          // Generar datos deterministas basados en el ID para complementar campos vacíos
+          const idHash = p.id ? p.id.split("-").join("") : p.username;
+          let charCodeSum = 0;
+          for (let i = 0; i < idHash.length; i++) {
+            charCodeSum += idHash.charCodeAt(i);
+          }
+
+          const age = p.age || (20 + (charCodeSum % 15)); // Edad 20-34
+          
+          const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
+          const location = p.location || locations[charCodeSum % locations.length];
+
+          const sportsPool = ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"];
+          const sportsCount = 1 + (charCodeSum % 3);
+          const sports: string[] = p.preferred_sports || [];
+          if (sports.length === 0) {
+            for (let i = 0; i < sportsCount; i++) {
+              const sport = sportsPool[(charCodeSum + i) % sportsPool.length];
+              if (!sports.includes(sport)) {
+                sports.push(sport);
+              }
+            }
+          }
+
+          const emojis = ["🏃‍♂️", "🎾", "🥾", "🏐", "👩‍🚀", "🧔", "🦁", "🦊", "🐯", "🐼"];
+          const emoji = emojis[charCodeSum % emojis.length];
+
+          const gradients = [
+            "from-pink-500 to-rose-400",
+            "from-emerald-500 to-teal-400",
+            "from-blue-500 to-cyan-400",
+            "from-purple-500 to-indigo-400",
+            "from-amber-500 to-orange-400",
+            "from-sky-500 to-blue-600",
+            "from-orange-400 to-red-500"
+          ];
+          const gradient = gradients[charCodeSum % gradients.length];
+
+          const bios = [
+            "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
+            "Siempre activo para jugar un partido de pádel o tenis.",
+            "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
+            "Running y entrenamiento funcional. Busco motivar y que me motiven.",
+            "Jugador recreativo de vóleibol y fútbol. Buena vibra."
+          ];
+          const bio = p.description || bios[charCodeSum % bios.length];
+
+          // Formatear el username para mostrar un nombre amigable si es un correo
+          const name = p.username.includes("@") 
+            ? p.username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
+            : p.username;
+
+          return {
+            id: p.id || `profile_${index}`,
+            name: name || "Deportista",
+            age,
+            location,
+            bio,
+            sports,
+            emoji,
+            gradient
+          };
+        });
+
+        // Filtrar candidatos para no mostrar a los que ya son tus amigos en localStorage
+        const currentFriends: Friend[] = storedFriends ? JSON.parse(storedFriends) : initialFriends;
+        const currentFriendNames = new Set(currentFriends.map(f => f.name.toLowerCase()));
+        const finalCandidates = mappedCandidates.filter(c => !currentFriendNames.has(c.name.toLowerCase()));
+
+        setCandidates(finalCandidates);
+        saveToStorage("teammatch_candidates", finalCandidates);
+      } catch (err) {
+        console.error("Error loading profiles from Supabase profiles:", err);
+      } finally {
+        setLoadingProfiles(false);
+      }
+    }
+
+    if (user) {
+      fetchRealProfiles();
+    } else {
+      setLoadingProfiles(false);
+    }
+  }, [user]);
+
 
   // Get user preferred sports for compatibility check
   const userSports = user?.user_metadata?.preferred_sports || [];
@@ -369,7 +375,13 @@ export function FriendsScreen({
               </div>
             )}
 
-            {activeCandidate ? (
+            {loadingProfiles ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Cargando perfiles reales...</p>
+              </div>
+            ) : activeCandidate ? (
+
               <div className="w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300">
                 {/* Image / Header Gradient block */}
                 <div className={`h-40 shrink-0 bg-gradient-to-tr ${activeCandidate.gradient} flex items-center justify-center relative`}>

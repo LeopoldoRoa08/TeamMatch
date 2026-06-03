@@ -158,16 +158,34 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     
     // Synchronize to public.profiles table
     try {
-      await supabase.from("profiles").upsert({
+      const profileData: any = {
         id: currentUser.id,
         username: currentUser.email || "",
         avatar_url: meta.avatar_url || null,
         rating: meta.rating || 4.80,
-        is_premium: meta.is_premium || false
-      });
+        is_premium: meta.is_premium || false,
+        age: meta.age || null,
+        gender: meta.gender || null,
+        description: meta.description || null,
+        location: meta.location || null,
+        preferred_sports: meta.preferred_sports || null
+      };
+      const { error } = await supabase.from("profiles").upsert(profileData);
+      if (error) {
+        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", error);
+        // Fallback to core fields only
+        await supabase.from("profiles").upsert({
+          id: currentUser.id,
+          username: currentUser.email || "",
+          avatar_url: meta.avatar_url || null,
+          rating: meta.rating || 4.80,
+          is_premium: meta.is_premium || false
+        });
+      }
     } catch (e) {
       console.error("Error upserting public profile:", e);
     }
+
     
     // Si aún no inicializado, crear valores por defecto
     const isBrandNew = meta.xp === undefined || meta.level === undefined;
@@ -396,19 +414,37 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (updateError) throw updateError;
 
     try {
-      const { error: profileError } = await supabase.from("profiles").upsert({
+      const profileData: any = {
         id: user.id,
         username: (updates.email || user.email || "").trim(),
         avatar_url: updates.avatarUrl,
         rating: user.user_metadata?.rating || 4.80,
-        is_premium: user.user_metadata?.is_premium || false
-      });
+        is_premium: user.user_metadata?.is_premium || false,
+        age: updates.age || user.user_metadata?.age || null,
+        gender: updates.gender || user.user_metadata?.gender || null,
+        description: updates.description || user.user_metadata?.description || null,
+        location: updates.location || user.user_metadata?.location || null,
+        preferred_sports: updates.preferredSports || user.user_metadata?.preferred_sports || null
+      };
+      const { error: profileError } = await supabase.from("profiles").upsert(profileData);
       if (profileError) {
-        console.warn("Failed to update public profiles table due to RLS, but continuing:", profileError);
+        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", profileError);
+        // Fallback
+        const { error: fallbackError } = await supabase.from("profiles").upsert({
+          id: user.id,
+          username: (updates.email || user.email || "").trim(),
+          avatar_url: updates.avatarUrl,
+          rating: user.user_metadata?.rating || 4.80,
+          is_premium: user.user_metadata?.is_premium || false
+        });
+        if (fallbackError) {
+          console.warn("Failed to update core profiles table due to RLS, but continuing:", fallbackError);
+        }
       }
     } catch (e) {
       console.error("Error upserting public profile:", e);
     }
+
 
     if (updatedUser) {
       setUser(updatedUser);
