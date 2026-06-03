@@ -22,6 +22,7 @@ import { supabase } from "@/lib/supabase";
 interface Friend {
   id: string;
   name: string;
+  username: string;
   age: number;
   location: string;
   bio: string;
@@ -156,6 +157,7 @@ export function FriendsScreen({
           return {
             id: p.id || `profile_${index}`,
             name: name || "Deportista",
+            username: p.username,
             age,
             location,
             bio,

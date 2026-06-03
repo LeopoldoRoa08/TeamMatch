@@ -3,7 +3,7 @@ import { events as mockEvents } from "./data";
 import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Star } from "lucide-react";
+import { Loader2, Star, X } from "lucide-react";
 import { UserAvatar } from "./UserAvatar";
 import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
@@ -33,6 +33,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [selectedUserProfile, setSelectedUserProfile] = useState<any | null>(null);
 
   const formatEvent = (row: any) => {
     if (!row) return null;
@@ -135,7 +136,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
         user_username, 
         status,
         events!inner(id, creator_username, sport_id),
-        profiles(is_premium, rating, avatar_url)
+        profiles(*)
       `)
       .eq("status", "pendiente")
       .eq("events.creator_username", email);
@@ -210,7 +211,10 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
               return (
                 <div key={req.id} className="rounded-2xl bg-card p-4 shadow-soft">
-                  <div className="mb-3 flex items-center gap-3">
+                  <div 
+                    onClick={() => setSelectedUserProfile(req.profiles || { username: req.user_username })}
+                    className="mb-3 flex items-center gap-3 cursor-pointer hover:opacity-85 transition-opacity"
+                  >
                     {req.profiles?.avatar_url ? (
                       <img
                         src={req.profiles.avatar_url}
@@ -237,7 +241,18 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-muted-foreground mt-0.5">quiere unirse a tu partido de {sportName}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">
+                        quiere unirse a tu partido de {sportName}
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedUserProfile(req.profiles || { username: req.user_username });
+                          }}
+                          className="text-[10px] font-extrabold text-primary hover:underline block text-left mt-1"
+                        >
+                          Ver Perfil 🔍
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -287,9 +302,174 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
               )}
             </>
           )}
-          {/* Historial tab removed */}
         </div>
       )}
+
+      {selectedUserProfile && (() => {
+        const formatted = getFormattedProfile(selectedUserProfile);
+        if (!formatted) return null;
+        
+        return (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 px-6 py-4 animate-in fade-in duration-300">
+            <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col">
+              
+              <div className={`h-24 w-full bg-gradient-to-tr ${formatted.gradient} relative shrink-0`} />
+              
+              <div className="absolute top-10 left-6">
+                <div className="relative">
+                  <div className="h-16 w-16 rounded-full bg-card p-1 shadow-md ring-4 ring-secondary">
+                    {formatted.avatar_url ? (
+                      <img 
+                        src={formatted.avatar_url} 
+                        alt="Avatar" 
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className={`h-full w-full rounded-full bg-gradient-to-tr ${formatted.gradient} grid place-items-center text-2xl`}>
+                        {formatted.emoji}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setSelectedUserProfile(null)}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors grid place-items-center cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+
+              <div className="p-6 pt-8 space-y-4 text-white">
+                <div className="space-y-1">
+                  <h3 className="text-base font-black flex items-center gap-2">
+                    {formatted.name}
+                    {formatted.is_organizer && (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30">
+                        Organizador
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-[10px] text-white/50">{formatted.username}</p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <span className="text-[9px] text-white/50 block font-bold">Edad</span>
+                    <span className="font-extrabold text-white">{formatted.age} años</span>
+                  </div>
+                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <span className="text-[9px] text-white/50 block font-bold">Género</span>
+                    <span className="font-extrabold text-white truncate block">{formatted.gender}</span>
+                  </div>
+                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                    <span className="text-[9px] text-white/50 block font-bold">Ubicación</span>
+                    <span className="font-extrabold text-white truncate block" title={formatted.location}>
+                      {formatted.location}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Sobre mí</span>
+                  <p className="text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic">
+                    "{formatted.bio}"
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Deportes Favoritos</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {formatted.sports.map((sport: string) => (
+                      <span key={sport} className="rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary">
+                        {sport}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setSelectedUserProfile(null)}
+                  className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
+                >
+                  Cerrar Perfil
+                </button>
+              </div>
+
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
+
+const getFormattedProfile = (p: any) => {
+  if (!p) return null;
+  const username = p.username || "Usuario";
+  
+  let charCodeSum = 0;
+  for (let i = 0; i < username.length; i++) {
+    charCodeSum += username.charCodeAt(i);
+  }
+  
+  const age = p.age || (20 + (charCodeSum % 15));
+  
+  const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
+  const location = p.location || locations[charCodeSum % locations.length];
+  
+  const sportsPool = ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"];
+  const sportsCount = 1 + (charCodeSum % 3);
+  const sports: string[] = p.preferred_sports || [];
+  if (sports.length === 0) {
+    for (let i = 0; i < sportsCount; i++) {
+      const sport = sportsPool[(charCodeSum + i) % sportsPool.length];
+      if (!sports.includes(sport)) {
+        sports.push(sport);
+      }
+    }
+  }
+  
+  const emojis = ["🏃‍♂️", "🎾", "🥾", "🏐", "👩‍🚀", "🧔", "🦁", "🦊", "🐯", "🐼"];
+  const emoji = emojis[charCodeSum % emojis.length];
+  
+  const gradients = [
+    "from-pink-500 to-rose-400",
+    "from-emerald-500 to-teal-400",
+    "from-blue-500 to-cyan-400",
+    "from-purple-500 to-indigo-400",
+    "from-amber-500 to-orange-400",
+    "from-sky-500 to-blue-600",
+    "from-orange-400 to-red-500"
+  ];
+  const gradient = gradients[charCodeSum % gradients.length];
+  
+  const bios = [
+    "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
+    "Siempre activo para jugar un partido de pádel o tenis.",
+    "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
+    "Running y entrenamiento funcional. Busco motivar y que me motiven.",
+    "Jugador recreativo de vóleibol y fútbol. Buena vibra."
+  ];
+  const bio = p.description || bios[charCodeSum % bios.length];
+  
+  const name = username.includes("@") 
+    ? username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
+    : username;
+
+  return {
+    name,
+    username,
+    age,
+    gender: p.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
+    location,
+    bio,
+    sports,
+    emoji,
+    gradient,
+    rating: p.rating || 4.8,
+    avatar_url: p.avatar_url,
+    is_premium: p.is_premium || false,
+    is_organizer: p.is_organizer || false
+  };
+};
