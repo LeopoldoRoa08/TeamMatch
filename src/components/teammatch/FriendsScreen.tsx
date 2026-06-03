@@ -54,8 +54,9 @@ export function FriendsScreen({
   
   // Tinder state
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [matchOverlayUser, setMatchOverlayUser] = useState<Friend | null>(null);
-  const [sentMatchEffect, setSentMatchEffect] = useState(false);
+  const [matchProgress, setMatchProgress] = useState<null | "sending" | "accepted" | "rejected">(null);
+  const [activeRequestUser, setActiveRequestUser] = useState<Friend | null>(null);
+
 
   // Save changes helper
   const saveToStorage = (key: string, data: any) => {
@@ -202,17 +203,15 @@ export function FriendsScreen({
 
   // Handle Tinder match (Like/Heart click)
   const handleLike = async (candidate: Friend) => {
-    setSentMatchEffect(true);
+    setActiveRequestUser(candidate);
+    setMatchProgress("sending");
     
-    // Simular que el match se envía con una animación de 1 segundo
+    // Simular tiempo de espera del mensaje enviado (2 segundos)
     setTimeout(async () => {
-      setSentMatchEffect(false);
+      // 60% probabilidad de aceptación, 40% de rechazo
+      const isAccepted = Math.random() > 0.4;
       
-      // Pasar a la siguiente tarjeta
-      setCurrentIndex(prev => prev + 1);
-
-      // Simular un Match Mutuo instantáneo o diferido de 2 segundos para hacer la demo interactiva y espectacular!
-      setTimeout(async () => {
+      if (isAccepted) {
         // Añadir a amigos
         const updatedFriends = [candidate, ...friends];
         setFriends(updatedFriends);
@@ -223,20 +222,21 @@ export function FriendsScreen({
         setCandidates(updatedCandidates);
         saveToStorage("teammatch_candidates", updatedCandidates);
 
-        // Gatillar modal de Match exitoso
-        setMatchOverlayUser(candidate);
+        setMatchProgress("accepted");
         
         // XP Reward
         await addXp(15, `¡Match deportivo con ${candidate.name}! ⚡`);
-      }, 1500);
-
-    }, 800);
+      } else {
+        setMatchProgress("rejected");
+      }
+    }, 2000);
   };
 
   // Handle Tinder Reject (X click)
   const handleReject = () => {
     setCurrentIndex(prev => prev + 1);
   };
+
 
   // Handle Accept received match request
   const handleAcceptRequest = async (request: Friend) => {
@@ -272,51 +272,113 @@ export function FriendsScreen({
 
   return (
     <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
-      {/* Match mutuo full-screen overlay */}
-      {matchOverlayUser && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300">
+      {/* Overlay para flujo de Match (Envío, Aceptación o Rechazo) */}
+      {matchProgress && activeRequestUser && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 p-6 text-center animate-in fade-in duration-300">
           <div className="absolute inset-0 sunburst-rays opacity-20 pointer-events-none" />
           
-          <div className="space-y-4 max-w-sm flex flex-col items-center">
-            <span className="inline-flex rounded-full bg-primary/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse">
-              ¡CONEXIÓN LOGRADA! 🔥
-            </span>
-            
-            <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
-              ¡HICISTE MATCH!
-            </h2>
-            <p className="text-sm text-white/80">
-              Tú y {matchOverlayUser.name} quieren jugar a los mismos deportes.
-            </p>
-
-            {/* Avatars comparison */}
-            <div className="flex items-center justify-center gap-8 py-8 relative">
-              <div className="relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500">
-                {(user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase()}
+          {matchProgress === "sending" && (
+            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300">
+              <div className="relative flex items-center justify-center h-24 w-24">
+                <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping duration-1000" />
+                <div className="h-16 w-16 rounded-full bg-primary/10 border border-primary/30 text-primary grid place-items-center animate-pulse">
+                  <Heart size={32} className="fill-current text-primary animate-bounce" />
+                </div>
               </div>
-              <div className="absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce">
-                ⚡
-              </div>
-              <div className={`relative h-20 w-20 rounded-full border-4 border-primary bg-gradient-to-tr ${matchOverlayUser.gradient} grid place-items-center text-4xl shadow-pop animate-in slide-in-from-right duration-500`}>
-                {matchOverlayUser.emoji}
+              
+              <div className="space-y-2">
+                <span className="inline-flex rounded-full bg-primary/20 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20">
+                  Enviando mensaje de solicitud...
+                </span>
+                <h3 className="text-xl font-black text-white">Esperando respuesta de {activeRequestUser.name}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed px-4">
+                  Hemos enviado tu solicitud de match. {activeRequestUser.name} está decidiendo en este momento si hacer match contigo...
+                </p>
               </div>
             </div>
+          )}
 
-            <div className="bg-white/5 p-4 rounded-2xl border border-white/5 w-full text-center space-y-1">
-              <div className="text-sm font-bold text-white">{matchOverlayUser.name}, {matchOverlayUser.age}</div>
-              <div className="text-xs text-muted-foreground">{matchOverlayUser.location}</div>
-              <p className="text-[11px] text-white/70 italic mt-2">"{matchOverlayUser.bio}"</p>
+          {matchProgress === "accepted" && (
+            <div className="space-y-5 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
+              <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
+                ¡SOLICITUD ACEPTADA! 🤝
+              </span>
+              
+              <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
+                ¡HICISTE MATCH!
+              </h2>
+              <p className="text-sm text-white/80">
+                ¡Felicidades! {activeRequestUser.name} ha aceptado tu solicitud de match y se ha guardado en tu lista de amigos.
+              </p>
+
+              {/* Avatars comparison */}
+              <div className="flex items-center justify-center gap-8 py-8 relative">
+                <div className="relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500">
+                  {(user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase()}
+                </div>
+                <div className="absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce">
+                  ⚡
+                </div>
+                <div className={`relative h-20 w-20 rounded-full border-4 border-primary bg-gradient-to-tr ${activeRequestUser.gradient} grid place-items-center text-4xl shadow-pop animate-in slide-in-from-right duration-500`}>
+                  {activeRequestUser.emoji}
+                </div>
+              </div>
+
+              <div className="bg-white/5 p-4 rounded-2xl border border-white/5 w-full text-center space-y-1">
+                <div className="text-sm font-bold text-white">{activeRequestUser.name}, {activeRequestUser.age}</div>
+                <div className="text-xs text-muted-foreground">{activeRequestUser.location}</div>
+                <p className="text-[11px] text-white/70 italic mt-2">"{activeRequestUser.bio}"</p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setMatchProgress(null);
+                  setActiveRequestUser(null);
+                  setCurrentIndex(prev => prev + 1);
+                }}
+                className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
+              >
+                ¡Excelente! Continuar buscando
+              </button>
             </div>
+          )}
 
-            <button
-              onClick={() => setMatchOverlayUser(null)}
-              className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4"
-            >
-              ¡Excelente! Enviar Mensaje 💬
-            </button>
-          </div>
+          {matchProgress === "rejected" && (
+            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
+              <span className="inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30">
+                SOLICITUD RECHAZADA 💔
+              </span>
+              
+              <h2 className="text-3xl font-black text-white tracking-tight">
+                Te han rechazado
+              </h2>
+              
+              <div className="h-20 w-20 rounded-full border-4 border-red-500/30 bg-muted/20 grid place-items-center text-4xl shadow-pop">
+                😢
+              </div>
+
+              <p className="text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5">
+                Lo sentimos, **{activeRequestUser.name}** ha rechazado tu solicitud de match en esta ocasión y no se añadirá a tu lista de amigos. <br/>
+                <span className="text-[10px] text-white/50 block mt-2">
+                  ¡No te desanimes, sigue intentándolo con otros jugadores en la zona!
+                </span>
+              </p>
+
+              <button
+                onClick={() => {
+                  setMatchProgress(null);
+                  setActiveRequestUser(null);
+                  setCurrentIndex(prev => prev + 1);
+                }}
+                className="w-full rounded-2xl bg-red-500 hover:bg-red-600 text-white py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95 cursor-pointer"
+              >
+                Seguir Buscando
+              </button>
+            </div>
+          )}
         </div>
       )}
+
 
       {/* Header */}
       <header className="flex items-center justify-between px-5 pb-3 pt-12">
@@ -364,16 +426,8 @@ export function FriendsScreen({
       <div className="flex-1 overflow-y-auto px-5 pt-3">
         {activeSubTab === "tinder" ? (
           <div className="h-full flex flex-col items-center justify-center pb-4 relative">
-            {sentMatchEffect && (
-              <div className="absolute inset-0 z-30 flex items-center justify-center bg-background/70 backdrop-blur-sm animate-in fade-in duration-200 rounded-3xl">
-                <div className="text-center space-y-2">
-                  <div className="text-5xl animate-bounce">⚡</div>
-                  <div className="text-sm font-black text-primary uppercase tracking-widest animate-pulse">
-                    Enviando Match...
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* El cargando y el progreso de match unificados se manejan en el overlay de pantalla completa */}
+
 
             {loadingProfiles ? (
               <div className="flex flex-col items-center justify-center gap-3 py-12">

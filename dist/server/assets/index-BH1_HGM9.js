@@ -1,7 +1,7 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect, createContext, useContext, Suspense, lazy, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, UserCheck, Heart, UserPlus, UserX, Search, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
+import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, Heart, UserCheck, UserPlus, UserX, Search, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
 const supabaseUrl = "https://aknwdkjzodhkhzxjvipu.supabase.co";
 const supabaseAnonKey = "sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -3662,50 +3662,7 @@ function WelcomeScreen({
     ] })
   ] });
 }
-const initialReceivedRequests = [
-  {
-    id: "req_1",
-    name: "Valentina G.",
-    age: 24,
-    location: "Las Mercedes",
-    bio: "Busco gente para correr en las mañanas o jugar pádel. ¡A jugar se ha dicho!",
-    sports: ["Running", "Pádel"],
-    emoji: "👩‍🚀",
-    gradient: "from-fuchsia-500 to-pink-500"
-  },
-  {
-    id: "req_2",
-    name: "Javier M.",
-    age: 29,
-    location: "Chacao",
-    bio: "Juego tenis nivel avanzado, busco contrincantes en la zona de Chacao para subir el nivel.",
-    sports: ["Tenis", "Senderismo"],
-    emoji: "🧔",
-    gradient: "from-violet-600 to-blue-500"
-  }
-];
-const initialFriends = [
-  {
-    id: "friend_default_1",
-    name: "Carlos P.",
-    age: 31,
-    location: "Las Mercedes",
-    bio: "Host de partidos de Pádel. Siempre activo.",
-    sports: ["Pádel"],
-    emoji: "🦁",
-    gradient: "from-sky-500 to-blue-600"
-  },
-  {
-    id: "friend_default_2",
-    name: "Andrea M.",
-    age: 25,
-    location: "Altamira",
-    bio: "Guía de senderismo en el Ávila.",
-    sports: ["Senderismo"],
-    emoji: "🦊",
-    gradient: "from-orange-400 to-red-500"
-  }
-];
+const initialFriends = [];
 function FriendsScreen({
   onNavigateToProfile,
   onSelectEvent
@@ -3718,26 +3675,26 @@ function FriendsScreen({
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [loadingProfiles, setLoadingProfiles] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [matchOverlayUser, setMatchOverlayUser] = useState(null);
-  const [sentMatchEffect, setSentMatchEffect] = useState(false);
+  const [matchProgress, setMatchProgress] = useState(null);
+  const [activeRequestUser, setActiveRequestUser] = useState(null);
   const saveToStorage = (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
   };
   useEffect(() => {
     const storedFriends = localStorage.getItem("teammatch_friends");
     const storedRequests = localStorage.getItem("teammatch_received_requests");
-    if (storedFriends) {
-      setFriends(JSON.parse(storedFriends));
-    } else {
-      setFriends(initialFriends);
-      localStorage.setItem("teammatch_friends", JSON.stringify(initialFriends));
-    }
-    if (storedRequests) {
-      setReceivedRequests(JSON.parse(storedRequests));
-    } else {
-      setReceivedRequests(initialReceivedRequests);
-      localStorage.setItem("teammatch_received_requests", JSON.stringify(initialReceivedRequests));
-    }
+    let loadedFriends = storedFriends ? JSON.parse(storedFriends) : [];
+    loadedFriends = loadedFriends.filter(
+      (f) => !f.id.startsWith("friend_default_") && !f.id.startsWith("req_") && !f.id.startsWith("cand_")
+    );
+    setFriends(loadedFriends);
+    localStorage.setItem("teammatch_friends", JSON.stringify(loadedFriends));
+    let loadedRequests = storedRequests ? JSON.parse(storedRequests) : [];
+    loadedRequests = loadedRequests.filter(
+      (r) => !r.id.startsWith("friend_default_") && !r.id.startsWith("req_") && !r.id.startsWith("cand_")
+    );
+    setReceivedRequests(loadedRequests);
+    localStorage.setItem("teammatch_received_requests", JSON.stringify(loadedRequests));
     async function fetchRealProfiles() {
       try {
         setLoadingProfiles(true);
@@ -3825,21 +3782,23 @@ function FriendsScreen({
     return Math.min(99, score);
   };
   const handleLike = async (candidate) => {
-    setSentMatchEffect(true);
+    setActiveRequestUser(candidate);
+    setMatchProgress("sending");
     setTimeout(async () => {
-      setSentMatchEffect(false);
-      setCurrentIndex((prev) => prev + 1);
-      setTimeout(async () => {
+      const isAccepted = Math.random() > 0.4;
+      if (isAccepted) {
         const updatedFriends = [candidate, ...friends];
         setFriends(updatedFriends);
         saveToStorage("teammatch_friends", updatedFriends);
         const updatedCandidates = candidates.filter((c) => c.id !== candidate.id);
         setCandidates(updatedCandidates);
         saveToStorage("teammatch_candidates", updatedCandidates);
-        setMatchOverlayUser(candidate);
+        setMatchProgress("accepted");
         await addXp(15, `¡Match deportivo con ${candidate.name}! ⚡`);
-      }, 1500);
-    }, 800);
+      } else {
+        setMatchProgress("rejected");
+      }
+    }, 2e3);
   };
   const handleReject = () => {
     setCurrentIndex((prev) => prev + 1);
@@ -3863,40 +3822,86 @@ function FriendsScreen({
   );
   const activeCandidate = candidates[currentIndex];
   return /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col bg-background relative overflow-hidden pb-24", children: [
-    matchOverlayUser && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300", children: [
+    matchProgress && activeRequestUser && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 p-6 text-center animate-in fade-in duration-300", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-20 pointer-events-none" }),
-      /* @__PURE__ */ jsxs("div", { className: "space-y-4 max-w-sm flex flex-col items-center", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse", children: "¡CONEXIÓN LOGRADA! 🔥" }),
+      matchProgress === "sending" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300", children: [
+        /* @__PURE__ */ jsxs("div", { className: "relative flex items-center justify-center h-24 w-24", children: [
+          /* @__PURE__ */ jsx("div", { className: "absolute inset-0 rounded-full bg-primary/20 animate-ping duration-1000" }),
+          /* @__PURE__ */ jsx("div", { className: "h-16 w-16 rounded-full bg-primary/10 border border-primary/30 text-primary grid place-items-center animate-pulse", children: /* @__PURE__ */ jsx(Heart, { size: 32, className: "fill-current text-primary animate-bounce" }) })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20", children: "Enviando mensaje de solicitud..." }),
+          /* @__PURE__ */ jsxs("h3", { className: "text-xl font-black text-white", children: [
+            "Esperando respuesta de ",
+            activeRequestUser.name
+          ] }),
+          /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground leading-relaxed px-4", children: [
+            "Hemos enviado tu solicitud de match. ",
+            activeRequestUser.name,
+            " está decidiendo en este momento si hacer match contigo..."
+          ] })
+        ] })
+      ] }),
+      matchProgress === "accepted" && /* @__PURE__ */ jsxs("div", { className: "space-y-5 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500", children: [
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡SOLICITUD ACEPTADA! 🤝" }),
         /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: "¡HICISTE MATCH!" }),
         /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80", children: [
-          "Tú y ",
-          matchOverlayUser.name,
-          " quieren jugar a los mismos deportes."
+          "¡Felicidades! ",
+          activeRequestUser.name,
+          " ha aceptado tu solicitud de match y se ha guardado en tu lista de amigos."
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-8 py-8 relative", children: [
           /* @__PURE__ */ jsx("div", { className: "relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500", children: (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase() }),
           /* @__PURE__ */ jsx("div", { className: "absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce", children: "⚡" }),
-          /* @__PURE__ */ jsx("div", { className: `relative h-20 w-20 rounded-full border-4 border-primary bg-gradient-to-tr ${matchOverlayUser.gradient} grid place-items-center text-4xl shadow-pop animate-in slide-in-from-right duration-500`, children: matchOverlayUser.emoji })
+          /* @__PURE__ */ jsx("div", { className: `relative h-20 w-20 rounded-full border-4 border-primary bg-gradient-to-tr ${activeRequestUser.gradient} grid place-items-center text-4xl shadow-pop animate-in slide-in-from-right duration-500`, children: activeRequestUser.emoji })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-4 rounded-2xl border border-white/5 w-full text-center space-y-1", children: [
           /* @__PURE__ */ jsxs("div", { className: "text-sm font-bold text-white", children: [
-            matchOverlayUser.name,
+            activeRequestUser.name,
             ", ",
-            matchOverlayUser.age
+            activeRequestUser.age
           ] }),
-          /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: matchOverlayUser.location }),
+          /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: activeRequestUser.location }),
           /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-white/70 italic mt-2", children: [
             '"',
-            matchOverlayUser.bio,
+            activeRequestUser.bio,
             '"'
           ] })
         ] }),
         /* @__PURE__ */ jsx(
           "button",
           {
-            onClick: () => setMatchOverlayUser(null),
-            className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4",
-            children: "¡Excelente! Enviar Mensaje 💬"
+            onClick: () => {
+              setMatchProgress(null);
+              setActiveRequestUser(null);
+              setCurrentIndex((prev) => prev + 1);
+            },
+            className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer",
+            children: "¡Excelente! Continuar buscando"
+          }
+        )
+      ] }),
+      matchProgress === "rejected" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500", children: [
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30", children: "SOLICITUD RECHAZADA 💔" }),
+        /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight", children: "Te han rechazado" }),
+        /* @__PURE__ */ jsx("div", { className: "h-20 w-20 rounded-full border-4 border-red-500/30 bg-muted/20 grid place-items-center text-4xl shadow-pop", children: "😢" }),
+        /* @__PURE__ */ jsxs("p", { className: "text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5", children: [
+          "Lo sentimos, **",
+          activeRequestUser.name,
+          "** ha rechazado tu solicitud de match en esta ocasión y no se añadirá a tu lista de amigos. ",
+          /* @__PURE__ */ jsx("br", {}),
+          /* @__PURE__ */ jsx("span", { className: "text-[10px] text-white/50 block mt-2", children: "¡No te desanimes, sigue intentándolo con otros jugadores en la zona!" })
+        ] }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => {
+              setMatchProgress(null);
+              setActiveRequestUser(null);
+              setCurrentIndex((prev) => prev + 1);
+            },
+            className: "w-full rounded-2xl bg-red-500 hover:bg-red-600 text-white py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95 cursor-pointer",
+            children: "Seguir Buscando"
           }
         )
       ] })
@@ -3941,83 +3946,77 @@ function FriendsScreen({
         }
       )
     ] }) }),
-    /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto px-5 pt-3", children: activeSubTab === "tinder" ? /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col items-center justify-center pb-4 relative", children: [
-      sentMatchEffect && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-30 flex items-center justify-center bg-background/70 backdrop-blur-sm animate-in fade-in duration-200 rounded-3xl", children: /* @__PURE__ */ jsxs("div", { className: "text-center space-y-2", children: [
-        /* @__PURE__ */ jsx("div", { className: "text-5xl animate-bounce", children: "⚡" }),
-        /* @__PURE__ */ jsx("div", { className: "text-sm font-black text-primary uppercase tracking-widest animate-pulse", children: "Enviando Match..." })
-      ] }) }),
-      loadingProfiles ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center gap-3 py-12", children: [
-        /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse", children: "Cargando perfiles reales..." })
-      ] }) : activeCandidate ? /* @__PURE__ */ jsxs("div", { className: "w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300", children: [
-        /* @__PURE__ */ jsxs("div", { className: `h-40 shrink-0 bg-gradient-to-tr ${activeCandidate.gradient} flex items-center justify-center relative`, children: [
-          /* @__PURE__ */ jsx("div", { className: "text-6xl drop-shadow-md select-none", children: activeCandidate.emoji }),
-          /* @__PURE__ */ jsxs("div", { className: "absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop", children: [
-            /* @__PURE__ */ jsx(Sparkles, { size: 10, className: "text-primary animate-pulse" }),
-            /* @__PURE__ */ jsxs("span", { children: [
-              getCompatibilityScore(activeCandidate.sports),
-              "% Compatible"
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft", children: [
-            /* @__PURE__ */ jsx(MapPin, { size: 10, className: "text-primary" }),
-            /* @__PURE__ */ jsx("span", { children: activeCandidate.location })
+    /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto px-5 pt-3", children: activeSubTab === "tinder" ? /* @__PURE__ */ jsx("div", { className: "h-full flex flex-col items-center justify-center pb-4 relative", children: loadingProfiles ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center gap-3 py-12", children: [
+      /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }),
+      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse", children: "Cargando perfiles reales..." })
+    ] }) : activeCandidate ? /* @__PURE__ */ jsxs("div", { className: "w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300", children: [
+      /* @__PURE__ */ jsxs("div", { className: `h-40 shrink-0 bg-gradient-to-tr ${activeCandidate.gradient} flex items-center justify-center relative`, children: [
+        /* @__PURE__ */ jsx("div", { className: "text-6xl drop-shadow-md select-none", children: activeCandidate.emoji }),
+        /* @__PURE__ */ jsxs("div", { className: "absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop", children: [
+          /* @__PURE__ */ jsx(Sparkles, { size: 10, className: "text-primary animate-pulse" }),
+          /* @__PURE__ */ jsxs("span", { children: [
+            getCompatibilityScore(activeCandidate.sports),
+            "% Compatible"
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: "flex-1 p-5 space-y-3.5 flex flex-col justify-between", children: [
-          /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-2", children: [
-              /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: activeCandidate.name }),
-              /* @__PURE__ */ jsxs("span", { className: "text-sm font-bold text-muted-foreground", children: [
-                activeCandidate.age,
-                " años"
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground leading-relaxed line-clamp-3", children: [
-              '"',
-              activeCandidate.bio,
-              '"'
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "space-y-1.5 border-t border-dashed border-border/80 pt-3", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-black uppercase tracking-wider block", children: "Deportes" }),
-            /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: activeCandidate.sports.map((sport) => /* @__PURE__ */ jsx(SportBadge, { sport }, sport)) })
-          ] })
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "p-4 border-t border-border/60 bg-muted/20 flex justify-center gap-6", children: [
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              onClick: handleReject,
-              className: "grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft",
-              title: "Descartar",
-              children: /* @__PURE__ */ jsx(X, { size: 20, strokeWidth: 2.5 })
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              onClick: () => handleLike(activeCandidate),
-              className: "grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop",
-              title: "¡Hacer Match!",
-              children: /* @__PURE__ */ jsx(Heart, { size: 20, strokeWidth: 2.5, className: "fill-current" })
-            }
-          )
+        /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft", children: [
+          /* @__PURE__ */ jsx(MapPin, { size: 10, className: "text-primary" }),
+          /* @__PURE__ */ jsx("span", { children: activeCandidate.location })
         ] })
-      ] }) : /* @__PURE__ */ jsxs("div", { className: "rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12", children: [
-        /* @__PURE__ */ jsx("div", { className: "text-5xl", children: "⚡" }),
-        /* @__PURE__ */ jsx("h3", { className: "text-base font-black text-secondary", children: "¡Eso es todo por hoy!" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos." }),
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "flex-1 p-5 space-y-3.5 flex flex-col justify-between", children: [
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-2", children: [
+            /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: activeCandidate.name }),
+            /* @__PURE__ */ jsxs("span", { className: "text-sm font-bold text-muted-foreground", children: [
+              activeCandidate.age,
+              " años"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground leading-relaxed line-clamp-3", children: [
+            '"',
+            activeCandidate.bio,
+            '"'
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-1.5 border-t border-dashed border-border/80 pt-3", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-black uppercase tracking-wider block", children: "Deportes" }),
+          /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: activeCandidate.sports.map((sport) => /* @__PURE__ */ jsx(SportBadge, { sport }, sport)) })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "p-4 border-t border-border/60 bg-muted/20 flex justify-center gap-6", children: [
         /* @__PURE__ */ jsx(
           "button",
           {
-            onClick: () => setCurrentIndex(0),
-            className: "rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20",
-            children: "Reiniciar Lista 🔄"
+            onClick: handleReject,
+            className: "grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft",
+            title: "Descartar",
+            children: /* @__PURE__ */ jsx(X, { size: 20, strokeWidth: 2.5 })
+          }
+        ),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => handleLike(activeCandidate),
+            className: "grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop",
+            title: "¡Hacer Match!",
+            children: /* @__PURE__ */ jsx(Heart, { size: 20, strokeWidth: 2.5, className: "fill-current" })
           }
         )
       ] })
-    ] }) : /* @__PURE__ */ jsxs("div", { className: "space-y-5 pb-8", children: [
+    ] }) : /* @__PURE__ */ jsxs("div", { className: "rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12", children: [
+      /* @__PURE__ */ jsx("div", { className: "text-5xl", children: "⚡" }),
+      /* @__PURE__ */ jsx("h3", { className: "text-base font-black text-secondary", children: "¡Eso es todo por hoy!" }),
+      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos." }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: () => setCurrentIndex(0),
+          className: "rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20",
+          children: "Reiniciar Lista 🔄"
+        }
+      )
+    ] }) }) : /* @__PURE__ */ jsxs("div", { className: "space-y-5 pb-8", children: [
       receivedRequests.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
         /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
           /* @__PURE__ */ jsx(UserPlus, { size: 14, className: "text-primary" }),
