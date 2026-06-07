@@ -62,6 +62,8 @@ interface UserContextValue {
     location?: string;
     preferredSports?: string[];
   }) => Promise<void>;
+  carisma: number;
+  incrementCarisma: (amount?: number) => Promise<void>;
 }
 
 
@@ -84,6 +86,8 @@ const UserContext = createContext<UserContextValue>({
   addXp: async () => {},
   claimCoupon: async () => {},
   updateProfile: async () => {},
+  carisma: 0,
+  incrementCarisma: async () => {},
 });
 
 function getCouponForLevel(level: number): RpgCoupon | null {
@@ -153,7 +157,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const initializeAndTrackUse = async (currentUser: any) => {
-    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
+    const today = new Date().toLocaleDateString();
+    const lastDailyXpDate = localStorage.getItem("teammatch_last_daily_xp_date");
+    const wasCounted = lastDailyXpDate === today;
     const meta = currentUser?.user_metadata || {};
     
     // Synchronize to public.profiles table
@@ -161,6 +167,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const profileData: any = {
         id: currentUser.id,
         username: currentUser.email || "",
+        full_name: meta.full_name || null,
         avatar_url: meta.avatar_url || null,
         rating: meta.rating || 4.80,
         is_premium: meta.is_premium || false,
@@ -207,19 +214,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             type: "system",
           },
         ],
+        carisma: 0,
       };
       
       const { data: { user: updatedUser } } = await supabase.auth.updateUser({
         data: initialMetadata,
       });
       if (updatedUser) setUser(updatedUser);
-      sessionStorage.setItem("teammatch_session_counted", "true");
+      localStorage.setItem("teammatch_last_daily_xp_date", today);
       return;
     }
 
-    // Si ya existe pero no se ha contado esta sesión, incrementar use_count
+    // Si ya existe pero no se ha contado esta sesión hoy, incrementar use_count
     if (!wasCounted) {
-      sessionStorage.setItem("teammatch_session_counted", "true");
+      localStorage.setItem("teammatch_last_daily_xp_date", today);
       const currentUseCount = (meta.use_count || 0) + 1;
       const currentXp = meta.xp || 0;
       const currentLevel = meta.level || 1;
@@ -383,6 +391,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (updatedUser) setUser(updatedUser);
   };
 
+  const incrementCarisma = async (amount: number = 1) => {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    const currentCarisma = meta.carisma || 0;
+    const newCarisma = currentCarisma + amount;
+
+    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+      data: {
+        carisma: newCarisma,
+      },
+    });
+    if (updatedUser) setUser(updatedUser);
+  };
+
   const updateProfile = async (updates: {
     name: string;
     avatarUrl: string | null;
@@ -417,14 +439,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const profileData: any = {
         id: user.id,
         username: (updates.email || user.email || "").trim(),
+        full_name: updates.name || null,
         avatar_url: updates.avatarUrl,
         rating: user.user_metadata?.rating || 4.80,
         is_premium: user.user_metadata?.is_premium || false,
-        age: updates.age || user.user_metadata?.age || null,
-        gender: updates.gender || user.user_metadata?.gender || null,
-        description: updates.description || user.user_metadata?.description || null,
-        location: updates.location || user.user_metadata?.location || null,
-        preferred_sports: updates.preferredSports || user.user_metadata?.preferred_sports || null
+        age: updates.age || null,
+        gender: updates.gender || null,
+        description: updates.description || null,
+        location: updates.location || null,
+        preferred_sports: updates.preferredSports || null
       };
       const { error: profileError } = await supabase.from("profiles").upsert(profileData);
       if (profileError) {
@@ -592,6 +615,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const xpHistory = user?.user_metadata?.xp_history || [];
   const joinedEventsCount = user?.user_metadata?.joined_events_count || 0;
   const createdEventsCount = user?.user_metadata?.created_events_count || 0;
+  const carisma = user?.user_metadata?.carisma || 0;
 
   return (
     <UserContext.Provider
@@ -614,6 +638,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         addXp,
         claimCoupon,
         updateProfile,
+        carisma,
+        incrementCarisma,
       }}
     >
       {children}

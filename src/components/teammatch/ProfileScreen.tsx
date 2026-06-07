@@ -37,6 +37,7 @@ export function ProfileScreen({
     joinedEventsCount,
     createdEventsCount,
     claimCoupon,
+    carisma,
   } = useCurrentUser();
 
   const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history">("stats");
@@ -100,7 +101,7 @@ export function ProfileScreen({
   const str = 10 + joinedEventsCount * 2;
   const wis = 10 + createdEventsCount * 5;
   const con = 10 + useCount;
-  const cha = 10 + Math.round((user.user_metadata?.rating || 4.8) * 2);
+  const cha = 10 + carisma;
 
   if (showClaimSuccess) {
     return (
@@ -274,7 +275,7 @@ export function ProfileScreen({
                 value={cha}
                 colorClass="text-amber-500"
                 bgClass="bg-amber-500/5 border-amber-500/10"
-                description="Calculado según tu reputación deportiva"
+                description="Aumenta al aceptar match con nuevos amigos"
               />
             </div>
 
