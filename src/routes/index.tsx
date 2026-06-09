@@ -46,7 +46,7 @@ function AppContent() {
   const { isLoading } = useCurrentUser();
   const [appState, setAppState] = useState<AppState>("checking");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
-  
+
   const [screen, setScreen] = useState<Screen>("events");
   const [selected, setSelected] = useState<SportEvent | null>(null);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
@@ -94,7 +94,7 @@ function AppContent() {
   const renderScreen = () => {
     if (appState === "auth") {
       return (
-        <AuthScreen 
+        <AuthScreen
           initialMode={authMode}
           onSuccess={() => setAppState("app")}
           onClose={() => setAppState("app")}
@@ -154,64 +154,63 @@ function AppContent() {
   }
 
   return (
-    <main className="fixed inset-0 w-full h-[100dvh] flex flex-col bg-background lg:bg-muted/30 overflow-hidden"> 
+    <main className="fixed inset-0 w-full h-[100dvh] flex flex-col bg-background lg:bg-muted/30 overflow-hidden">
       <div className="flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex mx-auto w-full lg:max-w-7xl lg:shadow-2xl lg:bg-background">
         {/* Panel lateral solo en desktop — visible en AuthScreen */}
         {appState === "auth" && (
-        <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex">
-          <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
-          <div className="pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
+          <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex">
+            <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
+            <div className="pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
 
-          <div className="relative">
-            <Logo size={36} />
-          </div>
-
-          <div className="relative">
-            <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Disponible en Caracas
-            </span>
-            <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl text-primary-foreground">
-              Encuentra tu próximo
-              <br />
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                partido en Caracas.
-              </span>
-            </h1>
-            <p className="mt-5 max-w-md text-base text-[#32CD32]">
-              Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores
-              verificados y matchmaking por nivel.
-            </p>
-
-            <div className="mt-10 grid max-w-md grid-cols-3 gap-3">
-              {[
-                { k: "1.2k", v: "Jugadores" },
-                { k: "320", v: "Eventos/mes" },
-                { k: "4.9★", v: "Rating" },
-              ].map((s) => (
-                <div
-                  key={s.v}
-                  className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-4"
-                >
-                  <div className="text-2xl font-bold text-primary">{s.k}</div>
-                  <div className="text-xs text-[#32CD32]">{s.v}</div>
-                </div>
-              ))}
+            <div className="relative">
+              <Logo size={36} />
             </div>
-          </div>
 
-          <div className="relative text-xs text-[#32CD32]">
-            👉 ¡A jugar ya!
-          </div>
-        </aside>
+            <div className="relative">
+              <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Disponible en Caracas
+              </span>
+              <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight xl:text-6xl text-primary-foreground">
+                Encuentra tu próximo
+                <br />
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  partido en Caracas.
+                </span>
+              </h1>
+              <p className="mt-5 max-w-md text-base text-[#32CD32]">
+                Crea eventos deportivos o únete a partidos cerca de ti. Mapa en vivo, jugadores
+                verificados y matchmaking por nivel.
+              </p>
+
+              <div className="mt-10 grid max-w-md grid-cols-3 gap-3">
+                {[
+                  { k: "1.2k", v: "Jugadores" },
+                  { k: "320", v: "Eventos/mes" },
+                  { k: "4.9★", v: "Rating" },
+                ].map((s) => (
+                  <div
+                    key={s.v}
+                    className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-4"
+                  >
+                    <div className="text-2xl font-bold text-primary">{s.k}</div>
+                    <div className="text-xs text-[#32CD32]">{s.v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative text-xs text-[#32CD32]">
+              👉 ¡A jugar ya!
+            </div>
+          </aside>
         )}
 
         {/* Área de la app: pantalla completa en móvil, columna derecha en desktop */}
-        <section 
-          className={`relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${
-            appState === "auth"
-              ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" 
+        <section
+          className={`relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState === "auth"
+              ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop"
               : "flex-1 lg:border-x lg:border-border/50"
-          }`}
+            }`}
         >
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
@@ -244,13 +243,17 @@ function RpgNotificationManager() {
 
   // Timed dismiss for normal XP gain toast
   useEffect(() => {
-    if (xpNotification && !isLevelUp && !newCoupon) {
+    if (xpNotification && !xpNotification.isLevelUp && !xpNotification.newCoupon) {
       const timer = setTimeout(() => {
         clearNotification();
       }, 6500);
       return () => clearTimeout(timer);
     }
-  }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
+  }, [xpNotification, clearNotification]);
+
+  if (!xpNotification) return null;
+
+  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
 
   if (!xpNotification) return null;
 
@@ -259,7 +262,7 @@ function RpgNotificationManager() {
     return (
       <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-6 py-4 animate-in fade-in duration-300">
         <div className="absolute inset-0 sunburst-rays opacity-25 pointer-events-none" />
-        
+
         <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 text-center shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col items-center">
           <div className="absolute -top-12 flex h-24 w-24 items-center justify-center rounded-full bg-primary text-secondary neon-border-legendary animate-bounce">
             <Sparkles size={48} className="animate-spin duration-3000" />
@@ -269,7 +272,7 @@ function RpgNotificationManager() {
             <span className="inline-flex rounded-full bg-primary/20 px-3 py-1 text-[11px] font-black uppercase tracking-widest text-primary animate-pulse border border-primary/30">
               ¡Hazaña Lograda!
             </span>
-            
+
             <div className="space-y-1">
               <h2 className="text-3xl font-black tracking-tight text-white drop-shadow">
                 ¡SUBISTE DE NIVEL!
@@ -280,7 +283,7 @@ function RpgNotificationManager() {
             </div>
 
             <p className="text-xs text-secondary-foreground/85 leading-relaxed bg-white/5 p-3.5 rounded-2xl border border-white/5">
-              "{reason}" <br/>
+              "{reason}" <br />
               <span className="text-[10px] text-white/50 block mt-1">
                 ¡Tus atributos físicos y mágicos STR, WIS, CON y CHA han aumentado!
               </span>
@@ -318,17 +321,17 @@ function RpgNotificationManager() {
         <div className="absolute inset-0 sunburst-rays opacity-25 pointer-events-none" />
 
         <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/20 p-6 text-center shadow-2xl animate-in zoom-in-95 duration-500 flex flex-col items-center">
-          
+
           {chestState === "closed" && (
             <div className="space-y-6 py-6 w-full flex flex-col items-center">
               <span className="inline-flex rounded-full bg-amber-500/25 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-amber-500 border border-amber-500/20 animate-pulse">
                 ¡FIDELIDAD RECOMPENSADA! 📜
               </span>
-              
+
               <div className="text-7xl chest-shake cursor-pointer">
                 🎁
               </div>
-              
+
               <div className="space-y-1">
                 <h3 className="text-lg font-black text-white">¡Has ganado un Cofre del Tesoro!</h3>
                 <p className="text-xs text-secondary-foreground/75 px-4">
@@ -447,15 +450,14 @@ function EventNotificationBanner() {
     <div className="fixed inset-0 z-[99999] flex flex-col items-center justify-center space-y-6 bg-background/98 backdrop-blur-md px-6 text-center animate-in fade-in zoom-in duration-500">
       {/* Decorative Glows */}
       <div className={`pointer-events-none absolute top-1/4 h-72 w-72 rounded-full blur-3xl opacity-20 ${isAccepted ? "bg-emerald-500" : "bg-red-500"}`} />
-      
+
       <div
-        className={`grid h-24 w-24 place-items-center rounded-full text-white shadow-pop ring-8 animate-bounce ${
-          isAccepted ? "bg-emerald-500 ring-emerald-500/20" : "bg-red-500 ring-red-500/20"
-        }`}
+        className={`grid h-24 w-24 place-items-center rounded-full text-white shadow-pop ring-8 animate-bounce ${isAccepted ? "bg-emerald-500 ring-emerald-500/20" : "bg-red-500 ring-red-500/20"
+          }`}
       >
         {isAccepted ? <CheckCircle2 size={48} strokeWidth={2.5} /> : <XCircle size={48} strokeWidth={2.5} />}
       </div>
-      
+
       <div className="space-y-2 max-w-xs relative z-10">
         <h2 className="text-2xl font-bold text-secondary">
           {isAccepted ? "¡Has sido aceptado!" : "No has sido aceptado"}
@@ -469,9 +471,8 @@ function EventNotificationBanner() {
 
       <button
         onClick={clearEventNotification}
-        className={`relative z-10 mt-4 min-w-[140px] rounded-2xl py-3.5 px-6 text-sm font-black text-white shadow-pop transition-all active:scale-95 ${
-          isAccepted ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" : "bg-red-500 hover:bg-red-600 shadow-red-500/20"
-        }`}
+        className={`relative z-10 mt-4 min-w-[140px] rounded-2xl py-3.5 px-6 text-sm font-black text-white shadow-pop transition-all active:scale-95 ${isAccepted ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" : "bg-red-500 hover:bg-red-600 shadow-red-500/20"
+          }`}
       >
         Entendido
       </button>

@@ -2,6 +2,7 @@ import { jsxs, jsx } from "react/jsx-runtime";
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin, Navigation } from "lucide-react";
+import L from "leaflet";
 function FlyToUser({ location }) {
   const map = useMap();
   if (location) {
@@ -17,7 +18,6 @@ function LeafletMap({
 }) {
   if (typeof window === "undefined") return null;
   function buildCanchaIcon(isActive = false) {
-    if (!window.L) return null;
     const html = renderToStaticMarkup(
       /* @__PURE__ */ jsxs(
         "div",
@@ -30,7 +30,6 @@ function LeafletMap({
         }
       )
     );
-    const L = window.L;
     return L.divIcon({
       className: "custom-leaflet-icon bg-transparent border-none",
       html,
@@ -39,7 +38,6 @@ function LeafletMap({
     });
   }
   function buildUserIcon() {
-    if (!window.L) return null;
     const html = renderToStaticMarkup(
       /* @__PURE__ */ jsxs("div", { className: "user-location-pin", children: [
         /* @__PURE__ */ jsx("div", { className: "user-pulse-ring" }),
@@ -47,7 +45,6 @@ function LeafletMap({
         /* @__PURE__ */ jsx("div", { className: "user-pin-tip" })
       ] })
     );
-    const L = window.L;
     return L.divIcon({
       className: "custom-leaflet-icon bg-transparent border-none",
       html,

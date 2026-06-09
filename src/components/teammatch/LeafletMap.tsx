@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin, Navigation } from "lucide-react";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 interface LeafletMapProps {
@@ -31,8 +32,6 @@ export default function LeafletMap({
 
   // ── Construir ícono "Pin Verde" para cada cancha ───────────────────────────
   function buildCanchaIcon(isActive = false) {
-    if (!(window as any).L) return null;
-
     const html = renderToStaticMarkup(
       <div
         className={`relative grid h-11 w-11 place-items-center rounded-full text-white shadow-pop ring-4 ring-background transition-all ${
@@ -44,7 +43,6 @@ export default function LeafletMap({
       </div>
     );
 
-    const L = (window as any).L;
     return L.divIcon({
       className: "custom-leaflet-icon bg-transparent border-none",
       html,
@@ -55,8 +53,6 @@ export default function LeafletMap({
 
   // ── Construir ícono "Pin Azul" para la ubicación del usuario ───────────────
   function buildUserIcon() {
-    if (!(window as any).L) return null;
-
     const html = renderToStaticMarkup(
       <div className="user-location-pin">
         {/* Anillo pulsante exterior */}
@@ -70,7 +66,6 @@ export default function LeafletMap({
       </div>
     );
 
-    const L = (window as any).L;
     return L.divIcon({
       className: "custom-leaflet-icon bg-transparent border-none",
       html,
