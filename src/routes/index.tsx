@@ -253,10 +253,6 @@ function RpgNotificationManager() {
 
   if (!xpNotification) return null;
 
-  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
-
-  if (!xpNotification) return null;
-
   // Si es subida de nivel
   if (isLevelUp) {
     return (
