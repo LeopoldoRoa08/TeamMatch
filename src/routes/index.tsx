@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-type AppState = "checking" | "welcome" | "auth" | "app";
+type AppState = "checking" | "auth" | "app";
 
 function Index() {
   return (
@@ -43,6 +43,7 @@ function Index() {
 }
 
 function AppContent() {
+  const { isLoading } = useCurrentUser();
   const [appState, setAppState] = useState<AppState>("checking");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   
@@ -51,20 +52,39 @@ function AppContent() {
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
-
+  // Siempre va a "app" (con o sin sesión activa — Modo Invitado habilitado)
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAppState(session ? "app" : "welcome");
+    let mounted = true;
+    supabase.auth.getSession().then(() => {
+      if (mounted) {
+        setAppState("app");
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAppState(session ? "app" : "welcome");
+      // Cuando se cierra sesión desde la app, volver a "app" como invitado
+      // Cuando se inicia sesión, cerrar el AuthScreen y volver a "app"
+      setAppState((prev) => {
+        if (prev === "checking") return prev; // Prevenir condición de carrera inicial
+        if (session) return "app";
+        if (prev !== "auth") return "app";
+        return prev;
+      });
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
+
+  /** Abre el flujo de autenticación desde cualquier pantalla */
+  const openAuth = (mode: AuthMode = "login") => {
+    setAuthMode(mode);
+    setAppState("auth");
+  };
 
   const openDetail = (e: SportEvent) => {
     setSelected(e);
@@ -72,42 +92,45 @@ function AppContent() {
   };
 
   const renderScreen = () => {
-    if (appState === "checking") {
-      return (
-        <div className="flex h-full w-full items-center justify-center bg-background">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        </div>
-      );
-    }
-    
-    if (appState === "welcome") {
-      return (
-        <WelcomeScreen 
-          onLogin={() => { setAuthMode("login"); setAppState("auth"); }}
-          onRegister={() => { setAuthMode("register"); setAppState("auth"); }}
-        />
-      );
-    }
-    
     if (appState === "auth") {
       return (
         <AuthScreen 
           initialMode={authMode}
           onSuccess={() => setAppState("app")}
-          onClose={() => setAppState("welcome")}
+          onClose={() => setAppState("app")}
         />
       );
     }
 
-
     if (screen === "detail" && selected)
-      return <EventDetailScreen event={selected} onBack={() => setScreen("events")} userLocation={userLocation} />;
+      return (
+        <EventDetailScreen
+          event={selected}
+          onBack={() => setScreen("events")}
+          userLocation={userLocation}
+          onOpenAuth={() => openAuth("login")}
+        />
+      );
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
     if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
-    if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
+    if (screen === "profile")
+      return (
+        <ProfileScreen
+          onEdit={() => setScreen("editProfile")}
+          onSelectEvent={openDetail}
+          onOpenAuth={() => openAuth("login")}
+          onOpenRegister={() => openAuth("register")}
+        />
+      );
     if (screen === "comments" && selectedCancha)
-      return <CanchaCommentsScreen cancha={selectedCancha} onBack={() => setScreen("map")} />;
+      return (
+        <CanchaCommentsScreen
+          cancha={selectedCancha}
+          onBack={() => setScreen("map")}
+          onOpenAuth={() => openAuth("login")}
+        />
+      );
     return (
       <MapScreen
         onSelect={openDetail}
@@ -122,11 +145,19 @@ function AppContent() {
     );
   };
 
+  if (appState === "checking" || (appState === "app" && isLoading)) {
+    return (
+      <div className="flex h-[100dvh] w-full items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
   return (
-    <main className="fixed inset-0 w-full h-[100dvh] flex flex-col bg-background overflow-hidden"> 
-      <div className="flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex">
-        {/* Panel lateral solo en desktop */}
-        {appState !== "app" && (
+    <main className="fixed inset-0 w-full h-[100dvh] flex flex-col bg-background lg:bg-muted/30 overflow-hidden"> 
+      <div className="flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex mx-auto w-full lg:max-w-7xl lg:shadow-2xl lg:bg-background">
+        {/* Panel lateral solo en desktop — visible en AuthScreen */}
+        {appState === "auth" && (
         <aside className="relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex">
           <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
           <div className="pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
@@ -177,16 +208,16 @@ function AppContent() {
         {/* Área de la app: pantalla completa en móvil, columna derecha en desktop */}
         <section 
           className={`relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${
-            appState !== "app" 
+            appState === "auth"
               ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" 
-              : "flex-1"
+              : "flex-1 lg:border-x lg:border-border/50"
           }`}
         >
           <div className="relative h-[100dvh] w-full overflow-hidden">
             {renderScreen()}
-            {appState === "app" && <RpgNotificationManager />}
-            {appState === "app" && <EventNotificationBanner />}
-            {appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
+            {appState !== "auth" && <RpgNotificationManager />}
+            {appState !== "auth" && <EventNotificationBanner />}
+            {appState !== "auth" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}
@@ -209,9 +240,7 @@ function RpgNotificationManager() {
     }
   }, [xpNotification]);
 
-  if (!xpNotification) return null;
-
-  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
+  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification || {};
 
   // Timed dismiss for normal XP gain toast
   useEffect(() => {
@@ -222,6 +251,8 @@ function RpgNotificationManager() {
       return () => clearTimeout(timer);
     }
   }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
+
+  if (!xpNotification) return null;
 
   // Si es subida de nivel
   if (isLevelUp) {

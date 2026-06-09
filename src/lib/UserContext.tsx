@@ -52,6 +52,7 @@ interface UserContextValue {
   addXp: (amount: number, reason: string) => Promise<void>;
   claimCoupon: (code: string) => Promise<void>;
   updateProfile: (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => Promise<void>;
+  isLoading: boolean;
 }
 
 const UserContext = createContext<UserContextValue>({
@@ -73,6 +74,7 @@ const UserContext = createContext<UserContextValue>({
   addXp: async () => {},
   claimCoupon: async () => {},
   updateProfile: async () => {},
+  isLoading: true,
 });
 
 function getCouponForLevel(level: number): RpgCoupon | null {
@@ -119,12 +121,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const addXpRef = useRef<(amount: number, reason: string) => Promise<void>>(async () => {});
   const previousStatuses = useRef<Record<number, string>>({});
   const isFirstFetch = useRef(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
         setUser(data.user);
-        initializeAndTrackUse(data.user);
+        initializeAndTrackUse(data.user).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
       }
     });
 
@@ -134,7 +139,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const u = session?.user ?? null;
       setUser(u);
       if (u) {
-        initializeAndTrackUse(u);
+        setIsLoading(true);
+        initializeAndTrackUse(u).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
       }
     });
 
@@ -551,6 +559,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         addXp,
         claimCoupon,
         updateProfile,
+        isLoading,
       }}
     >
       {children}

@@ -170,16 +170,16 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
   return (
     <div className="h-full overflow-y-auto bg-background pb-24">
-      <header className="flex items-center justify-between px-5 pb-3 pt-12">
+      <header className="flex items-center justify-between px-5 md:px-8 pb-3 md:pb-6 pt-12 md:pt-16">
         <div>
-          <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
-          <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
+          <h1 className="text-2xl md:text-4xl font-bold text-secondary">Mis eventos</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Tu agenda deportiva</p>
         </div>
-        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
+        <UserAvatar size="md" className="cursor-pointer hover:scale-105 transition-transform" onClick={onNavigateToProfile} />
       </header>
 
-      <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
-        <div className="flex gap-1 rounded-full bg-muted p-1">
+      <div className="sticky top-0 z-10 bg-background/80 px-5 md:px-8 pb-3 pt-1 backdrop-blur">
+        <div className="flex gap-1 rounded-full bg-muted p-1 md:max-w-md">
           {tabs.map((t) => {
             // Only show 'Solicitudes' tab if the user has created at least one event
             if (t === "Solicitudes" && createdEvents.length === 0) return null;
@@ -198,7 +198,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       </div>
 
       {tab === "Solicitudes" ? (
-        <div className="space-y-3 px-5 pt-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-5 md:px-8 pt-3">
           {loading ? (
             <div className="flex justify-center p-5"><Loader2 className="animate-spin text-primary" /></div>
           ) : pendingRequests.length === 0 ? (
@@ -262,7 +262,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4 px-5 pt-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-5 md:px-8 pt-3">
           {tab === "Próximos" && (
             <>
               {availableEvents.map((e) => (

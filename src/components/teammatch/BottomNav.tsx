@@ -34,12 +34,14 @@ export function BottomNav({ current, onChange }: Props) {
   };
 
   return (
-    <nav className="absolute inset-x-0 bottom-0 z-30 glass border-t border-border">
-      <div className="flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-1">
-        {items.map((it) => (
-          <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
-        ))}
-      </div>
-    </nav>
+    <div className="absolute inset-x-0 bottom-0 z-30 pointer-events-none flex justify-center pb-0 lg:pb-6">
+      <nav className="pointer-events-auto w-full lg:max-w-md lg:rounded-2xl glass border-t lg:border border-border shadow-pop">
+        <div className="flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] lg:pb-2 pt-1 lg:pt-2">
+          {items.map((it) => (
+            <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
+          ))}
+        </div>
+      </nav>
+    </div>
   );
 }

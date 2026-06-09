@@ -1,7 +1,7 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect, createContext, useContext, Suspense, lazy, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Share2, Star, Check, Edit3, Sparkles, Settings, Trophy, Shield, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, ArrowRight, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
+import { CheckCircle2, ArrowLeft, AlertCircle, MapPin, Loader2, Zap, Calendar, Clock, Users, FileText, X, MessageSquare, ChevronRight, Crosshair, Plus, Trophy, ArrowRight, Share2, Star, Check, Sparkles, Shield, Edit3, Settings, BookOpen, Award, Flame, Copy, LogOut, Camera, Save, ShieldCheck, Send, CalendarCheck, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
 const supabaseUrl = "https://aknwdkjzodhkhzxjvipu.supabase.co";
 const supabaseAnonKey = "sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -1468,15 +1468,17 @@ function MapScreen({
             return diffLat < 1e-4 && diffLng < 1e-4;
           });
           if (canchaEvents.length === 0) {
-            return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border p-5 text-center", children: [
-              /* @__PURE__ */ jsx("p", { className: "text-xs font-medium text-muted-foreground", children: "No hay partidos programados aquí" }),
+            return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border p-6 text-center", children: [
+              /* @__PURE__ */ jsx("p", { className: "text-sm font-medium text-muted-foreground mb-1", children: "No hay partidos programados aquí" }),
+              /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground mb-4", children: "¡Sé el primero en organizar uno!" }),
               /* @__PURE__ */ jsx(
                 "button",
                 {
                   onClick: () => {
                     setShowCreateForm(true);
                   },
-                  className: "mt-3 text-[11px] font-bold text-primary hover:underline",
+                  className: "w-full py-3 px-5 rounded-xl font-bold text-sm text-white",
+                  style: { background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))", boxShadow: "0 4px 16px rgba(99,102,241,0.35)" },
                   children: "+ Crear un partido aquí"
                 }
               )
@@ -1539,11 +1541,12 @@ function MapScreen({
       {
         id: "fab-create-event-btn",
         onClick: () => setShowCreateForm(true),
-        className: "absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-4 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105",
+        className: "absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-5 py-4 text-base font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105",
         "aria-label": "Crear evento",
+        style: { boxShadow: "0 6px 24px rgba(99,102,241,0.45)" },
         children: [
-          /* @__PURE__ */ jsx(Plus, { size: 18, strokeWidth: 2.5 }),
-          "Crear"
+          /* @__PURE__ */ jsx(Plus, { size: 20, strokeWidth: 2.5 }),
+          "Crear partido"
         ]
       }
     ),
@@ -1580,10 +1583,93 @@ function SportBadge({ sport, withEmoji = true }) {
     sport
   ] });
 }
+function LoginPromptModal({
+  isOpen,
+  onClose,
+  onLogin,
+  onRegister,
+  actionContext = "realizar esta acción"
+}) {
+  if (!isOpen) return null;
+  const perks = [
+    { icon: MapPin, text: "Únete a partidos cerca de ti" },
+    { icon: Users, text: "Crea eventos y arma tu equipo" },
+    { icon: Trophy, text: "Gana XP y desbloquea recompensas" },
+    { icon: Zap, text: "Matchmaking por nivel y deporte" }
+  ];
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm animate-in fade-in duration-200",
+        onClick: onClose
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "fixed inset-x-0 bottom-0 z-[9999] flex justify-center animate-in slide-in-from-bottom duration-300", children: /* @__PURE__ */ jsxs("div", { className: "w-full max-w-md rounded-t-3xl bg-[#0f1117] border border-white/10 shadow-2xl overflow-hidden", children: [
+      /* @__PURE__ */ jsx("div", { className: "flex justify-center pt-3 pb-1", children: /* @__PURE__ */ jsx("div", { className: "h-1 w-10 rounded-full bg-white/20" }) }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: onClose,
+          className: "absolute top-4 right-4 grid h-8 w-8 place-items-center rounded-full bg-white/10 hover:bg-white/20 transition-colors active:scale-95",
+          "aria-label": "Cerrar",
+          children: /* @__PURE__ */ jsx(X, { size: 14, className: "text-white/70" })
+        }
+      ),
+      /* @__PURE__ */ jsxs("div", { className: "px-6 pb-8 pt-2 space-y-5", children: [
+        /* @__PURE__ */ jsxs("div", { className: "text-center space-y-2 pt-2", children: [
+          /* @__PURE__ */ jsx("div", { className: "inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#32CD32] to-[#22a822] shadow-lg shadow-green-500/25 mx-auto", children: /* @__PURE__ */ jsx("span", { className: "text-3xl", children: "⚽" }) }),
+          /* @__PURE__ */ jsxs("h2", { className: "text-xl font-black text-white leading-tight", children: [
+            "¡Únete para ",
+            actionContext,
+            "!"
+          ] }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/60 leading-relaxed max-w-[280px] mx-auto", children: "Crea tu cuenta gratis y accede a todos los partidos y canchas de Caracas." })
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "rounded-2xl bg-white/5 border border-white/8 divide-y divide-white/5", children: perks.map(({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 px-4 py-3", children: [
+          /* @__PURE__ */ jsx("div", { className: "grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15", children: /* @__PURE__ */ jsx(Icon, { size: 14, className: "text-[#32CD32]" }) }),
+          /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-white/80", children: text })
+        ] }, text)) }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2.5", children: [
+          /* @__PURE__ */ jsxs(
+            "button",
+            {
+              id: "login-prompt-register-btn",
+              onClick: onRegister,
+              className: "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-lg shadow-green-500/25 transition-all active:scale-[0.98] hover:shadow-green-500/40",
+              children: [
+                "Crear Cuenta Gratis",
+                /* @__PURE__ */ jsx(ArrowRight, { size: 16, className: "transition-transform group-hover:translate-x-1" })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              id: "login-prompt-login-btn",
+              onClick: onLogin,
+              className: "w-full rounded-2xl border border-white/15 bg-white/5 py-3.5 text-sm font-bold text-white/80 transition-all hover:bg-white/10 active:scale-[0.98]",
+              children: "Ya tengo cuenta — Iniciar Sesión"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: onClose,
+            className: "w-full text-center text-xs text-white/30 hover:text-white/50 transition-colors py-1",
+            children: "Ahora no, seguir explorando"
+          }
+        )
+      ] })
+    ] }) })
+  ] });
+}
 function EventDetailScreen({
   event,
   onBack,
-  userLocation
+  userLocation,
+  onOpenAuth
 }) {
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1592,6 +1678,7 @@ function EventDetailScreen({
   const [currentUser, setCurrentUser] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFloatXp, setShowFloatXp] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState("");
   const [hostProfile, setHostProfile] = useState(null);
@@ -1642,7 +1729,10 @@ function EventDetailScreen({
     setLoading(false);
   }
   async function handleJoin() {
-    if (!currentUser || !currentUser.email) return alert("Debes iniciar sesión");
+    if (!currentUser || !currentUser.email) {
+      setShowLoginPrompt(true);
+      return;
+    }
     setJoining(true);
     const { error } = await supabase.from("event_participants").insert({
       event_id: event.id,
@@ -1722,6 +1812,22 @@ function EventDetailScreen({
     ] });
   }
   return /* @__PURE__ */ jsxs("div", { className: "relative h-full overflow-y-auto bg-background", children: [
+    /* @__PURE__ */ jsx(
+      LoginPromptModal,
+      {
+        isOpen: showLoginPrompt,
+        onClose: () => setShowLoginPrompt(false),
+        onLogin: () => {
+          setShowLoginPrompt(false);
+          onOpenAuth?.();
+        },
+        onRegister: () => {
+          setShowLoginPrompt(false);
+          onOpenAuth?.();
+        },
+        actionContext: "unirte al partido"
+      }
+    ),
     /* @__PURE__ */ jsxs("div", { className: "relative h-64 w-full overflow-hidden", children: [
       /* @__PURE__ */ jsx("img", { src: event.image, alt: event.title, className: "h-full w-full object-cover" }),
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-background via-background/30 to-secondary/40" }),
@@ -1928,7 +2034,9 @@ function InfoTile({
 }
 function ProfileScreen({
   onEdit,
-  onSelectEvent
+  onSelectEvent,
+  onOpenAuth,
+  onOpenRegister
 }) {
   const {
     user,
@@ -1956,7 +2064,80 @@ function ProfileScreen({
     setTimeout(() => setCopiedCode(null), 2e3);
   };
   if (!user) {
-    return /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center bg-background", children: /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }) });
+    return /* @__PURE__ */ jsxs("div", { className: "h-full overflow-y-auto bg-background", children: [
+      /* @__PURE__ */ jsxs("div", { className: "relative bg-gradient-to-br from-[#0f1117] via-[#0f1117] to-[#1a2a1a] px-6 pb-20 pt-14 text-center overflow-hidden", children: [
+        /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-[#32CD32]/15 blur-3xl" }),
+        /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute bottom-0 -right-10 h-40 w-40 rounded-full bg-[#32CD32]/10 blur-2xl" }),
+        /* @__PURE__ */ jsxs("div", { className: "relative inline-flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#32CD32] to-[#22a822] shadow-2xl shadow-green-500/30 ring-4 ring-[#32CD32]/20 mx-auto", children: [
+          /* @__PURE__ */ jsx("span", { className: "text-4xl", children: "🏟️" }),
+          /* @__PURE__ */ jsx("div", { className: "absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#0f1117] ring-2 ring-[#32CD32]/30", children: /* @__PURE__ */ jsx("span", { className: "text-base", children: "❓" }) })
+        ] }),
+        /* @__PURE__ */ jsx("h1", { className: "mt-5 text-2xl font-black text-white", children: "Perfil de Invitado" }),
+        /* @__PURE__ */ jsx("p", { className: "mt-1.5 text-sm text-white/50 max-w-[260px] mx-auto", children: "Explora la app libremente. Crea tu cuenta para desbloquear todo." })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "px-5 -mt-10 space-y-4", children: [
+        /* @__PURE__ */ jsxs("div", { className: "rounded-3xl bg-card border border-border shadow-pop overflow-hidden", children: [
+          /* @__PURE__ */ jsxs("div", { className: "px-5 py-5 space-y-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#32CD32]/15", children: /* @__PURE__ */ jsx(Sparkles, { size: 18, className: "text-[#32CD32] animate-pulse" }) }),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("h2", { className: "text-base font-black text-secondary", children: "Únete a la comunidad" }),
+                /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground", children: "Accede a todo TeamMatch gratis" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsx("div", { className: "space-y-2", children: [
+              { icon: MapPin, text: "Encuentra partidos cerca de ti en tiempo real" },
+              { icon: Users, text: "Solicita un cupo y únete con un toque" },
+              { icon: Trophy, text: "Sube de nivel y gana recompensas exclusivas" },
+              { icon: Zap, text: "Matchmaking inteligente por nivel de juego" },
+              { icon: Star, text: "Crea tus propios eventos y arma equipo" }
+            ].map(({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2.5", children: [
+              /* @__PURE__ */ jsx("div", { className: "grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15", children: /* @__PURE__ */ jsx(Icon, { size: 13, className: "text-[#32CD32]" }) }),
+              /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-secondary/80", children: text })
+            ] }, text)) }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2 pt-1", children: [
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  id: "guest-profile-register-btn",
+                  onClick: onOpenRegister,
+                  className: "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-[0.98] hover:shadow-green-500/30",
+                  children: [
+                    "Crear Cuenta Gratis",
+                    /* @__PURE__ */ jsx(ArrowRight, { size: 16, className: "transition-transform group-hover:translate-x-1" })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  id: "guest-profile-login-btn",
+                  onClick: onOpenAuth,
+                  className: "w-full rounded-2xl border border-border bg-muted/50 py-3.5 text-sm font-bold text-secondary transition-all hover:bg-muted active:scale-[0.98]",
+                  children: "Ya tengo cuenta — Iniciar Sesión"
+                }
+              )
+            ] })
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "border-t border-border grid grid-cols-3 divide-x divide-border", children: [
+            { k: "1.2k", v: "Jugadores" },
+            { k: "320", v: "Eventos/mes" },
+            { k: "4.9★", v: "Rating" }
+          ].map((s) => /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center py-4", children: [
+            /* @__PURE__ */ jsx("div", { className: "text-lg font-black text-[#32CD32]", children: s.k }),
+            /* @__PURE__ */ jsx("div", { className: "text-[10px] font-semibold text-muted-foreground", children: s.v })
+          ] }, s.v)) })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border bg-muted/20 p-4 flex items-start gap-3", children: [
+          /* @__PURE__ */ jsx(Shield, { size: 18, className: "text-muted-foreground shrink-0 mt-0.5" }),
+          /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: [
+            "Tu cuenta es ",
+            /* @__PURE__ */ jsx("strong", { className: "text-secondary", children: "100% gratuita" }),
+            ". Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte."
+          ] })
+        ] })
+      ] })
+    ] });
   }
   const email = user.email || "";
   const initials = displayName.substring(0, 2).toUpperCase();
@@ -2551,7 +2732,7 @@ function parseLocation(location) {
   }
   return null;
 }
-function CanchaCommentsScreen({ cancha, onBack }) {
+function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
   const { user } = useCurrentUser();
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
@@ -2741,7 +2922,22 @@ function CanchaCommentsScreen({ cancha, onBack }) {
     /* @__PURE__ */ jsx("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4", children: checkingPermission ? /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-2 py-2", children: [
       /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary", size: 14 }),
       /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground", children: "Comprobando acceso…" })
-    ] }) : !user ? /* @__PURE__ */ jsx("div", { className: "flex flex-col items-center gap-2 rounded-2xl bg-muted/40 p-4 border border-dashed border-border", children: /* @__PURE__ */ jsx("p", { className: "text-xs font-semibold text-muted-foreground text-center", children: "Debes iniciar sesión para escribir un comentario." }) }) : !canComment ? /* @__PURE__ */ jsxs("div", { className: "flex gap-2.5 items-start rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3.5", children: [
+    ] }) : !user ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3 rounded-2xl bg-muted/30 p-5 border border-dashed border-border", children: [
+      /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full bg-muted text-lg", children: "💬" }),
+      /* @__PURE__ */ jsxs("div", { className: "text-center space-y-1", children: [
+        /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-secondary", children: "Inicia sesión para comentar" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Comparte tu opinión sobre esta cancha con la comunidad." })
+      ] }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          id: "comments-login-btn",
+          onClick: onOpenAuth,
+          className: "flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#32CD32] to-[#22a822] px-5 py-2.5 text-xs font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-95 hover:shadow-green-500/30",
+          children: "Iniciar Sesión / Registrarse"
+        }
+      )
+    ] }) : !canComment ? /* @__PURE__ */ jsxs("div", { className: "flex gap-2.5 items-start rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3.5", children: [
       /* @__PURE__ */ jsx(AlertCircle, { size: 16, className: "text-amber-600 mt-0.5 shrink-0" }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
         /* @__PURE__ */ jsx("h4", { className: "text-xs font-bold text-amber-800", children: "Acceso restringido" }),
@@ -2852,7 +3048,7 @@ function EventCard({
     "button",
     {
       onClick,
-      className: "group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98] flex-1 min-w-[280px] w-full sm:w-[calc(50%-8px)] md:w-[calc(33.33%-11px)]",
+      className: "group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-card text-left shadow-soft transition-all active:scale-[0.98] w-full",
       children: [
         /* @__PURE__ */ jsxs("div", { className: "relative h-28 w-full overflow-hidden shrink-0", children: [
           /* @__PURE__ */ jsx(
@@ -3103,7 +3299,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
           )
         ] })
       ] }, req.id);
-    }) }) : /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap gap-4 px-5 pt-3", children: [
+    }) }) : /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-4 px-5 pt-3", children: [
       tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
@@ -3300,77 +3496,6 @@ function Logo({ size = 28 }) {
       }
     ),
     /* @__PURE__ */ jsx("span", { className: "font-bold tracking-tight text-secondary", style: { fontSize: size * 0.65 }, children: "Teammatch" })
-  ] });
-}
-const caracasMap = "/assets/caracas-map-BQoHHgZ8.jpg";
-function WelcomeScreen({
-  onRegister,
-  onLogin
-}) {
-  return /* @__PURE__ */ jsxs("div", { className: "relative h-full w-full overflow-hidden gradient-dark text-secondary-foreground", children: [
-    /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 opacity-25", children: [
-      /* @__PURE__ */ jsx("img", { src: caracasMap, alt: "Mapa de Caracas", className: "h-full w-full object-cover" }),
-      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-b from-secondary/40 via-secondary/70 to-secondary" })
-    ] }),
-    /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute -top-20 -left-16 h-64 w-64 rounded-full bg-primary/30 blur-3xl" }),
-    /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute bottom-32 -right-20 h-72 w-72 rounded-full bg-accent/25 blur-3xl" }),
-    /* @__PURE__ */ jsxs("div", { className: "relative flex h-full flex-col px-7 pt-14 pb-8", children: [
-      /* @__PURE__ */ jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsx(Logo, { size: 32 }) }),
-      /* @__PURE__ */ jsxs("div", { className: "mt-12 flex flex-1 flex-col", children: [
-        /* @__PURE__ */ jsxs("span", { className: "inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary", children: [
-          /* @__PURE__ */ jsx("span", { className: "h-1.5 w-1.5 rounded-full bg-primary" }),
-          " Disponible en Caracas"
-        ] }),
-        /* @__PURE__ */ jsxs("h1", { className: "mt-5 text-4xl font-bold leading-[1.05] tracking-tight", children: [
-          "Tu próximo",
-          /* @__PURE__ */ jsx("br", {}),
-          /* @__PURE__ */ jsx("span", { className: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", children: "partido te espera." })
-        ] }),
-        /* @__PURE__ */ jsx("p", { className: "mt-4 max-w-[300px] text-sm leading-relaxed text-secondary-foreground/70", children: "Encuentra eventos deportivos cerca de ti, únete con un toque o crea el tuyo y arma equipo." }),
-        /* @__PURE__ */ jsx("div", { className: "mt-8 space-y-3", children: [
-          { icon: MapPin, title: "Mapa en vivo", desc: "Eventos cerca en tiempo real" },
-          { icon: Users, title: "Únete fácil", desc: "Solicita un cupo en segundos" },
-          { icon: Trophy, title: "Por nivel", desc: "Juega con gente a tu altura" }
-        ].map(({ icon: Icon, title, desc }) => /* @__PURE__ */ jsxs(
-          "div",
-          {
-            className: "flex items-center gap-3 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-3 backdrop-blur-sm",
-            children: [
-              /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-xl gradient-primary shadow-pop", children: /* @__PURE__ */ jsx(Icon, { className: "h-5 w-5 text-secondary", strokeWidth: 2.5 }) }),
-              /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
-                /* @__PURE__ */ jsx("div", { className: "text-sm font-semibold", children: title }),
-                /* @__PURE__ */ jsx("div", { className: "text-xs text-secondary-foreground/60", children: desc })
-              ] })
-            ]
-          },
-          title
-        )) })
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "mt-6 space-y-3", children: [
-        /* @__PURE__ */ jsxs(
-          "button",
-          {
-            id: "welcome-register-btn",
-            onClick: onRegister,
-            className: "group flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-base font-bold text-secondary shadow-pop transition active:scale-[0.98]",
-            children: [
-              "Empezar a jugar",
-              /* @__PURE__ */ jsx(ArrowRight, { className: "h-5 w-5 transition-transform group-hover:translate-x-1", strokeWidth: 2.5 })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            id: "welcome-login-btn",
-            onClick: onLogin,
-            className: "w-full rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 py-3 text-sm font-medium text-secondary-foreground/80 transition hover:bg-primary-foreground/10 active:scale-[0.98]",
-            children: "Ya tengo cuenta"
-          }
-        ),
-        /* @__PURE__ */ jsx("p", { className: "pt-1 text-center text-[11px] text-secondary-foreground/40", children: "Al continuar aceptas los Términos y la Política de Privacidad" })
-      ] })
-    ] })
   ] });
 }
 function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
@@ -3675,22 +3800,26 @@ function AppContent() {
   const [selectedCancha, setSelectedCancha] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   useEffect(() => {
-    supabase.auth.getSession().then(({
-      data: {
-        session
-      }
-    }) => {
-      setAppState(session ? "app" : "welcome");
+    supabase.auth.getSession().then(() => {
+      setAppState("app");
     });
     const {
       data: {
         subscription
       }
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAppState(session ? "app" : "welcome");
+      if (session) {
+        setAppState("app");
+      } else if (appState !== "auth") {
+        setAppState("app");
+      }
     });
     return () => subscription.unsubscribe();
   }, []);
+  const openAuth = (mode = "login") => {
+    setAuthMode(mode);
+    setAppState("auth");
+  };
   const openDetail = (e) => {
     setSelected(e);
     setScreen("detail");
@@ -3699,31 +3828,22 @@ function AppContent() {
     if (appState === "checking") {
       return /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center bg-background", children: /* @__PURE__ */ jsx("div", { className: "h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" }) });
     }
-    if (appState === "welcome") {
-      return /* @__PURE__ */ jsx(WelcomeScreen, { onLogin: () => {
-        setAuthMode("login");
-        setAppState("auth");
-      }, onRegister: () => {
-        setAuthMode("register");
-        setAppState("auth");
-      } });
-    }
     if (appState === "auth") {
-      return /* @__PURE__ */ jsx(AuthScreen, { initialMode: authMode, onSuccess: () => setAppState("app"), onClose: () => setAppState("welcome") });
+      return /* @__PURE__ */ jsx(AuthScreen, { initialMode: authMode, onSuccess: () => setAppState("app"), onClose: () => setAppState("app") });
     }
-    if (screen === "detail" && selected) return /* @__PURE__ */ jsx(EventDetailScreen, { event: selected, onBack: () => setScreen("events"), userLocation });
+    if (screen === "detail" && selected) return /* @__PURE__ */ jsx(EventDetailScreen, { event: selected, onBack: () => setScreen("events"), userLocation, onOpenAuth: () => openAuth("login") });
     if (screen === "events") return /* @__PURE__ */ jsx(MyEventsScreen, { onSelect: openDetail, onNavigateToProfile: () => setScreen("profile") });
     if (screen === "sports") return /* @__PURE__ */ jsx(MySportsScreen, { onSelectEvent: openDetail, onNavigateToProfile: () => setScreen("profile") });
     if (screen === "editProfile") return /* @__PURE__ */ jsx(EditProfileScreen, { onBack: () => setScreen("profile") });
-    if (screen === "profile") return /* @__PURE__ */ jsx(ProfileScreen, { onEdit: () => setScreen("editProfile"), onSelectEvent: openDetail });
-    if (screen === "comments" && selectedCancha) return /* @__PURE__ */ jsx(CanchaCommentsScreen, { cancha: selectedCancha, onBack: () => setScreen("map") });
+    if (screen === "profile") return /* @__PURE__ */ jsx(ProfileScreen, { onEdit: () => setScreen("editProfile"), onSelectEvent: openDetail, onOpenAuth: () => openAuth("login"), onOpenRegister: () => openAuth("register") });
+    if (screen === "comments" && selectedCancha) return /* @__PURE__ */ jsx(CanchaCommentsScreen, { cancha: selectedCancha, onBack: () => setScreen("map"), onOpenAuth: () => openAuth("login") });
     return /* @__PURE__ */ jsx(MapScreen, { onSelect: openDetail, userLocation, setUserLocation, onNavigateToProfile: () => setScreen("profile"), onNavigateToComments: (cancha) => {
       setSelectedCancha(cancha);
       setScreen("comments");
     } });
   };
   return /* @__PURE__ */ jsx("main", { className: "fixed inset-0 w-full h-[100dvh] flex flex-col bg-background overflow-hidden", children: /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex", children: [
-    appState !== "app" && /* @__PURE__ */ jsxs("aside", { className: "relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex", children: [
+    appState === "auth" && /* @__PURE__ */ jsxs("aside", { className: "relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex", children: [
       /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" }),
       /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" }),
       /* @__PURE__ */ jsx("div", { className: "relative", children: /* @__PURE__ */ jsx(Logo, { size: 36 }) }),
@@ -3754,11 +3874,11 @@ function AppContent() {
       ] }),
       /* @__PURE__ */ jsx("div", { className: "relative text-xs text-[#32CD32]", children: "👉 ¡A jugar ya!" })
     ] }),
-    /* @__PURE__ */ jsx("section", { className: `relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState !== "app" ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" : "flex-1"}`, children: /* @__PURE__ */ jsxs("div", { className: "relative h-[100dvh] w-full overflow-hidden", children: [
+    /* @__PURE__ */ jsx("section", { className: `relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState === "auth" ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" : "flex-1"}`, children: /* @__PURE__ */ jsxs("div", { className: "relative h-[100dvh] w-full overflow-hidden", children: [
       renderScreen(),
-      appState === "app" && /* @__PURE__ */ jsx(RpgNotificationManager, {}),
-      appState === "app" && /* @__PURE__ */ jsx(EventNotificationBanner, {}),
-      appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && /* @__PURE__ */ jsx(BottomNav, { current: screen, onChange: setScreen })
+      appState !== "auth" && /* @__PURE__ */ jsx(RpgNotificationManager, {}),
+      appState !== "auth" && /* @__PURE__ */ jsx(EventNotificationBanner, {}),
+      appState !== "auth" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && /* @__PURE__ */ jsx(BottomNav, { current: screen, onChange: setScreen })
     ] }) })
   ] }) });
 }

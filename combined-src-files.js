@@ -1,6 +1,6 @@
 /**
  * COMBINED SOURCE FILES FROM: C:\Users\yilup\teammatch\TeamMatch
- * Generated on: 2026-05-23T03:57:53.205Z
+ * Generated on: 2026-06-08T22:14:25.004Z
  * 
  * This file contains all JavaScript files from the src directory combined into a single file.
  * Each file is clearly marked with separators and includes the original file path.
@@ -8,87 +8,128 @@
  * TABLE OF CONTENTS:
  */
 
- * 1. src\components\teammatch\AuthScreen.tsx
- * 2. src\components\teammatch\BottomNav.tsx
- * 3. src\components\teammatch\CanchasScreen.tsx
- * 4. src\components\teammatch\CreateEventForm.tsx
- * 5. src\components\teammatch\EditProfileScreen.tsx
- * 6. src\components\teammatch\EventCard.tsx
- * 7. src\components\teammatch\EventDetailScreen.tsx
- * 8. src\components\teammatch\LeafletMap.tsx
- * 9. src\components\teammatch\Logo.tsx
- * 10. src\components\teammatch\MapScreen.tsx
- * 11. src\components\teammatch\MyEventsScreen.tsx
- * 12. src\components\teammatch\ProfileScreen.tsx
- * 13. src\components\teammatch\SportBadge.tsx
- * 14. src\components\teammatch\WelcomeScreen.tsx
- * 15. src\components\teammatch\data.ts
- * 16. src\components\teammatch\types-nav.ts
- * 17. src\components\teammatch\types.ts
- * 18. src\components\ui\accordion.tsx
- * 19. src\components\ui\alert-dialog.tsx
- * 20. src\components\ui\alert.tsx
- * 21. src\components\ui\aspect-ratio.tsx
- * 22. src\components\ui\avatar.tsx
- * 23. src\components\ui\badge.tsx
- * 24. src\components\ui\breadcrumb.tsx
- * 25. src\components\ui\button.tsx
- * 26. src\components\ui\calendar.tsx
- * 27. src\components\ui\card.tsx
- * 28. src\components\ui\carousel.tsx
- * 29. src\components\ui\chart.tsx
- * 30. src\components\ui\checkbox.tsx
- * 31. src\components\ui\collapsible.tsx
- * 32. src\components\ui\command.tsx
- * 33. src\components\ui\context-menu.tsx
- * 34. src\components\ui\dialog.tsx
- * 35. src\components\ui\drawer.tsx
- * 36. src\components\ui\dropdown-menu.tsx
- * 37. src\components\ui\form.tsx
- * 38. src\components\ui\hover-card.tsx
- * 39. src\components\ui\input-otp.tsx
- * 40. src\components\ui\input.tsx
- * 41. src\components\ui\label.tsx
- * 42. src\components\ui\menubar.tsx
- * 43. src\components\ui\navigation-menu.tsx
- * 44. src\components\ui\pagination.tsx
- * 45. src\components\ui\popover.tsx
- * 46. src\components\ui\progress.tsx
- * 47. src\components\ui\radio-group.tsx
- * 48. src\components\ui\resizable.tsx
- * 49. src\components\ui\scroll-area.tsx
- * 50. src\components\ui\select.tsx
- * 51. src\components\ui\separator.tsx
- * 52. src\components\ui\sheet.tsx
- * 53. src\components\ui\sidebar.tsx
- * 54. src\components\ui\skeleton.tsx
- * 55. src\components\ui\slider.tsx
- * 56. src\components\ui\sonner.tsx
- * 57. src\components\ui\switch.tsx
- * 58. src\components\ui\table.tsx
- * 59. src\components\ui\tabs.tsx
- * 60. src\components\ui\textarea.tsx
- * 61. src\components\ui\toggle-group.tsx
- * 62. src\components\ui\toggle.tsx
- * 63. src\components\ui\tooltip.tsx
- * 64. src\hooks\use-mobile.tsx
- * 65. src\lib\error-capture.ts
- * 66. src\lib\error-page.ts
- * 67. src\lib\supabase.ts
- * 68. src\lib\utils.ts
- * 69. src\routeTree.gen.ts
- * 70. src\router.tsx
- * 71. src\routes\__root.tsx
- * 72. src\routes\index.tsx
- * 73. src\server.ts
- * 74. src\start.ts
- * 75. src\vite-env.d.ts
- * 76. vite.config.ts
+ * 1. db_check.js
+ * 2. src\components\teammatch\AuthScreen.tsx
+ * 3. src\components\teammatch\BottomNav.tsx
+ * 4. src\components\teammatch\CanchaCommentsScreen.tsx
+ * 5. src\components\teammatch\CanchasScreen.tsx
+ * 6. src\components\teammatch\CreateEventForm.tsx
+ * 7. src\components\teammatch\EditProfileScreen.tsx
+ * 8. src\components\teammatch\EventCard.tsx
+ * 9. src\components\teammatch\EventDetailScreen.tsx
+ * 10. src\components\teammatch\LeafletMap.tsx
+ * 11. src\components\teammatch\Logo.tsx
+ * 12. src\components\teammatch\MapScreen.tsx
+ * 13. src\components\teammatch\MyEventsScreen.tsx
+ * 14. src\components\teammatch\MySportsScreen.tsx
+ * 15. src\components\teammatch\ProfileScreen.tsx
+ * 16. src\components\teammatch\SportBadge.tsx
+ * 17. src\components\teammatch\UserAvatar.tsx
+ * 18. src\components\teammatch\WelcomeScreen.tsx
+ * 19. src\components\teammatch\data.ts
+ * 20. src\components\teammatch\types-nav.ts
+ * 21. src\components\teammatch\types.ts
+ * 22. src\components\ui\accordion.tsx
+ * 23. src\components\ui\alert-dialog.tsx
+ * 24. src\components\ui\alert.tsx
+ * 25. src\components\ui\aspect-ratio.tsx
+ * 26. src\components\ui\avatar.tsx
+ * 27. src\components\ui\badge.tsx
+ * 28. src\components\ui\breadcrumb.tsx
+ * 29. src\components\ui\button.tsx
+ * 30. src\components\ui\calendar.tsx
+ * 31. src\components\ui\card.tsx
+ * 32. src\components\ui\carousel.tsx
+ * 33. src\components\ui\chart.tsx
+ * 34. src\components\ui\checkbox.tsx
+ * 35. src\components\ui\collapsible.tsx
+ * 36. src\components\ui\command.tsx
+ * 37. src\components\ui\context-menu.tsx
+ * 38. src\components\ui\dialog.tsx
+ * 39. src\components\ui\drawer.tsx
+ * 40. src\components\ui\dropdown-menu.tsx
+ * 41. src\components\ui\form.tsx
+ * 42. src\components\ui\hover-card.tsx
+ * 43. src\components\ui\input-otp.tsx
+ * 44. src\components\ui\input.tsx
+ * 45. src\components\ui\label.tsx
+ * 46. src\components\ui\menubar.tsx
+ * 47. src\components\ui\navigation-menu.tsx
+ * 48. src\components\ui\pagination.tsx
+ * 49. src\components\ui\popover.tsx
+ * 50. src\components\ui\progress.tsx
+ * 51. src\components\ui\radio-group.tsx
+ * 52. src\components\ui\resizable.tsx
+ * 53. src\components\ui\scroll-area.tsx
+ * 54. src\components\ui\select.tsx
+ * 55. src\components\ui\separator.tsx
+ * 56. src\components\ui\sheet.tsx
+ * 57. src\components\ui\sidebar.tsx
+ * 58. src\components\ui\skeleton.tsx
+ * 59. src\components\ui\slider.tsx
+ * 60. src\components\ui\sonner.tsx
+ * 61. src\components\ui\switch.tsx
+ * 62. src\components\ui\table.tsx
+ * 63. src\components\ui\tabs.tsx
+ * 64. src\components\ui\textarea.tsx
+ * 65. src\components\ui\toggle-group.tsx
+ * 66. src\components\ui\toggle.tsx
+ * 67. src\components\ui\tooltip.tsx
+ * 68. src\hooks\use-mobile.tsx
+ * 69. src\lib\UserContext.tsx
+ * 70. src\lib\error-capture.ts
+ * 71. src\lib\error-page.ts
+ * 72. src\lib\supabase.ts
+ * 73. src\lib\utils.ts
+ * 74. src\routeTree.gen.ts
+ * 75. src\router.tsx
+ * 76. src\routes\__root.tsx
+ * 77. src\routes\index.tsx
+ * 78. src\server.ts
+ * 79. src\start.ts
+ * 80. src\vite-env.d.ts
+ * 81. vite.config.ts
  */
 
 
 ================================================================================
-// FILE 1 of 76
+// FILE 1 of 81
+// PATH: db_check.js
+// SIZE: 569 characters
+================================================================================
+
+/**
+ * FILE: db_check.js
+ * DIRECTORY: TeamMatch
+ * 
+ * PURPOSE: This file is located in TeamMatch directory.
+ */
+
+const supabaseUrl = 'https://aknwdkjzodhkhzxjvipu.supabase.co';
+const supabaseAnonKey = 'sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx';
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+async function check() {
+  console.log("Checking if sports table exists...");
+  const { data, error } = await supabase.from('sports').select('*').limit(1);
+  if (error) {
+    console.error("sports table select error:", error.message);
+  } else {
+    console.log("sports table sample row:", data);
+  }
+}
+
+check();
+
+
+================================================================================
+// END OF FILE: db_check.js
+================================================================================
+
+
+================================================================================
+// FILE 2 of 81
 // PATH: src\components\teammatch\AuthScreen.tsx
 // SIZE: 13427 characters
 ================================================================================
@@ -447,9 +488,9 @@ function InputField({
 
 
 ================================================================================
-// FILE 2 of 76
+// FILE 3 of 81
 // PATH: src\components\teammatch\BottomNav.tsx
-// SIZE: 1463 characters
+// SIZE: 1534 characters
 ================================================================================
 
 /**
@@ -466,8 +507,9 @@ interface Props {
 
 export function BottomNav({ current, onChange }: Props) {
   const items: { id: Screen; label: string; icon: typeof Map }[] = [
-    { id: "map", label: "Explorar", icon: Map },
     { id: "events", label: "Eventos", icon: CalendarCheck },
+    { id: "map", label: "Explorar", icon: Map },
+    { id: "sports", label: "Deportes", icon: Trophy as any },
     { id: "profile", label: "Perfil", icon: User as any },
   ];
 
@@ -496,8 +538,6 @@ export function BottomNav({ current, onChange }: Props) {
         {items.map((it) => (
           <Btn key={it.id} id={it.id} label={it.label} Icon={it.icon} />
         ))}
-
-        <div className="flex-1" />
       </div>
     </nav>
   );
@@ -510,9 +550,411 @@ export function BottomNav({ current, onChange }: Props) {
 
 
 ================================================================================
-// FILE 3 of 76
+// FILE 4 of 81
+// PATH: src\components\teammatch\CanchaCommentsScreen.tsx
+// SIZE: 14799 characters
+================================================================================
+
+/**
+ * FILE: CanchaCommentsScreen.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+function parseLocation(location: any): { lat: number; lng: number } | null {
+  if (!location) return null;
+  if (typeof location === "object") {
+    if (typeof location.lat === "number" && typeof location.lng === "number") {
+      return { lat: location.lat, lng: location.lng };
+    }
+    if (Array.isArray(location) && location.length >= 2) {
+      return { lat: location[0], lng: location[1] };
+    }
+    if (location.type === "Point" && Array.isArray(location.coordinates) && location.coordinates.length >= 2) {
+      return { lat: location.coordinates[1], lng: location.coordinates[0] };
+    }
+  }
+  if (typeof location === "string") {
+    if (location.toUpperCase().includes("POINT")) {
+      const cleaned = location.toUpperCase().replace("POINT", "").replace("(", "").replace(")", "").trim();
+      const coords = cleaned.split(/\s+/);
+      if (coords.length >= 2) {
+        let lng = parseFloat(coords[0]);
+        let lat = parseFloat(coords[1]);
+        if (lat < -20 && lng > 0) {
+          const temp = lat;
+          lat = lng;
+          lng = temp;
+        }
+        return { lat, lng };
+      }
+    } else if (/^[0-9A-Fa-f]+$/.test(location) && location.length >= 50) {
+      try {
+        const hex = location;
+        const buffer = new Uint8Array(hex.match(/../g)!.map((h: string) => parseInt(h, 16))).buffer;
+        const view = new DataView(buffer);
+        let lng = view.getFloat64(9, true);
+        let lat = view.getFloat64(17, true);
+        if (lat < -20 && lng > 0) {
+          const temp = lat;
+          lat = lng;
+          lng = temp;
+        }
+        return { lat, lng };
+      } catch (err) {
+        console.error("Error decodificando WKB Hex de PostGIS en CanchaCommentsScreen:", err);
+      }
+    }
+  }
+  return null;
+}
+
+interface CanchaCommentsScreenProps {
+  cancha: any;
+  onBack: () => void;
+}
+
+export function CanchaCommentsScreen({ cancha, onBack }: CanchaCommentsScreenProps) {
+  const { user } = useCurrentUser();
+  const [comments, setComments] = useState<any[]>([]);
+  const [loadingComments, setLoadingComments] = useState(true);
+  const [newComment, setNewComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [canComment, setCanComment] = useState(false);
+  const [checkingPermission, setCheckingPermission] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const commentsEndRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom when new comments are loaded
+  useEffect(() => {
+    commentsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [comments]);
+
+  // Fetch comments and subscribe to updates
+  useEffect(() => {
+    fetchComments();
+
+    // Subscribe to comments updates
+    const channel = supabase
+      .channel(`public:comentarios_Canchas:id_Cancha=eq.${cancha.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "comentarios_Canchas",
+          filter: `id_Cancha=eq.${cancha.id}`,
+        },
+        () => {
+          fetchComments();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [cancha.id]);
+
+  // Check commenting permission based on event participation
+  useEffect(() => {
+    if (!user || !user.email) {
+      setCanComment(false);
+      setCheckingPermission(false);
+      return;
+    }
+
+    async function checkPermission() {
+      setCheckingPermission(true);
+      const lat = cancha.lat ?? parseLocation(cancha.location)?.lat;
+      const lng = cancha.lng ?? parseLocation(cancha.location)?.lng;
+
+      if (!lat || !lng) {
+        setCanComment(false);
+        setCheckingPermission(false);
+        return;
+      }
+
+      try {
+        // Fetch user's approved participations in events
+        const { data: participations, error: partError } = await supabase
+          .from("event_participants")
+          .select(`
+            status,
+            events (
+              location
+            )
+          `)
+          .eq("user_username", user.email)
+          .in("status", ["approved", "aceptado", "aprobado"]);
+
+        if (partError) {
+          console.error("Error checking participations:", partError);
+        }
+
+        // Fetch events created by user
+        const { data: createdEvents, error: createdError } = await supabase
+          .from("events")
+          .select("location")
+          .eq("creator_username", user.email);
+
+        if (createdError) {
+          console.error("Error checking created events:", createdError);
+        }
+
+        let hasParticipated = false;
+
+        // Check inside approved participations
+        if (participations && participations.length > 0) {
+          hasParticipated = participations.some((p: any) => {
+            const event = p.events;
+            if (!event) return false;
+            const eventCoords = parseLocation(event.location);
+            if (!eventCoords) return false;
+            const diffLat = Math.abs(eventCoords.lat - lat);
+            const diffLng = Math.abs(eventCoords.lng - lng);
+            return diffLat < 0.0001 && diffLng < 0.0001;
+          });
+        }
+
+        // Check inside created events (if not already true)
+        if (!hasParticipated && createdEvents && createdEvents.length > 0) {
+          hasParticipated = createdEvents.some((event: any) => {
+            const eventCoords = parseLocation(event.location);
+            if (!eventCoords) return false;
+            const diffLat = Math.abs(eventCoords.lat - lat);
+            const diffLng = Math.abs(eventCoords.lng - lng);
+            return diffLat < 0.0001 && diffLng < 0.0001;
+          });
+        }
+
+        setCanComment(hasParticipated);
+      } catch (error) {
+        console.error("Error determining commenting permission:", error);
+        setCanComment(false);
+      } finally {
+        setCheckingPermission(false);
+      }
+    }
+
+    checkPermission();
+  }, [user, cancha]);
+
+  async function fetchComments() {
+    try {
+      const { data, error } = await supabase
+        .from("comentarios_Canchas")
+        .select("*")
+        .eq("id_Cancha", cancha.id)
+        .order("hora", { ascending: true });
+
+      if (error) throw error;
+      if (data) setComments(data);
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    } finally {
+      setLoadingComments(false);
+    }
+  }
+
+  async function handleSubmitComment(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newComment.trim() || !user) return;
+
+    setSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const { error } = await supabase.from("comentarios_Canchas").insert({
+        id_Cancha: cancha.id,
+        comentario: newComment.trim(),
+        hora: new Date().toISOString(),
+      });
+
+      if (error) throw error;
+
+      setNewComment("");
+      fetchComments();
+    } catch (err: any) {
+      console.error("Error posting comment:", err);
+      setErrorMessage(err.message || "Error al enviar el comentario.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function formatTime(timestamp: string) {
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString("es-VE", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return timestamp;
+    }
+  }
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Header */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <button
+          onClick={onBack}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Volver"
+        >
+          <ArrowLeft size={18} className="text-secondary" />
+        </button>
+        <div>
+          <h1 className="[TAILWIND_CLASSES_REMOVED]">Comentarios</h1>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            {cancha.name}
+          </p>
+        </div>
+      </div>
+
+      {/* Comments List */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {loadingComments ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <Loader2 className="[TAILWIND_CLASSES_REMOVED]" size={24} />
+            <span className="[TAILWIND_CLASSES_REMOVED]">Cargando comentarios…</span>
+          </div>
+        ) : comments.length === 0 ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              💬
+            </div>
+            <div>
+              <p className="[TAILWIND_CLASSES_REMOVED]">Sin comentarios aún</p>
+              <p className="[TAILWIND_CLASSES_REMOVED]">
+                {canComment
+                  ? "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha."
+                  : "Nadie ha comentado en esta cancha todavía."}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {comments.map((c) => (
+              <div
+                key={c.id}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <div className="[TAILWIND_CLASSES_REMOVED]">
+                      JD
+                    </div>
+                    <div>
+                      <span className="[TAILWIND_CLASSES_REMOVED]">
+                        Jugador
+                        <span className="[TAILWIND_CLASSES_REMOVED]">
+                          <ShieldCheck size={9} /> Verificado
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <span className="[TAILWIND_CLASSES_REMOVED]">
+                    {formatTime(c.hora)}
+                  </span>
+                </div>
+                <p className="[TAILWIND_CLASSES_REMOVED]">
+                  {c.comentario}
+                </p>
+              </div>
+            ))}
+            <div ref={commentsEndRef} />
+          </div>
+        )}
+      </div>
+
+      {/* Footer / Writing Area */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {checkingPermission ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <Loader2 className="[TAILWIND_CLASSES_REMOVED]" size={14} />
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              Comprobando acceso…
+            </span>
+          </div>
+        ) : !user ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              Debes iniciar sesión para escribir un comentario.
+            </p>
+          </div>
+        ) : !canComment ? (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <AlertCircle size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+            <div className="space-y-1">
+              <h4 className="[TAILWIND_CLASSES_REMOVED]">Acceso restringido</h4>
+              <p className="[TAILWIND_CLASSES_REMOVED]">
+                Solo puedes comentar si has participado o estás participando en un evento en esta cancha. ¡Únete a un partido o crea uno aquí primero!
+              </p>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmitComment} className="space-y-3">
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…"
+                maxLength={300}
+                rows={2}
+                className="[TAILWIND_CLASSES_REMOVED]"
+                disabled={submitting}
+              />
+              <button
+                type="submit"
+                disabled={submitting || !newComment.trim()}
+                className="[TAILWIND_CLASSES_REMOVED]"
+                aria-label="Enviar"
+              >
+                {submitting ? (
+                  <Loader2 size={16} className="animate-spin" />
+                ) : (
+                  <Send size={16} />
+                )}
+              </button>
+            </div>
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                <CalendarCheck size={11} className="text-primary" />
+                Listo para comentar
+              </span>
+              <span>{newComment.length}/300</span>
+            </div>
+            {errorMessage && (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <AlertCircle size={13} /> {errorMessage}
+              </div>
+            )}
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\CanchaCommentsScreen.tsx
+================================================================================
+
+
+================================================================================
+// FILE 5 of 81
 // PATH: src\components\teammatch\CanchasScreen.tsx
-// SIZE: 16616 characters
+// SIZE: 16709 characters
 ================================================================================
 
 /**
@@ -558,7 +1000,7 @@ export interface Cancha {
 }
 
 // ── AddCanchaForm ─────────────────────────────────────────────────────────────
-function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () => void }) {
+export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: (cancha?: any) => void }) {
   const [name, setName] = useState("");
   const [sportId, setSportId] = useState<SportId | null>(null);
   const [description, setDescription] = useState("");
@@ -609,14 +1051,14 @@ function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () =>
 
     const location = `POINT(${parseFloat(longitude)} ${parseFloat(latitude)})`;
 
-    const { error } = await supabase.from("canchas").insert({
+    const { data: newCanchas, error } = await supabase.from("canchas").insert({
       name: name.trim(),
       sport_id: sportId,
       location,
       description: description.trim() || null,
       price: price ? parseFloat(price) : null,
       created_by: user?.email,
-    });
+    }).select();
 
     if (error) {
       console.error(error);
@@ -624,7 +1066,8 @@ function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () =>
       setStatus("error");
     } else {
       setStatus("success");
-      setTimeout(onSaved, 1200);
+      const newCancha = newCanchas?.[0];
+      setTimeout(() => onSaved(newCancha), 1200);
     }
   }
 
@@ -723,7 +1166,7 @@ function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved: () =>
             </div>
             <div className="[TAILWIND_CLASSES_REMOVED]">
               <Suspense fallback={<MapSkeleton />}>
-                <LeafletMap events={[]} onLocationSelect={handleMapClick} />
+                <LeafletMap onLocationSelect={handleMapClick} />
               </Suspense>
             </div>
             {latitude && longitude && (
@@ -943,9 +1386,9 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
 
 
 ================================================================================
-// FILE 4 of 76
+// FILE 6 of 81
 // PATH: src\components\teammatch\CreateEventForm.tsx
-// SIZE: 21365 characters
+// SIZE: 24516 characters
 ================================================================================
 
 /**
@@ -957,20 +1400,6 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
  * HOOKS: Uses React hooks for state and effects
  */
 
-const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
-
-function MapSkeleton() {
-  return (
-    <div className="[TAILWIND_CLASSES_REMOVED]">
-      <div className="[TAILWIND_CLASSES_REMOVED]">
-        <div className="[TAILWIND_CLASSES_REMOVED]" />
-        <span className="[TAILWIND_CLASSES_REMOVED]">Cargando mapa…</span>
-      </div>
-    </div>
-  );
-}
-
-// ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
   { id: 1, label: "Fútbol", emoji: "⚽" },
   { id: 2, label: "Tenis", emoji: "🎾" },
@@ -995,6 +1424,7 @@ const INTENSITY_STYLE: Record<Intensity, string> = {
 interface Props {
   onClose: () => void;
   onEventCreated: () => void;
+  initialCancha?: any;
 }
 
 // ─── Estado inicial del formulario ───────────────────────────────────────────
@@ -1007,56 +1437,122 @@ const INITIAL_FORM = {
   longitude: "",
   address: "",
   maxCapacity: "",
+  canchaId: "",
+  descriptionAfterArrival: "",
 };
 
 type FormState = typeof INITIAL_FORM;
 type FieldError = Partial<Record<keyof FormState, string>>;
 
+// Helper function to parse location coordinates (same robust parser as LeafletMap)
+function parseLocation(location: any): { lat: number; lng: number } | null {
+  if (!location) return null;
+  if (typeof location === "object") {
+    if (typeof location.lat === "number" && typeof location.lng === "number") {
+      return { lat: location.lat, lng: location.lng };
+    }
+    if (Array.isArray(location) && location.length >= 2) {
+      return { lat: location[0], lng: location[1] };
+    }
+    if (location.type === "Point" && Array.isArray(location.coordinates) && location.coordinates.length >= 2) {
+      return { lat: location.coordinates[1], lng: location.coordinates[0] };
+    }
+  }
+  if (typeof location === "string") {
+    if (location.toUpperCase().includes("POINT")) {
+      const cleaned = location.toUpperCase().replace("POINT", "").replace("(", "").replace(")", "").trim();
+      const coords = cleaned.split(/\s+/);
+      if (coords.length >= 2) {
+        let lng = parseFloat(coords[0]);
+        let lat = parseFloat(coords[1]);
+        if (lat < -20 && lng > 0) {
+          const temp = lat;
+          lat = lng;
+          lng = temp;
+        }
+        return { lat, lng };
+      }
+    } else if (/^[0-9A-Fa-f]+$/.test(location) && location.length >= 50) {
+      try {
+        const hex = location;
+        const buffer = new Uint8Array(hex.match(/../g)!.map((h: string) => parseInt(h, 16))).buffer;
+        const view = new DataView(buffer);
+        let lng = view.getFloat64(9, true);
+        let lat = view.getFloat64(17, true);
+        if (lat < -20 && lng > 0) {
+          const temp = lat;
+          lat = lng;
+          lng = temp;
+        }
+        return { lat, lng };
+      } catch (err) {
+        console.error("Error decodificando WKB Hex de PostGIS en CreateEventForm:", err);
+      }
+    }
+  }
+  return null;
+}
+
 // ─── Componente principal ────────────────────────────────────────────────────
-export function CreateEventForm({ onClose, onEventCreated }: Props) {
+export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Props) {
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
-  const [errors, setErrors] = useState<FieldError>({});
+  const [errors, setErrors] = useState<FieldError>( {});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [serverError, setServerError] = useState<string | null>(null);
+  const [showFloatXp, setShowFloatXp] = useState(false);
+  const { addXp } = useCurrentUser();
+  
+  const [canchas, setCanchas] = useState<any[]>([]);
+  const [loadingCanchas, setLoadingCanchas] = useState(true);
+  const [showAddCanchaForm, setShowAddCanchaForm] = useState(false);
   const [isOrganizer, setIsOrganizer] = useState(false);
-  const [selectedCancha, setSelectedCancha] = useState<Cancha | null>(null);
-  const [showCanchas, setShowCanchas] = useState(false);
+
+  // ── Cargar canchas al montar ───────────────────────────────────────────────
+  async function loadCanchas() {
+    setLoadingCanchas(true);
+    try {
+      const { data, error } = await supabase
+        .from("canchas")
+        .select("*")
+        .order("name", { ascending: true });
+      if (error) throw error;
+      if (data) setCanchas(data);
+    } catch (err) {
+      console.error("Error cargando canchas para el formulario:", err);
+    } finally {
+      setLoadingCanchas(false);
+    }
+  }
 
   useEffect(() => {
+    loadCanchas();
+
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) {
-        setIsOrganizer(data.user.user_metadata?.is_organizer === true);
+      if (data?.user) {
+        setIsOrganizer(!!data.user.user_metadata?.is_organizer);
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (initialCancha) {
+      const coords = parseLocation(initialCancha.location);
+      setForm((prev) => ({
+        ...prev,
+        sportId: initialCancha.sport_id ? (initialCancha.sport_id as SportId) : null,
+        canchaId: initialCancha.id ? initialCancha.id.toString() : "",
+        latitude: coords?.lat ? coords.lat.toString() : "",
+        longitude: coords?.lng ? coords.lng.toString() : "",
+        address: initialCancha.name || "",
+      }));
+    }
+  }, [initialCancha]);
 
   // ── Actualizar campo ──────────────────────────────────────────────────────
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
     // limpiar error individual al editar
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
-  }
-
-  // ── Manejar click en el mapa ──────────────────────────────────────────────
-  async function handleMapClick(lat: number, lng: number) {
-    setField("latitude", lat.toString());
-    setField("longitude", lng.toString());
-    setField("address", "Buscando dirección...");
-
-    try {
-      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-      const data = await res.json();
-      if (data && data.display_name) {
-        // Extraemos un nombre amigable: calle, barrio, o la primera parte del display_name
-        const name = data.address?.road || data.address?.suburb || data.display_name.split(',')[0];
-        setField("address", name);
-      } else {
-        setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-      }
-    } catch (e) {
-      console.error("Geocoding error:", e);
-      setField("address", `${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-    }
   }
 
   // ── Validación ────────────────────────────────────────────────────────────
@@ -1067,16 +1563,7 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     if (!form.intensity) newErrors.intensity = "Selecciona la intensidad";
     if (!form.date) newErrors.date = "La fecha es obligatoria";
     if (!form.time) newErrors.time = "La hora es obligatoria";
-    if (!form.latitude || !form.longitude) {
-      newErrors.latitude = "Ingresa latitud y longitud";
-    } else {
-      const lat = parseFloat(form.latitude);
-      const lng = parseFloat(form.longitude);
-      if (isNaN(lat) || lat < -90 || lat > 90)
-        newErrors.latitude = "Latitud inválida (-90 a 90)";
-      if (isNaN(lng) || lng < -180 || lng > 180)
-        newErrors.longitude = "Longitud inválida (-180 a 180)";
-    }
+    if (!form.canchaId) newErrors.canchaId = "Selecciona una cancha obligatoriamente";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -1093,7 +1580,7 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
       // Combinar fecha y hora en ISO 8601
       const eventDate = new Date(`${form.date}T${form.time}:00`).toISOString();
 
-      // Formatear ubicación como WKT POINT para PostGIS / columna text
+      // Formatear ubicación como WKT POINT para PostGIS
       const location = `POINT(${parseFloat(form.longitude)} ${parseFloat(form.latitude)})`;
 
       // Obtener usuario autenticado
@@ -1108,13 +1595,6 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         return;
       }
 
-
-      // ── Payload del insert (esquema real de la tabla events) ────────────
-      // Columnas: id, creator_username, sport_id, location (geography),
-      //           event_date, max_capacity, status (enum), intensity (enum),
-      //           description_after_arrival, created_at
-      // creator_username debe coincidir exactamente con el registro en la tabla profiles
-      // Usamos user.email como fuente de verdad (FK estricta)
       if (!user.email) {
         setServerError("No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
         setStatus("error");
@@ -1122,36 +1602,48 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
       }
 
       const payload = {
-        // creator_username: email exacto del usuario (Foreign Key → tabla profiles)
         creator_username: user.email,
-
-        // sport_id: entero — form.sportId ya viene del catálogo numérico (1-4)
         sport_id: form.sportId,
-
-        // location: geography Point — formato WKT aceptado por PostGIS/Supabase
         location,
-
-        // event_date: timestamp ISO 8601
         event_date: eventDate,
-
-        // max_capacity: entero opcional
         max_capacity: form.maxCapacity ? parseInt(form.maxCapacity, 10) : null,
-
-        // intensity: enum intensity_level — 'Principiante' | 'Intermedio' | 'Pro'
         intensity: form.intensity,
-
-        // status: enum event_status — 'abierto' | 'lleno' | 'cancelado' | 'finalizado'
         status: "abierto",
+        joined: 1,
+        description_after_arrival: form.descriptionAfterArrival || null,
       };
 
-      // 🔍 Debug: verificar el payload exacto antes de enviarlo a Supabase
-      console.log("Payload a enviar:", payload);
+      console.log("Payload de evento a enviar:", payload);
 
-      const { error: insertError } = await supabase.from("events").insert(payload);
+      const { data: newEvents, error: insertError } = await supabase
+        .from("events")
+        .insert(payload)
+        .select();
 
       if (insertError) throw insertError;
 
+      const newEvent = newEvents?.[0];
+      if (newEvent) {
+        // Automatically join the creator to the event
+        const { error: joinError } = await supabase
+          .from("event_participants")
+          .insert({
+            event_id: newEvent.id,
+            user_username: user.email,
+            status: "aceptado"
+          });
+        if (joinError) {
+          console.error("Error adding creator as participant:", joinError);
+        }
+      }
+
       setStatus("success");
+      setShowFloatXp(true);
+      const sportLabel = SPORTS.find((s) => s.id === form.sportId)?.label || "Deporte";
+      addXp(25, `Organizar partido de ${sportLabel} en ${form.address || "Caracas"} ⚽`);
+      setTimeout(() => {
+        setShowFloatXp(false);
+      }, 1200);
 
       // Limpiar formulario tras éxito
       setTimeout(() => {
@@ -1161,24 +1653,38 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
         onClose();
       }, 1500);
     } catch (err: unknown) {
-      // Loggear el error completo de Supabase (PostgrestError) para diagnóstico
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err as { message: string; details?: string; hint?: string; code?: string };
-        console.error("❌ Supabase insert error:", {
-          message: pgErr.message,
-          details: pgErr.details,
-          hint: pgErr.hint,
-          code: pgErr.code,
-        });
-        setServerError(
-          `Error al crear el evento: ${pgErr.message}${pgErr.hint ? ` — ${pgErr.hint}` : ""}`,
-        );
+        console.error("❌ Supabase insert error:", pgErr);
+        setServerError(`Error al crear el evento: ${pgErr.message}`);
       } else {
         console.error("❌ Error inesperado:", err);
-        setServerError("Error inesperado al crear el evento. Revisa la consola para más detalles.");
+        setServerError("Error inesperado al crear el evento.");
       }
       setStatus("error");
     }
+  }
+
+  // ─── Render ───────────────────────────────────────────────────────────────
+  if (showAddCanchaForm) {
+    return (
+      <AddCanchaForm
+        onBack={() => setShowAddCanchaForm(false)}
+        onSaved={async (newCancha) => {
+          setShowAddCanchaForm(false);
+          await loadCanchas();
+          if (newCancha) {
+            setField("canchaId", newCancha.id.toString());
+            const coords = parseLocation(newCancha.location);
+            if (coords) {
+              setField("latitude", coords.lat.toString());
+              setField("longitude", coords.lng.toString());
+              setField("address", newCancha.name);
+            }
+          }
+        }}
+      />
+    );
   }
 
   if (status === "success") {
@@ -1197,22 +1703,8 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
     );
   }
 
-  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
-      {/* ── Panel de canchas (overlay) ── */}
-      {showCanchas && (
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          <CanchasScreen
-            isOrganizer={isOrganizer}
-            onBack={() => setShowCanchas(false)}
-            onSelect={(cancha) => {
-              setSelectedCancha(cancha);
-              setShowCanchas(false);
-            }}
-          />
-        </div>
-      )}
       {/* ── Header ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <button
@@ -1322,69 +1814,83 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
           </FormSection>
         </div>
 
-        {/* Ubicación */}
+        {/* Selección de Cancha */}
         <FormSection
-          title="Ubicación"
+          title="Instalación / Cancha"
           icon={<MapPin size={13} />}
-          error={errors.latitude || errors.longitude}
+          error={errors.canchaId}
           required
         >
-          <div className="[TAILWIND_CLASSES_REMOVED]">
+          {loadingCanchas ? (
             <div className="[TAILWIND_CLASSES_REMOVED]">
-              <MapPin size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+              <Loader2 size={16} className="[TAILWIND_CLASSES_REMOVED]" />
               <span className="[TAILWIND_CLASSES_REMOVED]">
-                {form.address || "Toca el mapa para elegir el lugar"}
+                Cargando canchas disponibles...
               </span>
             </div>
-            
-            {/* Mapa Leaflet interactivo */}
+          ) : canchas.length === 0 ? (
             <div className="[TAILWIND_CLASSES_REMOVED]">
-              <Suspense fallback={<MapSkeleton />}>
-                <LeafletMap 
-                  events={[]} 
-                  onLocationSelect={handleMapClick}
-                />
-              </Suspense>
+              <p className="[TAILWIND_CLASSES_REMOVED]">No hay canchas registradas en la app.</p>
+              <p className="[TAILWIND_CLASSES_REMOVED]">Registra primero una cancha en la sección de Canchas.</p>
+              {isOrganizer && (
+                <button
+                  type="button"
+                  onClick={() => setShowAddCanchaForm(true)}
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                >
+                  + Crear nueva cancha
+                </button>
+              )}
             </div>
-
-            {(form.latitude || form.longitude) && !errors.latitude && !errors.longitude && (
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                <CheckCircle2 size={12} className="text-emerald-600" />
-                <span className="[TAILWIND_CLASSES_REMOVED]">
-                  Guardará como: POINT({parseFloat(form.longitude).toFixed(4)} {parseFloat(form.latitude).toFixed(4)})
-                </span>
+          ) : (
+            <div className="space-y-2">
+              <div className="relative">
+                <select
+                  id="cancha-select"
+                  value={form.canchaId}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setField("canchaId", val);
+                    const selectedCancha = canchas.find((c) => c.id.toString() === val);
+                    if (selectedCancha) {
+                      const coords = parseLocation(selectedCancha.location);
+                      if (coords) {
+                        setField("latitude", coords.lat.toString());
+                        setField("longitude", coords.lng.toString());
+                        setField("address", selectedCancha.name);
+                      }
+                    } else {
+                      setField("latitude", "");
+                      setField("longitude", "");
+                      setField("address", "");
+                    }
+                  }}
+                  className={`w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft ${
+                    errors.canchaId ? "border-destructive" : "border-border"
+                  }`}
+                >
+                  <option value="">-- Selecciona una cancha --</option>
+                  {canchas.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} {c.price ? `(Bs. ${c.price}/h)` : ""}
+                    </option>
+                  ))}
+                </select>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <MapPin size={16} />
+                </div>
               </div>
-            )}
-          </div>
-        </FormSection>
-
-        {/* Cancha (opcional) */}
-        <FormSection title="Cancha" icon={<Trophy size={13} />}>
-          <button
-            id="select-cancha-btn"
-            type="button"
-            onClick={() => setShowCanchas(true)}
-            className={`w-full flex items-center gap-3 rounded-2xl border px-4 py-3.5 text-sm font-semibold transition-all active:scale-[0.97] ${
-              selectedCancha
-                ? "border-primary/40 bg-primary/5 text-secondary"
-                : "border-border bg-card text-muted-foreground hover:border-primary/40"
-            }`}
-          >
-            <Trophy size={16} className="[TAILWIND_CLASSES_REMOVED]" />
-            <span className="[TAILWIND_CLASSES_REMOVED]">
-              {selectedCancha ? selectedCancha.name : "Seleccionar cancha (opcional)"}
-            </span>
-            {selectedCancha && (
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setSelectedCancha(null); }}
-                className="[TAILWIND_CLASSES_REMOVED]"
-              >
-                ✕
-              </button>
-            )}
-            <ChevronRight size={16} className="[TAILWIND_CLASSES_REMOVED]" />
-          </button>
+              {isOrganizer && (
+                <button
+                  type="button"
+                  onClick={() => setShowAddCanchaForm(true)}
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                >
+                  + Crear nueva cancha
+                </button>
+              )}
+            </div>
+          )}
         </FormSection>
 
         {/* Capacidad máxima (opcional) */}
@@ -1407,6 +1913,27 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
           </div>
         </FormSection>
 
+        {/* Descripción (opcional, máx 150 caracteres) */}
+        <FormSection
+          title="Descripción"
+          icon={<FileText size={13} />}
+        >
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <textarea
+              id="event-description-input"
+              maxLength={150}
+              rows={3}
+              placeholder="Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)"
+              value={form.descriptionAfterArrival}
+              onChange={(e) => setField("descriptionAfterArrival", e.target.value)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            />
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              {form.descriptionAfterArrival.length}/150
+            </div>
+          </div>
+        </FormSection>
+
         {/* Error del servidor */}
         {status === "error" && serverError && (
           <div className="[TAILWIND_CLASSES_REMOVED]">
@@ -1418,6 +1945,11 @@ export function CreateEventForm({ onClose, onEventCreated }: Props) {
 
       {/* ── Footer con botón de acción ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
+        {showFloatXp && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            +25 XP ⚡
+          </div>
+        )}
         {/* Resumen rápido */}
         {form.sportId && form.intensity && (
           <div className="[TAILWIND_CLASSES_REMOVED]">
@@ -1507,9 +2039,9 @@ function FormSection({
 
 
 ================================================================================
-// FILE 5 of 76
+// FILE 7 of 81
 // PATH: src\components\teammatch\EditProfileScreen.tsx
-// SIZE: 7077 characters
+// SIZE: 8470 characters
 ================================================================================
 
 /**
@@ -1526,28 +2058,41 @@ interface Props {
 }
 
 export function EditProfileScreen({ onBack }: Props) {
+  const { user: currentUser, updateProfile } = useCurrentUser();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isOrganizer, setIsOrganizer] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        setUser(user);
-        setName(user.user_metadata?.full_name || user.email?.split('@')[0] || "");
-        setEmail(user.email || "");
-        setAvatarUrl(user.user_metadata?.avatar_url || null);
-      }
+    if (currentUser) {
+      setUser(currentUser);
+      setName(currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || "");
+      setEmail(currentUser.email || "");
+      setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
+      setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
       setLoading(false);
-    });
-  }, []);
+    } else {
+      // Fallback in case context hasn't loaded yet
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user) {
+          setUser(user);
+          setName(user.user_metadata?.full_name || user.email?.split('@')[0] || "");
+          setEmail(user.email || "");
+          setAvatarUrl(user.user_metadata?.avatar_url || null);
+          setIsOrganizer(!!user.user_metadata?.is_organizer);
+        }
+        setLoading(false);
+      });
+    }
+  }, [currentUser]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -1588,14 +2133,12 @@ export function EditProfileScreen({ onBack }: Props) {
     setSuccess("");
 
     try {
-      // Update metadata (name and avatar)
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: { full_name: name, avatar_url: avatarUrl },
-        // If email is different, we also update it, but it sends a confirmation email.
-        ...(email !== user.email && { email })
+      await updateProfile({
+        name,
+        avatarUrl,
+        isOrganizer,
+        email: email !== user?.email ? email : undefined
       });
-
-      if (updateError) throw updateError;
       
       setSuccess("Perfil actualizado correctamente");
       setTimeout(() => {
@@ -1690,6 +2233,25 @@ export function EditProfileScreen({ onBack }: Props) {
               Al cambiar el correo electrónico, se enviará un mensaje de confirmación.
             </p>
           </div>
+
+          <div className="pt-2">
+            <label className="[TAILWIND_CLASSES_REMOVED]">
+              <input
+                type="checkbox"
+                checked={isOrganizer}
+                onChange={(e) => setIsOrganizer(e.target.checked)}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              />
+              <div className="text-left">
+                <span className="[TAILWIND_CLASSES_REMOVED]">
+                  Modo Organizador
+                </span>
+                <span className="[TAILWIND_CLASSES_REMOVED]">
+                  Te permite registrar y gestionar tus propias instalaciones y canchas
+                </span>
+              </div>
+            </label>
+          </div>
         </div>
 
         <button
@@ -1718,9 +2280,9 @@ export function EditProfileScreen({ onBack }: Props) {
 
 
 ================================================================================
-// FILE 6 of 76
+// FILE 8 of 81
 // PATH: src\components\teammatch\EventCard.tsx
-// SIZE: 5270 characters
+// SIZE: 6066 characters
 ================================================================================
 
 /**
@@ -1743,44 +2305,71 @@ export function EventCard({
 }) {
   const [joining, setJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const pct = (event.joined / event.spots) * 100;
   const isFull = event.joined >= event.spots;
 
+  useEffect(() => {
+    let channel: any;
+
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user && user.email) {
+        setCurrentUser(user);
+        const fetchStatus = async () => {
+          const { data } = await supabase
+            .from("event_participants")
+            .select("status")
+            .eq("event_id", event.id)
+            .eq("user_username", user.email)
+            .maybeSingle();
+          if (data) {
+            setStatus(data.status);
+          } else {
+            setStatus(null);
+          }
+        };
+
+        fetchStatus();
+
+        channel = supabase
+          .channel(`participant_status_${event.id}_${user.id}`)
+          .on(
+            "postgres_changes",
+            {
+              event: "*",
+              schema: "public",
+              table: "event_participants",
+              filter: `event_id=eq.${event.id}`,
+            },
+            (payload: any) => {
+              if (payload.new && payload.new.user_username === user.email) {
+                setStatus(payload.new.status);
+              } else if (payload.eventType === "DELETE" && payload.old && payload.old.user_username === user.email) {
+                setStatus(null);
+              } else {
+                fetchStatus();
+              }
+            }
+          )
+          .subscribe();
+      }
+    });
+
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
+  }, [event.id]);
+
+  const isHost = currentUser && (event.host === currentUser.email || (event as any).creator_username === currentUser.email);
+  const isAccepted = status === "aceptado" || status === "approved" || status === "aprobado" || isHost;
+  const isPending = status === "pendiente" || status === "pending";
+
   async function handleJoin(e: React.MouseEvent) {
-    e.stopPropagation(); // Evitar click en la card
-    
-    if (isFull || hasJoined) return;
-
-    // Obtener sesión actual (opcional pero buena práctica)
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      toast.error("Inicia sesión", { description: "Debes iniciar sesión para unirte." });
-      return;
-    }
-
-    setJoining(true);
-
-    try {
-      const { error } = await supabase
-        .from("events")
-        .update({ joined: event.joined + 1 })
-        .eq("id", event.id);
-
-      if (error) throw error;
-
-      setHasJoined(true);
-      toast.success("¡Estás dentro!", {
-        description: "Te has unido al evento exitosamente.",
-        icon: "🎉",
-      });
-    } catch (err: any) {
-      console.error("Error al unirse:", err);
-      toast.error("Error al unirse", {
-        description: err.message || "No pudimos procesar tu solicitud.",
-      });
-    } finally {
-      setJoining(false);
-    }
+    e.stopPropagation(); // Evitar click redundante en la card
+    if (onClick) onClick();
   }
   return (
     <button
@@ -1823,7 +2412,7 @@ export function EventCard({
         </div>
 
         {variant === "full" && (
-          <>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
             <div className="[TAILWIND_CLASSES_REMOVED]">
               <div className="[TAILWIND_CLASSES_REMOVED]">
                 <div
@@ -1838,32 +2427,21 @@ export function EventCard({
 
             <button
               onClick={handleJoin}
-              disabled={isFull || hasJoined || joining}
-              className={`mt-2 w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 ${
-                hasJoined
-                  ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
-                  : isFull
-                    ? "bg-muted text-muted-foreground cursor-not-allowed"
-                    : joining
-                      ? "bg-secondary text-primary-foreground opacity-70 cursor-wait"
-                      : "bg-secondary text-primary-foreground shadow-pop hover:bg-secondary/90"
+              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${
+                isAccepted
+                  ? "bg-primary text-secondary hover:bg-primary/90"
+                  : isPending
+                    ? "bg-amber-500/20 text-amber-500 border border-amber-500/30 hover:bg-amber-500/30"
+                    : "bg-secondary text-primary-foreground hover:bg-secondary/90"
               }`}
             >
-              {joining ? (
-                <>
-                  <Loader2 size={14} className="animate-spin" /> Cargando...
-                </>
-              ) : hasJoined ? (
-                <>
-                  <CheckCircle2 size={14} /> ¡Estás dentro!
-                </>
-              ) : isFull ? (
-                "Evento lleno"
-              ) : (
-                "Unirse al evento"
-              )}
+              {isAccepted
+                ? "Ver evento"
+                : isPending
+                  ? "Esperando solicitud"
+                  : "Unirse al evento"}
             </button>
-          </>
+          </div>
         )}
       </div>
     </button>
@@ -1877,9 +2455,9 @@ export function EventCard({
 
 
 ================================================================================
-// FILE 7 of 76
+// FILE 9 of 81
 // PATH: src\components\teammatch\EventDetailScreen.tsx
-// SIZE: 12375 characters
+// SIZE: 19896 characters
 ================================================================================
 
 /**
@@ -1891,17 +2469,51 @@ export function EventCard({
  * HOOKS: Uses React hooks for state and effects
  */
 
-export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack: () => void }) {
+export function EventDetailScreen({
+  event,
+  onBack,
+  userLocation,
+}: {
+  event: SportEvent;
+  onBack: () => void;
+  userLocation?: { lat: number; lng: number } | null;
+}) {
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [joining, setJoining] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFloatXp, setShowFloatXp] = useState(false);
+  const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
+  const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
+
+  const [hostProfile, setHostProfile] = useState<any>(null);
+
+  const renderAvatar = (username: string, sizeClass = "h-10 w-10", explicitAvatarUrl?: string | null) => {
+    const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
+    const url = isCurrentUser ? (currentUserAvatar || explicitAvatarUrl) : explicitAvatarUrl;
+    if (url) {
+      return (
+        <img 
+          src={url} 
+          alt={username}
+          className={`${sizeClass} rounded-full object-cover shadow-soft ring-2 ring-primary/30`} 
+        />
+      );
+    }
+    return (
+      <div className={`${sizeClass} grid place-items-center rounded-full gradient-primary text-sm font-bold text-secondary shadow-soft ring-2 ring-primary/30`}>
+        {(username || "U").substring(0, 2).toUpperCase()}
+      </div>
+    );
+  };
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
     fetchParticipants();
-    
+    fetchHostProfile();
+
     // Suscripción a cambios en tiempo real
     const channel = supabase
       .channel(`participants_${event.id}`)
@@ -1915,14 +2527,29 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
     return () => { supabase.removeChannel(channel); };
   }, [event.id]);
 
+  async function fetchHostProfile() {
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("avatar_url, rating")
+        .eq("username", event.host)
+        .maybeSingle();
+      if (data) {
+        setHostProfile(data);
+      }
+    } catch (e) {
+      console.error("Error fetching host profile:", e);
+    }
+  }
+
   async function fetchParticipants() {
     setLoading(true);
     // Asumimos que la tabla event_participants tiene una columna 'status' (pending, approved, rejected)
     const { data, error } = await supabase
       .from("event_participants")
-      .select("*, profiles(username, rating)")
+      .select("*, profiles(username, rating, avatar_url)")
       .eq("event_id", event.id);
-    
+
     if (!error && data) {
       setParticipants(data);
     }
@@ -1932,7 +2559,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
   async function handleJoin() {
     if (!currentUser || !currentUser.email) return alert("Debes iniciar sesión");
     setJoining(true);
-    
+
     // Insertamos solicitud con status 'pending'
     const { error } = await supabase.from("event_participants").insert({
       event_id: event.id,
@@ -1945,19 +2572,30 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
       if (error.code === '23505') alert("Ya enviaste una solicitud");
       else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
     } else {
-      alert("Solicitud enviada al organizador");
+      setShowSuccess(true);
+      if (selectedCouponCode) {
+        await claimCoupon(selectedCouponCode);
+      }
       fetchParticipants();
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
     }
     setJoining(false);
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
+    if (!currentUser?.email || (currentUser.email !== event.host && currentUser.email !== (event as any).hostName)) {
+      alert("Solo el creador del evento puede aceptar o rechazar solicitudes.");
+      return;
+    }
+
     setActionLoading(participantId.toString());
     const { error } = await supabase
       .from("event_participants")
       .update({ status })
       .eq("id", participantId);
-    
+
     if (!error) {
       // Simular la notificación al usuario
       alert(`Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
@@ -1972,8 +2610,47 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
   const pendingRequests = participants.filter(p => p.status === "pending" || p.status === "pendiente");
   const emptySpots = Math.max(0, event.spots - approvedPlayers.length);
 
+  const activeCoupons = coupons.filter((c: any) => !c.claimed);
+  let finalPrice = event.price;
+  let appliedDiscountText = "";
+  if (selectedCouponCode) {
+    const coupon = coupons.find((c: any) => c.code === selectedCouponCode);
+    if (coupon) {
+      if (coupon.code === "FIDELIDAD5") {
+        finalPrice = Math.max(0, event.price - 5);
+        appliedDiscountText = "-$5 USD";
+      } else if (coupon.code === "ASPIRANTE2") {
+        finalPrice = Math.max(0, event.price * 0.9);
+        appliedDiscountText = "-10%";
+      } else if (coupon.code === "GUERRERO3") {
+        finalPrice = Math.max(0, event.price * 0.85);
+        appliedDiscountText = "-15%";
+      } else if (coupon.code === "LEYENDA5") {
+        finalPrice = 0;
+        appliedDiscountText = "-100%";
+      }
+    }
+  }
+
+  const isHost = currentUser && (event.host === currentUser.email || (event as any).hostName === currentUser.email);
   const isUserPending = participants.some(p => p.user_username === currentUser?.email && (p.status === "pending" || p.status === "pendiente"));
-  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status));
+  const isUserApproved = participants.some(p => p.user_username === currentUser?.email && (p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status)) || isHost;
+
+  if (showSuccess) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <CheckCircle2 size={48} strokeWidth={2.5} />
+        </div>
+        <div className="space-y-2">
+          <h2 className="[TAILWIND_CLASSES_REMOVED]">¡Solicitud enviada!</h2>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            Tu solicitud para unirte al partido de {event.sport} ha sido enviada con éxito.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
@@ -2008,9 +2685,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
       <div className="[TAILWIND_CLASSES_REMOVED]">
         {/* Host */}
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            {event.hostAvatar}
-          </div>
+          {renderAvatar(event.host, "h-11 w-11", hostProfile?.avatar_url)}
           <div className="flex-1">
             <div className="[TAILWIND_CLASSES_REMOVED]">Organizador</div>
             <div className="[TAILWIND_CLASSES_REMOVED]">{event.host}</div>
@@ -2024,21 +2699,54 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
         <div className="[TAILWIND_CLASSES_REMOVED]">
           <InfoTile icon={Calendar} label="Fecha" value={event.date} />
           <InfoTile icon={Clock} label="Hora" value={event.time} />
-          <InfoTile icon={MapPin} label="Lugar" value={event.location} />
+          <InfoTile 
+            icon={MapPin} 
+            label="Lugar" 
+            value={event.location} 
+            onClick={() => {
+              const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
+              const destination = `${event.lat},${event.lng}`;
+              const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+              window.open(url, '_blank');
+            }}
+          />
           <InfoTile icon={Users} label="Cupos" value={`${approvedPlayers.length}/${event.spots}`} />
         </div>
+
+        {/* Botón de Google Maps */}
+        <button
+          onClick={() => {
+            const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
+            const destination = `${event.lat},${event.lng}`;
+            const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+            window.open(url, '_blank');
+          }}
+          className="[TAILWIND_CLASSES_REMOVED]"
+        >
+          <MapPin size={16} className="text-primary" />
+          <span>Cómo llegar con Google Maps</span>
+          {userLocation ? (
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              En tiempo real
+            </span>
+          ) : (
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              Desde tu ubicación
+            </span>
+          )}
+        </button>
 
         {/* Description */}
         <div>
           <h3 className="[TAILWIND_CLASSES_REMOVED]">Descripción</h3>
           <p className="[TAILWIND_CLASSES_REMOVED]">
-            Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores
-            con experiencia, ambiente respetuoso y competitivo.
+            {event.description_after_arrival || 
+              "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo."}
           </p>
         </div>
 
-        {/* Pending Requests (Mocked as Organizer) */}
-        {pendingRequests.length > 0 && (
+        {/* Pending Requests */}
+        {pendingRequests.length > 0 && currentUser?.email && (currentUser.email === event.host || currentUser.email === (event as any).hostName) && (
           <div>
             <h3 className="[TAILWIND_CLASSES_REMOVED]">
               <span className="[TAILWIND_CLASSES_REMOVED]">
@@ -2050,9 +2758,7 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
               {pendingRequests.map(req => (
                 <div key={req.id} className="[TAILWIND_CLASSES_REMOVED]">
                   <div className="[TAILWIND_CLASSES_REMOVED]">
-                    <div className="[TAILWIND_CLASSES_REMOVED]">
-                      {(req.user_username || "U").substring(0, 2).toUpperCase()}
-                    </div>
+                    {renderAvatar(req.user_username || "Usuario", "h-10 w-10", req.profiles?.avatar_url)}
                     <div>
                       <div className="[TAILWIND_CLASSES_REMOVED]">
                         {req.user_username?.split('@')[0] || "Usuario"}
@@ -2064,15 +2770,14 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
                     </div>
                   </div>
                   <div className="[TAILWIND_CLASSES_REMOVED]">
-                    <button 
+                    <button
                       disabled={actionLoading === req.id.toString()}
-                      onClick={() => handleAction(req.id, "rejected")}
                       onClick={() => handleAction(req.id, "rechazado")}
                       className="[TAILWIND_CLASSES_REMOVED]"
                     >
                       <X size={16} strokeWidth={2.5} />
                     </button>
-                    <button 
+                    <button
                       disabled={actionLoading === req.id.toString()}
                       onClick={() => handleAction(req.id, "aceptado")}
                       className="[TAILWIND_CLASSES_REMOVED]"
@@ -2098,12 +2803,8 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
             ) : (
               <>
                 {approvedPlayers.map((p, i) => (
-                  <div
-                    key={p.id || i}
-                    title={p.user_username}
-                    className="[TAILWIND_CLASSES_REMOVED]"
-                  >
-                    {(p.user_username || "U").substring(0, 2).toUpperCase()}
+                  <div key={p.id || i} title={p.user_username}>
+                    {renderAvatar(p.user_username || "Usuario", "h-10 w-10", p.profiles?.avatar_url)}
                   </div>
                 ))}
                 {Array.from({ length: emptySpots }).map((_, i) => (
@@ -2122,19 +2823,65 @@ export function EventDetailScreen({ event, onBack }: { event: SportEvent; onBack
 
       {/* Sticky CTA */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
+        {showFloatXp && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            +15 XP ⚡
+          </div>
+        )}
+        
+        {/* Selector de cupones si el evento es de pago */}
+        {event.price > 0 && activeCoupons.length > 0 && (
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              📜 Aplicar Cupón RPG:
+            </span>
+            <select
+              value={selectedCouponCode}
+              onChange={(e) => setSelectedCouponCode(e.target.value)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            >
+              <option value="">-- Sin cupón --</option>
+              {activeCoupons.map((c: any) => (
+                <option key={c.code} value={c.code}>
+                  {c.title} ({c.discount})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="[TAILWIND_CLASSES_REMOVED]">
           <div>
-            <div className="[TAILWIND_CLASSES_REMOVED]">Aporte</div>
             <div className="[TAILWIND_CLASSES_REMOVED]">
-              {event.price === 0 ? "Gratis" : `$${event.price} USD`}
+              Aporte {selectedCouponCode && <span className="[TAILWIND_CLASSES_REMOVED]">{appliedDiscountText}</span>}
+            </div>
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              {finalPrice === 0 ? "Gratis" : `$${finalPrice.toFixed(2)} USD`}
+              {selectedCouponCode && <span className="[TAILWIND_CLASSES_REMOVED]">${event.price}</span>}
             </div>
           </div>
-          <button 
+          <button
             disabled={joining || emptySpots === 0 || isUserPending || isUserApproved}
             onClick={handleJoin}
-            className="[TAILWIND_CLASSES_REMOVED]"
+            className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 ${
+              isUserApproved
+                ? "bg-primary text-secondary"
+                : isUserPending
+                  ? "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                  : emptySpots === 0
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : "gradient-primary text-secondary"
+            }`}
           >
-            {joining ? "Enviando..." : isUserApproved ? "Ya estás dentro" : isUserPending ? "Solicitud enviada" : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"}
+            {joining 
+              ? "Enviando..." 
+              : isUserApproved 
+                ? "Ya estás dentro" 
+                : isUserPending 
+                  ? "Esperando solicitud" 
+                  : emptySpots === 0 
+                    ? "Evento Lleno" 
+                    : "Solicitar unirme"}
           </button>
         </div>
       </div>
@@ -2146,15 +2893,29 @@ function InfoTile({
   icon: Icon,
   label,
   value,
+  onClick,
 }: {
   icon: typeof MapPin;
   label: string;
   value: string;
+  onClick?: () => void;
 }) {
   return (
-    <div className="[TAILWIND_CLASSES_REMOVED]">
+    <div 
+      onClick={onClick}
+      className={`rounded-2xl bg-card p-3 shadow-soft transition-all ${
+        onClick ? "cursor-pointer hover:border-primary/20 active:scale-95 border border-transparent hover:bg-card/90" : ""
+      }`}
+    >
       <div className="[TAILWIND_CLASSES_REMOVED]">
-        <Icon size={15} className="text-primary" />
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <Icon size={15} className="text-primary" />
+        </div>
+        {onClick && (
+          <span className="[TAILWIND_CLASSES_REMOVED]">
+            Ver Ruta
+          </span>
+        )}
       </div>
       <div className="[TAILWIND_CLASSES_REMOVED]">{label}</div>
       <div className="[TAILWIND_CLASSES_REMOVED]">{value}</div>
@@ -2169,9 +2930,9 @@ function InfoTile({
 
 
 ================================================================================
-// FILE 8 of 76
+// FILE 10 of 81
 // PATH: src\components\teammatch\LeafletMap.tsx
-// SIZE: 4912 characters
+// SIZE: 4873 characters
 ================================================================================
 
 /**
@@ -2180,91 +2941,46 @@ function InfoTile({
  * 
  * PURPOSE: This file is located in teammatch directory.
  * EXPORTS: This file exports module(s) for use in other parts of the application.
- * TYPE: React component file
- * HOOKS: Uses React hooks for state and effects
  */
 
-function MapFlyTo({ lat, lng }: { lat: number; lng: number }) {
+interface LeafletMapProps {
+  canchas?: any[];
+  onCanchaClick?: (cancha: any) => void;
+  onLocationSelect?: (lat: number, lng: number) => void;
+  userLocation?: { lat: number; lng: number } | null;
+}
+
+// ── Componente que vuela el mapa a la ubicación del usuario ──────────────────
+function FlyToUser({ location }: { location: { lat: number; lng: number } | null }) {
   const map = useMap();
-  useEffect(() => {
-    if (typeof lat === "number" && typeof lng === "number" && !isNaN(lat) && !isNaN(lng)) {
-      map.flyTo([lat, lng], 15, { animate: true, duration: 0.8 });
-    }
-  }, [lat, lng, map]);
+  if (location) {
+    map.flyTo([location.lat, location.lng], 16, { duration: 1.5 });
+  }
   return null;
 }
 
-// ── Marcador temporal para selección de ubicación ──────────────────────────────
-function LocationMarker({ onSelect }: { onSelect: (lat: number, lng: number) => void }) {
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
-
-  useMapEvents({
-    click(e) {
-      setPosition(e.latlng);
-      if (onSelect) onSelect(e.latlng.lat, e.latlng.lng);
-    },
-  });
-
-  if (!position) return null;
-  // Bloqueo estricto de SSR para Leaflet globals
-  if (typeof window === "undefined" || !(window as any).L) return null;
-
-  const html = renderToStaticMarkup(
-    <div className="[TAILWIND_CLASSES_REMOVED]">
-      <span className="text-lg">📍</span>
-      <div className="[TAILWIND_CLASSES_REMOVED]" />
-    </div>
-  );
-
-  const L = (window as any).L;
-  const redIcon = L.divIcon({
-    className: "custom-leaflet-icon bg-transparent border-none",
-    html,
-    iconSize: [44, 44],
-    iconAnchor: [22, 44],
-  });
-
-  return (
-    <Marker position={position} icon={redIcon}>
-      <Popup>Ubicación seleccionada</Popup>
-    </Marker>
-  );
-}
-
-// ── Componente exportado: el mapa Leaflet real ────────────────────────────────
-export default function LeafletMap({ events = [], selectedId, onSelect, onLocationSelect }: any) {
-  // BLOQUEO ABSOLUTO DE SSR
+// ── Componente principal exportado ────────────────────────────────────────────
+export default function LeafletMap({
+  canchas = [],
+  onCanchaClick,
+  onLocationSelect,
+  userLocation,
+}: LeafletMapProps) {
+  // BLOQUEO ABSOLUTO DE SSR — Leaflet necesita window
   if (typeof window === "undefined") return null;
 
-  const selected = events.length > 0 ? (events.find((e: any) => e.id === selectedId) ?? events[0]) : null;
-
-  // buildIcon se mueve dentro para asegurar que no se evalúa al cargar el módulo
-  function buildIcon(event: any, isSelected: boolean) {
-    if (typeof window === "undefined" || !(window as any).L) return null;
-
-    const emoji =
-      event.sport === "Running"
-        ? "🏃"
-        : event.sport === "Senderismo"
-          ? "🥾"
-          : event.sport === "Pádel"
-            ? "🎾"
-            : "🏐";
+  // ── Construir ícono "Pin Verde" para cada cancha ───────────────────────────
+  function buildCanchaIcon(isActive = false) {
+    if (!(window as any).L) return null;
 
     const html = renderToStaticMarkup(
       <div
-        className={`relative grid h-11 w-11 place-items-center rounded-full ring-4 transition-all ${
-          isSelected
-            ? "gradient-primary scale-110 ring-background shadow-pop"
-            : "bg-secondary ring-card/80"
+        className={`relative grid h-11 w-11 place-items-center rounded-full text-white shadow-pop ring-4 ring-background transition-all ${
+          isActive ? "bg-emerald-600 scale-125" : "bg-emerald-500"
         }`}
       >
-        <span className="text-lg">{emoji}</span>
-        <div
-          className={`absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 ${
-            isSelected ? "bg-primary" : "bg-secondary"
-          }`}
-        />
+        <MapPin size={20} />
+        <div className="[TAILWIND_CLASSES_REMOVED]" />
       </div>
     );
 
@@ -2277,9 +2993,38 @@ export default function LeafletMap({ events = [], selectedId, onSelect, onLocati
     });
   }
 
+  // ── Construir ícono "Pin Azul" para la ubicación del usuario ───────────────
+  function buildUserIcon() {
+    if (!(window as any).L) return null;
+
+    const html = renderToStaticMarkup(
+      <div className="user-location-pin">
+        {/* Anillo pulsante exterior */}
+        <div className="user-pulse-ring" />
+        {/* Pin principal */}
+        <div className="user-pin-body">
+          <Navigation size={18} style={{[INLINE_STYLES_REMOVED]}} />
+        </div>
+        {/* Punta inferior del pin */}
+        <div className="user-pin-tip" />
+      </div>
+    );
+
+    const L = (window as any).L;
+    return L.divIcon({
+      className: "custom-leaflet-icon bg-transparent border-none",
+      html,
+      iconSize: [52, 52],
+      iconAnchor: [26, 52],
+    });
+  }
+
+  const canchaIcon = buildCanchaIcon();
+  const userIcon = buildUserIcon();
+
   return (
     <MapContainer
-      center={[10.49, -66.87]}
+      center={[10.4806, -66.8551]}
       zoom={13}
       style={{[INLINE_STYLES_REMOVED]}}
       zoomControl={false}
@@ -2289,38 +3034,60 @@ export default function LeafletMap({ events = [], selectedId, onSelect, onLocati
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* Marcador de selección de ubicación */}
-      {onLocationSelect && <LocationMarker onSelect={onLocationSelect} />}
+      <MapClickHandler onLocationSelect={onLocationSelect} />
 
-      {/* Vuela suavemente al marcador seleccionado */}
-      {selected && <MapFlyTo lat={selected.lat} lng={selected.lng} />}
+      {/* Volar al usuario cuando se active su ubicación */}
+      {userLocation && <FlyToUser location={userLocation} />}
 
-      {events.map((e: any) => {
-        if (typeof e.lat !== "number" || typeof e.lng !== "number" || isNaN(e.lat) || isNaN(e.lng)) return null;
+      {/* Renderizar la ubicación del usuario (Pin Azul) */}
+      {userLocation && userIcon && (
+        <Marker
+          key="user-location"
+          position={[userLocation.lat, userLocation.lng]}
+          icon={userIcon}
+          interactive={false}
+        />
+      )}
 
-        const icon = buildIcon(e, e.id === selectedId);
-        if (!icon) return null;
+      {/* Renderizar Canchas (Pines Verdes) usando lat/lng ya procesados */}
+      {canchas.map((c: any) => {
+        // Las canchas vienen pre-procesadas desde MapScreen con lat/lng numéricos
+        const lat = c.lat;
+        const lng = c.lng;
+
+        // Validar que las coordenadas sean números válidos
+        if (lat == null || lng == null || isNaN(lat) || isNaN(lng)) {
+          console.warn(`⚠️ Cancha "${c.name}" sin coordenadas válidas:`, { lat, lng });
+          return null;
+        }
 
         return (
           <Marker
-            key={e.id}
-            position={[e.lat, e.lng]}
-            icon={icon}
+            key={`cancha-${c.id}`}
+            position={[lat, lng]}
+            icon={canchaIcon}
             eventHandlers={{
               click: () => {
-                if (onSelect) onSelect(e.id);
+                console.log("📍 Cancha tocada en el mapa:", c.name, { lat, lng });
+                if (onCanchaClick) onCanchaClick(c);
               },
             }}
-          >
-            <Popup>
-              <div className="[TAILWIND_CLASSES_REMOVED]">{e.title}</div>
-              <div className="[TAILWIND_CLASSES_REMOVED]">{e.sport || e.sport_id}</div>
-            </Popup>
-          </Marker>
+          />
         );
       })}
     </MapContainer>
   );
+}
+
+function MapClickHandler({ onLocationSelect }: { onLocationSelect?: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      if (onLocationSelect) {
+        onLocationSelect(e.latlng.lat, e.latlng.lng);
+      }
+    },
+  });
+  return null;
 }
 
 
@@ -2330,7 +3097,7 @@ export default function LeafletMap({ events = [], selectedId, onSelect, onLocati
 
 
 ================================================================================
-// FILE 9 of 76
+// FILE 11 of 81
 // PATH: src\components\teammatch\Logo.tsx
 // SIZE: 597 characters
 ================================================================================
@@ -2365,9 +3132,9 @@ export function Logo({ size = 28 }: { size?: number }) {
 
 
 ================================================================================
-// FILE 10 of 76
+// FILE 12 of 81
 // PATH: src\components\teammatch\MapScreen.tsx
-// SIZE: 10460 characters
+// SIZE: 21230 characters
 ================================================================================
 
 /**
@@ -2379,7 +3146,18 @@ export function Logo({ size = 28 }: { size?: number }) {
  * HOOKS: Uses React hooks for state and effects
  */
 
-const LeafletMap = lazy(() => import("./LeafletMap").then((m) => ({ default: m.default })));
+const getSportImage = (sportId: number) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
+  if (sportId === 4) return padelCourt;
+  return runningTrail;
+};
+
+// ── Carga diferida de Leaflet (solo client, nunca SSR) ────────────────────────
+const LeafletMap = lazy(() =>
+  import("./LeafletMap").then((m) => ({ default: m.default }))
+);
 
 // ── Esqueleto mientras carga el mapa ─────────────────────────────────────────
 function MapSkeleton() {
@@ -2396,66 +3174,171 @@ function MapSkeleton() {
 }
 
 // ── Filtros de deporte ────────────────────────────────────────────────────────
-const sports = ["Todos", "Running", "Senderismo", "Pádel", "Vóleibol"] as const;
+const sports = ["Todos", "Fútbol", "Tenis", "Golf", "Pádel"] as const;
+
+// ── Helper: parsear WKT/WKB/GeoJSON a {lat, lng} ─────────────────────────────
+export function parseLocation(location: any): { lat: number; lng: number } | null {
+  if (!location) return null;
+
+  if (typeof location === "object") {
+    if (typeof location.lat === "number" && typeof location.lng === "number")
+      return { lat: location.lat, lng: location.lng };
+    if (Array.isArray(location) && location.length >= 2)
+      return { lat: location[0], lng: location[1] };
+    if (
+      location.type === "Point" &&
+      Array.isArray(location.coordinates) &&
+      location.coordinates.length >= 2
+    )
+      return { lat: location.coordinates[1], lng: location.coordinates[0] };
+  }
+
+  if (typeof location === "string") {
+    if (location.toUpperCase().includes("POINT")) {
+      const cleaned = location
+        .toUpperCase()
+        .replace("POINT", "")
+        .replace("(", "")
+        .replace(")", "")
+        .trim();
+      const parts = cleaned.split(/\s+/);
+      if (parts.length >= 2) {
+        let lng = parseFloat(parts[0]);
+        let lat = parseFloat(parts[1]);
+        // Parche: coordenadas invertidas (Caracas lat≈10, lng≈-66)
+        if (lat < -20 && lng > 0) { const t = lat; lat = lng; lng = t; }
+        return { lat, lng };
+      }
+    } else if (/^[0-9A-Fa-f]+$/.test(location) && location.length >= 50) {
+      try {
+        const buf = new Uint8Array(
+          location.match(/../g)!.map((h: string) => parseInt(h, 16))
+        ).buffer;
+        const dv = new DataView(buf);
+        let lng = dv.getFloat64(9, true);
+        let lat = dv.getFloat64(17, true);
+        if (lat < -20 && lng > 0) { const t = lat; lat = lng; lng = t; }
+        return { lat, lng };
+      } catch { /* silencioso */ }
+    }
+  }
+
+  return null;
+}
 
 // ── Componente principal ──────────────────────────────────────────────────────
-export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
+export function MapScreen({
+  onSelect,
+  userLocation: propUserLocation,
+  setUserLocation: propSetUserLocation,
+  onNavigateToComments,
+  onNavigateToProfile,
+}: {
+  onSelect: (e: any) => void;
+  userLocation?: { lat: number; lng: number } | null;
+  setUserLocation?: (loc: { lat: number; lng: number } | null) => void;
+  onNavigateToComments: (cancha: any) => void;
+  onNavigateToProfile?: () => void;
+}) {
   const [active, setActive] = useState<string>("Todos");
+  const [selectedSport, setSelectedSport] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
-  const [selectedId, setSelectedId] = useState<any>(null);
+  const [canchas, setCanchas] = useState<any[]>([]);
+  const [selectedCancha, setSelectedCancha] = useState<any>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
-  const fetchEvents = useCallback(async () => {
-    const { data, error } = await supabase.from("events").select("*").order("created_at", { ascending: false });
-    if (error) {
-      console.error("Error fetching events:", error);
+  const [localUserLocation, setLocalUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const userLocation = propUserLocation !== undefined ? propUserLocation : localUserLocation;
+  const setUserLocation = propSetUserLocation !== undefined ? propSetUserLocation : setLocalUserLocation;
+
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUser(data.user);
+    });
+  }, []);
+
+  // ── Obtener ubicación GPS del usuario ──────────────────────────────────────
+  const handleLocateUser = useCallback(() => {
+    // Si ya tiene ubicación, desactivarla (toggle)
+    if (userLocation) {
+      setUserLocation(null);
+      setLocationError(null);
       return;
     }
-    
+
+    if (!navigator.geolocation) {
+      setLocationError("Tu navegador no soporta geolocalización");
+      return;
+    }
+
+    setLocating(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log("📍 Ubicación GPS del usuario:", { lat: latitude, lng: longitude });
+        setUserLocation({ lat: latitude, lng: longitude });
+        setLocating(false);
+      },
+      (error) => {
+        console.error("❌ Error GPS:", error);
+        let msg = "No se pudo obtener tu ubicación";
+        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
+        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
+        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
+        setLocationError(msg);
+        setLocating(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000,
+      }
+    );
+  }, [userLocation, setUserLocation]);
+
+  // ── Fetch de datos ──────────────────────────────────────────────────────────
+  const fetchData = useCallback(async () => {
+    // Canchas
+    const { data: canchasData, error: canchasError } = await supabase
+      .from("canchas")
+      .select("*");
+    console.log("🕵️‍♂️ CANCHAS DATA (raw):", canchasData);
+    if (canchasError) console.error("❌ ERROR CANCHAS:", canchasError);
+    if (canchasData) {
+      const processedCanchas = canchasData.map((c: any) => {
+        const coords = parseLocation(c.location);
+        console.log(`📍 Cancha "${c.name}" coords:`, coords);
+        return { ...c, lat: coords?.lat ?? null, lng: coords?.lng ?? null };
+      });
+      setCanchas(processedCanchas);
+    }
+
+    // Eventos / Partidos
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) { console.error("Error fetching events:", error); return; }
+
     if (data) {
       const processed = data.map((row: any) => {
-        let lat = 0;
-        let lng = 0;
-        if (row.location) {
-          if (typeof row.location === "string") {
-            if (row.location.toUpperCase().includes("POINT")) {
-              // Limpiamos la cadena WKT y hacemos split por espacio
-              const cleaned = row.location.toUpperCase().replace("POINT", "").replace("(", "").replace(")", "").trim();
-              const coords = cleaned.split(/\s+/);
-              if (coords.length >= 2) {
-                lng = parseFloat(coords[0]); // Longitud
-                lat = parseFloat(coords[1]); // Latitud
-              }
-            } else if (/^[0-9A-Fa-f]+$/.test(row.location) && row.location.length >= 50) {
-              // Supabase / PostGIS devuelve un WKB Hex String nativo
-              // Ej: 0101000020E6100000 + 8 bytes X + 8 bytes Y
-              try {
-                const hex = row.location;
-                const buffer = new Uint8Array(hex.match(/../g)!.map((h: string) => parseInt(h, 16))).buffer;
-                const view = new DataView(buffer);
-                lng = view.getFloat64(9, true); // true para Little Endian
-                lat = view.getFloat64(17, true);
-              } catch (err) {
-                console.error("Error decodificando WKB Hex de PostGIS:", err);
-              }
-            }
+        const coords = parseLocation(row.location);
+        const lat = coords?.lat ?? 0;
+        const lng = coords?.lng ?? 0;
 
-            // Parche inteligente: Si lat y lng están invertidos en la DB vieja
-            // (por ej: lat = -66.87, lng = 10.49 en lugar de lat = 10.49, lng = -66.87)
-            // como sabemos que Caracas está en Lat 10, Lng -66, los intercambiamos.
-            if (lat < -20 && lng > 0) {
-              const temp = lat;
-              lat = lng;
-              lng = temp;
-            }
-          } else if (typeof row.location === "object" && row.location.type === "Point") {
-            lng = row.location.coordinates[0];
-            lat = row.location.coordinates[1];
-          }
-        }
-
-        // Fallbacks básicos para que la UI no se rompa (EventCard, iconos)
-        const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+        const sportName =
+          row.sport_id === 1 ? "Fútbol"
+          : row.sport_id === 2 ? "Tenis"
+          : row.sport_id === 3 ? "Golf"
+          : row.sport_id === 4 ? "Pádel"
+          : "Otro";
 
         return {
           ...row,
@@ -2463,151 +3346,304 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
           lng,
           sport: sportName,
           title: row.title || `Evento de ${sportName}`,
-          hostName: row.creator_username || "Usuario",
+          host: row.creator_username || "Usuario",
           hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
-          time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
-          date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
-          image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
-          distanceKm: 2.5,
+          time: row.event_date
+            ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+            : "00:00",
+          date: row.event_date
+            ? new Date(row.event_date).toLocaleDateString("es-VE", {
+                weekday: "short", day: "numeric", month: "short",
+              })
+            : "Próximamente",
+          image: getSportImage(row.sport_id),
           joined: row.joined ?? 1,
           spots: row.max_capacity || 10,
           price: 0,
           zone: "Caracas",
+          description_after_arrival: row.description_after_arrival,
         };
       });
-      
-      console.log('Eventos cargados:', processed);
+
+      console.log("Eventos cargados:", processed);
       setEvents(processed);
-      if (processed.length > 0) setSelectedId(processed[0].id);
     }
   }, []);
+
+  const fetchEvents = fetchData;
 
   useEffect(() => {
     fetchEvents();
 
-    // ── Supabase Realtime: Escuchar nuevos eventos ─────────────────────────
     const channel = supabase
       .channel("public:events")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "events" },
-        (payload) => {
-          console.log("¡Nuevo evento en tiempo real detectado!", payload);
-          // Refrescamos la lista para todos
-          fetchEvents();
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "events" },
-        (payload) => {
-          console.log("¡Evento actualizado en tiempo real detectado!", payload);
-          fetchEvents();
-        }
-      )
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "events" }, () => fetchEvents())
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "events" }, () => fetchEvents())
       .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    return () => { supabase.removeChannel(channel); };
   }, [fetchEvents]);
 
-  const filtered = active === "Todos" ? events : events.filter((e) => e.sport === active);
+  const filtered = active === "Todos"
+    ? events
+    : events.filter((e) => e.sport === active);
 
+  const filteredCanchas = selectedSport
+    ? canchas.filter((c) => {
+        const sportIdMap: Record<string, number> = {
+          "Fútbol": 1,
+          "Tenis": 2,
+          "Golf": 3,
+          "Pádel": 4,
+        };
+        const targetId = sportIdMap[selectedSport];
+        return c.sport_id === targetId || c.sport === selectedSport;
+      })
+    : canchas;
+
+  // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
 
-      {/* ── Mapa Leaflet (lazy, solo client) ── */}
+      {/* ── Mapa (solo pines verdes de canchas) ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <Suspense fallback={<MapSkeleton />}>
           <LeafletMap
-            events={filtered}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
+            canchas={filteredCanchas}
+            onCanchaClick={(cancha: any) => setSelectedCancha(cancha)}
+            userLocation={userLocation}
+            onLocationSelect={(lat, lng) => {
+              console.log("📍 Ubicación seleccionada en mapa:", { lat, lng });
+              setUserLocation({ lat, lng });
+            }}
           />
         </Suspense>
       </div>
 
       {/* ── Top bar ── */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* User avatar on the left */}
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            <Search size={18} className="text-muted-foreground" />
-            <input
-              placeholder="Buscar deporte, zona…"
-              className="[TAILWIND_CLASSES_REMOVED]"
-            />
-            <button className="[TAILWIND_CLASSES_REMOVED]">
-              <SlidersHorizontal size={14} />
-            </button>
-          </div>
-          <button className="[TAILWIND_CLASSES_REMOVED]">
-            <Bell size={18} className="text-secondary" />
-            <span className="[TAILWIND_CLASSES_REMOVED]" />
-          </button>
+          <UserAvatar size="sm" className="[TAILWIND_CLASSES_REMOVED]" onClick={onNavigateToProfile} />
         </div>
 
         {/* Filtros de deporte */}
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          {sports.map((s) => (
-            <button
-              key={s}
-              onClick={() => setActive(s)}
-              className={`whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold shadow-soft transition-all ${
-                active === s
-                  ? "bg-secondary text-primary-foreground"
-                  : "glass text-secondary"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
+          {sports.map((s) => {
+            const isActive = s === "Todos" ? selectedSport === null : selectedSport === s;
+            return (
+              <button
+                key={s}
+                onClick={() => {
+                  if (s === "Todos") {
+                    setSelectedSport(null);
+                    setActive("Todos");
+                  } else {
+                    if (selectedSport === s) {
+                      setSelectedSport(null);
+                      setActive("Todos");
+                    } else {
+                      setSelectedSport(s);
+                      setActive(s);
+                    }
+                  }
+                }}
+                className={`snap-center shrink-0 whitespace-nowrap rounded-3xl px-6 py-3.5 text-sm font-black tracking-wide shadow-xl transition-all border-2 ${
+                  isActive
+                    ? "bg-primary text-secondary border-primary scale-[1.02]"
+                    : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"
+                }`}
+              >
+                {s}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* ── Bottom sheet con cards de eventos ── */}
-      <div className="[TAILWIND_CLASSES_REMOVED]">
-        <div className="pointer-events-auto">
+      {/* ── Panel emergente de cancha ── */}
+      {selectedCancha && !showCreateForm && (
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          {/* Drag handle */}
+          <div className="[TAILWIND_CLASSES_REMOVED]" />
+
+          {/* Header */}
           <div className="[TAILWIND_CLASSES_REMOVED]">
-            <div className="[TAILWIND_CLASSES_REMOVED]" />
+            <div>
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                <MapPin size={10} /> Hub Deportivo
+              </span>
+              <h3 className="[TAILWIND_CLASSES_REMOVED]">
+                {selectedCancha.name}
+              </h3>
+              {selectedCancha.description && (
+                <p className="[TAILWIND_CLASSES_REMOVED]">
+                  {selectedCancha.description}
+                </p>
+              )}
+              {selectedCancha.price != null && selectedCancha.price > 0 ? (
+                <p className="[TAILWIND_CLASSES_REMOVED]">Bs. {selectedCancha.price}/hora</p>
+              ) : (
+                <p className="[TAILWIND_CLASSES_REMOVED]">Acceso gratuito</p>
+              )}
+            </div>
+            <button
+              onClick={() => setSelectedCancha(null)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+              aria-label="Cerrar"
+            >
+              <X size={16} strokeWidth={2.5} />
+            </button>
           </div>
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            <h2 className="[TAILWIND_CLASSES_REMOVED]">
-              {filtered.length} eventos cerca de ti
-            </h2>
-            <button className="[TAILWIND_CLASSES_REMOVED]">Ver todos</button>
-          </div>
-          <div className="[TAILWIND_CLASSES_REMOVED]">
-            {filtered.map((e) => (
-              <div
-                key={e.id}
-                className="[TAILWIND_CLASSES_REMOVED]"
-                onClick={() => setSelectedId(e.id)}
-              >
-                <EventCard event={e} onClick={() => onSelect(e)} />
+
+          {/* Caja de Comentarios */}
+          <button
+            onClick={() => onNavigateToComments(selectedCancha)}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          >
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <MessageSquare size={20} className="text-primary" />
               </div>
-            ))}
+              <div>
+                <div className="[TAILWIND_CLASSES_REMOVED]">Comentarios de la cancha</div>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  Mira opiniones o escribe sobre esta cancha
+                </div>
+              </div>
+            </div>
+            <ChevronRight size={16} className="[TAILWIND_CLASSES_REMOVED]" />
+          </button>
+
+          {/* Partidos en esta cancha */}
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <h4 className="[TAILWIND_CLASSES_REMOVED]">
+              Partidos programados
+            </h4>
+
+            {(() => {
+              // selectedCancha ya viene con lat/lng numéricos procesados por fetchData
+              if (selectedCancha.lat == null || selectedCancha.lng == null) return (
+                <p className="[TAILWIND_CLASSES_REMOVED]">Coordenadas no disponibles.</p>
+              );
+
+              const canchaEvents = filtered.filter((e) => {
+                if (e.lat == null || isNaN(e.lat) || e.lng == null || isNaN(e.lng)) return false;
+                const diffLat = Math.abs(e.lat - selectedCancha.lat);
+                const diffLng = Math.abs(e.lng - selectedCancha.lng);
+                return diffLat < 0.0001 && diffLng < 0.0001;
+              });
+
+              if (canchaEvents.length === 0) {
+                return (
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <p className="[TAILWIND_CLASSES_REMOVED]">
+                      No hay partidos programados aquí
+                    </p>
+                    <p className="[TAILWIND_CLASSES_REMOVED]">¡Sé el primero en organizar uno!</p>
+                    <button
+                      onClick={() => { setShowCreateForm(true); }}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                      style={{[INLINE_STYLES_REMOVED]}}
+                    >
+                      + Crear un partido aquí
+                    </button>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  {canchaEvents.map((e) => (
+                    <button
+                      key={e.id}
+                      onClick={() => onSelect(e)}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                    >
+                      <div className="min-w-0">
+                        <div className="[TAILWIND_CLASSES_REMOVED]">{e.title}</div>
+                        <div className="[TAILWIND_CLASSES_REMOVED]">
+                          ⏰ {e.date} · {e.time}
+                        </div>
+                        <div className="[TAILWIND_CLASSES_REMOVED]">
+                          👥 {e.joined}/{e.spots} jugadores
+                        </div>
+                      </div>
+                      <span className="[TAILWIND_CLASSES_REMOVED]">
+                        {e.sport}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ── Botón GPS — Mi ubicación ── */}
+      {!selectedCancha && (
+        <button
+          id="btn-locate-user"
+          onClick={handleLocateUser}
+          className={`absolute bottom-40 right-4 z-30 grid h-12 w-12 place-items-center rounded-2xl shadow-soft transition-all active:scale-90 hover:scale-105 ${
+            userLocation
+              ? "bg-blue-500 text-white shadow-[0_8px_25px_-4px_rgba(59,130,246,0.5)]"
+              : "glass text-secondary"
+          }`}
+          aria-label="Mi ubicación"
+          title="Mi ubicación GPS"
+        >
+          {locating ? (
+            <div className="[TAILWIND_CLASSES_REMOVED]" />
+          ) : (
+            <Crosshair size={20} strokeWidth={2.5} />
+          )}
+        </button>
+      )}
+
+      {/* ── Toast de error de ubicación ── */}
+      {locationError && (
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {locationError}
+            <button
+              onClick={() => setLocationError(null)}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── FAB — Crear evento ── */}
-      <button
-        id="fab-create-event-btn"
-        onClick={() => setShowCreateForm(true)}
-        className="[TAILWIND_CLASSES_REMOVED]"
-        aria-label="Crear evento"
-      >
-        <Plus size={18} strokeWidth={2.5} />
-        Crear
-      </button>
+      {!showCreateForm && (
+        <button
+          id="fab-create-event-btn"
+          onClick={() => setShowCreateForm(true)}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Crear evento"
+          style={{[INLINE_STYLES_REMOVED]}}
+        >
+          <Plus size={20} strokeWidth={2.5} />
+          Crear partido
+        </button>
+      )}
 
-      {/* ── Panel de creación (pantalla completa sobre el mapa) ── */}
+      {/* ── Panel de creación ── */}
       {showCreateForm && (
         <div className="[TAILWIND_CLASSES_REMOVED]">
           <CreateEventForm
-            onClose={() => setShowCreateForm(false)}
-            onEventCreated={fetchEvents}
+            onClose={() => {
+              setShowCreateForm(false);
+              setSelectedCancha(null);
+            }}
+            onEventCreated={() => {
+              fetchEvents();
+              setSelectedCancha(null);
+            }}
+            initialCancha={selectedCancha}
           />
         </div>
       )}
@@ -2622,9 +3658,9 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
 
 
 ================================================================================
-// FILE 11 of 76
+// FILE 13 of 81
 // PATH: src\components\teammatch\MyEventsScreen.tsx
-// SIZE: 8667 characters
+// SIZE: 12458 characters
 ================================================================================
 
 /**
@@ -2636,34 +3672,50 @@ export function MapScreen({ onSelect }: { onSelect: (e: any) => void }) {
  * HOOKS: Uses React hooks for state and effects
  */
 
-const tabs = ["Próximos", "Solicitudes", "Historial"] as const;
+const getSportImage = (sportId: number) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
+  if (sportId === 4) return padelCourt;
+  return runningTrail;
+};
 
-export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void }) {
-  const [tab, setTab] = useState<(typeof tabs)[number]>("Próximos");
+const tabs = ["Próximos", "Mis Partidos", "Solicitudes"] as const;
+
+export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
+  const [tab, setTab] = useState<(typeof tabs)[number]>("Mis Partidos");
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
+  const [availableEvents, setAvailableEvents] = useState<any[]>([]);
+  const [myEvents, setMyEvents] = useState<any[]>([]);
+  const [pastEvents, setPastEvents] = useState<any[]>([]);
   const [createdEvents, setCreatedEvents] = useState<any[]>([]);
-  const [joinedEvents, setJoinedEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   const formatEvent = (row: any) => {
     if (!row) return null;
+    const coords = parseLocation(row.location);
+    const lat = coords?.lat ?? 0;
+    const lng = coords?.lng ?? 0;
     const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
     return {
       ...row,
+      lat,
+      lng,
       sport: sportName,
       title: row.title || `Evento de ${sportName}`,
-      hostName: row.creator_username || "Usuario",
+      host: row.creator_username || "Usuario",
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
       date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
-      image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+      image: getSportImage(row.sport_id),
       distanceKm: 2.5,
       joined: row.joined ?? 1,
       spots: row.max_capacity || 10,
       price: 0,
       zone: "Caracas",
+      description_after_arrival: row.description_after_arrival,
     };
   };
 
@@ -2672,22 +3724,63 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
       setCurrentUser(data.user);
       if (data.user) {
         fetchRequests(data.user.email);
-        fetchCreated(data.user.email);
-        fetchJoined(data.user.email);
+        fetchUserEvents(data.user.email);
+        fetchAvailable();
       }
     });
   }, []);
 
-  async function fetchCreated(email: string | undefined) {
-    if (!email) return;
-    const { data } = await supabase.from("events").select("*").eq("creator_username", email).order("created_at", { ascending: false });
-    if (data) setCreatedEvents(data.map(formatEvent).filter(Boolean));
+  async function fetchAvailable() {
+    setLoading(true);
+    const now = new Date().toISOString();
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .or(`event_date.gte.${now},status.eq.abierto`)
+      .order("event_date", { ascending: true });
+
+    if (!error && data) {
+      setAvailableEvents(data.map(formatEvent).filter(Boolean));
+    }
+    setLoading(false);
   }
 
-  async function fetchJoined(email: string | undefined) {
+  async function fetchUserEvents(email: string | undefined) {
     if (!email) return;
-    const { data } = await supabase.from("event_participants").select("events(*)").eq("user_username", email);
-    if (data) setJoinedEvents(data.map((d: any) => formatEvent(d.events)).filter(Boolean));
+    setLoading(true);
+
+    const { data: createdData } = await supabase
+      .from("events")
+      .select("*")
+      .eq("creator_username", email);
+
+    const { data: joinedData } = await supabase
+      .from("event_participants")
+      .select("events(*)")
+      .eq("user_username", email)
+      .neq("status", "rechazado");
+
+    const created = (createdData || []).map(formatEvent).filter(Boolean);
+    const joined = (joinedData || []).map((d: any) => formatEvent(d.events)).filter(Boolean);
+
+    const allUserEventsMap = new Map();
+    created.forEach(e => allUserEventsMap.set(e.id, e));
+    joined.forEach(e => allUserEventsMap.set(e.id, e));
+    const allUserEvents = Array.from(allUserEventsMap.values());
+
+    const now = new Date();
+    const upcoming = allUserEvents.filter((e: any) => !e.event_date || new Date(e.event_date) >= now || e.status === "abierto");
+    const past = allUserEvents.filter((e: any) => e.event_date && new Date(e.event_date) < now && e.status !== "abierto");
+
+    upcoming.sort((a, b) => new Date(a.event_date || 0).getTime() - new Date(b.event_date || 0).getTime());
+    past.sort((a, b) => new Date(b.event_date || 0).getTime() - new Date(a.event_date || 0).getTime());
+
+    setMyEvents(upcoming);
+    setPastEvents(past);
+    setCreatedEvents(created);
+    setLoading(false);
+
+    setTab(upcoming.length > 0 ? "Mis Partidos" : "Próximos");
   }
 
   async function fetchRequests(email: string | undefined) {
@@ -2701,11 +3794,11 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
         user_username, 
         status,
         events!inner(id, creator_username, sport_id),
-        profiles(is_premium, rating)
+        profiles(is_premium, rating, avatar_url)
       `)
       .eq("status", "pendiente")
       .eq("events.creator_username", email);
-      
+
     if (!error && data) {
       setPendingRequests(data);
     }
@@ -2713,12 +3806,18 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
+    const req = pendingRequests.find(r => r.id === participantId);
+    if (!req || req.events?.creator_username !== currentUser?.email) {
+      alert("No tienes permiso para realizar esta acción.");
+      return;
+    }
+
     setActionLoading(participantId.toString());
     const { error } = await supabase
       .from("event_participants")
       .update({ status })
       .eq("id", participantId);
-      
+
     if (!error) {
       setPendingRequests(prev => prev.filter(r => r.id !== participantId));
     } else {
@@ -2731,20 +3830,24 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
       <header className="[TAILWIND_CLASSES_REMOVED]">
-        <h1 className="[TAILWIND_CLASSES_REMOVED]">Mis eventos</h1>
-        <p className="[TAILWIND_CLASSES_REMOVED]">Tu agenda deportiva</p>
+        <div>
+          <h1 className="[TAILWIND_CLASSES_REMOVED]">Mis eventos</h1>
+          <p className="[TAILWIND_CLASSES_REMOVED]">Tu agenda deportiva</p>
+        </div>
+        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
       </header>
 
       <div className="[TAILWIND_CLASSES_REMOVED]">
         <div className="[TAILWIND_CLASSES_REMOVED]">
           {tabs.map((t) => {
+            // Only show 'Solicitudes' tab if the user has created at least one event
+            if (t === "Solicitudes" && createdEvents.length === 0) return null;
             return (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${
-                  tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
-                }`}
+                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
+                  }`}
               >
                 {t}
               </button>
@@ -2762,64 +3865,88 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
           ) : (
             pendingRequests.map((req) => {
               const isPremium = req.profiles?.is_premium;
-              const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
-              
+              const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
+
               return (
-              <div key={req.id} className="[TAILWIND_CLASSES_REMOVED]">
-                <div className="[TAILWIND_CLASSES_REMOVED]">
+                <div key={req.id} className="[TAILWIND_CLASSES_REMOVED]">
                   <div className="[TAILWIND_CLASSES_REMOVED]">
-                    {(req.user_username || "U").substring(0, 2).toUpperCase()}
-                  </div>
-                  <div className="flex-1">
-                    <div className="[TAILWIND_CLASSES_REMOVED]">
+                    {req.profiles?.avatar_url ? (
+                      <img
+                        src={req.profiles.avatar_url}
+                        alt="Avatar"
+                        className="[TAILWIND_CLASSES_REMOVED]"
+                      />
+                    ) : (
                       <div className="[TAILWIND_CLASSES_REMOVED]">
-                        {req.user_username?.split('@')[0] || "Usuario"}
+                        {(req.user_username || "U").substring(0, 2).toUpperCase()}
                       </div>
-                      {isPremium ? (
-                        <span className="[TAILWIND_CLASSES_REMOVED]">
-                          <Star size={8} className="fill-amber-500" /> Premium
-                        </span>
-                      ) : (
-                        <span className="[TAILWIND_CLASSES_REMOVED]">
-                          Básica
-                        </span>
-                      )}
+                    )}
+                    <div className="flex-1">
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        <div className="[TAILWIND_CLASSES_REMOVED]">
+                          {req.user_username?.split('@')[0] || "Usuario"}
+                        </div>
+                        {isPremium ? (
+                          <span className="[TAILWIND_CLASSES_REMOVED]">
+                            <Star size={8} className="fill-amber-500" /> Premium
+                          </span>
+                        ) : (
+                          <span className="[TAILWIND_CLASSES_REMOVED]">
+                            Básica
+                          </span>
+                        )}
+                      </div>
+                      <div className="[TAILWIND_CLASSES_REMOVED]">quiere unirse a tu partido de {sportName}</div>
                     </div>
-                    <div className="[TAILWIND_CLASSES_REMOVED]">quiere unirse a tu partido de {sportName}</div>
+                  </div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    <button
+                      disabled={actionLoading === req.id.toString()}
+                      onClick={() => handleAction(req.id, "rechazado")}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                    >
+                      Rechazar
+                    </button>
+                    <button
+                      disabled={actionLoading === req.id.toString()}
+                      onClick={() => handleAction(req.id, "aceptado")}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                    >
+                      {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : "Aceptar"}
+                    </button>
                   </div>
                 </div>
-                <div className="[TAILWIND_CLASSES_REMOVED]">
-                  <button 
-                    disabled={actionLoading === req.id.toString()}
-                    onClick={() => handleAction(req.id, "rechazado")}
-                    className="[TAILWIND_CLASSES_REMOVED]"
-                  >
-                    Rechazar
-                  </button>
-                  <button 
-                    disabled={actionLoading === req.id.toString()}
-                    onClick={() => handleAction(req.id, "aceptado")}
-                    className="[TAILWIND_CLASSES_REMOVED]"
-                  >
-                    {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : "Aceptar"}
-                  </button>
-                </div>
-              </div>
-            )})
+              )
+            })
           )}
         </div>
       ) : (
         <div className="[TAILWIND_CLASSES_REMOVED]">
-          {(tab === "Próximos" ? createdEvents : joinedEvents).map((e) => (
-            <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
-          ))}
-          {(tab === "Próximos" ? createdEvents : joinedEvents).length === 0 && (
-            <div className="[TAILWIND_CLASSES_REMOVED]">
-              {tab === "Próximos" 
-                ? "No hay eventos disponibles" 
-                : "No te has unido a ningún evento todavía."}
-            </div>
+          {tab === "Próximos" && (
+            <>
+              {availableEvents.map((e) => (
+                <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
+              ))}
+              {availableEvents.length === 0 && (
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  No hay eventos disponibles
+                </div>
+              )}
+            </>
           )}
+          {tab === "Mis Partidos" && (
+            <>
+              {myEvents.map((e) => (
+                <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
+              ))}
+              {myEvents.length === 0 && (
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  No tienes partidos próximos programados
+                </div>
+              )}
+            </>
+          )}
+          {/* Historial tab removed */}
         </div>
       )}
     </div>
@@ -2833,13 +3960,13 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 
 
 ================================================================================
-// FILE 12 of 76
-// PATH: src\components\teammatch\ProfileScreen.tsx
-// SIZE: 11445 characters
+// FILE 14 of 81
+// PATH: src\components\teammatch\MySportsScreen.tsx
+// SIZE: 8763 characters
 ================================================================================
 
 /**
- * FILE: ProfileScreen.tsx
+ * FILE: MySportsScreen.tsx
  * DIRECTORY: teammatch
  * 
  * PURPOSE: This file is located in teammatch directory.
@@ -2850,7 +3977,7 @@ export function MyEventsScreen({ onSelect }: { onSelect: (e: SportEvent) => void
 const SPORT_NAMES: Record<number, string> = {
   1: "Fútbol",
   2: "Tenis",
-  3: "Baloncesto",
+  3: "Golf",
   4: "Pádel",
   5: "Senderismo",
   6: "Running",
@@ -2860,7 +3987,7 @@ const SPORT_NAMES: Record<number, string> = {
 const SPORT_EMOJIS: Record<number, string> = {
   1: "⚽",
   2: "🎾",
-  3: "🏀",
+  3: "⛳",
   4: "🏓",
   5: "🥾",
   6: "🏃",
@@ -2874,6 +4001,15 @@ interface SportGroup {
   count: number;
   events: any[];
 }
+
+const getSportImage = (sportId: number) => {
+  if (sportId === 1) return footballField;
+  if (sportId === 2) return tennisCourt;
+  if (sportId === 3) return golfCourse;
+  if (sportId === 4) return padelCourt;
+  if (sportId === 5) return hikingTrail;
+  return runningTrail;
+};
 
 function formatEvent(row: any): any {
   if (!row) return null;
@@ -2894,7 +4030,7 @@ function formatEvent(row: any): any {
           month: "short",
         })
       : "Próximamente",
-    image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800",
+    image: getSportImage(row.sport_id),
     distanceKm: 2.5,
     joined: row.joined ?? 1,
     spots: row.max_capacity || 10,
@@ -2903,14 +4039,7 @@ function formatEvent(row: any): any {
   };
 }
 
-export function ProfileScreen({
-  onEdit,
-  onSelectEvent,
-}: {
-  onEdit?: () => void;
-  onSelectEvent?: (e: SportEvent) => void;
-}) {
-  const [user, setUser] = useState<any>(null);
+export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelectEvent?: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
   const [loading, setLoading] = useState(true);
   const [sportGroups, setSportGroups] = useState<SportGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<SportGroup | null>(null);
@@ -2918,8 +4047,6 @@ export function ProfileScreen({
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (user) {
-        setUser(user);
-
         // Traer eventos completos en los que el usuario participa
         const { data } = await supabase
           .from("event_participants")
@@ -2952,14 +4079,6 @@ export function ProfileScreen({
     });
   }, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-  };
-
-  const name = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
-  const email = user?.email || "";
-  const initials = name.substring(0, 2).toUpperCase();
-
   if (loading) {
     return (
       <div className="[TAILWIND_CLASSES_REMOVED]">
@@ -2967,14 +4086,6 @@ export function ProfileScreen({
       </div>
     );
   }
-
-  const totalEvents = sportGroups.reduce((acc, g) => acc + g.count, 0);
-
-  const stats = [
-    { label: "Eventos", value: totalEvents.toString(), icon: Calendar },
-    { label: "Rating", value: "4.9", icon: Star },
-    { label: "Trofeos", value: "7", icon: Trophy },
-  ];
 
   // ── Vista: eventos de un deporte ──────────────────────────────────────────
   if (selectedGroup) {
@@ -3041,72 +4152,21 @@ export function ProfileScreen({
     );
   }
 
-  // ── Vista principal del perfil ────────────────────────────────────────────
+  // ── Vista principal de Mis Deportes ────────────────────────────────────────────
   return (
     <div className="[TAILWIND_CLASSES_REMOVED]">
-      {/* Hero */}
-      <div className="[TAILWIND_CLASSES_REMOVED]">
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          <button
-            onClick={onEdit}
-            className="[TAILWIND_CLASSES_REMOVED]"
-          >
-            <Edit3 size={16} />
-          </button>
-          <button className="[TAILWIND_CLASSES_REMOVED]">
-            <Settings size={16} />
-          </button>
+      <header className="[TAILWIND_CLASSES_REMOVED]">
+        <div>
+          <h1 className="[TAILWIND_CLASSES_REMOVED]">
+            <Trophy size={24} className="text-primary" />
+            Mis deportes
+          </h1>
+          <p className="[TAILWIND_CLASSES_REMOVED]">Tus estadísticas y partidos por disciplina</p>
         </div>
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          {user?.user_metadata?.avatar_url ? (
-            <img
-              src={user.user_metadata.avatar_url}
-              alt="Avatar"
-              className="[TAILWIND_CLASSES_REMOVED]"
-            />
-          ) : (
-            <div
-              className="[TAILWIND_CLASSES_REMOVED]"
-              style={{[INLINE_STYLES_REMOVED]}}
-            >
-              {initials}
-            </div>
-          )}
-          <div>
-            <h1 className="[TAILWIND_CLASSES_REMOVED]">
-              {name}
-              {user?.user_metadata?.is_organizer && (
-                <span className="[TAILWIND_CLASSES_REMOVED]">
-                  <Star size={10} className="fill-amber-500" /> Organizador
-                </span>
-              )}
-            </h1>
-            <p className="[TAILWIND_CLASSES_REMOVED]">{email}</p>
-            <div className="[TAILWIND_CLASSES_REMOVED]">
-              <Star size={11} className="fill-primary" /> Jugador verificado
-            </div>
-          </div>
-        </div>
-      </div>
+        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
+      </header>
 
-      {/* Stats card */}
       <div className="[TAILWIND_CLASSES_REMOVED]">
-        <div className="[TAILWIND_CLASSES_REMOVED]">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="[TAILWIND_CLASSES_REMOVED]">
-                <s.icon size={16} className="text-primary" />
-              </div>
-              <div className="[TAILWIND_CLASSES_REMOVED]">{s.value}</div>
-              <div className="[TAILWIND_CLASSES_REMOVED]">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Sports */}
-      <div className="[TAILWIND_CLASSES_REMOVED]">
-        <h2 className="[TAILWIND_CLASSES_REMOVED]">Mis deportes</h2>
         <div className="space-y-2">
           {sportGroups.length > 0 ? (
             sportGroups.map((g) => (
@@ -3129,10 +4189,475 @@ export function ProfileScreen({
             ))
           ) : (
             <div className="[TAILWIND_CLASSES_REMOVED]">
-              No has escogido ningún deporte
+              No te has unido a eventos de ningún deporte todavía
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\MySportsScreen.tsx
+================================================================================
+
+
+================================================================================
+// FILE 15 of 81
+// PATH: src\components\teammatch\ProfileScreen.tsx
+// SIZE: 21817 characters
+================================================================================
+
+/**
+ * FILE: ProfileScreen.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+export function ProfileScreen({
+  onEdit,
+  onSelectEvent,
+}: {
+  onEdit?: () => void;
+  onSelectEvent?: (e: any) => void;
+}) {
+  const {
+    user,
+    avatarUrl,
+    displayName,
+    xp,
+    level,
+    useCount,
+    coupons,
+    xpHistory,
+    joinedEventsCount,
+    createdEventsCount,
+    claimCoupon,
+  } = useCurrentUser();
+
+  const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history">("stats");
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [showClaimSuccess, setShowClaimSuccess] = useState<{ title: string; discount: string } | null>(null);
+
+  const handleLogout = async () => {
+    const { supabase } = await import("@/lib/supabase");
+    await supabase.auth.signOut();
+  };
+
+  const handleCopy = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  if (!user) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <Loader2 className="[TAILWIND_CLASSES_REMOVED]" />
+      </div>
+    );
+  }
+
+  const email = user.email || "";
+  const initials = displayName.substring(0, 2).toUpperCase();
+
+  // RPG calculations
+  const xpNeeded = level * 100;
+  const xpPercentage = Math.min(100, Math.max(0, (xp / xpNeeded) * 100));
+
+  let rpgClass = "Recluta Novato 👟";
+  let borderClass = "neon-border-bronze";
+  let rarityLabel = "Novato";
+  let rarityColor = "text-amber-600 bg-amber-500/10 border-amber-500/20";
+
+  if (level === 2) {
+    rpgClass = "Aspirante Activo ⚡";
+    borderClass = "neon-border-bronze";
+    rarityLabel = "Común";
+    rarityColor = "text-gray-400 bg-gray-500/10 border-gray-500/20";
+  } else if (level === 3) {
+    rpgClass = "Guerrero del Fitness 🏋️‍♂️";
+    borderClass = "neon-border-silver";
+    rarityLabel = "Raro";
+    rarityColor = "text-blue-400 bg-blue-500/10 border-blue-500/20";
+  } else if (level === 4) {
+    rpgClass = "Maestro del Match 🏆";
+    borderClass = "neon-border-gold";
+    rarityLabel = "Épico";
+    rarityColor = "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
+  } else if (level >= 5) {
+    rpgClass = "Leyenda de Caracas 🌟";
+    borderClass = "neon-border-legendary";
+    rarityLabel = "Legendario";
+    rarityColor = "text-purple-400 bg-purple-500/10 border-purple-500/20";
+  }
+
+  // RPG stats
+  const str = 10 + joinedEventsCount * 2;
+  const wis = 10 + createdEventsCount * 5;
+  const con = 10 + useCount;
+  const cha = 10 + Math.round((user.user_metadata?.rating || 4.8) * 2);
+
+  if (showClaimSuccess) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]" />
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <Check size={48} strokeWidth={3} className="text-secondary" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="[TAILWIND_CLASSES_REMOVED]">¡Objeto Canjeado! 💎</h2>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            {showClaimSuccess.title}
+          </p>
+          <p className="[TAILWIND_CLASSES_REMOVED]">
+            El beneficio de **{showClaimSuccess.discount}** ha sido activado con éxito para tu próxima reserva de cancha o partido.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Hero / RPG Avatar Section */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <button
+            onClick={onEdit}
+            className="[TAILWIND_CLASSES_REMOVED]"
+          >
+            <Edit3 size={16} />
+          </button>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <Sparkles size={11} className="animate-pulse" /> Modo RPG Activo
+          </div>
+          <button className="[TAILWIND_CLASSES_REMOVED]">
+            <Settings size={16} />
+          </button>
+        </div>
+
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            {/* Level Badge Border */}
+            <div className={`h-22 w-22 rounded-full overflow-hidden p-1 bg-card ${borderClass}`}>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  className="[TAILWIND_CLASSES_REMOVED]"
+                />
+              ) : (
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  {initials}
+                </div>
+              )}
+            </div>
+            {/* Level floating Badge */}
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              {level}
+            </div>
+          </div>
+
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <h1 className="[TAILWIND_CLASSES_REMOVED]">
+                {displayName}
+                {user?.user_metadata?.is_organizer && (
+                  <span className="[TAILWIND_CLASSES_REMOVED]">
+                    <Star size={9} className="[TAILWIND_CLASSES_REMOVED]" /> Organizador
+                  </span>
+                )}
+              </h1>
+              <span
+                className={`inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`}
+              >
+                {rarityLabel}
+              </span>
+            </div>
+            
+            <p className="[TAILWIND_CLASSES_REMOVED]">{rpgClass}</p>
+            <p className="[TAILWIND_CLASSES_REMOVED]">{email}</p>
+          </div>
+        </div>
+
+        {/* Experiencia Progress Bar */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              <Trophy size={13} className="[TAILWIND_CLASSES_REMOVED]" /> Puntos de Experiencia
+            </span>
+            <span className="font-mono">{xp} / {xpNeeded} XP</span>
+          </div>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <div
+              className="[TAILWIND_CLASSES_REMOVED]"
+              style={{ width: `${xpPercentage}%` }}
+            />
+          </div>
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span>Nivel {level}</span>
+            <span>+{xpNeeded - xp} XP para Nivel {level + 1}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Tabs (RPG Character Sheet Style) */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          {[
+            { id: "stats", label: "Hoja de Stats", icon: Shield },
+            { id: "inventory", label: "Inventario", icon: Trophy },
+            { id: "history", label: "Aventuras", icon: BookOpen },
+          ].map((t) => {
+            const ActiveIcon = t.icon;
+            const isSelected = activeTab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setActiveTab(t.id as any)}
+                className={`flex flex-col items-center gap-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 ${
+                  isSelected
+                    ? "bg-secondary text-primary shadow-sm"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-secondary"
+                }`}
+              >
+                <ActiveIcon size={14} className={isSelected ? "text-primary" : ""} />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Tabs Content */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* TAB 1: RPG Stats */}
+        {activeTab === "stats" && (
+          <div className="space-y-4">
+            <h3 className="[TAILWIND_CLASSES_REMOVED]">
+              <Award size={14} className="text-primary" /> Atributos del Jugador
+            </h3>
+            
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <StatCard
+                icon={Flame}
+                label="Fuerza (STR)"
+                value={str}
+                colorClass="text-red-500"
+                bgClass="bg-red-500/5 border-red-500/10"
+                description="Aumenta al unirte a partidos (+2 XP/partido)"
+              />
+              <StatCard
+                icon={BookOpen}
+                label="Sabiduría (WIS)"
+                value={wis}
+                colorClass="text-blue-500"
+                bgClass="bg-blue-500/5 border-blue-500/10"
+                description="Aumenta al crear partidos (+5 XP/partido)"
+              />
+              <StatCard
+                icon={Shield}
+                label="Constitución (CON)"
+                value={con}
+                colorClass="text-emerald-500"
+                bgClass="bg-emerald-500/5 border-emerald-500/10"
+                description="Aumenta con el uso diario de la app"
+              />
+              <StatCard
+                icon={Sparkles}
+                label="Carisma (CHA)"
+                value={cha}
+                colorClass="text-amber-500"
+                bgClass="bg-amber-500/5 border-amber-500/10"
+                description="Calculado según tu reputación deportiva"
+              />
+            </div>
+
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <h4 className="[TAILWIND_CLASSES_REMOVED]">
+                Resumen de Campaña
+              </h4>
+              <p className="[TAILWIND_CLASSES_REMOVED]">
+                Has completado **{joinedEventsCount} partidos** como luchador y has guiado a otros
+                jugadores creando **{createdEventsCount} eventos**. Tu constancia te ha otorgado
+                **{useCount} días de entrenamiento** activo.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: Inventory / Rewards */}
+        {activeTab === "inventory" && (
+          <div className="space-y-4">
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <h3 className="[TAILWIND_CLASSES_REMOVED]">
+                <Trophy size={14} className="text-primary" /> Cofre de Objetos Mágicos
+              </h3>
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                {coupons.filter((c) => !c.claimed).length} Activos
+              </span>
+            </div>
+
+            {coupons.length === 0 ? (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <div className="text-4xl">🎁</div>
+                <h4 className="[TAILWIND_CLASSES_REMOVED]">Cofre Vacío</h4>
+                <p className="[TAILWIND_CLASSES_REMOVED]">
+                  No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app
+                  diariamente para ganar cofres sorpresa!
+                </p>
+              </div>
+            ) : (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                {coupons.map((c: any) => {
+                  const isLegendary = c.id === "LEYENDA5";
+                  return (
+                    <div
+                      key={c.code}
+                      className={`rounded-2xl p-4 transition-all shadow-soft flex flex-col justify-between magic-scroll ${
+                        isLegendary ? "magic-scroll-legendary" : ""
+                      } ${
+                        c.claimed
+                          ? "opacity-60 grayscale border-border bg-muted/30 pointer-events-none"
+                          : ""
+                      }`}
+                    >
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        <div>
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider mb-2 ${
+                              isLegendary
+                                ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
+                                : "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                            }`}
+                          >
+                            {isLegendary ? "Objeto Legendario ⭐" : "Objeto Épico 📜"}
+                          </span>
+                          <h4 className="[TAILWIND_CLASSES_REMOVED]">{c.title}</h4>
+                          <p className="[TAILWIND_CLASSES_REMOVED]">
+                            {c.description}
+                          </p>
+                        </div>
+                        <div className="[TAILWIND_CLASSES_REMOVED]">
+                          <div className="[TAILWIND_CLASSES_REMOVED]">
+                            {c.discount}
+                          </div>
+                          <div className="[TAILWIND_CLASSES_REMOVED]">
+                            {c.date}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        <div className="[TAILWIND_CLASSES_REMOVED]">
+                          Código: <span className="[TAILWIND_CLASSES_REMOVED]">{c.code}</span>
+                        </div>
+                        <div className="[TAILWIND_CLASSES_REMOVED]">
+                          <button
+                            onClick={() => handleCopy(c.code)}
+                            className="[TAILWIND_CLASSES_REMOVED]"
+                          >
+                            {copiedCode === c.code ? (
+                              <>
+                                <Check size={11} className="text-emerald-500" />
+                                <span>Copiado</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={11} />
+                                <span>Copiar</span>
+                              </>
+                            )}
+                          </button>
+                          {!c.claimed ? (
+                            <button
+                              onClick={async () => {
+                                await claimCoupon(c.code);
+                                setShowClaimSuccess({ title: c.title, discount: c.discount });
+                                setTimeout(() => setShowClaimSuccess(null), 3000);
+                              }}
+                              className="[TAILWIND_CLASSES_REMOVED]"
+                            >
+                              Canjear
+                            </button>
+                          ) : (
+                            <span className="[TAILWIND_CLASSES_REMOVED]">
+                              Usado
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: Adventure History */}
+        {activeTab === "history" && (
+          <div className="space-y-4">
+            <h3 className="[TAILWIND_CLASSES_REMOVED]">
+              <Calendar size={14} className="text-primary" /> Registro de Aventuras (XP Log)
+            </h3>
+
+            <div className="space-y-2">
+              {xpHistory.length === 0 ? (
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  Aún no has ganado experiencia. ¡Explora el mapa y únete a un partido!
+                </div>
+              ) : (
+                xpHistory.map((h: any) => {
+                  let typeEmoji = "🎮";
+                  let typeBg = "bg-purple-500/10 text-purple-500 border border-purple-500/20";
+                  if (h.type === "join") {
+                    typeEmoji = "👟";
+                    typeBg = "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
+                  } else if (h.type === "create") {
+                    typeEmoji = "⚽";
+                    typeBg = "bg-blue-500/10 text-blue-500 border border-blue-500/20";
+                  } else if (h.type === "use") {
+                    typeEmoji = "⚡";
+                    typeBg = "bg-amber-500/10 text-amber-500 border border-amber-500/20";
+                  }
+
+                  return (
+                    <div
+                      key={h.id}
+                      className="[TAILWIND_CLASSES_REMOVED]"
+                    >
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        <div
+                          className={`grid h-8 w-8 place-items-center rounded-xl text-sm shrink-0 ${typeBg}`}
+                        >
+                          {typeEmoji}
+                        </div>
+                        <div>
+                          <div className="[TAILWIND_CLASSES_REMOVED]">
+                            {h.title}
+                          </div>
+                          <div className="[TAILWIND_CLASSES_REMOVED]">
+                            {h.date}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="[TAILWIND_CLASSES_REMOVED]">
+                        {h.xp > 0 ? `+${h.xp} XP` : `0 XP`}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Logout */}
@@ -3141,10 +4666,39 @@ export function ProfileScreen({
           onClick={handleLogout}
           className="[TAILWIND_CLASSES_REMOVED]"
         >
-          <LogOut size={18} />
-          Cerrar Sesión
+          <LogOut size={16} />
+          Cerrar Sesión del Héroe
         </button>
       </div>
+    </div>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  colorClass,
+  bgClass,
+  description,
+}: {
+  icon: any;
+  label: string;
+  value: number;
+  colorClass: string;
+  bgClass: string;
+  description: string;
+}) {
+  return (
+    <div className={`rounded-2xl border p-3 shadow-soft flex flex-col ${bgClass}`}>
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <span className="[TAILWIND_CLASSES_REMOVED]">
+          {label}
+        </span>
+        <Icon size={14} className={colorClass} />
+      </div>
+      <div className="[TAILWIND_CLASSES_REMOVED]">{value}</div>
+      <p className="[TAILWIND_CLASSES_REMOVED]">{description}</p>
     </div>
   );
 }
@@ -3156,7 +4710,7 @@ export function ProfileScreen({
 
 
 ================================================================================
-// FILE 13 of 76
+// FILE 16 of 81
 // PATH: src\components\teammatch\SportBadge.tsx
 // SIZE: 976 characters
 ================================================================================
@@ -3196,7 +4750,70 @@ export function SportBadge({ sport, withEmoji = true }: { sport: string; withEmo
 
 
 ================================================================================
-// FILE 14 of 76
+// FILE 17 of 81
+// PATH: src\components\teammatch\UserAvatar.tsx
+// SIZE: 1232 characters
+================================================================================
+
+/**
+ * FILE: UserAvatar.tsx
+ * DIRECTORY: teammatch
+ * 
+ * PURPOSE: This file is located in teammatch directory.
+ */
+
+interface UserAvatarProps {
+  size?: "sm" | "md" | "lg";
+  className?: string;
+  onClick?: () => void;
+}
+
+const sizeMap = {
+  sm: "h-8 w-8 text-xs",
+  md: "h-10 w-10 text-sm",
+  lg: "h-20 w-20 text-2xl",
+};
+
+const ringMap = {
+  sm: "ring-2",
+  md: "ring-2",
+  lg: "ring-4",
+};
+
+export function UserAvatar({ size = "md", className = "", onClick }: UserAvatarProps) {
+  const { avatarUrl, initials } = useCurrentUser();
+  const sizeClass = sizeMap[size];
+  const ringClass = ringMap[size];
+
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt="Avatar"
+        onClick={onClick}
+        className={`${sizeClass} rounded-full object-cover ${ringClass} ring-primary/30 shadow-soft ${onClick ? "cursor-pointer active:scale-95 transition-transform" : ""} ${className}`}
+      />
+    );
+  }
+
+  return (
+    <div
+      onClick={onClick}
+      className={`${sizeClass} grid place-items-center rounded-full gradient-primary font-bold text-secondary shadow-soft ${ringClass} ring-primary/30 ${onClick ? "cursor-pointer active:scale-95 transition-transform" : ""} ${className}`}
+    >
+      {initials}
+    </div>
+  );
+}
+
+
+================================================================================
+// END OF FILE: src\components\teammatch\UserAvatar.tsx
+================================================================================
+
+
+================================================================================
+// FILE 18 of 81
 // PATH: src\components\teammatch\WelcomeScreen.tsx
 // SIZE: 4224 characters
 ================================================================================
@@ -3302,7 +4919,7 @@ export function WelcomeScreen({
 
 
 ================================================================================
-// FILE 15 of 76
+// FILE 19 of 81
 // PATH: src\components\teammatch\data.ts
 // SIZE: 1808 characters
 ================================================================================
@@ -3400,9 +5017,9 @@ export const events: SportEvent[] = [
 
 
 ================================================================================
-// FILE 16 of 76
+// FILE 20 of 81
 // PATH: src\components\teammatch\types-nav.ts
-// SIZE: 90 characters
+// SIZE: 114 characters
 ================================================================================
 
 /**
@@ -3412,7 +5029,7 @@ export const events: SportEvent[] = [
  * PURPOSE: This file is located in teammatch directory.
  */
 
-export type Screen = "map" | "events" | "create" | "detail" | "profile" | "editProfile";
+export type Screen = "map" | "events" | "sports" | "create" | "detail" | "profile" | "editProfile" | "comments";
 
 
 ================================================================================
@@ -3421,9 +5038,9 @@ export type Screen = "map" | "events" | "create" | "detail" | "profile" | "editP
 
 
 ================================================================================
-// FILE 17 of 76
+// FILE 21 of 81
 // PATH: src\components\teammatch\types.ts
-// SIZE: 488 characters
+// SIZE: 527 characters
 ================================================================================
 
 /**
@@ -3454,6 +5071,7 @@ export interface SportEvent {
   distanceKm: number;
   lat: number;
   lng: number;
+  description_after_arrival?: string;
 }
 
 
@@ -3463,7 +5081,7 @@ export interface SportEvent {
 
 
 ================================================================================
-// FILE 18 of 76
+// FILE 22 of 81
 // PATH: src\components\ui\accordion.tsx
 // SIZE: 2051 characters
 ================================================================================
@@ -3529,7 +5147,7 @@ export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };
 
 
 ================================================================================
-// FILE 19 of 76
+// FILE 23 of 81
 // PATH: src\components\ui\alert-dialog.tsx
 // SIZE: 4466 characters
 ================================================================================
@@ -3659,7 +5277,7 @@ export {
 
 
 ================================================================================
-// FILE 20 of 76
+// FILE 24 of 81
 // PATH: src\components\ui\alert.tsx
 // SIZE: 1638 characters
 ================================================================================
@@ -3724,7 +5342,7 @@ export { Alert, AlertTitle, AlertDescription };
 
 
 ================================================================================
-// FILE 21 of 76
+// FILE 25 of 81
 // PATH: src\components\ui\aspect-ratio.tsx
 // SIZE: 148 characters
 ================================================================================
@@ -3747,7 +5365,7 @@ export { AspectRatio };
 
 
 ================================================================================
-// FILE 22 of 76
+// FILE 26 of 81
 // PATH: src\components\ui\avatar.tsx
 // SIZE: 1460 characters
 ================================================================================
@@ -3815,7 +5433,7 @@ export { Avatar, AvatarImage, AvatarFallback };
 
 
 ================================================================================
-// FILE 23 of 76
+// FILE 27 of 81
 // PATH: src\components\ui\badge.tsx
 // SIZE: 1155 characters
 ================================================================================
@@ -3863,7 +5481,7 @@ export { Badge, badgeVariants };
 
 
 ================================================================================
-// FILE 24 of 76
+// FILE 28 of 81
 // PATH: src\components\ui\breadcrumb.tsx
 // SIZE: 2850 characters
 ================================================================================
@@ -3979,7 +5597,7 @@ export {
 
 
 ================================================================================
-// FILE 25 of 76
+// FILE 29 of 81
 // PATH: src\components\ui\button.tsx
 // SIZE: 1900 characters
 ================================================================================
@@ -4043,7 +5661,7 @@ export { Button, buttonVariants };
 
 
 ================================================================================
-// FILE 26 of 76
+// FILE 30 of 81
 // PATH: src\components\ui\calendar.tsx
 // SIZE: 7387 characters
 ================================================================================
@@ -4242,7 +5860,7 @@ export { Calendar, CalendarDayButton };
 
 
 ================================================================================
-// FILE 27 of 76
+// FILE 31 of 81
 // PATH: src\components\ui\card.tsx
 // SIZE: 1872 characters
 ================================================================================
@@ -4314,7 +5932,7 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 
 
 ================================================================================
-// FILE 28 of 76
+// FILE 32 of 81
 // PATH: src\components\ui\carousel.tsx
 // SIZE: 6440 characters
 ================================================================================
@@ -4569,7 +6187,7 @@ export {
 
 
 ================================================================================
-// FILE 29 of 76
+// FILE 33 of 81
 // PATH: src\components\ui\chart.tsx
 // SIZE: 10901 characters
 ================================================================================
@@ -4913,7 +6531,7 @@ export {
 
 
 ================================================================================
-// FILE 30 of 76
+// FILE 34 of 81
 // PATH: src\components\ui\checkbox.tsx
 // SIZE: 1054 characters
 ================================================================================
@@ -4954,7 +6572,7 @@ export { Checkbox };
 
 
 ================================================================================
-// FILE 31 of 76
+// FILE 35 of 81
 // PATH: src\components\ui\collapsible.tsx
 // SIZE: 346 characters
 ================================================================================
@@ -4985,7 +6603,7 @@ export { Collapsible, CollapsibleTrigger, CollapsibleContent };
 
 
 ================================================================================
-// FILE 32 of 76
+// FILE 36 of 81
 // PATH: src\components\ui\command.tsx
 // SIZE: 5019 characters
 ================================================================================
@@ -5149,7 +6767,7 @@ export {
 
 
 ================================================================================
-// FILE 33 of 76
+// FILE 37 of 81
 // PATH: src\components\ui\context-menu.tsx
 // SIZE: 7578 characters
 ================================================================================
@@ -5351,7 +6969,7 @@ export {
 
 
 ================================================================================
-// FILE 34 of 76
+// FILE 38 of 81
 // PATH: src\components\ui\dialog.tsx
 // SIZE: 3905 characters
 ================================================================================
@@ -5476,7 +7094,7 @@ export {
 
 
 ================================================================================
-// FILE 35 of 76
+// FILE 39 of 81
 // PATH: src\components\ui\drawer.tsx
 // SIZE: 3071 characters
 ================================================================================
@@ -5590,7 +7208,7 @@ export {
 
 
 ================================================================================
-// FILE 36 of 76
+// FILE 40 of 81
 // PATH: src\components\ui\dropdown-menu.tsx
 // SIZE: 7784 characters
 ================================================================================
@@ -5799,7 +7417,7 @@ export {
 
 
 ================================================================================
-// FILE 37 of 76
+// FILE 41 of 81
 // PATH: src\components\ui\form.tsx
 // SIZE: 4372 characters
 ================================================================================
@@ -5976,7 +7594,7 @@ export {
 
 
 ================================================================================
-// FILE 38 of 76
+// FILE 42 of 81
 // PATH: src\components\ui\hover-card.tsx
 // SIZE: 1273 characters
 ================================================================================
@@ -6019,7 +7637,7 @@ export { HoverCard, HoverCardTrigger, HoverCardContent };
 
 
 ================================================================================
-// FILE 39 of 76
+// FILE 43 of 81
 // PATH: src\components\ui\input-otp.tsx
 // SIZE: 2230 characters
 ================================================================================
@@ -6103,7 +7721,7 @@ export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator };
 
 
 ================================================================================
-// FILE 40 of 76
+// FILE 44 of 81
 // PATH: src\components\ui\input.tsx
 // SIZE: 798 characters
 ================================================================================
@@ -6142,7 +7760,7 @@ export { Input };
 
 
 ================================================================================
-// FILE 41 of 76
+// FILE 45 of 81
 // PATH: src\components\ui\label.tsx
 // SIZE: 737 characters
 ================================================================================
@@ -6184,7 +7802,7 @@ export { Label };
 
 
 ================================================================================
-// FILE 42 of 76
+// FILE 46 of 81
 // PATH: src\components\ui\menubar.tsx
 // SIZE: 8775 characters
 ================================================================================
@@ -6428,7 +8046,7 @@ export {
 
 
 ================================================================================
-// FILE 43 of 76
+// FILE 47 of 81
 // PATH: src\components\ui\navigation-menu.tsx
 // SIZE: 5229 characters
 ================================================================================
@@ -6562,7 +8180,7 @@ export {
 
 
 ================================================================================
-// FILE 44 of 76
+// FILE 48 of 81
 // PATH: src\components\ui\pagination.tsx
 // SIZE: 2837 characters
 ================================================================================
@@ -6675,7 +8293,7 @@ export {
 
 
 ================================================================================
-// FILE 45 of 76
+// FILE 49 of 81
 // PATH: src\components\ui\popover.tsx
 // SIZE: 1383 characters
 ================================================================================
@@ -6722,7 +8340,7 @@ export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor };
 
 
 ================================================================================
-// FILE 46 of 76
+// FILE 50 of 81
 // PATH: src\components\ui\progress.tsx
 // SIZE: 806 characters
 ================================================================================
@@ -6768,7 +8386,7 @@ export { Progress };
 
 
 ================================================================================
-// FILE 47 of 76
+// FILE 51 of 81
 // PATH: src\components\ui\radio-group.tsx
 // SIZE: 1426 characters
 ================================================================================
@@ -6819,7 +8437,7 @@ export { RadioGroup, RadioGroupItem };
 
 
 ================================================================================
-// FILE 48 of 76
+// FILE 52 of 81
 // PATH: src\components\ui\resizable.tsx
 // SIZE: 1589 characters
 ================================================================================
@@ -6871,7 +8489,7 @@ export { ResizablePanelGroup, ResizablePanel, ResizableHandle };
 
 
 ================================================================================
-// FILE 49 of 76
+// FILE 53 of 81
 // PATH: src\components\ui\scroll-area.tsx
 // SIZE: 1679 characters
 ================================================================================
@@ -6931,7 +8549,7 @@ export { ScrollArea, ScrollBar };
 
 
 ================================================================================
-// FILE 50 of 76
+// FILE 54 of 81
 // PATH: src\components\ui\select.tsx
 // SIZE: 5886 characters
 ================================================================================
@@ -7104,7 +8722,7 @@ export {
 
 
 ================================================================================
-// FILE 51 of 76
+// FILE 55 of 81
 // PATH: src\components\ui\separator.tsx
 // SIZE: 747 characters
 ================================================================================
@@ -7144,7 +8762,7 @@ export { Separator };
 
 
 ================================================================================
-// FILE 52 of 76
+// FILE 56 of 81
 // PATH: src\components\ui\sheet.tsx
 // SIZE: 4355 characters
 ================================================================================
@@ -7287,7 +8905,7 @@ export {
 
 
 ================================================================================
-// FILE 53 of 76
+// FILE 57 of 81
 // PATH: src\components\ui\sidebar.tsx
 // SIZE: 24603 characters
 ================================================================================
@@ -8033,7 +9651,7 @@ export {
 
 
 ================================================================================
-// FILE 54 of 76
+// FILE 58 of 81
 // PATH: src\components\ui\skeleton.tsx
 // SIZE: 246 characters
 ================================================================================
@@ -8058,7 +9676,7 @@ export { Skeleton };
 
 
 ================================================================================
-// FILE 55 of 76
+// FILE 59 of 81
 // PATH: src\components\ui\slider.tsx
 // SIZE: 1048 characters
 ================================================================================
@@ -8097,7 +9715,7 @@ export { Slider };
 
 
 ================================================================================
-// FILE 56 of 76
+// FILE 60 of 81
 // PATH: src\components\ui\sonner.tsx
 // SIZE: 757 characters
 ================================================================================
@@ -8138,7 +9756,7 @@ export { Toaster };
 
 
 ================================================================================
-// FILE 57 of 76
+// FILE 61 of 81
 // PATH: src\components\ui\switch.tsx
 // SIZE: 1183 characters
 ================================================================================
@@ -8181,7 +9799,7 @@ export { Switch };
 
 
 ================================================================================
-// FILE 58 of 76
+// FILE 62 of 81
 // PATH: src\components\ui\table.tsx
 // SIZE: 2914 characters
 ================================================================================
@@ -8292,7 +9910,7 @@ export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 
 
 ================================================================================
-// FILE 59 of 76
+// FILE 63 of 81
 // PATH: src\components\ui\tabs.tsx
 // SIZE: 1944 characters
 ================================================================================
@@ -8361,7 +9979,7 @@ export { Tabs, TabsList, TabsTrigger, TabsContent };
 
 
 ================================================================================
-// FILE 60 of 76
+// FILE 64 of 81
 // PATH: src\components\ui\textarea.tsx
 // SIZE: 698 characters
 ================================================================================
@@ -8399,7 +10017,7 @@ export { Textarea };
 
 
 ================================================================================
-// FILE 61 of 76
+// FILE 65 of 81
 // PATH: src\components\ui\toggle-group.tsx
 // SIZE: 1809 characters
 ================================================================================
@@ -8477,7 +10095,7 @@ export { ToggleGroup, ToggleGroupItem };
 
 
 ================================================================================
-// FILE 62 of 76
+// FILE 66 of 81
 // PATH: src\components\ui\toggle.tsx
 // SIZE: 1533 characters
 ================================================================================
@@ -8534,7 +10152,7 @@ export { Toggle, toggleVariants };
 
 
 ================================================================================
-// FILE 63 of 76
+// FILE 67 of 81
 // PATH: src\components\ui\tooltip.tsx
 // SIZE: 1310 characters
 ================================================================================
@@ -8587,7 +10205,7 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
 
 
 ================================================================================
-// FILE 64 of 76
+// FILE 68 of 81
 // PATH: src\hooks\use-mobile.tsx
 // SIZE: 595 characters
 ================================================================================
@@ -8626,7 +10244,589 @@ export function useIsMobile() {
 
 
 ================================================================================
-// FILE 65 of 76
+// FILE 69 of 81
+// PATH: src\lib\UserContext.tsx
+// SIZE: 17564 characters
+================================================================================
+
+/**
+ * FILE: UserContext.tsx
+ * DIRECTORY: lib
+ * 
+ * PURPOSE: This file is located in lib directory.
+ * TYPE: React component file
+ * HOOKS: Uses React hooks for state and effects
+ */
+
+export interface RpgCoupon {
+  id: string;
+  code: string;
+  title: string;
+  discount: string;
+  description: string;
+  date: string;
+  claimed: boolean;
+}
+
+export interface RpgXpEntry {
+  id: string;
+  title: string;
+  xp: number;
+  date: string;
+  type: "join" | "create" | "use" | "system";
+}
+
+export interface XpNotification {
+  xp: number;
+  reason: string;
+  isLevelUp: boolean;
+  newLevel?: number;
+  newCoupon?: RpgCoupon | null;
+}
+
+export interface EventNotification {
+  type: "accepted" | "rejected";
+  eventTitle: string;
+  sport: string;
+}
+
+interface UserContextValue {
+  user: any | null;
+  avatarUrl: string | null;
+  displayName: string;
+  initials: string;
+  xp: number;
+  level: number;
+  useCount: number;
+  coupons: RpgCoupon[];
+  xpHistory: RpgXpEntry[];
+  joinedEventsCount: number;
+  createdEventsCount: number;
+  xpNotification: XpNotification | null;
+  eventNotification: EventNotification | null;
+  clearNotification: () => void;
+  clearEventNotification: () => void;
+  addXp: (amount: number, reason: string) => Promise<void>;
+  claimCoupon: (code: string) => Promise<void>;
+  updateProfile: (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => Promise<void>;
+}
+
+const UserContext = createContext<UserContextValue>({
+  user: null,
+  avatarUrl: null,
+  displayName: "",
+  initials: "",
+  xp: 0,
+  level: 1,
+  useCount: 0,
+  coupons: [],
+  xpHistory: [],
+  joinedEventsCount: 0,
+  createdEventsCount: 0,
+  xpNotification: null,
+  eventNotification: null,
+  clearNotification: () => {},
+  clearEventNotification: () => {},
+  addXp: async () => {},
+  claimCoupon: async () => {},
+  updateProfile: async () => {},
+});
+
+function getCouponForLevel(level: number): RpgCoupon | null {
+  if (level === 2) {
+    return {
+      id: "ASPIRANTE2",
+      code: "ASPIRANTE2",
+      title: "Pase de Aspirante ⚡",
+      discount: "10% de Descuento",
+      description: "Otorgado automáticamente por alcanzar el Nivel 2.",
+      date: new Date().toLocaleDateString(),
+      claimed: false,
+    };
+  }
+  if (level === 3) {
+    return {
+      id: "GUERRERO3",
+      code: "GUERRERO3",
+      title: "Pergamino de Guerrero 🏋️‍♂️",
+      discount: "15% de Descuento",
+      description: "Otorgado automáticamente por alcanzar el Nivel 3.",
+      date: new Date().toLocaleDateString(),
+      claimed: false,
+    };
+  }
+  if (level === 5) {
+    return {
+      id: "LEYENDA5",
+      code: "LEYENDA5",
+      title: "Medalla de Leyenda 🌟",
+      discount: "Partido Gratis (100% Off)",
+      description: "Otorgado automáticamente por alcanzar el Nivel 5.",
+      date: new Date().toLocaleDateString(),
+      claimed: false,
+    };
+  }
+  return null;
+}
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<any>(null);
+  const [xpNotification, setXpNotification] = useState<XpNotification | null>(null);
+  const [eventNotification, setEventNotification] = useState<EventNotification | null>(null);
+  const addXpRef = useRef<(amount: number, reason: string) => Promise<void>>(async () => {});
+  const previousStatuses = useRef<Record<number, string>>({});
+  const isFirstFetch = useRef(true);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        setUser(data.user);
+        initializeAndTrackUse(data.user);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (u) {
+        initializeAndTrackUse(u);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const initializeAndTrackUse = async (currentUser: any) => {
+    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
+    const meta = currentUser?.user_metadata || {};
+    
+    // Synchronize to public.profiles table
+    try {
+      await supabase.from("profiles").upsert({
+        id: currentUser.id,
+        username: currentUser.email || "",
+        avatar_url: meta.avatar_url || null,
+        rating: meta.rating || 4.80,
+        is_premium: meta.is_premium || false
+      });
+    } catch (e) {
+      console.error("Error upserting public profile:", e);
+    }
+    
+    // Si aún no inicializado, crear valores por defecto
+    const isBrandNew = meta.xp === undefined || meta.level === undefined;
+
+    if (isBrandNew) {
+      const initialMetadata = {
+        xp: 0,
+        level: 1,
+        use_count: 1,
+        coupons: [],
+        joined_events_count: 0,
+        created_events_count: 0,
+        xp_history: [
+          {
+            id: "init_" + Date.now(),
+            title: "Creación de Personaje 🎮",
+            xp: 0,
+            date: new Date().toLocaleDateString(),
+            type: "system",
+          },
+        ],
+      };
+      
+      const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+        data: initialMetadata,
+      });
+      if (updatedUser) setUser(updatedUser);
+      sessionStorage.setItem("teammatch_session_counted", "true");
+      return;
+    }
+
+    // Si ya existe pero no se ha contado esta sesión, incrementar use_count
+    if (!wasCounted) {
+      sessionStorage.setItem("teammatch_session_counted", "true");
+      const currentUseCount = (meta.use_count || 0) + 1;
+      const currentXp = meta.xp || 0;
+      const currentLevel = meta.level || 1;
+      const xpGained = 10; // +10 XP por uso de la app
+
+      let newXp = currentXp + xpGained;
+      let newLevel = currentLevel;
+      let isLevelUp = false;
+
+      while (newXp >= newLevel * 100) {
+        newXp -= newLevel * 100;
+        newLevel += 1;
+        isLevelUp = true;
+      }
+
+      const newHistory = [
+        {
+          id: "use_" + Date.now(),
+          title: `Aventura Diaria (Uso #${currentUseCount}) ⚡`,
+          xp: xpGained,
+          date: new Date().toLocaleDateString(),
+          type: "use",
+        },
+        ...(meta.xp_history || []),
+      ];
+
+      let newCoupons = [...(meta.coupons || [])];
+      let awardedCoupon: RpgCoupon | null = null;
+
+      // Otorga cupón al 5to uso (o más si no lo tiene por si el usuario está testeando)
+      if (currentUseCount >= 5 && !newCoupons.some((c: any) => c.code === "FIDELIDAD5")) {
+        awardedCoupon = {
+          id: "FIDELIDAD5",
+          code: "FIDELIDAD5",
+          title: "Pergamino de Fidelidad 📜",
+          discount: "$5 USD de Descuento",
+          description: "Otorgado automáticamente tras tu 5to uso de la app.",
+          date: new Date().toLocaleDateString(),
+          claimed: false,
+        };
+        newCoupons.push(awardedCoupon);
+      }
+
+      // Recompensa si sube de nivel por el uso diario
+      if (isLevelUp) {
+        const levelCoupon = getCouponForLevel(newLevel);
+        if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
+          newCoupons.push(levelCoupon);
+          if (!awardedCoupon) awardedCoupon = levelCoupon;
+        }
+      }
+
+      const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+        data: {
+          xp: newXp,
+          level: newLevel,
+          use_count: currentUseCount,
+          coupons: newCoupons,
+          xp_history: newHistory,
+        },
+      });
+      if (updatedUser) setUser(updatedUser);
+
+      // Gatillar notificación
+      setXpNotification({
+        xp: xpGained,
+        reason: `¡Uso diario #${currentUseCount} de la app!`,
+        isLevelUp,
+        newLevel: isLevelUp ? newLevel : undefined,
+        newCoupon: awardedCoupon,
+      });
+    }
+  };
+
+  const addXp = async (amount: number, reason: string) => {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    const currentXp = meta.xp || 0;
+    const currentLevel = meta.level || 1;
+
+    let newXp = currentXp + amount;
+    let newLevel = currentLevel;
+    let isLevelUp = false;
+
+    while (newXp >= newLevel * 100) {
+      newXp -= newLevel * 100;
+      newLevel += 1;
+      isLevelUp = true;
+    }
+
+    let newCoupons = [...(meta.coupons || [])];
+    let awardedCoupon: RpgCoupon | null = null;
+
+    if (isLevelUp) {
+      const levelCoupon = getCouponForLevel(newLevel);
+      if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
+        newCoupons.push(levelCoupon);
+        awardedCoupon = levelCoupon;
+      }
+    }
+
+    const type =
+      reason.includes("unirse") || reason.includes("Unirse")
+        ? "join"
+        : reason.includes("crear") || reason.includes("Organizar")
+          ? "create"
+          : "system";
+
+    const newHistory = [
+      {
+        id: "xp_" + Date.now(),
+        title: reason,
+        xp: amount,
+        date: new Date().toLocaleDateString(),
+        type,
+      },
+      ...(meta.xp_history || []),
+    ];
+
+    const joinedDelta = type === "join" ? 1 : 0;
+    const createdDelta = type === "create" ? 1 : 0;
+
+    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+      data: {
+        xp: newXp,
+        level: newLevel,
+        coupons: newCoupons,
+        xp_history: newHistory,
+        joined_events_count: (meta.joined_events_count || 0) + joinedDelta,
+        created_events_count: (meta.created_events_count || 0) + createdDelta,
+      },
+    });
+    if (updatedUser) setUser(updatedUser);
+
+    setXpNotification({
+      xp: amount,
+      reason,
+      isLevelUp,
+      newLevel: isLevelUp ? newLevel : undefined,
+      newCoupon: awardedCoupon,
+    });
+  };
+
+  const claimCoupon = async (code: string) => {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    const currentCoupons = meta.coupons || [];
+
+    const newCoupons = currentCoupons.map((c: any) => {
+      if (c.code === code) {
+        return { ...c, claimed: true };
+      }
+      return c;
+    });
+
+    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+      data: {
+        coupons: newCoupons,
+      },
+    });
+    if (updatedUser) setUser(updatedUser);
+  };
+
+  const updateProfile = async (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => {
+    if (!user) return;
+
+    const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({
+      data: {
+        full_name: updates.name,
+        avatar_url: updates.avatarUrl,
+        is_organizer: updates.isOrganizer
+      },
+      ...(updates.email && updates.email !== user.email && { email: updates.email })
+    });
+
+    if (updateError) throw updateError;
+
+    try {
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        username: (updates.email || user.email || "").trim(),
+        avatar_url: updates.avatarUrl,
+        rating: user.user_metadata?.rating || 4.80,
+        is_premium: user.user_metadata?.is_premium || false
+      });
+      if (profileError) {
+        console.warn("Failed to update public profiles table due to RLS, but continuing:", profileError);
+      }
+    } catch (e) {
+      console.error("Error upserting public profile:", e);
+    }
+
+    if (updatedUser) {
+      setUser(updatedUser);
+    }
+  };
+
+  const clearNotification = () => setXpNotification(null);
+  const clearEventNotification = () => setEventNotification(null);
+
+  // Keep addXp ref fresh
+  useEffect(() => { addXpRef.current = addXp; });
+
+  // Function to check participant status updates (polling fallback)
+  const checkStatusChanges = async () => {
+    if (!user?.email) return;
+    try {
+      const { data, error } = await supabase
+        .from("event_participants")
+        .select("id, event_id, status")
+        .eq("user_username", user.email);
+
+      if (error || !data) return;
+
+      const newStatuses: Record<number, string> = {};
+      const changes: { id: number; eventId: string; status: string }[] = [];
+
+      data.forEach((item: any) => {
+        newStatuses[item.id] = item.status;
+        const oldStatus = previousStatuses.current[item.id];
+        if (!isFirstFetch.current && oldStatus === "pendiente" && item.status !== "pendiente") {
+          changes.push({ id: item.id, eventId: item.event_id, status: item.status });
+        }
+      });
+
+      // Update ref and flag
+      previousStatuses.current = { ...previousStatuses.current, ...newStatuses };
+      isFirstFetch.current = false;
+
+      // Process any changed statuses
+      for (const change of changes) {
+        if (change.status === "aceptado" || change.status === "rechazado") {
+          const { data: eventData } = await supabase
+            .from("events")
+            .select("title, sport_id")
+            .eq("id", change.eventId)
+            .maybeSingle();
+
+          const sportName =
+            eventData?.sport_id === 1 ? "Fútbol"
+            : eventData?.sport_id === 2 ? "Tenis"
+            : eventData?.sport_id === 3 ? "Golf"
+            : eventData?.sport_id === 4 ? "Pádel"
+            : "Deporte";
+          const eventTitle = eventData?.title || `Evento de ${sportName}`;
+
+          if (change.status === "aceptado") {
+            setEventNotification({ type: "accepted", eventTitle, sport: sportName });
+            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} 👟`);
+          } else if (change.status === "rechazado") {
+            setEventNotification({ type: "rejected", eventTitle, sport: sportName });
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Error in status check:", e);
+    }
+  };
+
+  // Realtime subscription + Polling fallback
+  useEffect(() => {
+    if (!user?.email) return;
+
+    // Reset status tracker on user change
+    isFirstFetch.current = true;
+    previousStatuses.current = {};
+    checkStatusChanges();
+
+    // Setup polling every 4 seconds
+    const interval = setInterval(checkStatusChanges, 4000);
+
+    // Setup realtime subscription
+    const channel = supabase
+      .channel(`user_event_status_${user.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "event_participants",
+          filter: `user_username=eq.${user.email}`,
+        },
+        async (payload: any) => {
+          const newStatus = payload.new?.status;
+          const oldStatus = payload.old?.status;
+          if (!newStatus || newStatus === oldStatus) return;
+          if (newStatus !== "aceptado" && newStatus !== "rechazado") return;
+
+          const eventId = payload.new?.event_id;
+          if (!eventId) return;
+
+          const { data: eventData } = await supabase
+            .from("events")
+            .select("title, sport_id")
+            .eq("id", eventId)
+            .maybeSingle();
+
+          const sportName =
+            eventData?.sport_id === 1 ? "Fútbol"
+            : eventData?.sport_id === 2 ? "Tenis"
+            : eventData?.sport_id === 3 ? "Golf"
+            : eventData?.sport_id === 4 ? "Pádel"
+            : "Deporte";
+          const eventTitle = eventData?.title || `Evento de ${sportName}`;
+
+          if (newStatus === "aceptado") {
+            setEventNotification({ type: "accepted", eventTitle, sport: sportName });
+            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} 👟`);
+          } else if (newStatus === "rechazado") {
+            setEventNotification({ type: "rejected", eventTitle, sport: sportName });
+          }
+          
+          // Keep local state in sync to prevent double firing
+          if (payload.new?.id) {
+            previousStatuses.current[payload.new.id] = newStatus;
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      clearInterval(interval);
+      supabase.removeChannel(channel);
+    };
+  }, [user?.email, user?.id]);
+
+  const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
+  const initials = displayName.substring(0, 2).toUpperCase();
+  const avatarUrl = user?.user_metadata?.avatar_url ?? null;
+
+  // RPG stats extracted from metadata
+  const xp = user?.user_metadata?.xp || 0;
+  const level = user?.user_metadata?.level || 1;
+  const useCount = user?.user_metadata?.use_count || 0;
+  const coupons = user?.user_metadata?.coupons || [];
+  const xpHistory = user?.user_metadata?.xp_history || [];
+  const joinedEventsCount = user?.user_metadata?.joined_events_count || 0;
+  const createdEventsCount = user?.user_metadata?.created_events_count || 0;
+
+  return (
+    <UserContext.Provider
+      value={{
+        user,
+        avatarUrl,
+        displayName,
+        initials,
+        xp,
+        level,
+        useCount,
+        coupons,
+        xpHistory,
+        joinedEventsCount,
+        createdEventsCount,
+        xpNotification,
+        eventNotification,
+        clearNotification,
+        clearEventNotification,
+        addXp,
+        claimCoupon,
+        updateProfile,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+export function useCurrentUser() {
+  return useContext(UserContext);
+}
+
+
+================================================================================
+// END OF FILE: src\lib\UserContext.tsx
+================================================================================
+
+
+================================================================================
+// FILE 70 of 81
 // PATH: src\lib\error-capture.ts
 // SIZE: 933 characters
 ================================================================================
@@ -8670,7 +10870,7 @@ export function consumeLastCapturedError(): unknown {
 
 
 ================================================================================
-// FILE 66 of 76
+// FILE 71 of 81
 // PATH: src\lib\error-page.ts
 // SIZE: 1401 characters
 ================================================================================
@@ -8720,7 +10920,7 @@ export function renderErrorPage(): string {
 
 
 ================================================================================
-// FILE 67 of 76
+// FILE 72 of 81
 // PATH: src\lib\supabase.ts
 // SIZE: 497 characters
 ================================================================================
@@ -8751,7 +10951,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 
 ================================================================================
-// FILE 68 of 76
+// FILE 73 of 81
 // PATH: src\lib\utils.ts
 // SIZE: 175 characters
 ================================================================================
@@ -8775,7 +10975,7 @@ export function cn(...inputs: ClassValue[]) {
 
 
 ================================================================================
-// FILE 69 of 76
+// FILE 74 of 81
 // PATH: src\routeTree.gen.ts
 // SIZE: 1797 characters
 ================================================================================
@@ -8864,7 +11064,7 @@ declare module '@tanstack/react-start' {
 
 
 ================================================================================
-// FILE 70 of 76
+// FILE 75 of 81
 // PATH: src\router.tsx
 // SIZE: 410 characters
 ================================================================================
@@ -8896,7 +11096,7 @@ export const getRouter = () => {
 
 
 ================================================================================
-// FILE 71 of 76
+// FILE 76 of 81
 // PATH: src\routes\__root.tsx
 // SIZE: 3781 characters
 ================================================================================
@@ -9023,9 +11223,9 @@ function RootComponent() {
 
 
 ================================================================================
-// FILE 72 of 76
+// FILE 77 of 81
 // PATH: src\routes\index.tsx
-// SIZE: 6770 characters
+// SIZE: 19864 characters
 ================================================================================
 
 /**
@@ -9054,11 +11254,21 @@ export const Route = createFileRoute("/")({
 type AppState = "checking" | "welcome" | "auth" | "app";
 
 function Index() {
+  return (
+    <UserProvider>
+      <AppContent />
+    </UserProvider>
+  );
+}
+
+function AppContent() {
   const [appState, setAppState] = useState<AppState>("checking");
   const [authMode, setAuthMode] = useState<AuthMode>("login");
   
-  const [screen, setScreen] = useState<Screen>("map");
+  const [screen, setScreen] = useState<Screen>("events");
   const [selected, setSelected] = useState<SportEvent | null>(null);
+  const [selectedCancha, setSelectedCancha] = useState<any>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
 
   useEffect(() => {
@@ -9110,11 +11320,25 @@ function Index() {
 
 
     if (screen === "detail" && selected)
-      return <EventDetailScreen event={selected} onBack={() => setScreen("map")} />;
-    if (screen === "events") return <MyEventsScreen onSelect={openDetail} />;
+      return <EventDetailScreen event={selected} onBack={() => setScreen("events")} userLocation={userLocation} />;
+    if (screen === "events") return <MyEventsScreen onSelect={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
+    if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
     if (screen === "profile") return <ProfileScreen onEdit={() => setScreen("editProfile")} onSelectEvent={openDetail} />;
-    return <MapScreen onSelect={openDetail} />;
+    if (screen === "comments" && selectedCancha)
+      return <CanchaCommentsScreen cancha={selectedCancha} onBack={() => setScreen("map")} />;
+    return (
+      <MapScreen
+        onSelect={openDetail}
+        userLocation={userLocation}
+        setUserLocation={setUserLocation}
+        onNavigateToProfile={() => setScreen("profile")}
+        onNavigateToComments={(cancha) => {
+          setSelectedCancha(cancha);
+          setScreen("comments");
+        }}
+      />
+    );
   };
 
   return (
@@ -9179,7 +11403,9 @@ function Index() {
         >
           <div className="[TAILWIND_CLASSES_REMOVED]">
             {renderScreen()}
-            {appState === "app" && screen !== "detail" && screen !== "editProfile" && (
+            {appState === "app" && <RpgNotificationManager />}
+            {appState === "app" && <EventNotificationBanner />}
+            {appState === "app" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
               <BottomNav
                 current={screen}
                 onChange={setScreen}
@@ -9192,6 +11418,261 @@ function Index() {
   );
 }
 
+function RpgNotificationManager() {
+  const { xpNotification, clearNotification } = useCurrentUser();
+  const [chestState, setChestState] = useState<"closed" | "opening" | "opened">("closed");
+
+  useEffect(() => {
+    if (xpNotification) {
+      setChestState("closed");
+    }
+  }, [xpNotification]);
+
+  if (!xpNotification) return null;
+
+  const { xp, reason, isLevelUp, newLevel, newCoupon } = xpNotification;
+
+  // Timed dismiss for normal XP gain toast
+  useEffect(() => {
+    if (xpNotification && !isLevelUp && !newCoupon) {
+      const timer = setTimeout(() => {
+        clearNotification();
+      }, 6500);
+      return () => clearTimeout(timer);
+    }
+  }, [xpNotification, isLevelUp, newCoupon, clearNotification]);
+
+  // Si es subida de nivel
+  if (isLevelUp) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]" />
+        
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <Sparkles size={48} className="[TAILWIND_CLASSES_REMOVED]" />
+          </div>
+
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              ¡Hazaña Lograda!
+            </span>
+            
+            <div className="space-y-1">
+              <h2 className="[TAILWIND_CLASSES_REMOVED]">
+                ¡SUBISTE DE NIVEL!
+              </h2>
+              <p className="[TAILWIND_CLASSES_REMOVED]">
+                Has alcanzado el Nivel {newLevel} 🏆
+              </p>
+            </div>
+
+            <p className="[TAILWIND_CLASSES_REMOVED]">
+              "{reason}" <br/>
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                ¡Tus atributos físicos y mágicos STR, WIS, CON y CHA han aumentado!
+              </span>
+            </p>
+
+            {newCoupon && (
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <span className="[TAILWIND_CLASSES_REMOVED]">
+                  ¡Recompensa de Nivel Desbloqueada! 🎁
+                </span>
+                <h4 className="[TAILWIND_CLASSES_REMOVED]">{newCoupon.title}</h4>
+                <p className="[TAILWIND_CLASSES_REMOVED]">{newCoupon.discount}</p>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  Código: {newCoupon.code}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={clearNotification}
+              className="[TAILWIND_CLASSES_REMOVED]"
+            >
+              Cerrar y Continuar Aventura ⚔️
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no es subida de nivel, pero tiene un nuevo cupón (Cofre del Tesoro del 5to uso)
+  if (newCoupon) {
+    return (
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <div className="[TAILWIND_CLASSES_REMOVED]" />
+
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          
+          {chestState === "closed" && (
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                ¡FIDELIDAD RECOMPENSADA! 📜
+              </span>
+              
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                🎁
+              </div>
+              
+              <div className="space-y-1">
+                <h3 className="[TAILWIND_CLASSES_REMOVED]">¡Has ganado un Cofre del Tesoro!</h3>
+                <p className="[TAILWIND_CLASSES_REMOVED]">
+                  Por tu excelente fidelidad usando TeamMatch, has obtenido un cofre de recompensa.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setChestState("opening")}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                Abrir Cofre 🔓
+              </button>
+            </div>
+          )}
+
+          {chestState === "opening" && (
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                🌟
+              </div>
+              <p className="[TAILWIND_CLASSES_REMOVED]">
+                Desbloqueando magia...
+              </p>
+              {(() => {
+                setTimeout(() => setChestState("opened"), 1000);
+                return null;
+              })()}
+            </div>
+          )}
+
+          {chestState === "opened" && (
+            <div className="[TAILWIND_CLASSES_REMOVED]">
+              <span className="[TAILWIND_CLASSES_REMOVED]">
+                ¡OBJETO OBTENIDO! 💎
+              </span>
+
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                📜
+              </div>
+
+              <div className="[TAILWIND_CLASSES_REMOVED]">
+                <h4 className="[TAILWIND_CLASSES_REMOVED]">{newCoupon.title}</h4>
+                <p className="[TAILWIND_CLASSES_REMOVED]">
+                  {newCoupon.description}
+                </p>
+                <div className="[TAILWIND_CLASSES_REMOVED]">
+                  <div className="[TAILWIND_CLASSES_REMOVED]">{newCoupon.discount}</div>
+                  <div className="[TAILWIND_CLASSES_REMOVED]">
+                    CÓDIGO: {newCoupon.code}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={clearNotification}
+                className="[TAILWIND_CLASSES_REMOVED]"
+              >
+                Equipar en Inventario y Cerrar 💼
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Timer progress bar at the bottom */}
+      <div className="xp-toast-progress" />
+
+      {/* Main content row */}
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        {/* Animated icon container */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <Zap size={18} className="[TAILWIND_CLASSES_REMOVED]" />
+        </div>
+
+        {/* Text Area */}
+        <div className="[TAILWIND_CLASSES_REMOVED]">
+          <div className="[TAILWIND_CLASSES_REMOVED]">
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              +{xp} XP GANADO!
+            </span>
+            <span className="[TAILWIND_CLASSES_REMOVED]">
+              ¡Logro!
+            </span>
+          </div>
+          <p className="[TAILWIND_CLASSES_REMOVED]" title={reason}>
+            {reason}
+          </p>
+        </div>
+
+        {/* Manual Close Button */}
+        <button
+          onClick={clearNotification}
+          className="[TAILWIND_CLASSES_REMOVED]"
+          aria-label="Cerrar notificación"
+        >
+          <X size={12} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EventNotificationBanner() {
+  const { eventNotification, clearEventNotification } = useCurrentUser();
+
+  if (!eventNotification) return null;
+
+  const isAccepted = eventNotification.type === "accepted";
+
+  return (
+    <div className="[TAILWIND_CLASSES_REMOVED]">
+      {/* Decorative Glows */}
+      <div className={`pointer-events-none absolute top-1/4 h-72 w-72 rounded-full blur-3xl opacity-20 ${isAccepted ? "bg-emerald-500" : "bg-red-500"}`} />
+      
+      <div
+        className={`grid h-24 w-24 place-items-center rounded-full text-white shadow-pop ring-8 animate-bounce ${
+          isAccepted ? "bg-emerald-500 ring-emerald-500/20" : "bg-red-500 ring-red-500/20"
+        }`}
+      >
+        {isAccepted ? <CheckCircle2 size={48} strokeWidth={2.5} /> : <XCircle size={48} strokeWidth={2.5} />}
+      </div>
+      
+      <div className="[TAILWIND_CLASSES_REMOVED]">
+        <h2 className="[TAILWIND_CLASSES_REMOVED]">
+          {isAccepted ? "¡Has sido aceptado!" : "No has sido aceptado"}
+        </h2>
+        <p className="[TAILWIND_CLASSES_REMOVED]">
+          {isAccepted
+            ? `Tu solicitud para unirte al partido "${eventNotification.eventTitle}" ha sido aprobada. ¡Prepárate para jugar!`
+            : `Tu solicitud para unirte al partido "${eventNotification.eventTitle}" ha sido rechazada. El evento ha sido removido de tus deportes.`}
+        </p>
+      </div>
+
+      <button
+        onClick={clearEventNotification}
+        className={`relative z-10 mt-4 min-w-[140px] rounded-2xl py-3.5 px-6 text-sm font-black text-white shadow-pop transition-all active:scale-95 ${
+          isAccepted ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" : "bg-red-500 hover:bg-red-600 shadow-red-500/20"
+        }`}
+      >
+        Entendido
+      </button>
+
+      {/* Auto-dismiss fallback */}
+      {(() => {
+        setTimeout(clearEventNotification, 8000);
+        return null;
+      })()}
+    </div>
+  );
+}
+
 
 ================================================================================
 // END OF FILE: src\routes\index.tsx
@@ -9199,7 +11680,7 @@ function Index() {
 
 
 ================================================================================
-// FILE 73 of 76
+// FILE 78 of 81
 // PATH: src\server.ts
 // SIZE: 2569 characters
 ================================================================================
@@ -9295,7 +11776,7 @@ export default {
 
 
 ================================================================================
-// FILE 74 of 76
+// FILE 79 of 81
 // PATH: src\start.ts
 // SIZE: 641 characters
 ================================================================================
@@ -9333,7 +11814,7 @@ export const startInstance = createStart(() => ({
 
 
 ================================================================================
-// FILE 75 of 76
+// FILE 80 of 81
 // PATH: src\vite-env.d.ts
 // SIZE: 45 characters
 ================================================================================
@@ -9353,7 +11834,7 @@ export const startInstance = createStart(() => ({
 
 
 ================================================================================
-// FILE 76 of 76
+// FILE 81 of 81
 // PATH: vite.config.ts
 // SIZE: 867 characters
 ================================================================================
@@ -9383,6 +11864,6 @@ export default defineConfig({
 
 /**
  * END OF COMBINED FILES
- * Total files processed: 76
- * Total size: 316540 characters
+ * Total files processed: 81
+ * Total size: 403133 characters
  */

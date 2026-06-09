@@ -131,22 +131,22 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
   return (
     <div className="relative flex h-full flex-col bg-background">
       {/* Header */}
-      <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/90 px-4 pb-3 pt-12 backdrop-blur">
+      <div className="sticky top-0 z-20 flex items-center gap-3 md:gap-4 border-b border-border bg-background/90 px-4 md:px-8 pb-3 md:pb-5 pt-12 md:pt-16 backdrop-blur">
         <button
           onClick={onBack}
-          className="grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95"
+          className="grid h-10 w-10 md:h-12 md:w-12 place-items-center rounded-full bg-muted hover:bg-muted/80 transition-all active:scale-95"
           aria-label="Volver"
         >
-          <ArrowLeft size={18} className="text-secondary" />
+          <ArrowLeft size={18} className="text-secondary md:scale-110" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-secondary">Añadir cancha</h1>
-          <p className="text-[11px] text-muted-foreground">Registra una nueva cancha deportiva</p>
+          <h1 className="text-lg md:text-3xl font-bold text-secondary">Añadir cancha</h1>
+          <p className="text-[11px] md:text-sm text-muted-foreground">Registra una nueva cancha deportiva</p>
         </div>
       </div>
 
       {/* Body */}
-      <div className="flex-1 overflow-y-auto px-5 py-5 pb-32 space-y-6">
+      <div className="flex-1 overflow-y-auto px-5 md:px-12 py-5 md:py-8 pb-32 space-y-6 md:space-y-8 max-w-2xl mx-auto w-full">
         {/* Nombre */}
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">
@@ -331,33 +331,34 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
   return (
     <div className="relative flex h-full flex-col bg-background">
       {/* Header */}
-      <div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/90 px-4 pb-3 pt-12 backdrop-blur">
+      <div className="sticky top-0 z-20 flex items-center gap-3 md:gap-4 border-b border-border bg-background/90 px-4 md:px-8 pb-3 md:pb-5 pt-12 md:pt-16 backdrop-blur">
         <button
           onClick={onBack}
-          className="grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95"
+          className="grid h-10 w-10 md:h-12 md:w-12 place-items-center rounded-full bg-muted hover:bg-muted/80 transition-all active:scale-95"
           aria-label="Volver"
         >
-          <ArrowLeft size={18} className="text-secondary" />
+          <ArrowLeft size={18} className="text-secondary md:scale-110" />
         </button>
         <div className="flex-1">
-          <h1 className="text-lg font-bold text-secondary">Canchas</h1>
-          <p className="text-[11px] text-muted-foreground">
+          <h1 className="text-lg md:text-3xl font-bold text-secondary">Canchas</h1>
+          <p className="text-[11px] md:text-sm text-muted-foreground">
             {onSelect ? "Selecciona una cancha para tu evento" : "Canchas disponibles"}
           </p>
         </div>
         {isOrganizer && (
           <button
             onClick={() => setView("add")}
-            className="flex items-center gap-1.5 rounded-xl gradient-primary px-3 py-2 text-xs font-bold text-secondary shadow-pop transition-all active:scale-95"
+            className="flex items-center gap-1.5 rounded-xl gradient-primary px-3 py-2 md:px-5 md:py-3 text-xs md:text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:shadow-lg hover:-translate-y-0.5"
           >
-            <Plus size={14} strokeWidth={2.5} />
-            Añadir
+            <Plus size={14} strokeWidth={2.5} className="md:scale-110" />
+            <span className="hidden md:inline">Añadir cancha</span>
+            <span className="md:hidden">Añadir</span>
           </button>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-5 py-5">
+      <div className="flex-1 overflow-y-auto px-5 md:px-8 py-5 md:py-8">
         {loading ? (
           <div className="flex justify-center p-10">
             <Loader2 className="animate-spin text-primary" />
@@ -386,12 +387,12 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
             )}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {canchas.map((c) => (
               <button
                 key={c.id}
                 onClick={() => onSelect?.(c)}
-                className="w-full rounded-2xl bg-card p-4 shadow-soft text-left transition-all hover:shadow-pop active:scale-[0.98]"
+                className="w-full h-full flex flex-col rounded-2xl bg-card p-4 md:p-5 shadow-soft text-left transition-all hover:shadow-pop hover:-translate-y-1 active:scale-[0.98]"
               >
                 <div className="flex items-center gap-3">
                   <div className="grid h-12 w-12 place-items-center rounded-xl bg-muted text-2xl shrink-0">

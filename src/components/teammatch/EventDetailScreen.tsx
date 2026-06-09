@@ -4,15 +4,18 @@ import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
+import { LoginPromptModal } from "./LoginPromptModal";
 
 export function EventDetailScreen({
   event,
   onBack,
   userLocation,
+  onOpenAuth,
 }: {
   event: SportEvent;
   onBack: () => void;
   userLocation?: { lat: number; lng: number } | null;
+  onOpenAuth?: () => void;
 }) {
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +24,7 @@ export function EventDetailScreen({
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showFloatXp, setShowFloatXp] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
 
@@ -93,7 +97,11 @@ export function EventDetailScreen({
   }
 
   async function handleJoin() {
-    if (!currentUser || !currentUser.email) return alert("Debes iniciar sesión");
+    // Si no hay usuario autenticado, mostrar modal de login
+    if (!currentUser || !currentUser.email) {
+      setShowLoginPrompt(true);
+      return;
+    }
     setJoining(true);
 
     // Insertamos solicitud con status 'pending'
@@ -190,6 +198,20 @@ export function EventDetailScreen({
 
   return (
     <div className="relative h-full overflow-y-auto bg-background">
+      {/* Modal de login para invitados */}
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={() => setShowLoginPrompt(false)}
+        onLogin={() => {
+          setShowLoginPrompt(false);
+          onOpenAuth?.();
+        }}
+        onRegister={() => {
+          setShowLoginPrompt(false);
+          onOpenAuth?.();
+        }}
+        actionContext="unirte al partido"
+      />
       {/* Hero */}
       <div className="relative h-64 w-full overflow-hidden">
         <img src={event.image} alt={event.title} className="h-full w-full object-cover" />

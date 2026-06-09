@@ -55,9 +55,10 @@ function parseLocation(location: any): { lat: number; lng: number } | null {
 interface CanchaCommentsScreenProps {
   cancha: any;
   onBack: () => void;
+  onOpenAuth?: () => void;
 }
 
-export function CanchaCommentsScreen({ cancha, onBack }: CanchaCommentsScreenProps) {
+export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaCommentsScreenProps) {
   const { user } = useCurrentUser();
   const [comments, setComments] = useState<any[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
@@ -326,10 +327,21 @@ export function CanchaCommentsScreen({ cancha, onBack }: CanchaCommentsScreenPro
             </span>
           </div>
         ) : !user ? (
-          <div className="flex flex-col items-center gap-2 rounded-2xl bg-muted/40 p-4 border border-dashed border-border">
-            <p className="text-xs font-semibold text-muted-foreground text-center">
-              Debes iniciar sesión para escribir un comentario.
-            </p>
+          <div className="flex flex-col items-center gap-3 rounded-2xl bg-muted/30 p-5 border border-dashed border-border">
+            <div className="grid h-10 w-10 place-items-center rounded-full bg-muted text-lg">💬</div>
+            <div className="text-center space-y-1">
+              <p className="text-sm font-bold text-secondary">Inicia sesión para comentar</p>
+              <p className="text-xs text-muted-foreground">
+                Comparte tu opinión sobre esta cancha con la comunidad.
+              </p>
+            </div>
+            <button
+              id="comments-login-btn"
+              onClick={onOpenAuth}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#32CD32] to-[#22a822] px-5 py-2.5 text-xs font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-95 hover:shadow-green-500/30"
+            >
+              Iniciar Sesión / Registrarse
+            </button>
           </div>
         ) : !canComment ? (
           <div className="flex gap-2.5 items-start rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3.5">
