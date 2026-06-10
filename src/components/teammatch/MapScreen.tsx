@@ -186,7 +186,7 @@ export function MapScreen({
     // Eventos / Partidos
     const { data, error } = await supabase
       .from("events")
-      .select("*")
+      .select("*, canchas(name)")
       .order("created_at", { ascending: false });
 
     if (error) { console.error("Error fetching events:", error); return; }
@@ -225,6 +225,7 @@ export function MapScreen({
           spots: row.max_capacity || 10,
           price: 0,
           zone: "Caracas",
+          cancha_name: row.canchas?.name || null,
           description_after_arrival: row.description_after_arrival,
         };
       });

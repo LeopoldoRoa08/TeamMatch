@@ -371,7 +371,7 @@ export function EventDetailScreen({
           <InfoTile 
             icon={MapPin} 
             label="Lugar" 
-            value={event.location} 
+            value={(event as any).cancha_name || event.zone || (event.lat && event.lng ? `${event.lat.toFixed(4)}, ${event.lng.toFixed(4)}` : "Caracas")}
             onClick={() => {
               const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
               const destination = `${event.lat},${event.lng}`;
@@ -573,7 +573,7 @@ export function EventDetailScreen({
               onClick={handleLeave}
               className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer"
             >
-              Cancelar solicitud ÔØî
+              Cancelar solicitud ⏳
             </button>
           ) : (
             <button

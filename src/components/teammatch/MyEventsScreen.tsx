@@ -57,6 +57,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       spots: row.max_capacity || 10,
       price: 0,
       zone: "Caracas",
+      cancha_name: row.canchas?.name || null,
       description_after_arrival: row.description_after_arrival,
     };
   };
@@ -77,7 +78,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
     const now = new Date().toISOString();
     const { data, error } = await supabase
       .from("events")
-      .select("*")
+      .select("*, canchas(name)")
       .or(`event_date.gte.${now},status.eq.abierto`)
       .order("event_date", { ascending: true });
 
@@ -93,12 +94,12 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
     const { data: createdData } = await supabase
       .from("events")
-      .select("*")
+      .select("*, canchas(name)")
       .eq("creator_username", email);
 
     const { data: joinedData } = await supabase
       .from("event_participants")
-      .select("events(*)")
+      .select("events(*, canchas(name))")
       .eq("user_username", email)
       .neq("status", "rechazado");
 
