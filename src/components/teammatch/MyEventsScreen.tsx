@@ -24,7 +24,7 @@ const getSportImage = (sportId: number) => {
 const tabs = ["Próximos", "Mis Partidos", "Solicitudes"] as const;
 
 export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
-  const [tab, setTab] = useState<(typeof tabs)[number]>("Mis Partidos");
+  const [tab, setTab] = useState<(typeof tabs)[number]>("Próximos");
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
   const [myEvents, setMyEvents] = useState<any[]>([]);
@@ -57,7 +57,6 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       spots: row.max_capacity || 10,
       price: 0,
       zone: "Caracas",
-      cancha_name: row.canchas?.name || null,
       description_after_arrival: row.description_after_arrival,
     };
   };
@@ -78,7 +77,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
     const now = new Date().toISOString();
     const { data, error } = await supabase
       .from("events")
-      .select("*, canchas(name)")
+      .select("*")
       .or(`event_date.gte.${now},status.eq.abierto`)
       .order("event_date", { ascending: true });
 
@@ -94,12 +93,12 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
     const { data: createdData } = await supabase
       .from("events")
-      .select("*, canchas(name)")
+      .select("*")
       .eq("creator_username", email);
 
     const { data: joinedData } = await supabase
       .from("event_participants")
-      .select("events(*, canchas(name))")
+      .select("events(*)")
       .eq("user_username", email)
       .neq("status", "rechazado");
 

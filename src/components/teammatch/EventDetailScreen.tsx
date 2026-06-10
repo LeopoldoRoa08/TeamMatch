@@ -371,7 +371,7 @@ export function EventDetailScreen({
           <InfoTile 
             icon={MapPin} 
             label="Lugar" 
-            value={(event as any).cancha_name || event.zone || (event.lat && event.lng ? `${event.lat.toFixed(4)}, ${event.lng.toFixed(4)}` : "Caracas")}
+            value={event.zone || (event.lat && event.lng ? `${event.lat.toFixed(4)}, ${event.lng.toFixed(4)}` : "Caracas")}
             onClick={() => {
               const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
               const destination = `${event.lat},${event.lng}`;
