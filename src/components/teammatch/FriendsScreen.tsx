@@ -12,6 +12,7 @@ import {
   UserX,
   Flame,
   Check,
+  CheckCircle2,
   Loader2
 } from "lucide-react";
 import { useCurrentUser } from "@/lib/UserContext";
@@ -202,11 +203,6 @@ export function FriendsScreen({
       setCandidates(candidates.filter(c => c.id !== candidate.id));
       
       setMatchProgress("sent");
-      setTimeout(() => {
-        setMatchProgress(null);
-        setActiveRequestUser(null);
-        handleReject(); // Move to next
-      }, 3000); // Also advance automatically
       
     } catch (err) {
       console.error(err);
@@ -290,10 +286,10 @@ export function FriendsScreen({
     <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
       {matchProgress && activeRequestUser && (
         <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 p-6 text-center animate-in fade-in duration-300">
-          <div className="absolute inset-0 sunburst-rays opacity-20 pointer-events-none" />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 40%, rgba(16,185,129,0.15) 0%, transparent 70%)' }} />
           
           {matchProgress === "sending" && (
-            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300">
+            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300 relative z-10">
               <div className="relative flex items-center justify-center h-24 w-24">
                 <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping duration-1000" />
                 <div className="h-16 w-16 rounded-full bg-primary/10 border border-primary/30 text-primary grid place-items-center animate-pulse">
@@ -311,19 +307,25 @@ export function FriendsScreen({
           )}
 
           {matchProgress === "sent" && (
-            <div className="space-y-5 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
+            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
               <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
                 ¡SOLICITUD ENVIADA! 🤝
               </span>
-              
-              <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
-                ¡ENVIADO!
-              </h2>
-              <p className="text-sm text-white/80 px-4">
-                Has enviado una solicitud de Match a {activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.
-              </p>
 
-              <div className="flex items-center justify-center gap-8 py-8 relative">
+              <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
+                <CheckCircle2 size={48} strokeWidth={2.5} />
+              </div>
+              
+              <div className="space-y-2">
+                <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-md">
+                  ¡Enviado!
+                </h2>
+                <p className="text-sm text-white/80 px-4 leading-relaxed">
+                  Has enviado una solicitud de Match a {activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-8 py-6 relative">
                 <div className="relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500 overflow-hidden">
                   {user?.user_metadata?.avatar_url ? (
                     <img src={user.user_metadata.avatar_url} className="w-full h-full object-cover" />
@@ -353,7 +355,7 @@ export function FriendsScreen({
           )}
 
           {matchProgress === "error" && (
-            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
+            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
               <span className="inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30">
                 ERROR 💔
               </span>

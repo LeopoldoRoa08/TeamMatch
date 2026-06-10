@@ -260,14 +260,6 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       setTimeout(() => {
         setShowFloatXp(false);
       }, 1200);
-
-      // Limpiar formulario tras éxito
-      setTimeout(() => {
-        setForm(INITIAL_FORM);
-        setStatus("idle");
-        onEventCreated();
-        onClose();
-      }, 1500);
     } catch (err: unknown) {
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err as { message: string; details?: string; hint?: string; code?: string };
@@ -303,17 +295,46 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
     );
   }
 
+  function handleDismissSuccess() {
+    setForm(INITIAL_FORM);
+    setStatus("idle");
+    onEventCreated();
+    onClose();
+  }
+
   if (status === "success") {
     return (
-      <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
-        <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
-          <CheckCircle2 size={48} strokeWidth={2.5} />
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-secondary">¡Evento publicado!</h2>
-          <p className="text-sm text-muted-foreground">
-            Tu partido ya está en el mapa, listo para que otros jugadores se unan.
-          </p>
+      <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center bg-black/95 px-6 text-center animate-in fade-in duration-300">
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 40%, rgba(16,185,129,0.15) 0%, transparent 70%)' }} />
+
+        <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
+          <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
+            ¡EVENTO PUBLICADO! ⚽
+          </span>
+
+          <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
+            <CheckCircle2 size={48} strokeWidth={2.5} />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-md">¡Listo!</h2>
+            <p className="text-sm text-white/80 px-4 leading-relaxed">
+              Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!
+            </p>
+          </div>
+
+          {showFloatXp && (
+            <div className="float-xp z-50">
+              +25 XP ⚡
+            </div>
+          )}
+
+          <button
+            onClick={handleDismissSuccess}
+            className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
+          >
+            ¡Entendido!
+          </button>
         </div>
       </div>
     );
