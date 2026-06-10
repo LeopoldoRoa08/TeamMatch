@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { events as mockEvents } from "./data";
 import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
-import { CouponPopup } from "./CouponPopup";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Star } from "lucide-react";
 import { UserAvatar } from "./UserAvatar";
@@ -171,7 +170,6 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
   return (
     <div className="h-full overflow-y-auto bg-background pb-24">
-      <CouponPopup />
       <header className="flex items-center justify-between px-5 md:px-8 pb-3 md:pb-6 pt-12 md:pt-16">
         <div>
           <h1 className="text-2xl md:text-4xl font-bold text-secondary">Mis eventos</h1>
