@@ -31,6 +31,40 @@ export function EventDetailScreen({
   const [selectedUserProfile, setSelectedUserProfile] = useState<any | null>(null);
 
   const [hostProfile, setHostProfile] = useState<any>(null);
+  const [myFriends, setMyFriends] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchMyFriends();
+    }
+  }, [currentUser]);
+
+  async function fetchMyFriends() {
+    if (!currentUser?.id) return;
+    try {
+      const { data: dbProfiles } = await supabase.from("profiles").select("*");
+      const { data: requestsData } = await supabase
+        .from("friend_requests")
+        .select("*")
+        .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
+      
+      const requests = requestsData || [];
+      const friends: any[] = [];
+      
+      requests.forEach((req: any) => {
+        if (req.status === 'accepted') {
+          const otherUserId = req.sender_id === currentUser.id ? req.receiver_id : req.sender_id;
+          const profile = dbProfiles?.find(p => p.id === otherUserId);
+          if (profile) {
+            friends.push(profile);
+          }
+        }
+      });
+      setMyFriends(friends);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   const renderAvatar = (username: string, sizeClass = "h-10 w-10", explicitAvatarUrl?: string | null) => {
     const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
@@ -571,42 +605,56 @@ export function EventDetailScreen({
             
             <div className="flex-1 overflow-y-auto py-4 space-y-2 pr-1">
               {(() => {
-                const storedFriends = localStorage.getItem("teammatch_friends");
-                const friendList: any[] = storedFriends ? JSON.parse(storedFriends) : [];
-                
-                // Filter out friends who are already participants
-                const nonParticipantFriends = friendList.filter(friend => {
-                  const friendEmail = friend.username || (friend.name.toLowerCase().replace(" ", "") + "@teammatch.com");
-                  return !participants.some(p => p.user_username === friendEmail || p.profiles?.username === friend.name || (friend.username && p.user_username === friend.username));
-                });
-
-                if (nonParticipantFriends.length === 0) {
+                if (myFriends.length === 0) {
                   return (
                     <div className="text-center text-xs text-muted-foreground py-8">
-                      No tienes amigos disponibles para invitar o todos ya están en el partido.
+                      No tienes amigos disponibles para invitar. ¡Acepta solicitudes en la pestaña de Amigos!
                     </div>
                   );
                 }
 
-                return nonParticipantFriends.map(friend => (
-                  <div key={friend.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`}>
-                        {friend.emoji}
+                return myFriends.map(profile => {
+                  const friend = getFormattedProfile(profile);
+                  if (!friend) return null;
+                  
+                  const friendEmail = friend.username || (friend.name.toLowerCase().replace(" ", "") + "@teammatch.com");
+                  const isParticipant = participants.some(p => 
+                    p.user_username === friendEmail || 
+                    p.profiles?.username === friend.name || 
+                    (friend.username && p.user_username === friend.username)
+                  );
+
+                  return (
+                    <div key={profile.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {friend.avatar_url ? (
+                          <img src={friend.avatar_url} className="h-9 w-9 rounded-full object-cover shadow-sm shrink-0" />
+                        ) : (
+                          <div className={`h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`}>
+                            {friend.emoji}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <div className="text-xs font-bold text-secondary truncate">{friend.name}</div>
+                          <div className="text-[9px] text-muted-foreground">{friend.location}</div>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <div className="text-xs font-bold text-secondary truncate">{friend.name}</div>
-                        <div className="text-[9px] text-muted-foreground">{friend.location}</div>
-                      </div>
+                      
+                      {isParticipant ? (
+                        <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg">
+                          Ya está en el partido
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleInviteFriend({ ...friend, id: profile.id })}
+                          className="rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
+                        >
+                          Agregar
+                        </button>
+                      )}
                     </div>
-                    <button
-                      onClick={() => handleInviteFriend(friend)}
-                      className="rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
-                    >
-                      Agregar
-                    </button>
-                  </div>
-                ));
+                  );
+                });
               })()}
             </div>
 
