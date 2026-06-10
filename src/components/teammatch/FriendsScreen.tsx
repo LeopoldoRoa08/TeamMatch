@@ -160,8 +160,8 @@ export function FriendsScreen({
       name: name || "Deportista",
       username: p.username,
       age: p.age || "?",
-      location: p.location || "Ubicaci├│n desconocida",
-      bio: p.description || "Sin descripci├│n",
+      location: p.location || "Ubicación desconocida",
+      bio: p.description || "Sin descripción",
       sports: p.preferred_sports || [],
       avatar_url: p.avatar_url || null,
       emoji,
@@ -231,7 +231,7 @@ export function FriendsScreen({
       setReceivedRequests(receivedRequests.filter(r => r.id !== request.id));
       setFriends([request, ...friends]);
       
-      await addXp(15, `┬íAceptaste a ${request.name} como amigo! ­ƒñØ`);
+      await addXp(15, `¡Aceptaste a ${request.name} como amigo! ­ƒñØ`);
       if (incrementCarisma) {
         await incrementCarisma(1);
       }
@@ -313,11 +313,11 @@ export function FriendsScreen({
           {matchProgress === "sent" && (
             <div className="space-y-5 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
               <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-                ┬íSOLICITUD ENVIADA! ­ƒñØ
+                ¡SOLICITUD ENVIADA! ­ƒñØ
               </span>
               
               <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
-                ┬íENVIADO!
+                ¡ENVIADO!
               </h2>
               <p className="text-sm text-white/80 px-4">
                 Has enviado una solicitud de Match a {activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.
@@ -332,7 +332,7 @@ export function FriendsScreen({
                   )}
                 </div>
                 <div className="absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce">
-                  ÔÜí
+                  ⚔️
                 </div>
                 <div className="relative h-20 w-20 shadow-pop animate-in slide-in-from-right duration-500">
                    {renderAvatar(activeRequestUser, "h-20 w-20 text-4xl")}
@@ -347,7 +347,7 @@ export function FriendsScreen({
                 }}
                 className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
               >
-                ┬íEntendido!
+                ¡Entendido!
               </button>
             </div>
           )}
@@ -363,7 +363,7 @@ export function FriendsScreen({
               </h2>
               
               <p className="text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5">
-                No pudimos enviar tu solicitud. Verifica tu conexi├│n o aseg├║rate de haber creado la tabla de friend_requests.
+                No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests.
               </p>
 
               <button
@@ -386,14 +386,14 @@ export function FriendsScreen({
           
           <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
             <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-              ┬íNUEVO MATCH! ­ƒñØ
+              ¡NUEVO MATCH! ­ƒñØ
             </span>
             
             <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
-              ┬íSOLICITUD ACEPTADA!
+              ¡SOLICITUD ACEPTADA!
             </h2>
             <p className="text-sm text-white/80 px-4">
-              ┬íT├║ y {acceptedMatchUser.name} ahora son amigos! Han ganado +1 punto de Carisma.
+              ¡Tú y {acceptedMatchUser.name} ahora son amigos! Han ganado +1 punto de Carisma.
             </p>
 
             <div className="flex items-center justify-center gap-8 py-8 relative">
@@ -494,7 +494,7 @@ export function FriendsScreen({
                   <div className="space-y-2">
                     <div className="flex items-baseline gap-2">
                       <h3 className="text-lg font-black text-secondary">{activeCandidate.name}</h3>
-                      <span className="text-sm font-bold text-muted-foreground">{activeCandidate.age} a├▒os</span>
+                      <span className="text-sm font-bold text-muted-foreground">{activeCandidate.age} años</span>
                     </div>
 
                     <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
@@ -524,7 +524,7 @@ export function FriendsScreen({
                   <button
                     onClick={() => handleLike(activeCandidate)}
                     className="grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop"
-                    title="┬íHacer Match!"
+                    title="¡Hacer Match!"
                   >
                     <Heart size={20} strokeWidth={2.5} className="fill-current" />
                   </button>
@@ -532,10 +532,10 @@ export function FriendsScreen({
               </div>
             ) : (
               <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12">
-                <div className="text-5xl">ÔÜí</div>
-                <h3 className="text-base font-black text-secondary">┬íEso es todo por hoy!</h3>
+                <div className="text-5xl">⚔️</div>
+                <h3 className="text-base font-black text-secondary">¡Eso es todo por hoy!</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Has revisado todos los candidatos cercanos en Caracas. Configura m├ís deportes favoritos en tu perfil para encontrar nuevos partidos y amigos.
+                  Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos.
                 </p>
                 <button
                   onClick={() => setCurrentIndex(0)}
@@ -562,7 +562,7 @@ export function FriendsScreen({
                         <div className="min-w-0">
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-sm font-bold text-secondary truncate">{req.name}</span>
-                            <span className="text-xs text-muted-foreground">{req.age} a├▒os</span>
+                            <span className="text-xs text-muted-foreground">{req.age} años</span>
                           </div>
                           <div className="text-[10px] text-primary font-extrabold">{req.location}</div>
                           <p className="text-[10px] text-muted-foreground truncate max-w-[160px]">{req.bio}</p>
@@ -612,7 +612,7 @@ export function FriendsScreen({
 
               {filteredFriends.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground">
-                  {searchQuery ? "No se encontraron amigos con ese criterio" : "A├║n no tienes amigos agregados. ┬íBusca conexiones en la pesta├▒a 'Para ti'!"}
+                  {searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!"}
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -623,7 +623,7 @@ export function FriendsScreen({
                         <div className="min-w-0">
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-sm font-bold text-secondary truncate">{friend.name}</span>
-                            <span className="text-xs text-muted-foreground">{friend.age} a├▒os</span>
+                            <span className="text-xs text-muted-foreground">{friend.age} años</span>
                           </div>
                           <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                             <MapPin size={9} className="text-primary" />

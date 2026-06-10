@@ -1,0 +1,1619 @@
+﻿diff --git a/src/components/teammatch/EditProfileScreen.tsx b/src/components/teammatch/EditProfileScreen.tsx
+index 0b935905..50b6d57b 100644
+--- a/src/components/teammatch/EditProfileScreen.tsx
++++ b/src/components/teammatch/EditProfileScreen.tsx
+@@ -21,6 +21,13 @@ export function EditProfileScreen({ onBack }: Props) {
+   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+   const [uploadingImage, setUploadingImage] = useState(false);
+ 
++  // Nuevos campos de perfil
++  const [age, setAge] = useState<number | undefined>(undefined);
++  const [gender, setGender] = useState("");
++  const [description, setDescription] = useState("");
++  const [location, setLocation] = useState("");
++  const [preferredSports, setPreferredSports] = useState<string[]>([]);
++
+   useEffect(() => {
+     if (currentUser) {
+       setUser(currentUser);
+@@ -28,6 +35,13 @@ export function EditProfileScreen({ onBack }: Props) {
+       setEmail(currentUser.email || "");
+       setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
+       setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
++      
++      setAge(currentUser.user_metadata?.age || undefined);
++      setGender(currentUser.user_metadata?.gender || "");
++      setDescription(currentUser.user_metadata?.description || "");
++      setLocation(currentUser.user_metadata?.location || "");
++      setPreferredSports(currentUser.user_metadata?.preferred_sports || []);
++      
+       setLoading(false);
+     } else {
+       // Fallback in case context hasn't loaded yet
+@@ -38,12 +52,19 @@ export function EditProfileScreen({ onBack }: Props) {
+           setEmail(user.email || "");
+           setAvatarUrl(user.user_metadata?.avatar_url || null);
+           setIsOrganizer(!!user.user_metadata?.is_organizer);
++          
++          setAge(user.user_metadata?.age || undefined);
++          setGender(user.user_metadata?.gender || "");
++          setDescription(user.user_metadata?.description || "");
++          setLocation(user.user_metadata?.location || "");
++          setPreferredSports(user.user_metadata?.preferred_sports || []);
+         }
+         setLoading(false);
+       });
+     }
+   }, [currentUser]);
+ 
++
+   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+     try {
+       setUploadingImage(true);
+@@ -87,7 +108,12 @@ export function EditProfileScreen({ onBack }: Props) {
+         name,
+         avatarUrl,
+         isOrganizer,
+-        email: email !== user?.email ? email : undefined
++        email: email !== user?.email ? email : undefined,
++        age,
++        gender,
++        description,
++        location,
++        preferredSports
+       });
+       
+       setSuccess("Perfil actualizado correctamente");
+@@ -101,6 +127,7 @@ export function EditProfileScreen({ onBack }: Props) {
+     }
+   };
+ 
++
+   if (loading) {
+     return (
+       <div className="flex h-full w-full items-center justify-center bg-background">
+@@ -111,7 +138,7 @@ export function EditProfileScreen({ onBack }: Props) {
+ 
+   return (
+     <div className="flex h-full flex-col bg-background">
+-      <header className="flex items-center gap-3 px-5 py-4">
++      <header className="flex items-center gap-3 px-5 py-4 shrink-0">
+         <button
+           onClick={onBack}
+           className="grid h-10 w-10 place-items-center rounded-full bg-card shadow-soft transition-transform active:scale-95"
+@@ -121,103 +148,182 @@ export function EditProfileScreen({ onBack }: Props) {
+         <h1 className="text-xl font-bold text-secondary">Editar Perfil</h1>
+       </header>
+ 
+-      <form onSubmit={handleSave} className="flex-1 px-5 pt-4 space-y-6">
+-        {error && (
+-          <div className="rounded-xl bg-destructive/10 p-3 text-sm font-semibold text-destructive">
+-            {error}
+-          </div>
+-        )}
+-        {success && (
+-          <div className="rounded-xl bg-primary/10 p-3 text-sm font-semibold text-primary">
+-            {success}
++      <form onSubmit={handleSave} className="flex flex-1 flex-col overflow-hidden">
++        {/* Scrollable content */}
++        <div className="flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-6">
++          {error && (
++            <div className="rounded-xl bg-destructive/10 p-3 text-sm font-semibold text-destructive">
++              {error}
++            </div>
++          )}
++          {success && (
++            <div className="rounded-xl bg-primary/10 p-3 text-sm font-semibold text-primary">
++              {success}
++            </div>
++          )}
++
++          <div className="flex flex-col items-center justify-center space-y-3 pb-2">
++            <div className="relative">
++              {avatarUrl ? (
++                <img src={avatarUrl} alt="Avatar" className="h-24 w-24 rounded-full object-cover border-2 border-primary/30" />
++              ) : (
++                <div className="h-24 w-24 rounded-full bg-primary/20 flex items-center justify-center text-2xl font-bold text-primary">
++                  {name.substring(0, 2).toUpperCase()}
++                </div>
++              )}
++              <label className="absolute bottom-0 right-0 grid h-8 w-8 cursor-pointer place-items-center rounded-full bg-primary text-secondary shadow-pop transition-transform active:scale-90">
++                {uploadingImage ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
++                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploadingImage} />
++              </label>
++            </div>
++            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Foto de perfil</span>
+           </div>
+-        )}
+ 
+-        <div className="flex flex-col items-center justify-center space-y-3 pb-2">
+-          <div className="relative h-24 w-24">
+-            {avatarUrl ? (
+-              <img src={avatarUrl} alt="Avatar" className="h-full w-full rounded-full object-cover border-4 border-card shadow-soft" />
+-            ) : (
+-              <div className="flex h-full w-full items-center justify-center rounded-full bg-secondary text-3xl font-bold text-[#32CD32] shadow-soft">
+-                {(name || "U").substring(0, 2).toUpperCase()}
+-              </div>
+-            )}
+-            <label className="absolute bottom-0 right-0 grid h-8 w-8 cursor-pointer place-items-center rounded-full bg-primary text-secondary shadow-pop transition-transform hover:scale-105 active:scale-95">
+-              {uploadingImage ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
+-              <input 
+-                type="file" 
+-                className="hidden" 
+-                accept="image/*" 
+-                onChange={handleImageUpload} 
+-                disabled={uploadingImage}
++          <div className="space-y-4">
++            <div className="space-y-1.5">
++              <label className="text-xs font-bold text-muted-foreground">Nombre completo</label>
++              <input
++                type="text"
++                value={name}
++                onChange={(e) => setName(e.target.value)}
++                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
++                placeholder="Tu nombre"
++                required
+               />
+-            </label>
+-          </div>
+-          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Foto de perfil</p>
+-        </div>
++            </div>
+ 
+-        <div className="space-y-4">
+-          <div className="space-y-1.5">
+-            <label className="text-xs font-bold text-muted-foreground">Nombre completo</label>
+-            <input
+-              type="text"
+-              value={name}
+-              onChange={(e) => setName(e.target.value)}
+-              className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+-              placeholder="Tu nombre"
+-              required
+-            />
+-          </div>
++            <div className="space-y-1.5">
++              <label className="text-xs font-bold text-muted-foreground">Correo electr├│nico</label>
++              <input
++                type="email"
++                value={email}
++                onChange={(e) => setEmail(e.target.value)}
++                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
++                placeholder="tu@email.com"
++                required
++              />
++              <p className="text-[10px] text-muted-foreground">
++                Al cambiar el correo electr├│nico, se enviar├í un mensaje de confirmaci├│n.
++              </p>
++            </div>
+ 
+-          <div className="space-y-1.5">
+-            <label className="text-xs font-bold text-muted-foreground">Correo electr├│nico</label>
+-            <input
+-              type="email"
+-              value={email}
+-              onChange={(e) => setEmail(e.target.value)}
+-              className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+-              placeholder="tu@email.com"
+-              required
+-            />
+-            <p className="text-[10px] text-muted-foreground">
+-              Al cambiar el correo electr├│nico, se enviar├í un mensaje de confirmaci├│n.
+-            </p>
+-          </div>
++            <div className="grid grid-cols-2 gap-4">
++              <div className="space-y-1.5">
++                <label className="text-xs font-bold text-muted-foreground">Edad</label>
++                <input
++                  type="number"
++                  value={age ?? ""}
++                  onChange={(e) => setAge(e.target.value ? parseInt(e.target.value) : undefined)}
++                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
++                  placeholder="Ej. 25"
++                  min="1"
++                  max="120"
++                />
++              </div>
++              <div className="space-y-1.5">
++                <label className="text-xs font-bold text-muted-foreground">G├®nero</label>
++                <select
++                  value={gender}
++                  onChange={(e) => setGender(e.target.value)}
++                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
++                >
++                  <option value="">Seleccionar...</option>
++                  <option value="Masculino">Masculino</option>
++                  <option value="Femenino">Femenino</option>
++                  <option value="Otro">Otro</option>
++                </select>
++              </div>
++            </div>
+ 
+-          <div className="pt-2">
+-            <label className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 cursor-pointer transition-all hover:border-primary/50 active:scale-[0.99]">
++            <div className="space-y-1.5">
++              <label className="text-xs font-bold text-muted-foreground">Ubicaci├│n (Municipio/Zona)</label>
+               <input
+-                type="checkbox"
+-                checked={isOrganizer}
+-                onChange={(e) => setIsOrganizer(e.target.checked)}
+-                className="h-4 w-4 rounded border-border text-primary accent-primary"
++                type="text"
++                value={location}
++                onChange={(e) => setLocation(e.target.value)}
++                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
++                placeholder="Ej. Chacao, Caracas"
++              />
++            </div>
++
++            <div className="space-y-1.5">
++              <label className="text-xs font-bold text-muted-foreground">Sobre m├¡ (Descripci├│n)</label>
++              <textarea
++                value={description}
++                onChange={(e) => setDescription(e.target.value)}
++                rows={3}
++                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none"
++                placeholder="Cu├®ntanos un poco sobre ti, tu nivel de juego, etc."
+               />
+-              <div className="text-left">
+-                <span className="text-sm font-bold text-secondary block">
+-                  Modo Organizador
+-                </span>
+-                <span className="text-[10px] text-muted-foreground">
+-                  Te permite registrar y gestionar tus propias instalaciones y canchas
+-                </span>
++            </div>
++
++            <div className="space-y-2">
++              <label className="text-xs font-bold text-muted-foreground block">Deportes preferidos</label>
++              <div className="flex flex-wrap gap-2">
++                {["Running", "Senderismo", "P├ídel", "Tenis", "V├│leibol"].map((sport) => {
++                  const isSelected = preferredSports.includes(sport);
++                  return (
++                    <button
++                      key={sport}
++                      type="button"
++                      onClick={() => {
++                        if (isSelected) {
++                          setPreferredSports(preferredSports.filter((s) => s !== sport));
++                        } else {
++                          setPreferredSports([...preferredSports, sport]);
++                        }
++                      }}
++                      className={`rounded-full px-3 py-1.5 text-xs font-bold border transition-all ${
++                        isSelected
++                          ? "bg-primary/20 text-primary border-primary"
++                          : "bg-card text-muted-foreground border-border hover:border-muted-foreground"
++                      }`}
++                    >
++                      {sport}
++                    </button>
++                  );
++                })}
+               </div>
+-            </label>
++            </div>
++
++            <div className="pt-2">
++              <label className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 cursor-pointer transition-all hover:border-primary/50 active:scale-[0.99]">
++                <input
++                  type="checkbox"
++                  checked={isOrganizer}
++                  onChange={(e) => setIsOrganizer(e.target.checked)}
++                  className="h-4 w-4 rounded border-border text-primary accent-primary"
++                />
++                <div className="text-left">
++                  <span className="text-sm font-bold text-secondary block">
++                    Modo Organizador
++                  </span>
++                  <span className="text-[10px] text-muted-foreground">
++                    Te permite registrar y gestionar tus propias instalaciones y canchas
++                  </span>
++                </div>
++              </label>
++            </div>
+           </div>
+         </div>
+ 
+-        <button
+-          type="submit"
+-          disabled={saving}
+-          className="flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-sm font-bold text-secondary shadow-pop transition-transform active:scale-[0.98] disabled:opacity-70"
+-        >
+-          {saving ? (
+-            <Loader2 size={18} className="animate-spin" />
+-          ) : (
+-            <>
+-              <Save size={18} />
+-              Guardar Cambios
+-            </>
+-          )}
+-        </button>
++        {/* Fixed save button at bottom */}
++        <div className="shrink-0 px-5 py-4 border-t border-border bg-background">
++          <button
++            type="submit"
++            disabled={saving}
++            className="flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-sm font-bold text-secondary shadow-pop transition-transform active:scale-[0.98] disabled:opacity-70"
++          >
++            {saving ? (
++              <Loader2 size={18} className="animate-spin" />
++            ) : (
++              <>
++                <Save size={18} />
++                Guardar Cambios
++              </>
++            )}
++          </button>
++        </div>
+       </form>
+     </div>
+   );
+diff --git a/src/components/teammatch/EventDetailScreen.tsx b/src/components/teammatch/EventDetailScreen.tsx
+index 6afab3b1..c9de4119 100644
+--- a/src/components/teammatch/EventDetailScreen.tsx
++++ b/src/components/teammatch/EventDetailScreen.tsx
+@@ -4,18 +4,15 @@ import type { SportEvent } from "./types";
+ import { SportBadge } from "./SportBadge";
+ import { supabase } from "@/lib/supabase";
+ import { useCurrentUser } from "@/lib/UserContext";
+-import { LoginPromptModal } from "./LoginPromptModal";
+ 
+ export function EventDetailScreen({
+   event,
+   onBack,
+   userLocation,
+-  onOpenAuth,
+ }: {
+   event: SportEvent;
+   onBack: () => void;
+   userLocation?: { lat: number; lng: number } | null;
+-  onOpenAuth?: () => void;
+ }) {
+   const [participants, setParticipants] = useState<any[]>([]);
+   const [loading, setLoading] = useState(true);
+@@ -24,9 +21,10 @@ export function EventDetailScreen({
+   const [currentUser, setCurrentUser] = useState<any>(null);
+   const [showSuccess, setShowSuccess] = useState(false);
+   const [showFloatXp, setShowFloatXp] = useState(false);
+-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
+   const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
++  const [showInviteModal, setShowInviteModal] = useState(false);
++  const [selectedUserProfile, setSelectedUserProfile] = useState<any | null>(null);
+ 
+   const [hostProfile, setHostProfile] = useState<any>(null);
+ 
+@@ -84,10 +82,9 @@ export function EventDetailScreen({
+ 
+   async function fetchParticipants() {
+     setLoading(true);
+-    // Asumimos que la tabla event_participants tiene una columna 'status' (pending, approved, rejected)
+     const { data, error } = await supabase
+       .from("event_participants")
+-      .select("*, profiles(username, rating, avatar_url)")
++      .select("*, profiles(*)")
+       .eq("event_id", event.id);
+ 
+     if (!error && data) {
+@@ -97,11 +94,7 @@ export function EventDetailScreen({
+   }
+ 
+   async function handleJoin() {
+-    // Si no hay usuario autenticado, mostrar modal de login
+-    if (!currentUser || !currentUser.email) {
+-      setShowLoginPrompt(true);
+-      return;
+-    }
++    if (!currentUser || !currentUser.email) return alert("Debes iniciar sesi├│n");
+     setJoining(true);
+ 
+     // Insertamos solicitud con status 'pending'
+@@ -150,6 +143,83 @@ export function EventDetailScreen({
+     setActionLoading(null);
+   }
+ 
++  async function handleInviteFriend(friend: any) {
++    const friendEmail = friend.username || (friend.name.toLowerCase().replace(" ", "") + "@teammatch.com");
++    const invitationStatus = isHost ? "aceptado" : "pendiente";
++    try {
++      const { error } = await supabase.from("event_participants").insert({
++        event_id: event.id,
++        user_username: friendEmail,
++        status: invitationStatus
++      });
++      if (error) throw error;
++      if (invitationStatus === "aceptado") {
++        alert(`┬í${friend.name} ha sido agregado al partido!`);
++      } else {
++        alert(`┬íSe ha enviado la solicitud de invitaci├│n para ${friend.name}! Esperando aprobaci├│n del organizador.`);
++      }
++      fetchParticipants();
++    } catch (e: any) {
++      console.warn("Could not insert to Supabase event_participants due to RLS/schema, simulating locally:", e);
++      
++      const idHash = friend.id ? friend.id.split("-").join("") : (friend.username || friend.name);
++      let charCodeSum = 0;
++      for (let i = 0; i < idHash.length; i++) {
++        charCodeSum += idHash.charCodeAt(i);
++      }
++      const rating = 4.5 + (charCodeSum % 6) * 0.1;
++
++      // Fallback local
++      const mockParticipant = {
++        id: Math.floor(Math.random() * 100000),
++        event_id: event.id,
++        user_username: friendEmail,
++        status: invitationStatus,
++        profiles: {
++          username: friend.username || friendEmail,
++          avatar_url: null,
++          rating: Number(rating.toFixed(2)),
++          age: friend.age,
++          gender: friend.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
++          description: friend.bio,
++          location: friend.location,
++          preferred_sports: friend.sports
++        }
++      };
++      setParticipants(prev => [...prev, mockParticipant]);
++      if (invitationStatus === "aceptado") {
++        alert(`┬í${friend.name} ha sido agregado al partido!`);
++      } else {
++        alert(`┬íSe ha enviado la solicitud de invitaci├│n para ${friend.name}! Esperando aprobaci├│n del organizador.`);
++      }
++    }
++  }
++
++  async function handleLeave() {
++    if (!currentUser?.email) return;
++    const confirmLeave = confirm("┬┐Est├ís seguro de que deseas salirte de este partido?");
++    if (!confirmLeave) return;
++
++    try {
++      const { error } = await supabase
++        .from("event_participants")
++        .delete()
++        .eq("event_id", event.id)
++        .eq("user_username", currentUser.email);
++
++      if (error) throw error;
++      
++      alert("Te has salido del partido.");
++      fetchParticipants();
++    } catch (e: any) {
++      console.error("Error leaving event, simulating locally:", e);
++      // Local fallback
++      setParticipants(prev => prev.filter(p => p.user_username !== currentUser.email));
++      alert("Te has salido del partido.");
++    }
++  }
++
++
+   const approvedPlayers = participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status); // Fallback si status no existe
+   const pendingRequests = participants.filter(p => p.status === "pending" || p.status === "pendiente");
+   const emptySpots = Math.max(0, event.spots - approvedPlayers.length);
+@@ -198,20 +268,6 @@ export function EventDetailScreen({
+ 
+   return (
+     <div className="relative h-full overflow-y-auto bg-background">
+-      {/* Modal de login para invitados */}
+-      <LoginPromptModal
+-        isOpen={showLoginPrompt}
+-        onClose={() => setShowLoginPrompt(false)}
+-        onLogin={() => {
+-          setShowLoginPrompt(false);
+-          onOpenAuth?.();
+-        }}
+-        onRegister={() => {
+-          setShowLoginPrompt(false);
+-          onOpenAuth?.();
+-        }}
+-        actionContext="unirte al partido"
+-      />
+       {/* Hero */}
+       <div className="relative h-64 w-full overflow-hidden">
+         <img src={event.image} alt={event.title} className="h-full w-full object-cover" />
+@@ -315,7 +371,10 @@ export function EventDetailScreen({
+             <div className="space-y-2">
+               {pendingRequests.map(req => (
+                 <div key={req.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft">
+-                  <div className="flex items-center gap-3">
++                  <div 
++                    onClick={() => setSelectedUserProfile(req.profiles || { username: req.user_username })}
++                    className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
++                  >
+                     {renderAvatar(req.user_username || "Usuario", "h-10 w-10", req.profiles?.avatar_url)}
+                     <div>
+                       <div className="text-sm font-bold text-secondary">
+@@ -325,6 +384,15 @@ export function EventDetailScreen({
+                         <Star size={10} className="fill-accent text-accent" />
+                         {req.profiles?.rating || "5.00"}
+                       </div>
++                      <button 
++                        onClick={(e) => {
++                          e.stopPropagation();
++                          setSelectedUserProfile(req.profiles || { username: req.user_username });
++                        }}
++                        className="text-[9px] font-extrabold text-primary hover:underline block text-left"
++                      >
++                        Ver Perfil ­ƒöì
++                      </button>
+                     </div>
+                   </div>
+                   <div className="flex gap-2">
+@@ -353,8 +421,19 @@ export function EventDetailScreen({
+         <div>
+           <div className="mb-2 flex items-center justify-between">
+             <h3 className="text-sm font-bold text-secondary">Jugadores aprobados</h3>
+-            <span className="text-xs text-muted-foreground">{emptySpots} cupos disponibles</span>
++            <div className="flex items-center gap-2">
++              {currentUser && (
++                <button
++                  onClick={() => setShowInviteModal(true)}
++                  className="rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-black transition-all active:scale-95 shadow-sm cursor-pointer"
++                >
++                  + Invitar Amigos
++                </button>
++              )}
++              <span className="text-xs text-muted-foreground">{emptySpots} cupos disponibles</span>
++            </div>
+           </div>
++
+           <div className="flex flex-wrap gap-2">
+             {loading ? (
+               <div className="text-xs text-muted-foreground">Cargando jugadores...</div>
+@@ -418,35 +497,291 @@ export function EventDetailScreen({
+               {selectedCouponCode && <span className="text-[10px] text-muted-foreground line-through ml-1.5">${event.price}</span>}
+             </div>
+           </div>
+-          <button
+-            disabled={joining || emptySpots === 0 || isUserPending || isUserApproved}
+-            onClick={handleJoin}
+-            className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 ${
+-              isUserApproved
+-                ? "bg-primary text-secondary"
+-                : isUserPending
+-                  ? "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+-                  : emptySpots === 0
+-                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+-                    : "gradient-primary text-secondary"
+-            }`}
+-          >
+-            {joining 
+-              ? "Enviando..." 
+-              : isUserApproved 
+-                ? "Ya est├ís dentro" 
+-                : isUserPending 
+-                  ? "Esperando solicitud" 
+-                  : emptySpots === 0 
+-                    ? "Evento Lleno" 
+-                    : "Solicitar unirme"}
+-          </button>
++          {isHost ? (
++            <button
++              disabled={true}
++              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center"
++            >
++              Eres el organizador ­ƒææ
++            </button>
++          ) : isUserApproved ? (
++            <button
++              disabled={joining}
++              onClick={handleLeave}
++              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer"
++            >
++              Salir del partido ­ƒÜ¬
++            </button>
++          ) : isUserPending ? (
++            <button
++              disabled={joining}
++              onClick={handleLeave}
++              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer"
++            >
++              Cancelar solicitud ÔØî
++            </button>
++          ) : (
++            <button
++              disabled={joining || emptySpots === 0}
++              onClick={handleJoin}
++              className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${
++                emptySpots === 0
++                  ? "bg-muted text-muted-foreground cursor-not-allowed"
++                  : "gradient-primary text-secondary"
++              }`}
++            >
++              {joining 
++                ? "Enviando..." 
++                : emptySpots === 0 
++                  ? "Evento Lleno" 
++                  : "Solicitar unirme"}
++            </button>
++          )}
+         </div>
+       </div>
++
++      {/* Modal de Invitar Amigos */}
++      {showInviteModal && (
++        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-6 py-4 animate-in fade-in duration-300">
++          <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[80vh]">
++            <h3 className="text-lg font-black text-white flex items-center gap-2 border-b border-white/10 pb-3">
++              <Users size={20} className="text-primary animate-pulse" /> Invitar Amigos
++            </h3>
++            
++            <div className="flex-1 overflow-y-auto py-4 space-y-2 pr-1">
++              {(() => {
++                const storedFriends = localStorage.getItem("teammatch_friends");
++                const friendList: any[] = storedFriends ? JSON.parse(storedFriends) : [];
++                
++                // Filter out friends who are already participants
++                const nonParticipantFriends = friendList.filter(friend => {
++                  const friendEmail = friend.username || (friend.name.toLowerCase().replace(" ", "") + "@teammatch.com");
++                  return !participants.some(p => p.user_username === friendEmail || p.profiles?.username === friend.name || (friend.username && p.user_username === friend.username));
++                });
++
++                if (nonParticipantFriends.length === 0) {
++                  return (
++                    <div className="text-center text-xs text-muted-foreground py-8">
++                      No tienes amigos disponibles para invitar o todos ya est├ín en el partido.
++                    </div>
++                  );
++                }
++
++                return nonParticipantFriends.map(friend => (
++                  <div key={friend.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft">
++                    <div className="flex items-center gap-2.5 min-w-0">
++                      <div className={`h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`}>
++                        {friend.emoji}
++                      </div>
++                      <div className="min-w-0">
++                        <div className="text-xs font-bold text-secondary truncate">{friend.name}</div>
++                        <div className="text-[9px] text-muted-foreground">{friend.location}</div>
++                      </div>
++                    </div>
++                    <button
++                      onClick={() => handleInviteFriend(friend)}
++                      className="rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
++                    >
++                      Agregar
++                    </button>
++                  </div>
++                ));
++              })()}
++            </div>
++
++             <button
++              onClick={() => setShowInviteModal(false)}
++              className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
++            >
++              Cerrar
++            </button>
++          </div>
++        </div>
++      )}
++
++      {/* Modal de Perfil de Usuario Solicitante */}
++      {selectedUserProfile && (() => {
++        const formatted = getFormattedProfile(selectedUserProfile);
++        if (!formatted) return null;
++        
++        return (
++          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 px-6 py-4 animate-in fade-in duration-300">
++            <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col">
++              
++              {/* Banner superior con gradiente */}
++              <div className={`h-24 w-full bg-gradient-to-tr ${formatted.gradient} relative shrink-0`} />
++              
++              {/* Foto de perfil flotante */}
++              <div className="absolute top-10 left-6">
++                <div className="relative">
++                  <div className="h-16 w-16 rounded-full bg-card p-1 shadow-md ring-4 ring-secondary">
++                    {formatted.avatar_url ? (
++                      <img 
++                        src={formatted.avatar_url} 
++                        alt="Avatar" 
++                        className="h-full w-full rounded-full object-cover"
++                      />
++                    ) : (
++                      <div className={`h-full w-full rounded-full bg-gradient-to-tr ${formatted.gradient} grid place-items-center text-2xl`}>
++                        {formatted.emoji}
++                      </div>
++                    )}
++                  </div>
++                </div>
++              </div>
++
++              {/* Bot├│n cerrar flotante */}
++              <button 
++                onClick={() => setSelectedUserProfile(null)}
++                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors grid place-items-center cursor-pointer"
++              >
++                <X size={16} />
++              </button>
++
++              {/* Contenido del perfil */}
++              <div className="p-6 pt-8 space-y-4 text-white">
++                <div className="space-y-1">
++                  <h3 className="text-base font-black flex items-center gap-2">
++                    {formatted.name}
++                    {formatted.is_organizer && (
++                      <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30">
++                        Organizador
++                      </span>
++                    )}
++                  </h3>
++                  <p className="text-[10px] text-white/50">{formatted.username}</p>
++                </div>
++
++                {/* Reputaci├│n / Rating */}
++                <div className="inline-flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-2.5 py-1 text-xs font-bold text-primary">
++                  <Star size={12} className="fill-primary text-primary" /> {formatted.rating.toFixed(2)} Reputaci├│n
++                </div>
++
++                {/* Grid de Atributos */}
++                <div className="grid grid-cols-3 gap-2 text-center text-xs">
++                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
++                    <span className="text-[9px] text-white/50 block font-bold">Edad</span>
++                    <span className="font-extrabold text-white">{formatted.age} a├▒os</span>
++                  </div>
++                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
++                    <span className="text-[9px] text-white/50 block font-bold">G├®nero</span>
++                    <span className="font-extrabold text-white truncate block">{formatted.gender}</span>
++                  </div>
++                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
++                    <span className="text-[9px] text-white/50 block font-bold">Ubicaci├│n</span>
++                    <span className="font-extrabold text-white truncate block" title={formatted.location}>
++                      {formatted.location}
++                    </span>
++                  </div>
++                </div>
++
++                {/* Biograf├¡a / Sobre m├¡ */}
++                <div className="space-y-1">
++                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Sobre m├¡</span>
++                  <p className="text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic">
++                    "{formatted.bio}"
++                  </p>
++                </div>
++
++                {/* Deportes favoritos */}
++                <div className="space-y-1.5">
++                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Deportes Favoritos</span>
++                  <div className="flex flex-wrap gap-1.5">
++                    {formatted.sports.map((sport: string) => (
++                      <span key={sport} className="rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary">
++                        {sport}
++                      </span>
++                    ))}
++                  </div>
++                </div>
++
++                {/* Bot├│n cerrar */}
++                <button
++                  onClick={() => setSelectedUserProfile(null)}
++                  className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
++                >
++                  Volver al Partido
++                </button>
++              </div>
++
++            </div>
++          </div>
++        );
++      })()}
+     </div>
+   );
+ }
+ 
++const getFormattedProfile = (p: any) => {
++  if (!p) return null;
++  const username = p.username || "Usuario";
++  
++  let charCodeSum = 0;
++  for (let i = 0; i < username.length; i++) {
++    charCodeSum += username.charCodeAt(i);
++  }
++  
++  const age = p.age || (20 + (charCodeSum % 15));
++  
++  const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
++  const location = p.location || locations[charCodeSum % locations.length];
++  
++  const sportsPool = ["Running", "Senderismo", "P├ídel", "Tenis", "V├│leibol"];
++  const sportsCount = 1 + (charCodeSum % 3);
++  const sports: string[] = p.preferred_sports || [];
++  if (sports.length === 0) {
++    for (let i = 0; i < sportsCount; i++) {
++      const sport = sportsPool[(charCodeSum + i) % sportsPool.length];
++      if (!sports.includes(sport)) {
++        sports.push(sport);
++      }
++    }
++  }
++  
++  const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
++  const emoji = emojis[charCodeSum % emojis.length];
++  
++  const gradients = [
++    "from-pink-500 to-rose-400",
++    "from-emerald-500 to-teal-400",
++    "from-blue-500 to-cyan-400",
++    "from-purple-500 to-indigo-400",
++    "from-amber-500 to-orange-400",
++    "from-sky-500 to-blue-600",
++    "from-orange-400 to-red-500"
++  ];
++  const gradient = gradients[charCodeSum % gradients.length];
++  
++  const bios = [
++    "┬íMe encanta el deporte y conocer gente nueva para entrenar en Caracas!",
++    "Siempre activo para jugar un partido de p├ídel o tenis.",
++    "Subo al ├üvila todos los fines de semana. ┬íAcomp├í├▒ame!",
++    "Running y entrenamiento funcional. Busco motivar y que me motiven.",
++    "Jugador recreativo de v├│leibol y f├║tbol. Buena vibra."
++  ];
++  const bio = p.description || bios[charCodeSum % bios.length];
++  
++  const name = username.includes("@") 
++    ? username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
++    : username;
++
++  return {
++    name,
++    username,
++    age,
++    gender: p.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
++    location,
++    bio,
++    sports,
++    emoji,
++    gradient,
++    rating: p.rating || 4.8,
++    avatar_url: p.avatar_url,
++    is_premium: p.is_premium || false,
++    is_organizer: p.is_organizer || false
++  };
++};
++
+ function InfoTile({
+   icon: Icon,
+   label,
+diff --git a/src/components/teammatch/MyEventsScreen.tsx b/src/components/teammatch/MyEventsScreen.tsx
+index d7802b1c..6f75323f 100644
+--- a/src/components/teammatch/MyEventsScreen.tsx
++++ b/src/components/teammatch/MyEventsScreen.tsx
+@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
+ import { events as mockEvents } from "./data";
+ import { EventCard } from "./EventCard";
+ import type { SportEvent } from "./types";
+-import { CouponPopup } from "./CouponPopup";
+ import { supabase } from "@/lib/supabase";
+-import { Loader2, Star } from "lucide-react";
++import { Loader2, Star, X } from "lucide-react";
+ import { UserAvatar } from "./UserAvatar";
+ import footballField from "@/assets/football-field.jpg";
+ import padelCourt from "@/assets/padel-court.jpg";
+@@ -34,6 +33,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+   const [loading, setLoading] = useState(false);
+   const [actionLoading, setActionLoading] = useState<string | null>(null);
+   const [currentUser, setCurrentUser] = useState<any>(null);
++  const [selectedUserProfile, setSelectedUserProfile] = useState<any | null>(null);
+ 
+   const formatEvent = (row: any) => {
+     if (!row) return null;
+@@ -136,7 +136,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+         user_username, 
+         status,
+         events!inner(id, creator_username, sport_id),
+-        profiles(is_premium, rating, avatar_url)
++        profiles(*)
+       `)
+       .eq("status", "pendiente")
+       .eq("events.creator_username", email);
+@@ -171,17 +171,16 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+ 
+   return (
+     <div className="h-full overflow-y-auto bg-background pb-24">
+-      <CouponPopup />
+-      <header className="flex items-center justify-between px-5 md:px-8 pb-3 md:pb-6 pt-12 md:pt-16">
++      <header className="flex items-center justify-between px-5 pb-3 pt-12">
+         <div>
+-          <h1 className="text-2xl md:text-4xl font-bold text-secondary">Mis eventos</h1>
+-          <p className="text-sm md:text-base text-muted-foreground">Tu agenda deportiva</p>
++          <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
++          <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
+         </div>
+-        <UserAvatar size="md" className="cursor-pointer hover:scale-105 transition-transform" onClick={onNavigateToProfile} />
++        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
+       </header>
+ 
+-      <div className="sticky top-0 z-10 bg-background/80 px-5 md:px-8 pb-3 pt-1 backdrop-blur">
+-        <div className="flex gap-1 rounded-full bg-muted p-1 md:max-w-md">
++      <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
++        <div className="flex gap-1 rounded-full bg-muted p-1">
+           {tabs.map((t) => {
+             // Only show 'Solicitudes' tab if the user has created at least one event
+             if (t === "Solicitudes" && createdEvents.length === 0) return null;
+@@ -200,7 +199,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+       </div>
+ 
+       {tab === "Solicitudes" ? (
+-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-5 md:px-8 pt-3">
++        <div className="space-y-3 px-5 pt-3">
+           {loading ? (
+             <div className="flex justify-center p-5"><Loader2 className="animate-spin text-primary" /></div>
+           ) : pendingRequests.length === 0 ? (
+@@ -212,7 +211,10 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+ 
+               return (
+                 <div key={req.id} className="rounded-2xl bg-card p-4 shadow-soft">
+-                  <div className="mb-3 flex items-center gap-3">
++                  <div 
++                    onClick={() => setSelectedUserProfile(req.profiles || { username: req.user_username })}
++                    className="mb-3 flex items-center gap-3 cursor-pointer hover:opacity-85 transition-opacity"
++                  >
+                     {req.profiles?.avatar_url ? (
+                       <img
+                         src={req.profiles.avatar_url}
+@@ -239,7 +241,18 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+                           </span>
+                         )}
+                       </div>
+-                      <div className="text-xs text-muted-foreground mt-0.5">quiere unirse a tu partido de {sportName}</div>
++                      <div className="text-xs text-muted-foreground mt-0.5">
++                        quiere unirse a tu partido de {sportName}
++                        <button 
++                          onClick={(e) => {
++                            e.stopPropagation();
++                            setSelectedUserProfile(req.profiles || { username: req.user_username });
++                          }}
++                          className="text-[10px] font-extrabold text-primary hover:underline block text-left mt-1"
++                        >
++                          Ver Perfil ­ƒöì
++                        </button>
++                      </div>
+                     </div>
+                   </div>
+                   <div className="flex gap-2">
+@@ -264,7 +277,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+           )}
+         </div>
+       ) : (
+-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-5 md:px-8 pt-3">
++        <div className="grid grid-cols-3 gap-4 px-5 pt-3">
+           {tab === "Pr├│ximos" && (
+             <>
+               {availableEvents.map((e) => (
+@@ -289,9 +302,174 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
+               )}
+             </>
+           )}
+-          {/* Historial tab removed */}
+         </div>
+       )}
++
++      {selectedUserProfile && (() => {
++        const formatted = getFormattedProfile(selectedUserProfile);
++        if (!formatted) return null;
++        
++        return (
++          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 px-6 py-4 animate-in fade-in duration-300">
++            <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col">
++              
++              <div className={`h-24 w-full bg-gradient-to-tr ${formatted.gradient} relative shrink-0`} />
++              
++              <div className="absolute top-10 left-6">
++                <div className="relative">
++                  <div className="h-16 w-16 rounded-full bg-card p-1 shadow-md ring-4 ring-secondary">
++                    {formatted.avatar_url ? (
++                      <img 
++                        src={formatted.avatar_url} 
++                        alt="Avatar" 
++                        className="h-full w-full rounded-full object-cover"
++                      />
++                    ) : (
++                      <div className={`h-full w-full rounded-full bg-gradient-to-tr ${formatted.gradient} grid place-items-center text-2xl`}>
++                        {formatted.emoji}
++                      </div>
++                    )}
++                  </div>
++                </div>
++              </div>
++
++              <button 
++                onClick={() => setSelectedUserProfile(null)}
++                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors grid place-items-center cursor-pointer"
++              >
++                <X size={16} />
++              </button>
++
++              <div className="p-6 pt-8 space-y-4 text-white">
++                <div className="space-y-1">
++                  <h3 className="text-base font-black flex items-center gap-2">
++                    {formatted.name}
++                    {formatted.is_organizer && (
++                      <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30">
++                        Organizador
++                      </span>
++                    )}
++                  </h3>
++                  <p className="text-[10px] text-white/50">{formatted.username}</p>
++                </div>
++
++                <div className="grid grid-cols-3 gap-2 text-center text-xs">
++                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
++                    <span className="text-[9px] text-white/50 block font-bold">Edad</span>
++                    <span className="font-extrabold text-white">{formatted.age} a├▒os</span>
++                  </div>
++                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
++                    <span className="text-[9px] text-white/50 block font-bold">G├®nero</span>
++                    <span className="font-extrabold text-white truncate block">{formatted.gender}</span>
++                  </div>
++                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
++                    <span className="text-[9px] text-white/50 block font-bold">Ubicaci├│n</span>
++                    <span className="font-extrabold text-white truncate block" title={formatted.location}>
++                      {formatted.location}
++                    </span>
++                  </div>
++                </div>
++
++                <div className="space-y-1">
++                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Sobre m├¡</span>
++                  <p className="text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic">
++                    "{formatted.bio}"
++                  </p>
++                </div>
++
++                <div className="space-y-1.5">
++                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Deportes Favoritos</span>
++                  <div className="flex flex-wrap gap-1.5">
++                    {formatted.sports.map((sport: string) => (
++                      <span key={sport} className="rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary">
++                        {sport}
++                      </span>
++                    ))}
++                  </div>
++                </div>
++
++                <button
++                  onClick={() => setSelectedUserProfile(null)}
++                  className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
++                >
++                  Cerrar Perfil
++                </button>
++              </div>
++
++            </div>
++          </div>
++        );
++      })()}
+     </div>
+   );
+ }
++
++const getFormattedProfile = (p: any) => {
++  if (!p) return null;
++  const username = p.username || "Usuario";
++  
++  let charCodeSum = 0;
++  for (let i = 0; i < username.length; i++) {
++    charCodeSum += username.charCodeAt(i);
++  }
++  
++  const age = p.age || (20 + (charCodeSum % 15));
++  
++  const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
++  const location = p.location || locations[charCodeSum % locations.length];
++  
++  const sportsPool = ["Running", "Senderismo", "P├ídel", "Tenis", "V├│leibol"];
++  const sportsCount = 1 + (charCodeSum % 3);
++  const sports: string[] = p.preferred_sports || [];
++  if (sports.length === 0) {
++    for (let i = 0; i < sportsCount; i++) {
++      const sport = sportsPool[(charCodeSum + i) % sportsPool.length];
++      if (!sports.includes(sport)) {
++        sports.push(sport);
++      }
++    }
++  }
++  
++  const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
++  const emoji = emojis[charCodeSum % emojis.length];
++  
++  const gradients = [
++    "from-pink-500 to-rose-400",
++    "from-emerald-500 to-teal-400",
++    "from-blue-500 to-cyan-400",
++    "from-purple-500 to-indigo-400",
++    "from-amber-500 to-orange-400",
++    "from-sky-500 to-blue-600",
++    "from-orange-400 to-red-500"
++  ];
++  const gradient = gradients[charCodeSum % gradients.length];
++  
++  const bios = [
++    "┬íMe encanta el deporte y conocer gente nueva para entrenar en Caracas!",
++    "Siempre activo para jugar un partido de p├ídel o tenis.",
++    "Subo al ├üvila todos los fines de semana. ┬íAcomp├í├▒ame!",
++    "Running y entrenamiento funcional. Busco motivar y que me motiven.",
++    "Jugador recreativo de v├│leibol y f├║tbol. Buena vibra."
++  ];
++  const bio = p.description || bios[charCodeSum % bios.length];
++  
++  const name = username.includes("@") 
++    ? username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
++    : username;
++
++  return {
++    name,
++    username,
++    age,
++    gender: p.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
++    location,
++    bio,
++    sports,
++    emoji,
++    gradient,
++    rating: p.rating || 4.8,
++    avatar_url: p.avatar_url,
++    is_premium: p.is_premium || false,
++    is_organizer: p.is_organizer || false
++  };
++};
+diff --git a/src/components/teammatch/ProfileScreen.tsx b/src/components/teammatch/ProfileScreen.tsx
+index 6b84626f..806301f6 100644
+--- a/src/components/teammatch/ProfileScreen.tsx
++++ b/src/components/teammatch/ProfileScreen.tsx
+@@ -14,9 +14,6 @@ import {
+   BookOpen,
+   Award,
+   Calendar,
+-  ArrowRight,
+-  MapPin,
+-  Users,
+ } from "lucide-react";
+ import { useState } from "react";
+ import { useCurrentUser } from "@/lib/UserContext";
+@@ -24,13 +21,9 @@ import { useCurrentUser } from "@/lib/UserContext";
+ export function ProfileScreen({
+   onEdit,
+   onSelectEvent,
+-  onOpenAuth,
+-  onOpenRegister,
+ }: {
+   onEdit?: () => void;
+   onSelectEvent?: (e: any) => void;
+-  onOpenAuth?: () => void;
+-  onOpenRegister?: () => void;
+ }) {
+   const {
+     user,
+@@ -44,6 +37,7 @@ export function ProfileScreen({
+     joinedEventsCount,
+     createdEventsCount,
+     claimCoupon,
++    carisma,
+   } = useCurrentUser();
+ 
+   const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history">("stats");
+@@ -63,103 +57,8 @@ export function ProfileScreen({
+ 
+   if (!user) {
+     return (
+-      <div className="h-full overflow-y-auto bg-background">
+-        {/* Hero degradado */}
+-        <div className="relative bg-gradient-to-br from-[#0f1117] via-[#0f1117] to-[#1a2a1a] px-6 pb-20 pt-14 text-center overflow-hidden">
+-          {/* Glows decorativos */}
+-          <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-[#32CD32]/15 blur-3xl" />
+-          <div className="pointer-events-none absolute bottom-0 -right-10 h-40 w-40 rounded-full bg-[#32CD32]/10 blur-2xl" />
+-
+-          {/* Avatar gen├®rico animado */}
+-          <div className="relative inline-flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#32CD32] to-[#22a822] shadow-2xl shadow-green-500/30 ring-4 ring-[#32CD32]/20 mx-auto">
+-            <span className="text-4xl">­ƒÅƒ´©Å</span>
+-            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#0f1117] ring-2 ring-[#32CD32]/30">
+-              <span className="text-base">ÔØô</span>
+-            </div>
+-          </div>
+-
+-          <h1 className="mt-5 text-2xl font-black text-white">Perfil de Invitado</h1>
+-          <p className="mt-1.5 text-sm text-white/50 max-w-[260px] mx-auto">
+-            Explora la app libremente. Crea tu cuenta para desbloquear todo.
+-          </p>
+-        </div>
+-
+-        {/* Tarjeta principal */}
+-        <div className="px-5 -mt-10 space-y-4">
+-          {/* Caja ├Ünete a la comunidad */}
+-          <div className="rounded-3xl bg-card border border-border shadow-pop overflow-hidden">
+-            <div className="px-5 py-5 space-y-4">
+-              <div className="flex items-center gap-3">
+-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#32CD32]/15">
+-                  <Sparkles size={18} className="text-[#32CD32] animate-pulse" />
+-                </div>
+-                <div>
+-                  <h2 className="text-base font-black text-secondary">├Ünete a la comunidad</h2>
+-                  <p className="text-[11px] text-muted-foreground">Accede a todo TeamMatch gratis</p>
+-                </div>
+-              </div>
+-
+-              {/* Lista de beneficios */}
+-              <div className="space-y-2">
+-                {[
+-                  { icon: MapPin, text: "Encuentra partidos cerca de ti en tiempo real" },
+-                  { icon: Users, text: "Solicita un cupo y ├║nete con un toque" },
+-                  { icon: Trophy, text: "Sube de nivel y gana recompensas exclusivas" },
+-                  { icon: Zap, text: "Matchmaking inteligente por nivel de juego" },
+-                  { icon: Star, text: "Crea tus propios eventos y arma equipo" },
+-                ].map(({ icon: Icon, text }) => (
+-                  <div key={text} className="flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2.5">
+-                    <div className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15">
+-                      <Icon size={13} className="text-[#32CD32]" />
+-                    </div>
+-                    <span className="text-xs font-semibold text-secondary/80">{text}</span>
+-                  </div>
+-                ))}
+-              </div>
+-
+-              {/* CTAs */}
+-              <div className="space-y-2 pt-1">
+-                <button
+-                  id="guest-profile-register-btn"
+-                  onClick={onOpenRegister}
+-                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-[0.98] hover:shadow-green-500/30"
+-                >
+-                  Crear Cuenta Gratis
+-                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+-                </button>
+-                <button
+-                  id="guest-profile-login-btn"
+-                  onClick={onOpenAuth}
+-                  className="w-full rounded-2xl border border-border bg-muted/50 py-3.5 text-sm font-bold text-secondary transition-all hover:bg-muted active:scale-[0.98]"
+-                >
+-                  Ya tengo cuenta ÔÇö Iniciar Sesi├│n
+-                </button>
+-              </div>
+-            </div>
+-
+-            {/* Estadisticas animadas como placeholders */}
+-            <div className="border-t border-border grid grid-cols-3 divide-x divide-border">
+-              {[
+-                { k: "1.2k", v: "Jugadores" },
+-                { k: "320", v: "Eventos/mes" },
+-                { k: "4.9Ôÿà", v: "Rating" },
+-              ].map((s) => (
+-                <div key={s.v} className="flex flex-col items-center py-4">
+-                  <div className="text-lg font-black text-[#32CD32]">{s.k}</div>
+-                  <div className="text-[10px] font-semibold text-muted-foreground">{s.v}</div>
+-                </div>
+-              ))}
+-            </div>
+-          </div>
+-
+-          {/* Info extra */}
+-          <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-4 flex items-start gap-3">
+-            <Shield size={18} className="text-muted-foreground shrink-0 mt-0.5" />
+-            <p className="text-[11px] text-muted-foreground leading-relaxed">
+-              Tu cuenta es <strong className="text-secondary">100% gratuita</strong>. Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte.
+-            </p>
+-          </div>
+-        </div>
++      <div className="flex h-full w-full items-center justify-center bg-background">
++        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+       </div>
+     );
+   }
+@@ -202,7 +101,7 @@ export function ProfileScreen({
+   const str = 10 + joinedEventsCount * 2;
+   const wis = 10 + createdEventsCount * 5;
+   const con = 10 + useCount;
+-  const cha = 10 + Math.round((user.user_metadata?.rating || 4.8) * 2);
++  const cha = 10 + carisma;
+ 
+   if (showClaimSuccess) {
+     return (
+@@ -376,10 +275,56 @@ export function ProfileScreen({
+                 value={cha}
+                 colorClass="text-amber-500"
+                 bgClass="bg-amber-500/5 border-amber-500/10"
+-                description="Calculado seg├║n tu reputaci├│n deportiva"
++                description="Aumenta al aceptar match con nuevos amigos"
+               />
+             </div>
+ 
++            {/* Informaci├│n Personal (Edad, Ubicaci├│n, G├®nero, Deportes, Bio) */}
++            <div className="rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4">
++              <h4 className="text-xs font-black uppercase tracking-wider text-secondary flex items-center gap-1.5 border-b border-border pb-2">
++                <Sparkles size={14} className="text-primary animate-pulse" /> Informaci├│n de Perfil
++              </h4>
++              
++              <div className="grid grid-cols-3 gap-2 text-center text-xs">
++                <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
++                  <span className="text-[10px] text-muted-foreground block font-bold">Edad</span>
++                  <span className="font-black text-secondary">{user.user_metadata?.age ? `${user.user_metadata.age} a├▒os` : "ÔÇö"}</span>
++                </div>
++                <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
++                  <span className="text-[10px] text-muted-foreground block font-bold">G├®nero</span>
++                  <span className="font-black text-secondary">{user.user_metadata?.gender || "ÔÇö"}</span>
++                </div>
++                <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
++                  <span className="text-[10px] text-muted-foreground block font-bold">Ubicaci├│n</span>
++                  <span className="font-black text-secondary truncate block" title={user.user_metadata?.location || ""}>
++                    {user.user_metadata?.location || "ÔÇö"}
++                  </span>
++                </div>
++              </div>
++
++              {user.user_metadata?.description && (
++                <div className="space-y-1">
++                  <span className="text-[10px] text-muted-foreground font-bold">Sobre m├¡</span>
++                  <p className="text-xs leading-relaxed text-secondary-foreground/80 bg-muted/20 p-3 rounded-xl border border-border/30">
++                    {user.user_metadata.description}
++                  </p>
++                </div>
++              )}
++
++              {user.user_metadata?.preferred_sports && user.user_metadata.preferred_sports.length > 0 && (
++                <div className="space-y-1.5">
++                  <span className="text-[10px] text-muted-foreground font-bold block">Deportes favoritos</span>
++                  <div className="flex flex-wrap gap-1.5">
++                    {user.user_metadata.preferred_sports.map((sport: string) => (
++                      <span key={sport} className="rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
++                        {sport}
++                      </span>
++                    ))}
++                  </div>
++                </div>
++              )}
++            </div>
++
+             <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+               <h4 className="text-xs font-black uppercase tracking-wider text-secondary mb-1">
+                 Resumen de Campa├▒a
+diff --git a/src/lib/UserContext.tsx b/src/lib/UserContext.tsx
+index 532bfe25..0406f9fe 100644
+--- a/src/lib/UserContext.tsx
++++ b/src/lib/UserContext.tsx
+@@ -51,10 +51,22 @@ interface UserContextValue {
+   clearEventNotification: () => void;
+   addXp: (amount: number, reason: string) => Promise<void>;
+   claimCoupon: (code: string) => Promise<void>;
+-  updateProfile: (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => Promise<void>;
+-  isLoading: boolean;
++  updateProfile: (updates: {
++    name: string;
++    avatarUrl: string | null;
++    isOrganizer: boolean;
++    email?: string;
++    age?: number;
++    gender?: string;
++    description?: string;
++    location?: string;
++    preferredSports?: string[];
++  }) => Promise<void>;
++  carisma: number;
++  incrementCarisma: (amount?: number) => Promise<void>;
+ }
+ 
++
+ const UserContext = createContext<UserContextValue>({
+   user: null,
+   avatarUrl: null,
+@@ -74,7 +86,8 @@ const UserContext = createContext<UserContextValue>({
+   addXp: async () => {},
+   claimCoupon: async () => {},
+   updateProfile: async () => {},
+-  isLoading: true,
++  carisma: 0,
++  incrementCarisma: async () => {},
+ });
+ 
+ function getCouponForLevel(level: number): RpgCoupon | null {
+@@ -121,15 +134,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+   const addXpRef = useRef<(amount: number, reason: string) => Promise<void>>(async () => {});
+   const previousStatuses = useRef<Record<number, string>>({});
+   const isFirstFetch = useRef(true);
+-  const [isLoading, setIsLoading] = useState<boolean>(true);
+ 
+   useEffect(() => {
+     supabase.auth.getUser().then(({ data }) => {
+       if (data.user) {
+         setUser(data.user);
+-        initializeAndTrackUse(data.user).finally(() => setIsLoading(false));
+-      } else {
+-        setIsLoading(false);
++        initializeAndTrackUse(data.user);
+       }
+     });
+ 
+@@ -139,10 +149,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+       const u = session?.user ?? null;
+       setUser(u);
+       if (u) {
+-        setIsLoading(true);
+-        initializeAndTrackUse(u).finally(() => setIsLoading(false));
+-      } else {
+-        setIsLoading(false);
++        initializeAndTrackUse(u);
+       }
+     });
+ 
+@@ -150,21 +157,42 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+   }, []);
+ 
+   const initializeAndTrackUse = async (currentUser: any) => {
+-    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
++    const today = new Date().toLocaleDateString();
++    const lastDailyXpDate = localStorage.getItem("teammatch_last_daily_xp_date");
++    const wasCounted = lastDailyXpDate === today;
+     const meta = currentUser?.user_metadata || {};
+     
+     // Synchronize to public.profiles table
+     try {
+-      await supabase.from("profiles").upsert({
++      const profileData: any = {
+         id: currentUser.id,
+         username: currentUser.email || "",
++        full_name: meta.full_name || null,
+         avatar_url: meta.avatar_url || null,
+         rating: meta.rating || 4.80,
+-        is_premium: meta.is_premium || false
+-      });
++        is_premium: meta.is_premium || false,
++        age: meta.age || null,
++        gender: meta.gender || null,
++        description: meta.description || null,
++        location: meta.location || null,
++        preferred_sports: meta.preferred_sports || null
++      };
++      const { error } = await supabase.from("profiles").upsert(profileData);
++      if (error) {
++        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", error);
++        // Fallback to core fields only
++        await supabase.from("profiles").upsert({
++          id: currentUser.id,
++          username: currentUser.email || "",
++          avatar_url: meta.avatar_url || null,
++          rating: meta.rating || 4.80,
++          is_premium: meta.is_premium || false
++        });
++      }
+     } catch (e) {
+       console.error("Error upserting public profile:", e);
+     }
++
+     
+     // Si a├║n no inicializado, crear valores por defecto
+     const isBrandNew = meta.xp === undefined || meta.level === undefined;
+@@ -186,19 +214,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+             type: "system",
+           },
+         ],
++        carisma: 0,
+       };
+       
+       const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+         data: initialMetadata,
+       });
+       if (updatedUser) setUser(updatedUser);
+-      sessionStorage.setItem("teammatch_session_counted", "true");
++      localStorage.setItem("teammatch_last_daily_xp_date", today);
+       return;
+     }
+ 
+-    // Si ya existe pero no se ha contado esta sesi├│n, incrementar use_count
++    // Si ya existe pero no se ha contado esta sesi├│n hoy, incrementar use_count
+     if (!wasCounted) {
+-      sessionStorage.setItem("teammatch_session_counted", "true");
++      localStorage.setItem("teammatch_last_daily_xp_date", today);
+       const currentUseCount = (meta.use_count || 0) + 1;
+       const currentXp = meta.xp || 0;
+       const currentLevel = meta.level || 1;
+@@ -362,35 +391,84 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+     if (updatedUser) setUser(updatedUser);
+   };
+ 
+-  const updateProfile = async (updates: { name: string; avatarUrl: string | null; isOrganizer: boolean; email?: string }) => {
++  const incrementCarisma = async (amount: number = 1) => {
++    if (!user) return;
++    const meta = user.user_metadata || {};
++    const currentCarisma = meta.carisma || 0;
++    const newCarisma = currentCarisma + amount;
++
++    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
++      data: {
++        carisma: newCarisma,
++      },
++    });
++    if (updatedUser) setUser(updatedUser);
++  };
++
++  const updateProfile = async (updates: {
++    name: string;
++    avatarUrl: string | null;
++    isOrganizer: boolean;
++    email?: string;
++    age?: number;
++    gender?: string;
++    description?: string;
++    location?: string;
++    preferredSports?: string[];
++  }) => {
+     if (!user) return;
+ 
+     const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({
+       data: {
+         full_name: updates.name,
+         avatar_url: updates.avatarUrl,
+-        is_organizer: updates.isOrganizer
++        is_organizer: updates.isOrganizer,
++        age: updates.age,
++        gender: updates.gender,
++        description: updates.description,
++        location: updates.location,
++        preferred_sports: updates.preferredSports
+       },
+       ...(updates.email && updates.email !== user.email && { email: updates.email })
+     });
+ 
++
+     if (updateError) throw updateError;
+ 
+     try {
+-      const { error: profileError } = await supabase.from("profiles").upsert({
++      const profileData: any = {
+         id: user.id,
+         username: (updates.email || user.email || "").trim(),
++        full_name: updates.name || null,
+         avatar_url: updates.avatarUrl,
+         rating: user.user_metadata?.rating || 4.80,
+-        is_premium: user.user_metadata?.is_premium || false
+-      });
++        is_premium: user.user_metadata?.is_premium || false,
++        age: updates.age || null,
++        gender: updates.gender || null,
++        description: updates.description || null,
++        location: updates.location || null,
++        preferred_sports: updates.preferredSports || null
++      };
++      const { error: profileError } = await supabase.from("profiles").upsert(profileData);
+       if (profileError) {
+-        console.warn("Failed to update public profiles table due to RLS, but continuing:", profileError);
++        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", profileError);
++        // Fallback
++        const { error: fallbackError } = await supabase.from("profiles").upsert({
++          id: user.id,
++          username: (updates.email || user.email || "").trim(),
++          avatar_url: updates.avatarUrl,
++          rating: user.user_metadata?.rating || 4.80,
++          is_premium: user.user_metadata?.is_premium || false
++        });
++        if (fallbackError) {
++          console.warn("Failed to update core profiles table due to RLS, but continuing:", fallbackError);
++        }
+       }
+     } catch (e) {
+       console.error("Error upserting public profile:", e);
+     }
+ 
++
+     if (updatedUser) {
+       setUser(updatedUser);
+     }
+@@ -537,6 +615,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+   const xpHistory = user?.user_metadata?.xp_history || [];
+   const joinedEventsCount = user?.user_metadata?.joined_events_count || 0;
+   const createdEventsCount = user?.user_metadata?.created_events_count || 0;
++  const carisma = user?.user_metadata?.carisma || 0;
+ 
+   return (
+     <UserContext.Provider
+@@ -559,7 +638,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
+         addXp,
+         claimCoupon,
+         updateProfile,
+-        isLoading,
++        carisma,
++        incrementCarisma,
+       }}
+     >
+       {children}

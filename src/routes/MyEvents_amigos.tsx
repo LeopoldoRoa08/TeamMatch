@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { events as mockEvents } from "./data";
 import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
@@ -447,7 +447,7 @@ const getFormattedProfile = (p: any) => {
   const bios = [
     "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
     "Siempre activo para jugar un partido de pádel o tenis.",
-    "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
+    "Subo al ├üvila todos los fines de semana. ¡Acompáñame!",
     "Running y entrenamiento funcional. Busco motivar y que me motiven.",
     "Jugador recreativo de vóleibol y fútbol. Buena vibra."
   ];

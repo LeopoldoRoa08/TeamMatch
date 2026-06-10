@@ -1,4 +1,4 @@
-import {
+﻿import {
   Settings,
   Trophy,
   Star,
@@ -14,9 +14,6 @@ import {
   BookOpen,
   Award,
   Calendar,
-  ArrowRight,
-  MapPin,
-  Users,
 } from "lucide-react";
 import { useState } from "react";
 import { useCurrentUser } from "@/lib/UserContext";
@@ -24,13 +21,9 @@ import { useCurrentUser } from "@/lib/UserContext";
 export function ProfileScreen({
   onEdit,
   onSelectEvent,
-  onOpenAuth,
-  onOpenRegister,
 }: {
   onEdit?: () => void;
   onSelectEvent?: (e: any) => void;
-  onOpenAuth?: () => void;
-  onOpenRegister?: () => void;
 }) {
   const {
     user,
@@ -64,103 +57,8 @@ export function ProfileScreen({
 
   if (!user) {
     return (
-      <div className="h-full overflow-y-auto bg-background">
-        {/* Hero degradado */}
-        <div className="relative bg-gradient-to-br from-[#0f1117] via-[#0f1117] to-[#1a2a1a] px-6 pb-20 pt-14 text-center overflow-hidden">
-          {/* Glows decorativos */}
-          <div className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 h-56 w-56 rounded-full bg-[#32CD32]/15 blur-3xl" />
-          <div className="pointer-events-none absolute bottom-0 -right-10 h-40 w-40 rounded-full bg-[#32CD32]/10 blur-2xl" />
-
-          {/* Avatar genérico animado */}
-          <div className="relative inline-flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#32CD32] to-[#22a822] shadow-2xl shadow-green-500/30 ring-4 ring-[#32CD32]/20 mx-auto">
-            <span className="text-4xl">🏟️</span>
-            <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#0f1117] ring-2 ring-[#32CD32]/30">
-              <span className="text-base">❓</span>
-            </div>
-          </div>
-
-          <h1 className="mt-5 text-2xl font-black text-white">Perfil de Invitado</h1>
-          <p className="mt-1.5 text-sm text-white/50 max-w-[260px] mx-auto">
-            Explora la app libremente. Crea tu cuenta para desbloquear todo.
-          </p>
-        </div>
-
-        {/* Tarjeta principal */}
-        <div className="px-5 -mt-10 space-y-4">
-          {/* Caja Únete a la comunidad */}
-          <div className="rounded-3xl bg-card border border-border shadow-pop overflow-hidden">
-            <div className="px-5 py-5 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#32CD32]/15">
-                  <Sparkles size={18} className="text-[#32CD32] animate-pulse" />
-                </div>
-                <div>
-                  <h2 className="text-base font-black text-secondary">Únete a la comunidad</h2>
-                  <p className="text-[11px] text-muted-foreground">Accede a todo TeamMatch gratis</p>
-                </div>
-              </div>
-
-              {/* Lista de beneficios */}
-              <div className="space-y-2">
-                {[
-                  { icon: MapPin, text: "Encuentra partidos cerca de ti en tiempo real" },
-                  { icon: Users, text: "Solicita un cupo y únete con un toque" },
-                  { icon: Trophy, text: "Sube de nivel y gana recompensas exclusivas" },
-                  { icon: Zap, text: "Matchmaking inteligente por nivel de juego" },
-                  { icon: Star, text: "Crea tus propios eventos y arma equipo" },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2.5">
-                    <div className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15">
-                      <Icon size={13} className="text-[#32CD32]" />
-                    </div>
-                    <span className="text-xs font-semibold text-secondary/80">{text}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="space-y-2 pt-1">
-                <button
-                  id="guest-profile-register-btn"
-                  onClick={onOpenRegister}
-                  className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-[0.98] hover:shadow-green-500/30"
-                >
-                  Crear Cuenta Gratis
-                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                </button>
-                <button
-                  id="guest-profile-login-btn"
-                  onClick={onOpenAuth}
-                  className="w-full rounded-2xl border border-border bg-muted/50 py-3.5 text-sm font-bold text-secondary transition-all hover:bg-muted active:scale-[0.98]"
-                >
-                  Ya tengo cuenta — Iniciar Sesión
-                </button>
-              </div>
-            </div>
-
-            {/* Estadisticas animadas como placeholders */}
-            <div className="border-t border-border grid grid-cols-3 divide-x divide-border">
-              {[
-                { k: "1.2k", v: "Jugadores" },
-                { k: "320", v: "Eventos/mes" },
-                { k: "4.9★", v: "Rating" },
-              ].map((s) => (
-                <div key={s.v} className="flex flex-col items-center py-4">
-                  <div className="text-lg font-black text-[#32CD32]">{s.k}</div>
-                  <div className="text-[10px] font-semibold text-muted-foreground">{s.v}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Info extra */}
-          <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-4 flex items-start gap-3">
-            <Shield size={18} className="text-muted-foreground shrink-0 mt-0.5" />
-            <p className="text-[11px] text-muted-foreground leading-relaxed">
-              Tu cuenta es <strong className="text-secondary">100% gratuita</strong>. Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte.
-            </p>
-          </div>
-        </div>
+      <div className="flex h-full w-full items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -172,13 +70,13 @@ export function ProfileScreen({
   const xpNeeded = level * 100;
   const xpPercentage = Math.min(100, Math.max(0, (xp / xpNeeded) * 100));
 
-  let rpgClass = "Recluta Novato 👟";
+  let rpgClass = "Recluta Novato ­ƒæƒ";
   let borderClass = "neon-border-bronze";
   let rarityLabel = "Novato";
   let rarityColor = "text-amber-600 bg-amber-500/10 border-amber-500/20";
 
   if (level === 2) {
-    rpgClass = "Aspirante Activo ⚡";
+    rpgClass = "Aspirante Activo ⚔️";
     borderClass = "neon-border-bronze";
     rarityLabel = "Común";
     rarityColor = "text-gray-400 bg-gray-500/10 border-gray-500/20";
@@ -188,7 +86,7 @@ export function ProfileScreen({
     rarityLabel = "Raro";
     rarityColor = "text-blue-400 bg-blue-500/10 border-blue-500/20";
   } else if (level === 4) {
-    rpgClass = "Maestro del Match 🏆";
+    rpgClass = "Maestro del Match ­ƒÅå";
     borderClass = "neon-border-gold";
     rarityLabel = "Épico";
     rarityColor = "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
@@ -213,7 +111,7 @@ export function ProfileScreen({
           <Check size={48} strokeWidth={3} className="text-secondary" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-secondary uppercase tracking-wide">¡Objeto Canjeado! 💎</h2>
+          <h2 className="text-2xl font-black text-secondary uppercase tracking-wide">¡Objeto Canjeado! ­ƒÆÄ</h2>
           <p className="text-sm font-bold text-primary">
             {showClaimSuccess.title}
           </p>
@@ -377,7 +275,7 @@ export function ProfileScreen({
                 value={cha}
                 colorClass="text-amber-500"
                 bgClass="bg-amber-500/5 border-amber-500/10"
-                description="Calculado según tu reputación deportiva"
+                description="Aumenta al aceptar match con nuevos amigos"
               />
             </div>
 
@@ -454,7 +352,7 @@ export function ProfileScreen({
 
             {coupons.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center space-y-2 animate-fade-in">
-                <div className="text-4xl">🎁</div>
+                <div className="text-4xl">­ƒÄü</div>
                 <h4 className="text-sm font-bold text-secondary">Cofre Vacío</h4>
                 <p className="text-[11px] text-muted-foreground max-w-[240px] mx-auto">
                   No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app
@@ -563,16 +461,16 @@ export function ProfileScreen({
                 </div>
               ) : (
                 xpHistory.map((h: any) => {
-                  let typeEmoji = "🎮";
+                  let typeEmoji = "🎭";
                   let typeBg = "bg-purple-500/10 text-purple-500 border border-purple-500/20";
                   if (h.type === "join") {
-                    typeEmoji = "👟";
+                    typeEmoji = "­ƒæƒ";
                     typeBg = "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
                   } else if (h.type === "create") {
-                    typeEmoji = "⚽";
+                    typeEmoji = "ÔÜ¢";
                     typeBg = "bg-blue-500/10 text-blue-500 border border-blue-500/20";
                   } else if (h.type === "use") {
-                    typeEmoji = "⚡";
+                    typeEmoji = "⚔️";
                     typeBg = "bg-amber-500/10 text-amber-500 border border-amber-500/20";
                   }
 

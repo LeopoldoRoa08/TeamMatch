@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+﻿import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export interface RpgCoupon {
@@ -62,10 +62,10 @@ interface UserContextValue {
     location?: string;
     preferredSports?: string[];
   }) => Promise<void>;
-  isLoading: boolean;
   carisma: number;
   incrementCarisma: (amount?: number) => Promise<void>;
 }
+
 
 const UserContext = createContext<UserContextValue>({
   user: null,
@@ -86,7 +86,6 @@ const UserContext = createContext<UserContextValue>({
   addXp: async () => {},
   claimCoupon: async () => {},
   updateProfile: async () => {},
-  isLoading: true,
   carisma: 0,
   incrementCarisma: async () => {},
 });
@@ -96,7 +95,7 @@ function getCouponForLevel(level: number): RpgCoupon | null {
     return {
       id: "ASPIRANTE2",
       code: "ASPIRANTE2",
-      title: "Pase de Aspirante ⚡",
+      title: "Pase de Aspirante ⚔️",
       discount: "10% de Descuento",
       description: "Otorgado automáticamente por alcanzar el Nivel 2.",
       date: new Date().toLocaleDateString(),
@@ -135,15 +134,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const addXpRef = useRef<(amount: number, reason: string) => Promise<void>>(async () => {});
   const previousStatuses = useRef<Record<number, string>>({});
   const isFirstFetch = useRef(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
         setUser(data.user);
-        initializeAndTrackUse(data.user).finally(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
+        initializeAndTrackUse(data.user);
       }
     });
 
@@ -153,10 +149,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const u = session?.user ?? null;
       setUser(u);
       if (u) {
-        setIsLoading(true);
-        initializeAndTrackUse(u).finally(() => setIsLoading(false));
-      } else {
-        setIsLoading(false);
+        initializeAndTrackUse(u);
       }
     });
 
@@ -164,12 +157,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const initializeAndTrackUse = async (currentUser: any) => {
-    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
+    const today = new Date().toLocaleDateString();
+    const lastDailyXpDate = localStorage.getItem("teammatch_last_daily_xp_date");
+    const wasCounted = lastDailyXpDate === today;
     const meta = currentUser?.user_metadata || {};
     
     // Synchronize to public.profiles table
     try {
-      await supabase.from("profiles").upsert({
+      const profileData: any = {
         id: currentUser.id,
         username: currentUser.email || "",
         full_name: meta.full_name || null,
@@ -181,10 +176,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         description: meta.description || null,
         location: meta.location || null,
         preferred_sports: meta.preferred_sports || null
-      });
+      };
+      const { error } = await supabase.from("profiles").upsert(profileData);
+      if (error) {
+        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", error);
+        // Fallback to core fields only
+        await supabase.from("profiles").upsert({
+          id: currentUser.id,
+          username: currentUser.email || "",
+          avatar_url: meta.avatar_url || null,
+          rating: meta.rating || 4.80,
+          is_premium: meta.is_premium || false
+        });
+      }
     } catch (e) {
       console.error("Error upserting public profile:", e);
     }
+
     
     // Si aún no inicializado, crear valores por defecto
     const isBrandNew = meta.xp === undefined || meta.level === undefined;
@@ -200,7 +208,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         xp_history: [
           {
             id: "init_" + Date.now(),
-            title: "Creación de Personaje 🎮",
+            title: "Creación de Personaje 🎭",
             xp: 0,
             date: new Date().toLocaleDateString(),
             type: "system",
@@ -213,13 +221,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         data: initialMetadata,
       });
       if (updatedUser) setUser(updatedUser);
-      sessionStorage.setItem("teammatch_session_counted", "true");
+      localStorage.setItem("teammatch_last_daily_xp_date", today);
       return;
     }
 
-    // Si ya existe pero no se ha contado esta sesión, incrementar use_count
+    // Si ya existe pero no se ha contado esta sesión hoy, incrementar use_count
     if (!wasCounted) {
-      sessionStorage.setItem("teammatch_session_counted", "true");
+      localStorage.setItem("teammatch_last_daily_xp_date", today);
       const currentUseCount = (meta.use_count || 0) + 1;
       const currentXp = meta.xp || 0;
       const currentLevel = meta.level || 1;
@@ -238,7 +246,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       const newHistory = [
         {
           id: "use_" + Date.now(),
-          title: `Aventura Diaria (Uso #${currentUseCount}) ⚡`,
+          title: `Aventura Diaria (Uso #${currentUseCount}) ⚔️`,
           xp: xpGained,
           date: new Date().toLocaleDateString(),
           type: "use",
@@ -383,6 +391,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (updatedUser) setUser(updatedUser);
   };
 
+  const incrementCarisma = async (amount: number = 1) => {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    const currentCarisma = meta.carisma || 0;
+    const newCarisma = currentCarisma + amount;
+
+    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+      data: {
+        carisma: newCarisma,
+      },
+    });
+    if (updatedUser) setUser(updatedUser);
+  };
+
   const updateProfile = async (updates: {
     name: string;
     avatarUrl: string | null;
@@ -410,28 +432,42 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       ...(updates.email && updates.email !== user.email && { email: updates.email })
     });
 
+
     if (updateError) throw updateError;
 
     try {
-      const { error: profileError } = await supabase.from("profiles").upsert({
+      const profileData: any = {
         id: user.id,
         username: (updates.email || user.email || "").trim(),
-        full_name: updates.name,
+        full_name: updates.name || null,
         avatar_url: updates.avatarUrl,
         rating: user.user_metadata?.rating || 4.80,
         is_premium: user.user_metadata?.is_premium || false,
-        age: updates.age,
-        gender: updates.gender,
-        description: updates.description,
-        location: updates.location,
-        preferred_sports: updates.preferredSports
-      });
+        age: updates.age || null,
+        gender: updates.gender || null,
+        description: updates.description || null,
+        location: updates.location || null,
+        preferred_sports: updates.preferredSports || null
+      };
+      const { error: profileError } = await supabase.from("profiles").upsert(profileData);
       if (profileError) {
-        console.warn("Failed to update public profiles table due to RLS, but continuing:", profileError);
+        console.warn("Failed to upsert extended fields to public.profiles table, falling back to core fields:", profileError);
+        // Fallback
+        const { error: fallbackError } = await supabase.from("profiles").upsert({
+          id: user.id,
+          username: (updates.email || user.email || "").trim(),
+          avatar_url: updates.avatarUrl,
+          rating: user.user_metadata?.rating || 4.80,
+          is_premium: user.user_metadata?.is_premium || false
+        });
+        if (fallbackError) {
+          console.warn("Failed to update core profiles table due to RLS, but continuing:", fallbackError);
+        }
       }
     } catch (e) {
       console.error("Error upserting public profile:", e);
     }
+
 
     if (updatedUser) {
       setUser(updatedUser);
@@ -489,7 +525,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
           if (change.status === "aceptado") {
             setEventNotification({ type: "accepted", eventTitle, sport: sportName });
-            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} 👟`);
+            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} ­ƒæƒ`);
           } else if (change.status === "rechazado") {
             setEventNotification({ type: "rejected", eventTitle, sport: sportName });
           }
@@ -548,7 +584,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
           if (newStatus === "aceptado") {
             setEventNotification({ type: "accepted", eventTitle, sport: sportName });
-            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} 👟`);
+            addXpRef.current(15, `Aceptado en partido de ${sportName}: ${eventTitle} ­ƒæƒ`);
           } else if (newStatus === "rechazado") {
             setEventNotification({ type: "rejected", eventTitle, sport: sportName });
           }
@@ -581,20 +617,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const createdEventsCount = user?.user_metadata?.created_events_count || 0;
   const carisma = user?.user_metadata?.carisma || 0;
 
-  const incrementCarisma = async (amount = 1) => {
-    if (!user) return;
-    const meta = user.user_metadata || {};
-    const currentCarisma = meta.carisma || 0;
-    const newCarisma = currentCarisma + amount;
-    
-    const { data: { user: updatedUser } } = await supabase.auth.updateUser({
-      data: {
-        carisma: newCarisma,
-      },
-    });
-    if (updatedUser) setUser(updatedUser);
-  };
-
   return (
     <UserContext.Provider
       value={{
@@ -616,7 +638,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         addXp,
         claimCoupon,
         updateProfile,
-        isLoading,
         carisma,
         incrementCarisma,
       }}
