@@ -32,7 +32,8 @@ const UserContext = createContext({
   claimCoupon: async () => {
   },
   updateProfile: async () => {
-  }
+  },
+  isLoading: true
 });
 function getCouponForLevel(level) {
   if (level === 2) {
@@ -78,11 +79,14 @@ function UserProvider({ children }) {
   });
   const previousStatuses = useRef({});
   const isFirstFetch = useRef(true);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) {
         setUser(data.user);
-        initializeAndTrackUse(data.user);
+        initializeAndTrackUse(data.user).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
       }
     });
     const {
@@ -91,7 +95,10 @@ function UserProvider({ children }) {
       const u = session?.user ?? null;
       setUser(u);
       if (u) {
-        initializeAndTrackUse(u);
+        setIsLoading(true);
+        initializeAndTrackUse(u).finally(() => setIsLoading(false));
+      } else {
+        setIsLoading(false);
       }
     });
     return () => subscription.unsubscribe();
@@ -409,7 +416,8 @@ function UserProvider({ children }) {
         clearEventNotification,
         addXp,
         claimCoupon,
-        updateProfile
+        updateProfile,
+        isLoading
       },
       children
     }
@@ -506,22 +514,22 @@ function AddCanchaForm({ onBack, onSaved }) {
     ] });
   }
   return /* @__PURE__ */ jsxs("div", { className: "relative flex h-full flex-col bg-background", children: [
-    /* @__PURE__ */ jsxs("div", { className: "sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-background/90 px-4 pb-3 pt-12 backdrop-blur", children: [
+    /* @__PURE__ */ jsxs("div", { className: "sticky top-0 z-20 flex items-center gap-3 md:gap-4 border-b border-border bg-background/90 px-4 md:px-8 pb-3 md:pb-5 pt-12 md:pt-16 backdrop-blur", children: [
       /* @__PURE__ */ jsx(
         "button",
         {
           onClick: onBack,
-          className: "grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95",
+          className: "grid h-10 w-10 md:h-12 md:w-12 place-items-center rounded-full bg-muted hover:bg-muted/80 transition-all active:scale-95",
           "aria-label": "Volver",
-          children: /* @__PURE__ */ jsx(ArrowLeft, { size: 18, className: "text-secondary" })
+          children: /* @__PURE__ */ jsx(ArrowLeft, { size: 18, className: "text-secondary md:scale-110" })
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-lg font-bold text-secondary", children: "Añadir cancha" }),
-        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground", children: "Registra una nueva cancha deportiva" })
+        /* @__PURE__ */ jsx("h1", { className: "text-lg md:text-3xl font-bold text-secondary", children: "Añadir cancha" }),
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] md:text-sm text-muted-foreground", children: "Registra una nueva cancha deportiva" })
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5 py-5 pb-32 space-y-6", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5 md:px-12 py-5 md:py-8 pb-32 space-y-6 md:space-y-8 max-w-2xl mx-auto w-full", children: [
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
         /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: [
           "🏟️ Nombre ",
@@ -3116,6 +3124,131 @@ function EventCard({
     }
   );
 }
+function CouponPopup() {
+  const [coupons, setCoupons] = useState([]);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    const hasSeen = sessionStorage.getItem("teamMatch_hasSeenCoupons");
+    if (hasSeen === "true") {
+      return;
+    }
+    async function loadActiveCoupons() {
+      try {
+        const todayDate = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+        const { data, error } = await supabase.from("cupones").select("*").gte("duracion", todayDate);
+        if (error) {
+          console.error("Error al obtener cupones:", error.message);
+          return;
+        }
+        if (data && data.length > 0) {
+          setCoupons(data);
+          setIsOpen(true);
+        }
+      } catch (err) {
+        console.error("Error inesperado al cargar cupones:", err);
+      }
+    }
+    loadActiveCoupons();
+  }, []);
+  if (!isOpen || coupons.length === 0) {
+    return null;
+  }
+  const currentCoupon = coupons[activeIdx];
+  const couponTitle = currentCoupon.nombre || "¡Descuento Especial!";
+  const couponDesc = currentCoupon.descripcion || "Disfruta de este beneficio exclusivo en tus próximos eventos.";
+  const couponImg = currentCoupon["Imagen de Fondo"] || currentCoupon.imagen_de_fondo || "https://images.unsplash.com/photo-1540747737956-37872404797a?q=80&w=800";
+  const couponCode = currentCoupon.idCupon || currentCoupon.codigo || currentCoupon.code || String(currentCoupon.id);
+  const handleClose = () => {
+    setIsOpen(false);
+    sessionStorage.setItem("teamMatch_hasSeenCoupons", "true");
+  };
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setCopied(false);
+    setActiveIdx((prev) => (prev + 1) % coupons.length);
+  };
+  const handleCopyCode = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2e3);
+    } catch (err) {
+      console.error("No se pudo copiar el código:", err);
+    }
+  };
+  return /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in", children: /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: "relative w-full max-w-sm overflow-hidden rounded-3xl bg-secondary border border-white/10 shadow-2xl transition-all duration-300 animate-in zoom-in-95 slide-in-from-bottom-8 aspect-[3/4.2] flex flex-col justify-between",
+      style: {
+        backgroundImage: `url(${couponImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      },
+      children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/95 z-0" }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: handleClose,
+            className: "absolute top-4 right-4 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 border border-white/20 text-white/80 hover:text-white hover:bg-black/60 transition-all hover:scale-105 active:scale-95 cursor-pointer",
+            "aria-label": "Cerrar anuncio",
+            children: /* @__PURE__ */ jsx(X, { size: 18 })
+          }
+        ),
+        /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col h-full justify-between p-6 pt-12 pb-8 text-center text-white", children: [
+          /* @__PURE__ */ jsxs("div", { className: "animate-in fade-in slide-in-from-top-3 duration-500", children: [
+            /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse mb-3", children: "Anuncio Especial 📣" }),
+            /* @__PURE__ */ jsx("h2", { className: "text-2xl md:text-3xl font-extrabold tracking-tight leading-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]", children: couponTitle })
+          ] }, `title-${activeIdx}`),
+          /* @__PURE__ */ jsx("div", { className: "px-2 py-4 animate-in fade-in duration-500 max-h-[140px] overflow-y-auto", children: /* @__PURE__ */ jsx("p", { className: "text-sm md:text-base text-gray-200 font-medium leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]", children: couponDesc }) }, `desc-${activeIdx}`),
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-4 w-full", children: [
+            /* @__PURE__ */ jsxs(
+              "div",
+              {
+                onClick: handleCopyCode,
+                className: "group relative flex w-full max-w-[280px] cursor-pointer items-center justify-between gap-2 rounded-2xl border-2 border-dashed border-primary/60 bg-primary/10 backdrop-blur-md px-4 py-3 text-center transition-all hover:border-primary hover:bg-primary/20 hover:scale-102 active:scale-98 animate-in fade-in slide-in-from-bottom-3 duration-500",
+                title: "Click para copiar código",
+                children: [
+                  /* @__PURE__ */ jsx("div", { className: "flex-1 font-mono text-lg font-black tracking-wider text-primary select-all", children: couponCode }),
+                  /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/25 text-primary transition-transform group-hover:scale-110", children: copied ? /* @__PURE__ */ jsx(Check, { size: 14, className: "text-emerald-400" }) : /* @__PURE__ */ jsx(Copy, { size: 14 }) }),
+                  copied && /* @__PURE__ */ jsx("span", { className: "absolute -top-7 left-1/2 -translate-x-1/2 rounded bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-bounce", children: "¡Copiado!" })
+                ]
+              },
+              `code-${activeIdx}`
+            ),
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: "*Haz clic en el código para copiarlo al portapapeles." })
+          ] })
+        ] }),
+        coupons.length > 1 && /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: handleNext,
+            className: "absolute right-4 top-1/2 -translate-y-1/2 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-black/40 border border-white/20 text-white/80 hover:text-white hover:bg-black/60 hover:scale-110 hover:border-primary active:scale-90 transition-all shadow-lg cursor-pointer",
+            "aria-label": "Siguiente cupón",
+            children: /* @__PURE__ */ jsx(ChevronRight, { size: 24, className: "translate-x-[1px]" })
+          }
+        ),
+        coupons.length > 1 && /* @__PURE__ */ jsx("div", { className: "absolute bottom-3 left-0 right-0 z-30 flex justify-center gap-1.5 pb-1", children: coupons.map((_, index) => /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: (e) => {
+              e.stopPropagation();
+              setCopied(false);
+              setActiveIdx(index);
+            },
+            className: `h-1.5 rounded-full transition-all duration-300 ${activeIdx === index ? "bg-primary w-4" : "bg-white/30 w-1.5"}`,
+            "aria-label": `Ir al cupón ${index + 1}`
+          },
+          index
+        )) })
+      ]
+    }
+  ) });
+}
 const getSportImage$1 = (sportId) => {
   if (sportId === 1) return footballField;
   if (sportId === 2) return tennisCourt;
@@ -3232,14 +3365,15 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     setActionLoading(null);
   }
   return /* @__PURE__ */ jsxs("div", { className: "h-full overflow-y-auto bg-background pb-24", children: [
-    /* @__PURE__ */ jsxs("header", { className: "flex items-center justify-between px-5 pb-3 pt-12", children: [
+    /* @__PURE__ */ jsx(CouponPopup, {}),
+    /* @__PURE__ */ jsxs("header", { className: "flex items-center justify-between px-5 md:px-8 pb-3 md:pb-6 pt-12 md:pt-16", children: [
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Mis eventos" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tu agenda deportiva" })
+        /* @__PURE__ */ jsx("h1", { className: "text-2xl md:text-4xl font-bold text-secondary", children: "Mis eventos" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm md:text-base text-muted-foreground", children: "Tu agenda deportiva" })
       ] }),
-      /* @__PURE__ */ jsx(UserAvatar, { size: "md", className: "cursor-pointer", onClick: onNavigateToProfile })
+      /* @__PURE__ */ jsx(UserAvatar, { size: "md", className: "cursor-pointer hover:scale-105 transition-transform", onClick: onNavigateToProfile })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur", children: /* @__PURE__ */ jsx("div", { className: "flex gap-1 rounded-full bg-muted p-1", children: tabs.map((t) => {
+    /* @__PURE__ */ jsx("div", { className: "sticky top-0 z-10 bg-background/80 px-5 md:px-8 pb-3 pt-1 backdrop-blur", children: /* @__PURE__ */ jsx("div", { className: "flex gap-1 rounded-full bg-muted p-1 md:max-w-md", children: tabs.map((t) => {
       if (t === "Solicitudes" && createdEvents.length === 0) return null;
       return /* @__PURE__ */ jsx(
         "button",
@@ -3251,7 +3385,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
         t
       );
     }) }) }),
-    tab === "Solicitudes" ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
+    tab === "Solicitudes" ? /* @__PURE__ */ jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-5 md:px-8 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
       const isPremium = req.profiles?.is_premium;
       const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
       return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl bg-card p-4 shadow-soft", children: [
@@ -3299,7 +3433,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
           )
         ] })
       ] }, req.id);
-    }) }) : /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-4 px-5 pt-3", children: [
+    }) }) : /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-5 md:px-8 pt-3", children: [
       tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
@@ -3787,12 +3921,15 @@ function BottomNav({ current, onChange }) {
       }
     );
   };
-  return /* @__PURE__ */ jsx("nav", { className: "absolute inset-x-0 bottom-0 z-30 glass border-t border-border", children: /* @__PURE__ */ jsx("div", { className: "flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] pt-1", children: items.map((it) => /* @__PURE__ */ jsx(Btn, { id: it.id, label: it.label, Icon: it.icon }, it.id)) }) });
+  return /* @__PURE__ */ jsx("div", { className: "absolute inset-x-0 bottom-0 z-30 pointer-events-none flex justify-center pb-0 lg:pb-6", children: /* @__PURE__ */ jsx("nav", { className: "pointer-events-auto w-full lg:max-w-md lg:rounded-2xl glass border-t lg:border border-border shadow-pop", children: /* @__PURE__ */ jsx("div", { className: "flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] lg:pb-2 pt-1 lg:pt-2", children: items.map((it) => /* @__PURE__ */ jsx(Btn, { id: it.id, label: it.label, Icon: it.icon }, it.id)) }) }) });
 }
 function Index() {
   return /* @__PURE__ */ jsx(UserProvider, { children: /* @__PURE__ */ jsx(AppContent, {}) });
 }
 function AppContent() {
+  const {
+    isLoading
+  } = useCurrentUser();
   const [appState, setAppState] = useState("checking");
   const [authMode, setAuthMode] = useState("login");
   const [screen, setScreen] = useState("events");
@@ -3800,21 +3937,28 @@ function AppContent() {
   const [selectedCancha, setSelectedCancha] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   useEffect(() => {
+    let mounted = true;
     supabase.auth.getSession().then(() => {
-      setAppState("app");
+      if (mounted) {
+        setAppState("app");
+      }
     });
     const {
       data: {
         subscription
       }
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setAppState("app");
-      } else if (appState !== "auth") {
-        setAppState("app");
-      }
+      setAppState((prev) => {
+        if (prev === "checking") return prev;
+        if (session) return "app";
+        if (prev !== "auth") return "app";
+        return prev;
+      });
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
   const openAuth = (mode = "login") => {
     setAuthMode(mode);
@@ -3825,9 +3969,6 @@ function AppContent() {
     setScreen("detail");
   };
   const renderScreen = () => {
-    if (appState === "checking") {
-      return /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center bg-background", children: /* @__PURE__ */ jsx("div", { className: "h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" }) });
-    }
     if (appState === "auth") {
       return /* @__PURE__ */ jsx(AuthScreen, { initialMode: authMode, onSuccess: () => setAppState("app"), onClose: () => setAppState("app") });
     }
@@ -3842,7 +3983,10 @@ function AppContent() {
       setScreen("comments");
     } });
   };
-  return /* @__PURE__ */ jsx("main", { className: "fixed inset-0 w-full h-[100dvh] flex flex-col bg-background overflow-hidden", children: /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex", children: [
+  if (appState === "checking" || appState === "app" && isLoading) {
+    return /* @__PURE__ */ jsx("div", { className: "flex h-[100dvh] w-full items-center justify-center bg-background", children: /* @__PURE__ */ jsx("div", { className: "h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" }) });
+  }
+  return /* @__PURE__ */ jsx("main", { className: "fixed inset-0 w-full h-[100dvh] flex flex-col bg-background lg:bg-muted/30 overflow-hidden", children: /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto overscroll-none pt-[env(safe-area-inset-top)] relative flex mx-auto w-full lg:max-w-7xl lg:shadow-2xl lg:bg-background", children: [
     appState === "auth" && /* @__PURE__ */ jsxs("aside", { className: "relative hidden flex-1 flex-col justify-between overflow-hidden bg-secondary p-12 text-[#32CD32] lg:flex", children: [
       /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-primary/25 blur-3xl" }),
       /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute bottom-10 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" }),
@@ -3874,7 +4018,7 @@ function AppContent() {
       ] }),
       /* @__PURE__ */ jsx("div", { className: "relative text-xs text-[#32CD32]", children: "👉 ¡A jugar ya!" })
     ] }),
-    /* @__PURE__ */ jsx("section", { className: `relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState === "auth" ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" : "flex-1"}`, children: /* @__PURE__ */ jsxs("div", { className: "relative h-[100dvh] w-full overflow-hidden", children: [
+    /* @__PURE__ */ jsx("section", { className: `relative flex min-h-[100dvh] w-full flex-col overflow-hidden bg-background ${appState === "auth" ? "lg:max-w-[520px] lg:border-l lg:border-primary-foreground/10 lg:shadow-pop" : "flex-1 lg:border-x lg:border-border/50"}`, children: /* @__PURE__ */ jsxs("div", { className: "relative h-[100dvh] w-full overflow-hidden", children: [
       renderScreen(),
       appState !== "auth" && /* @__PURE__ */ jsx(RpgNotificationManager, {}),
       appState !== "auth" && /* @__PURE__ */ jsx(EventNotificationBanner, {}),
@@ -3893,6 +4037,13 @@ function RpgNotificationManager() {
       setChestState("closed");
     }
   }, [xpNotification]);
+  const {
+    xp,
+    reason,
+    isLevelUp,
+    newLevel,
+    newCoupon
+  } = xpNotification || {};
   useEffect(() => {
     if (xpNotification && !xpNotification.isLevelUp && !xpNotification.newCoupon) {
       const timer = setTimeout(() => {
@@ -3902,13 +4053,6 @@ function RpgNotificationManager() {
     }
   }, [xpNotification, clearNotification]);
   if (!xpNotification) return null;
-  const {
-    xp,
-    reason,
-    isLevelUp,
-    newLevel,
-    newCoupon
-  } = xpNotification;
   if (isLevelUp) {
     return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-6 py-4 animate-in fade-in duration-300", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-25 pointer-events-none" }),
