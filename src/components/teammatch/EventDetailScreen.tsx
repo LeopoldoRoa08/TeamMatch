@@ -412,7 +412,7 @@ export function EventDetailScreen({
                         }}
                         className="text-[9px] font-extrabold text-primary hover:underline block text-left"
                       >
-                        Ver Perfil ­ƒöì
+                        Ver Perfil 🔍
                       </button>
                     </div>
                   </div>
@@ -523,7 +523,7 @@ export function EventDetailScreen({
               disabled={true}
               className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center"
             >
-              Eres el organizador ­ƒææ
+              Eres el organizador 👑
             </button>
           ) : isUserApproved ? (
             <button
@@ -531,7 +531,7 @@ export function EventDetailScreen({
               onClick={handleLeave}
               className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer"
             >
-              Salir del partido ­ƒÜ¬
+              Salir del partido 🚪
             </button>
           ) : isUserPending ? (
             <button
@@ -759,7 +759,7 @@ const getFormattedProfile = (p: any) => {
     }
   }
   
-  const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
+  const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
   const emoji = emojis[charCodeSum % emojis.length];
   
   const gradients = [

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { 
   Users, 
   UserPlus, 
@@ -135,7 +135,7 @@ export function FriendsScreen({
     for (let i = 0; i < idHash.length; i++) {
       charCodeSum += idHash.charCodeAt(i);
     }
-    const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
+    const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
     const emoji = emojis[charCodeSum % emojis.length];
     const gradients = [
       "from-pink-500 to-rose-400", "from-emerald-500 to-teal-400", 
@@ -231,7 +231,7 @@ export function FriendsScreen({
       setReceivedRequests(receivedRequests.filter(r => r.id !== request.id));
       setFriends([request, ...friends]);
       
-      await addXp(15, `¡Aceptaste a ${request.name} como amigo! ­ƒñØ`);
+      await addXp(15, `¡Aceptaste a ${request.name} como amigo! 🤝`);
       if (incrementCarisma) {
         await incrementCarisma(1);
       }
@@ -313,7 +313,7 @@ export function FriendsScreen({
           {matchProgress === "sent" && (
             <div className="space-y-5 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
               <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-                ¡SOLICITUD ENVIADA! ­ƒñØ
+                ¡SOLICITUD ENVIADA! 🤝
               </span>
               
               <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
@@ -355,7 +355,7 @@ export function FriendsScreen({
           {matchProgress === "error" && (
             <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
               <span className="inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30">
-                ERROR ­ƒÆö
+                ERROR 💔
               </span>
               
               <h2 className="text-3xl font-black text-white tracking-tight">
@@ -386,7 +386,7 @@ export function FriendsScreen({
           
           <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
             <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-              ¡NUEVO MATCH! ­ƒñØ
+              ¡NUEVO MATCH! 🤝
             </span>
             
             <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
@@ -541,7 +541,7 @@ export function FriendsScreen({
                   onClick={() => setCurrentIndex(0)}
                   className="rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20"
                 >
-                  Reiniciar Lista ­ƒöä
+                  Reiniciar Lista 🔄
                 </button>
               </div>
             )}

@@ -250,7 +250,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                           }}
                           className="text-[10px] font-extrabold text-primary hover:underline block text-left mt-1"
                         >
-                          Ver Perfil ­ƒöì
+                          Ver Perfil 🔍
                         </button>
                       </div>
                     </div>
@@ -430,7 +430,7 @@ const getFormattedProfile = (p: any) => {
     }
   }
   
-  const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
+  const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
   const emoji = emojis[charCodeSum % emojis.length];
   
   const gradients = [
