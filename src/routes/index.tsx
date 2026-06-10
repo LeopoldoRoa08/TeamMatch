@@ -12,6 +12,7 @@ import { CanchaCommentsScreen } from "@/components/teammatch/CanchaCommentsScree
 import { MyEventsScreen } from "@/components/teammatch/MyEventsScreen";
 import { MySportsScreen } from "@/components/teammatch/MySportsScreen";
 import { WelcomeScreen } from "@/components/teammatch/WelcomeScreen";
+import { FriendsScreen } from "@/components/teammatch/FriendsScreen";
 import { AuthScreen, type AuthMode } from "@/components/teammatch/AuthScreen";
 import { BottomNav } from "@/components/teammatch/BottomNav";
 import { Logo } from "@/components/teammatch/Logo";
@@ -113,6 +114,7 @@ function AppContent() {
       );
     if (screen === "events") return <MyEventsScreen onSelect={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
     if (screen === "sports") return <MySportsScreen onSelectEvent={openDetail} onNavigateToProfile={() => setScreen("profile")} />;
+    if (screen === "friends") return <FriendsScreen onNavigateToProfile={() => setScreen("profile")} onSelectEvent={openDetail} />;
     if (screen === "editProfile") return <EditProfileScreen onBack={() => setScreen("profile")} />;
     if (screen === "profile")
       return (
