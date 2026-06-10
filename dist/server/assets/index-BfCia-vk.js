@@ -862,12 +862,6 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       setTimeout(() => {
         setShowFloatXp(false);
       }, 1200);
-      setTimeout(() => {
-        setForm(INITIAL_FORM);
-        setStatus("idle");
-        onEventCreated();
-        onClose();
-      }, 1500);
     } catch (err) {
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err;
@@ -901,12 +895,31 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       }
     );
   }
+  function handleDismissSuccess() {
+    setForm(INITIAL_FORM);
+    setStatus("idle");
+    onEventCreated();
+    onClose();
+  }
   if (status === "success") {
-    return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500", children: [
-      /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
-      /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: "¡Evento publicado!" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tu partido ya está en el mapa, listo para que otros jugadores se unan." })
+    return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center bg-black/95 px-6 text-center animate-in fade-in duration-300", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 pointer-events-none", style: { background: "radial-gradient(circle at 50% 40%, rgba(16,185,129,0.15) 0%, transparent 70%)" } }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10", children: [
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡EVENTO PUBLICADO! ⚽" }),
+        /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight drop-shadow-md", children: "¡Listo!" }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/80 px-4 leading-relaxed", children: "Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!" })
+        ] }),
+        showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp z-50", children: "+25 XP ⚡" }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: handleDismissSuccess,
+            className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer",
+            children: "¡Entendido!"
+          }
+        )
       ] })
     ] });
   }
@@ -1728,6 +1741,33 @@ function EventDetailScreen({
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedUserProfile, setSelectedUserProfile] = useState(null);
   const [hostProfile, setHostProfile] = useState(null);
+  const [myFriends, setMyFriends] = useState([]);
+  useEffect(() => {
+    if (currentUser) {
+      fetchMyFriends();
+    }
+  }, [currentUser]);
+  async function fetchMyFriends() {
+    if (!currentUser?.id) return;
+    try {
+      const { data: dbProfiles } = await supabase.from("profiles").select("*");
+      const { data: requestsData } = await supabase.from("friend_requests").select("*").or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
+      const requests = requestsData || [];
+      const friends = [];
+      requests.forEach((req) => {
+        if (req.status === "accepted") {
+          const otherUserId = req.sender_id === currentUser.id ? req.receiver_id : req.sender_id;
+          const profile = dbProfiles?.find((p) => p.id === otherUserId);
+          if (profile) {
+            friends.push(profile);
+          }
+        }
+      });
+      setMyFriends(friends);
+    } catch (e) {
+      console.error(e);
+    }
+  }
   const renderAvatar = (username, sizeClass = "h-10 w-10", explicitAvatarUrl) => {
     const isCurrentUser = currentUser?.email === username || currentUser?.user_metadata?.full_name === username;
     const url = isCurrentUser ? currentUserAvatar || explicitAvatarUrl : explicitAvatarUrl;
@@ -1979,7 +2019,7 @@ function EventDetailScreen({
           {
             icon: MapPin,
             label: "Lugar",
-            value: event.location,
+            value: event.zone || (event.lat && event.lng ? `${event.lat.toFixed(4)}, ${event.lng.toFixed(4)}` : "Caracas"),
             onClick: () => {
               const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : "";
               const destination = `${event.lat},${event.lng}`;
@@ -2002,14 +2042,14 @@ function EventDetailScreen({
           className: "w-full flex items-center justify-center gap-2 rounded-2xl bg-secondary/10 hover:bg-secondary/20 active:scale-[0.98] py-3 text-xs font-bold text-secondary transition-all border border-secondary/20 shadow-soft",
           children: [
             /* @__PURE__ */ jsx(MapPin, { size: 16, className: "text-primary" }),
-            /* @__PURE__ */ jsx("span", { children: "C├│mo llegar con Google Maps" }),
-            userLocation ? /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary animate-pulse", children: "En tiempo real" }) : /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-muted px-2 py-0.5 text-[9px] font-medium text-muted-foreground", children: "Desde tu ubicaci├│n" })
+            /* @__PURE__ */ jsx("span", { children: "Cómo llegar con Google Maps" }),
+            userLocation ? /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary animate-pulse", children: "En tiempo real" }) : /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-muted px-2 py-0.5 text-[9px] font-medium text-muted-foreground", children: "Desde tu ubicación" })
           ]
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h3", { className: "mb-2 text-sm font-bold text-secondary", children: "Descripci├│n" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm leading-relaxed text-muted-foreground", children: event.description_after_arrival || "Partido amistoso, cancha sint├®tica con luces. Trae ropa c├│moda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo." })
+        /* @__PURE__ */ jsx("h3", { className: "mb-2 text-sm font-bold text-secondary", children: "Descripción" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm leading-relaxed text-muted-foreground", children: event.description_after_arrival || "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo." })
       ] }),
       pendingRequests.length > 0 && currentUser?.email && (currentUser.email === event.host || currentUser.email === event.hostName) && /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsxs("h3", { className: "mb-3 text-sm font-bold text-secondary flex items-center gap-2", children: [
@@ -2038,7 +2078,7 @@ function EventDetailScreen({
                         setSelectedUserProfile(req.profiles || { username: req.user_username });
                       },
                       className: "text-[9px] font-extrabold text-primary hover:underline block text-left",
-                      children: "Ver Perfil ­ƒöì"
+                      children: "Ver Perfil 🔍"
                     }
                   )
                 ] })
@@ -2099,9 +2139,9 @@ function EventDetailScreen({
       ] })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative", children: [
-      showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50", children: "+15 XP ÔÜí" }),
+      showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50", children: "+15 XP ⚔️" }),
       event.price > 0 && activeCoupons.length > 0 && /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-3", children: [
-        /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1", children: "­ƒô£ Aplicar Cup├│n RPG:" }),
+        /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1", children: "📜 Aplicar Cupón RPG:" }),
         /* @__PURE__ */ jsxs(
           "select",
           {
@@ -2109,7 +2149,7 @@ function EventDetailScreen({
             onChange: (e) => setSelectedCouponCode(e.target.value),
             className: "text-xs font-bold text-secondary border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]",
             children: [
-              /* @__PURE__ */ jsx("option", { value: "", children: "-- Sin cup├│n --" }),
+              /* @__PURE__ */ jsx("option", { value: "", children: "-- Sin cupón --" }),
               activeCoupons.map((c) => /* @__PURE__ */ jsxs("option", { value: c.code, children: [
                 c.title,
                 " (",
@@ -2139,7 +2179,7 @@ function EventDetailScreen({
           {
             disabled: true,
             className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center",
-            children: "Eres el organizador ­ƒææ"
+            children: "Eres el organizador 👑"
           }
         ) : isUserApproved ? /* @__PURE__ */ jsx(
           "button",
@@ -2147,7 +2187,7 @@ function EventDetailScreen({
             disabled: joining,
             onClick: handleLeave,
             className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer",
-            children: "Salir del partido ­ƒÜ¬"
+            children: "Salir del partido 🚪"
           }
         ) : isUserPending ? /* @__PURE__ */ jsx(
           "button",
@@ -2155,7 +2195,7 @@ function EventDetailScreen({
             disabled: joining,
             onClick: handleLeave,
             className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer",
-            children: "Cancelar solicitud ÔØî"
+            children: "Cancelar solicitud ⏳"
           }
         ) : /* @__PURE__ */ jsx(
           "button",
@@ -2174,32 +2214,34 @@ function EventDetailScreen({
         " Invitar Amigos"
       ] }),
       /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto py-4 space-y-2 pr-1", children: (() => {
-        const storedFriends = localStorage.getItem("teammatch_friends");
-        const friendList = storedFriends ? JSON.parse(storedFriends) : [];
-        const nonParticipantFriends = friendList.filter((friend) => {
-          const friendEmail = friend.username || friend.name.toLowerCase().replace(" ", "") + "@teammatch.com";
-          return !participants.some((p) => p.user_username === friendEmail || p.profiles?.username === friend.name || friend.username && p.user_username === friend.username);
-        });
-        if (nonParticipantFriends.length === 0) {
-          return /* @__PURE__ */ jsx("div", { className: "text-center text-xs text-muted-foreground py-8", children: "No tienes amigos disponibles para invitar o todos ya est├ín en el partido." });
+        if (myFriends.length === 0) {
+          return /* @__PURE__ */ jsx("div", { className: "text-center text-xs text-muted-foreground py-8", children: "No tienes amigos disponibles para invitar. ¡Acepta solicitudes en la pestaña de Amigos!" });
         }
-        return nonParticipantFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 min-w-0", children: [
-            /* @__PURE__ */ jsx("div", { className: `h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`, children: friend.emoji }),
-            /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
-              /* @__PURE__ */ jsx("div", { className: "text-xs font-bold text-secondary truncate", children: friend.name }),
-              /* @__PURE__ */ jsx("div", { className: "text-[9px] text-muted-foreground", children: friend.location })
-            ] })
-          ] }),
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              onClick: () => handleInviteFriend(friend),
-              className: "rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer",
-              children: "Agregar"
-            }
-          )
-        ] }, friend.id));
+        return myFriends.map((profile) => {
+          const friend = getFormattedProfile$1(profile);
+          if (!friend) return null;
+          const friendEmail = friend.username || friend.name.toLowerCase().replace(" ", "") + "@teammatch.com";
+          const isParticipant = participants.some(
+            (p) => p.user_username === friendEmail || p.profiles?.username === friend.name || friend.username && p.user_username === friend.username
+          );
+          return /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 min-w-0", children: [
+              friend.avatar_url ? /* @__PURE__ */ jsx("img", { src: friend.avatar_url, className: "h-9 w-9 rounded-full object-cover shadow-sm shrink-0" }) : /* @__PURE__ */ jsx("div", { className: `h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`, children: friend.emoji }),
+              /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                /* @__PURE__ */ jsx("div", { className: "text-xs font-bold text-secondary truncate", children: friend.name }),
+                /* @__PURE__ */ jsx("div", { className: "text-[9px] text-muted-foreground", children: friend.location })
+              ] })
+            ] }),
+            isParticipant ? /* @__PURE__ */ jsx("span", { className: "text-[9px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg", children: "Ya está en el partido" }) : /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => handleInviteFriend({ ...friend, id: profile.id }),
+                className: "rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer",
+                children: "Agregar"
+              }
+            )
+          ] }, profile.id);
+        });
       })() }),
       /* @__PURE__ */ jsx(
         "button",
@@ -2243,27 +2285,27 @@ function EventDetailScreen({
             /* @__PURE__ */ jsx(Star, { size: 12, className: "fill-primary text-primary" }),
             " ",
             formatted.rating.toFixed(2),
-            " Reputaci├│n"
+            " Reputación"
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-2 text-center text-xs", children: [
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
               /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Edad" }),
               /* @__PURE__ */ jsxs("span", { className: "font-extrabold text-white", children: [
                 formatted.age,
-                " a├▒os"
+                " años"
               ] })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "G├®nero" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Género" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", children: formatted.gender })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Ubicaci├│n" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Ubicación" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", title: formatted.location, children: formatted.location })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Sobre m├¡" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Sobre mí" }),
             /* @__PURE__ */ jsxs("p", { className: "text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic", children: [
               '"',
               formatted.bio,
@@ -2297,7 +2339,7 @@ const getFormattedProfile$1 = (p) => {
   const age = p.age || 20 + charCodeSum % 15;
   const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
   const location = p.location || locations[charCodeSum % locations.length];
-  const sportsPool = ["Running", "Senderismo", "P├ídel", "Tenis", "V├│leibol"];
+  const sportsPool = ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"];
   const sportsCount = 1 + charCodeSum % 3;
   const sports2 = p.preferred_sports || [];
   if (sports2.length === 0) {
@@ -2308,7 +2350,7 @@ const getFormattedProfile$1 = (p) => {
       }
     }
   }
-  const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
+  const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
   const emoji = emojis[charCodeSum % emojis.length];
   const gradients = [
     "from-pink-500 to-rose-400",
@@ -2321,11 +2363,11 @@ const getFormattedProfile$1 = (p) => {
   ];
   const gradient = gradients[charCodeSum % gradients.length];
   const bios = [
-    "┬íMe encanta el deporte y conocer gente nueva para entrenar en Caracas!",
-    "Siempre activo para jugar un partido de p├ídel o tenis.",
-    "Subo al ├üvila todos los fines de semana. ┬íAcomp├í├▒ame!",
+    "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
+    "Siempre activo para jugar un partido de pádel o tenis.",
+    "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
     "Running y entrenamiento funcional. Busco motivar y que me motiven.",
-    "Jugador recreativo de v├│leibol y f├║tbol. Buena vibra."
+    "Jugador recreativo de vóleibol y fútbol. Buena vibra."
   ];
   const bio = p.description || bios[charCodeSum % bios.length];
   const name = username.includes("@") ? username.split("@")[0].split(".").map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") : username;
@@ -3016,7 +3058,7 @@ function EditProfileScreen({ onBack }) {
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Correo electr├│nico" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Correo electrónico" }),
             /* @__PURE__ */ jsx(
               "input",
               {
@@ -3028,7 +3070,7 @@ function EditProfileScreen({ onBack }) {
                 required: true
               }
             ),
-            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground", children: "Al cambiar el correo electr├│nico, se enviar├í un mensaje de confirmaci├│n." })
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground", children: "Al cambiar el correo electrónico, se enviará un mensaje de confirmación." })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
             /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
@@ -3047,7 +3089,7 @@ function EditProfileScreen({ onBack }) {
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "G├®nero" }),
+              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Género" }),
               /* @__PURE__ */ jsxs(
                 "select",
                 {
@@ -3065,7 +3107,7 @@ function EditProfileScreen({ onBack }) {
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Ubicaci├│n (Municipio/Zona)" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Ubicación (Municipio/Zona)" }),
             /* @__PURE__ */ jsx(
               "input",
               {
@@ -3078,7 +3120,7 @@ function EditProfileScreen({ onBack }) {
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Sobre m├¡ (Descripci├│n)" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Sobre mí (Descripción)" }),
             /* @__PURE__ */ jsx(
               "textarea",
               {
@@ -3086,13 +3128,13 @@ function EditProfileScreen({ onBack }) {
                 onChange: (e) => setDescription(e.target.value),
                 rows: 3,
                 className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none",
-                placeholder: "Cu├®ntanos un poco sobre ti, tu nivel de juego, etc."
+                placeholder: "Cuéntanos un poco sobre ti, tu nivel de juego, etc."
               }
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
             /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground block", children: "Deportes preferidos" }),
-            /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: ["Running", "Senderismo", "P├ídel", "Tenis", "V├│leibol"].map((sport) => {
+            /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"].map((sport) => {
               const isSelected = preferredSports.includes(sport);
               return /* @__PURE__ */ jsx(
                 "button",
@@ -3575,6 +3617,131 @@ function EventCard({
     }
   );
 }
+function CouponPopup() {
+  const [coupons, setCoupons] = useState([]);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    const hasSeen = sessionStorage.getItem("teamMatch_hasSeenCoupons");
+    if (hasSeen === "true") {
+      return;
+    }
+    async function loadActiveCoupons() {
+      try {
+        const todayDate = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+        const { data, error } = await supabase.from("cupones").select("*").gte("duracion", todayDate);
+        if (error) {
+          console.error("Error al obtener cupones:", error.message);
+          return;
+        }
+        if (data && data.length > 0) {
+          setCoupons(data);
+          setIsOpen(true);
+        }
+      } catch (err) {
+        console.error("Error inesperado al cargar cupones:", err);
+      }
+    }
+    loadActiveCoupons();
+  }, []);
+  if (!isOpen || coupons.length === 0) {
+    return null;
+  }
+  const currentCoupon = coupons[activeIdx];
+  const couponTitle = currentCoupon.nombre || "¡Descuento Especial!";
+  const couponDesc = currentCoupon.descripcion || "Disfruta de este beneficio exclusivo en tus próximos eventos.";
+  const couponImg = currentCoupon["Imagen de Fondo"] || currentCoupon.imagen_de_fondo || "https://images.unsplash.com/photo-1540747737956-37872404797a?q=80&w=800";
+  const couponCode = currentCoupon.idCupon || currentCoupon.codigo || currentCoupon.code || String(currentCoupon.id);
+  const handleClose = () => {
+    setIsOpen(false);
+    sessionStorage.setItem("teamMatch_hasSeenCoupons", "true");
+  };
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setCopied(false);
+    setActiveIdx((prev) => (prev + 1) % coupons.length);
+  };
+  const handleCopyCode = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2e3);
+    } catch (err) {
+      console.error("No se pudo copiar el código:", err);
+    }
+  };
+  return /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in", children: /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: "relative w-full max-w-sm overflow-hidden rounded-3xl bg-secondary border border-white/10 shadow-2xl transition-all duration-300 animate-in zoom-in-95 slide-in-from-bottom-8 aspect-[3/4.2] flex flex-col justify-between",
+      style: {
+        backgroundImage: `url(${couponImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      },
+      children: [
+        /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black/95 z-0" }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: handleClose,
+            className: "absolute top-4 right-4 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 border border-white/20 text-white/80 hover:text-white hover:bg-black/60 transition-all hover:scale-105 active:scale-95 cursor-pointer",
+            "aria-label": "Cerrar anuncio",
+            children: /* @__PURE__ */ jsx(X, { size: 18 })
+          }
+        ),
+        /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col h-full justify-between p-6 pt-12 pb-8 text-center text-white", children: [
+          /* @__PURE__ */ jsxs("div", { className: "animate-in fade-in slide-in-from-top-3 duration-500", children: [
+            /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse mb-3", children: "Anuncio Especial 📣" }),
+            /* @__PURE__ */ jsx("h2", { className: "text-2xl md:text-3xl font-extrabold tracking-tight leading-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]", children: couponTitle })
+          ] }, `title-${activeIdx}`),
+          /* @__PURE__ */ jsx("div", { className: "px-2 py-4 animate-in fade-in duration-500 max-h-[140px] overflow-y-auto", children: /* @__PURE__ */ jsx("p", { className: "text-sm md:text-base text-gray-200 font-medium leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]", children: couponDesc }) }, `desc-${activeIdx}`),
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-4 w-full", children: [
+            /* @__PURE__ */ jsxs(
+              "div",
+              {
+                onClick: handleCopyCode,
+                className: "group relative flex w-full max-w-[280px] cursor-pointer items-center justify-between gap-2 rounded-2xl border-2 border-dashed border-primary/60 bg-primary/10 backdrop-blur-md px-4 py-3 text-center transition-all hover:border-primary hover:bg-primary/20 hover:scale-102 active:scale-98 animate-in fade-in slide-in-from-bottom-3 duration-500",
+                title: "Click para copiar código",
+                children: [
+                  /* @__PURE__ */ jsx("div", { className: "flex-1 font-mono text-lg font-black tracking-wider text-primary select-all", children: couponCode }),
+                  /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/25 text-primary transition-transform group-hover:scale-110", children: copied ? /* @__PURE__ */ jsx(Check, { size: 14, className: "text-emerald-400" }) : /* @__PURE__ */ jsx(Copy, { size: 14 }) }),
+                  copied && /* @__PURE__ */ jsx("span", { className: "absolute -top-7 left-1/2 -translate-x-1/2 rounded bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-bounce", children: "¡Copiado!" })
+                ]
+              },
+              `code-${activeIdx}`
+            ),
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: "*Haz clic en el código para copiarlo al portapapeles." })
+          ] })
+        ] }),
+        coupons.length > 1 && /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: handleNext,
+            className: "absolute right-4 top-1/2 -translate-y-1/2 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-black/40 border border-white/20 text-white/80 hover:text-white hover:bg-black/60 hover:scale-110 hover:border-primary active:scale-90 transition-all shadow-lg cursor-pointer",
+            "aria-label": "Siguiente cupón",
+            children: /* @__PURE__ */ jsx(ChevronRight, { size: 24, className: "translate-x-[1px]" })
+          }
+        ),
+        coupons.length > 1 && /* @__PURE__ */ jsx("div", { className: "absolute bottom-3 left-0 right-0 z-30 flex justify-center gap-1.5 pb-1", children: coupons.map((_, index) => /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: (e) => {
+              e.stopPropagation();
+              setCopied(false);
+              setActiveIdx(index);
+            },
+            className: `h-1.5 rounded-full transition-all duration-300 ${activeIdx === index ? "bg-primary w-4" : "bg-white/30 w-1.5"}`,
+            "aria-label": `Ir al cupón ${index + 1}`
+          },
+          index
+        )) })
+      ]
+    }
+  ) });
+}
 const getSportImage$1 = (sportId) => {
   if (sportId === 1) return footballField;
   if (sportId === 2) return tennisCourt;
@@ -3582,9 +3749,9 @@ const getSportImage$1 = (sportId) => {
   if (sportId === 4) return padelCourt;
   return runningTrail;
 };
-const tabs = ["Pr├│ximos", "Mis Partidos", "Solicitudes"];
+const tabs = ["Próximos", "Mis Partidos", "Solicitudes"];
 function MyEventsScreen({ onSelect, onNavigateToProfile }) {
-  const [tab, setTab] = useState("Mis Partidos");
+  const [tab, setTab] = useState("Próximos");
   const [pendingRequests, setPendingRequests] = useState([]);
   const [availableEvents, setAvailableEvents] = useState([]);
   const [myEvents, setMyEvents] = useState([]);
@@ -3599,7 +3766,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     const coords = parseLocation$1(row.location);
     const lat = coords?.lat ?? 0;
     const lng = coords?.lng ?? 0;
-    const sportName = row.sport_id === 1 ? "F├║tbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "P├ídel" : "Otro";
+    const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
     return {
       ...row,
       lat,
@@ -3609,7 +3776,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
       host: row.creator_username || "Usuario",
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
-      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Pr├│ximamente",
+      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
       image: getSportImage$1(row.sport_id),
       distanceKm: 2.5,
       joined: row.joined ?? 1,
@@ -3658,7 +3825,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     setPastEvents(past);
     setCreatedEvents(created);
     setLoading(false);
-    setTab(upcoming.length > 0 ? "Mis Partidos" : "Pr├│ximos");
+    setTab(upcoming.length > 0 ? "Mis Partidos" : "Próximos");
   }
   async function fetchRequests(email) {
     if (!email) return;
@@ -3678,7 +3845,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
   async function handleAction(participantId, status) {
     const req = pendingRequests.find((r) => r.id === participantId);
     if (!req || req.events?.creator_username !== currentUser?.email) {
-      alert("No tienes permiso para realizar esta acci├│n.");
+      alert("No tienes permiso para realizar esta acción.");
       return;
     }
     setActionLoading(participantId.toString());
@@ -3692,6 +3859,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     setActionLoading(null);
   }
   return /* @__PURE__ */ jsxs("div", { className: "h-full overflow-y-auto bg-background pb-24", children: [
+    /* @__PURE__ */ jsx(CouponPopup, {}),
     /* @__PURE__ */ jsxs("header", { className: "flex items-center justify-between px-5 pb-3 pt-12", children: [
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Mis eventos" }),
@@ -3713,7 +3881,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     }) }) }),
     tab === "Solicitudes" ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
       const isPremium = req.profiles?.is_premium;
-      const sportName = req.events?.sport_id === 1 ? "F├║tbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "P├ídel" : "Evento";
+      const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
       return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl bg-card p-4 shadow-soft", children: [
         /* @__PURE__ */ jsxs(
           "div",
@@ -3735,7 +3903,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
                   isPremium ? /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700", children: [
                     /* @__PURE__ */ jsx(Star, { size: 8, className: "fill-amber-500" }),
                     " Premium"
-                  ] }) : /* @__PURE__ */ jsx("span", { className: "rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground", children: "B├ísica" })
+                  ] }) : /* @__PURE__ */ jsx("span", { className: "rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground", children: "Básica" })
                 ] }),
                 /* @__PURE__ */ jsxs("div", { className: "text-xs text-muted-foreground mt-0.5", children: [
                   "quiere unirse a tu partido de ",
@@ -3748,7 +3916,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
                         setSelectedUserProfile(req.profiles || { username: req.user_username });
                       },
                       className: "text-[10px] font-extrabold text-primary hover:underline block text-left mt-1",
-                      children: "Ver Perfil ­ƒöì"
+                      children: "Ver Perfil 🔍"
                     }
                   )
                 ] })
@@ -3778,13 +3946,13 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
         ] })
       ] }, req.id);
     }) }) : /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-4 px-5 pt-3", children: [
-      tab === "Pr├│ximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
+      tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
       ] }),
       tab === "Mis Partidos" && /* @__PURE__ */ jsxs(Fragment, { children: [
         myEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
-        myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos pr├│ximos programados" })
+        myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos próximos programados" })
       ] })
     ] }),
     selectedUserProfile && (() => {
@@ -3821,20 +3989,20 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
               /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Edad" }),
               /* @__PURE__ */ jsxs("span", { className: "font-extrabold text-white", children: [
                 formatted.age,
-                " a├▒os"
+                " años"
               ] })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "G├®nero" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Género" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", children: formatted.gender })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Ubicaci├│n" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Ubicación" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", title: formatted.location, children: formatted.location })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Sobre m├¡" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Sobre mí" }),
             /* @__PURE__ */ jsxs("p", { className: "text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic", children: [
               '"',
               formatted.bio,
@@ -3868,7 +4036,7 @@ const getFormattedProfile = (p) => {
   const age = p.age || 20 + charCodeSum % 15;
   const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
   const location = p.location || locations[charCodeSum % locations.length];
-  const sportsPool = ["Running", "Senderismo", "P├ídel", "Tenis", "V├│leibol"];
+  const sportsPool = ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"];
   const sportsCount = 1 + charCodeSum % 3;
   const sports2 = p.preferred_sports || [];
   if (sports2.length === 0) {
@@ -3879,7 +4047,7 @@ const getFormattedProfile = (p) => {
       }
     }
   }
-  const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
+  const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
   const emoji = emojis[charCodeSum % emojis.length];
   const gradients = [
     "from-pink-500 to-rose-400",
@@ -3892,11 +4060,11 @@ const getFormattedProfile = (p) => {
   ];
   const gradient = gradients[charCodeSum % gradients.length];
   const bios = [
-    "┬íMe encanta el deporte y conocer gente nueva para entrenar en Caracas!",
-    "Siempre activo para jugar un partido de p├ídel o tenis.",
-    "Subo al ├üvila todos los fines de semana. ┬íAcomp├í├▒ame!",
+    "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
+    "Siempre activo para jugar un partido de pádel o tenis.",
+    "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
     "Running y entrenamiento funcional. Busco motivar y que me motiven.",
-    "Jugador recreativo de v├│leibol y f├║tbol. Buena vibra."
+    "Jugador recreativo de vóleibol y fútbol. Buena vibra."
   ];
   const bio = p.description || bios[charCodeSum % bios.length];
   const name = username.includes("@") ? username.split("@")[0].split(".").map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") : username;
@@ -4160,7 +4328,7 @@ function FriendsScreen({
     for (let i = 0; i < idHash.length; i++) {
       charCodeSum += idHash.charCodeAt(i);
     }
-    const emojis = ["­ƒÅâÔÇìÔÖé´©Å", "­ƒÄ¥", "­ƒÑ¥", "­ƒÅÉ", "­ƒæ®ÔÇì­ƒÜÇ", "­ƒºö", "­ƒªü", "­ƒªè", "­ƒÉ»", "­ƒÉ╝"];
+    const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
     const emoji = emojis[charCodeSum % emojis.length];
     const gradients = [
       "from-pink-500 to-rose-400",
@@ -4185,8 +4353,8 @@ function FriendsScreen({
       name: name || "Deportista",
       username: p.username,
       age: p.age || "?",
-      location: p.location || "Ubicaci├│n desconocida",
-      bio: p.description || "Sin descripci├│n",
+      location: p.location || "Ubicación desconocida",
+      bio: p.description || "Sin descripción",
       sports: p.preferred_sports || [],
       avatar_url: p.avatar_url || null,
       emoji,
@@ -4220,11 +4388,6 @@ function FriendsScreen({
       }
       setCandidates(candidates.filter((c) => c.id !== candidate.id));
       setMatchProgress("sent");
-      setTimeout(() => {
-        setMatchProgress(null);
-        setActiveRequestUser(null);
-        handleReject();
-      }, 3e3);
     } catch (err) {
       console.error(err);
       setMatchProgress("error");
@@ -4240,7 +4403,7 @@ function FriendsScreen({
       if (error) throw error;
       setReceivedRequests(receivedRequests.filter((r) => r.id !== request.id));
       setFriends([request, ...friends]);
-      await addXp(15, `┬íAceptaste a ${request.name} como amigo! ­ƒñØ`);
+      await addXp(15, `¡Aceptaste a ${request.name} como amigo! 🤝`);
       if (incrementCarisma) {
         await incrementCarisma(1);
       }
@@ -4281,8 +4444,8 @@ function FriendsScreen({
   };
   return /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col bg-background relative overflow-hidden pb-24", children: [
     matchProgress && activeRequestUser && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 p-6 text-center animate-in fade-in duration-300", children: [
-      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-20 pointer-events-none" }),
-      matchProgress === "sending" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 pointer-events-none", style: { background: "radial-gradient(circle at 50% 40%, rgba(16,185,129,0.15) 0%, transparent 70%)" } }),
+      matchProgress === "sending" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300 relative z-10", children: [
         /* @__PURE__ */ jsxs("div", { className: "relative flex items-center justify-center h-24 w-24", children: [
           /* @__PURE__ */ jsx("div", { className: "absolute inset-0 rounded-full bg-primary/20 animate-ping duration-1000" }),
           /* @__PURE__ */ jsx("div", { className: "h-16 w-16 rounded-full bg-primary/10 border border-primary/30 text-primary grid place-items-center animate-pulse", children: /* @__PURE__ */ jsx(Heart, { size: 32, className: "fill-current text-primary animate-bounce" }) })
@@ -4295,17 +4458,20 @@ function FriendsScreen({
           ] })
         ] })
       ] }),
-      matchProgress === "sent" && /* @__PURE__ */ jsxs("div", { className: "space-y-5 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "┬íSOLICITUD ENVIADA! ­ƒñØ" }),
-        /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: "┬íENVIADO!" }),
-        /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80 px-4", children: [
-          "Has enviado una solicitud de Match a ",
-          activeRequestUser.name,
-          ". Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos."
+      matchProgress === "sent" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10", children: [
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡SOLICITUD ENVIADA! 🤝" }),
+        /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
+        /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight drop-shadow-md", children: "¡Enviado!" }),
+          /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80 px-4 leading-relaxed", children: [
+            "Has enviado una solicitud de Match a ",
+            activeRequestUser.name,
+            ". Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos."
+          ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-8 py-8 relative", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-8 py-6 relative", children: [
           /* @__PURE__ */ jsx("div", { className: "relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500 overflow-hidden", children: user?.user_metadata?.avatar_url ? /* @__PURE__ */ jsx("img", { src: user.user_metadata.avatar_url, className: "w-full h-full object-cover" }) : (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase() }),
-          /* @__PURE__ */ jsx("div", { className: "absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce", children: "ÔÜí" }),
+          /* @__PURE__ */ jsx("div", { className: "absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce", children: "⚔️" }),
           /* @__PURE__ */ jsx("div", { className: "relative h-20 w-20 shadow-pop animate-in slide-in-from-right duration-500", children: renderAvatar(activeRequestUser, "h-20 w-20 text-4xl") })
         ] }),
         /* @__PURE__ */ jsx(
@@ -4317,14 +4483,14 @@ function FriendsScreen({
               setCurrentIndex((prev) => prev + 1);
             },
             className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer",
-            children: "┬íEntendido!"
+            children: "¡Entendido!"
           }
         )
       ] }),
-      matchProgress === "error" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30", children: "ERROR ­ƒÆö" }),
+      matchProgress === "error" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10", children: [
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30", children: "ERROR 💔" }),
         /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight", children: "Hubo un problema" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5", children: "No pudimos enviar tu solicitud. Verifica tu conexi├│n o aseg├║rate de haber creado la tabla de friend_requests." }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5", children: "No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests." }),
         /* @__PURE__ */ jsx(
           "button",
           {
@@ -4341,10 +4507,10 @@ function FriendsScreen({
     acceptedMatchUser && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300 backdrop-blur-sm", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-20 pointer-events-none" }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "┬íNUEVO MATCH! ­ƒñØ" }),
-        /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: "┬íSOLICITUD ACEPTADA!" }),
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡NUEVO MATCH! 🤝" }),
+        /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: "¡SOLICITUD ACEPTADA!" }),
         /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80 px-4", children: [
-          "┬íT├║ y ",
+          "¡Tú y ",
           acceptedMatchUser.name,
           " ahora son amigos! Han ganado +1 punto de Carisma."
         ] }),
@@ -4427,7 +4593,7 @@ function FriendsScreen({
             /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: activeCandidate.name }),
             /* @__PURE__ */ jsxs("span", { className: "text-sm font-bold text-muted-foreground", children: [
               activeCandidate.age,
-              " a├▒os"
+              " años"
             ] })
           ] }),
           /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground leading-relaxed line-clamp-3", children: [
@@ -4456,21 +4622,21 @@ function FriendsScreen({
           {
             onClick: () => handleLike(activeCandidate),
             className: "grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop",
-            title: "┬íHacer Match!",
+            title: "¡Hacer Match!",
             children: /* @__PURE__ */ jsx(Heart, { size: 20, strokeWidth: 2.5, className: "fill-current" })
           }
         )
       ] })
     ] }) : /* @__PURE__ */ jsxs("div", { className: "rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12", children: [
-      /* @__PURE__ */ jsx("div", { className: "text-5xl", children: "ÔÜí" }),
-      /* @__PURE__ */ jsx("h3", { className: "text-base font-black text-secondary", children: "┬íEso es todo por hoy!" }),
-      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Has revisado todos los candidatos cercanos en Caracas. Configura m├ís deportes favoritos en tu perfil para encontrar nuevos partidos y amigos." }),
+      /* @__PURE__ */ jsx("div", { className: "text-5xl", children: "⚔️" }),
+      /* @__PURE__ */ jsx("h3", { className: "text-base font-black text-secondary", children: "¡Eso es todo por hoy!" }),
+      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos." }),
       /* @__PURE__ */ jsx(
         "button",
         {
           onClick: () => setCurrentIndex(0),
           className: "rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20",
-          children: "Reiniciar Lista ­ƒöä"
+          children: "Reiniciar Lista 🔄"
         }
       )
     ] }) }) : /* @__PURE__ */ jsxs("div", { className: "space-y-5 pb-8", children: [
@@ -4487,7 +4653,7 @@ function FriendsScreen({
                 /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate", children: req.name }),
                 /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
                   req.age,
-                  " a├▒os"
+                  " años"
                 ] })
               ] }),
               /* @__PURE__ */ jsx("div", { className: "text-[10px] text-primary font-extrabold", children: req.location }),
@@ -4540,7 +4706,7 @@ function FriendsScreen({
           ),
           /* @__PURE__ */ jsx(Search, { size: 14, className: "absolute left-3.5 top-3.5 text-muted-foreground" })
         ] }),
-        filteredFriends.length === 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground", children: searchQuery ? "No se encontraron amigos con ese criterio" : "A├║n no tienes amigos agregados. ┬íBusca conexiones en la pesta├▒a 'Para ti'!" }) : /* @__PURE__ */ jsx("div", { className: "space-y-2", children: filteredFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all", children: [
+        filteredFriends.length === 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground", children: searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!" }) : /* @__PURE__ */ jsx("div", { className: "space-y-2", children: filteredFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
             renderAvatar(friend, "h-11 w-11 text-xl"),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
@@ -4548,7 +4714,7 @@ function FriendsScreen({
                 /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate", children: friend.name }),
                 /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
                   friend.age,
-                  " a├▒os"
+                  " años"
                 ] })
               ] }),
               /* @__PURE__ */ jsxs("div", { className: "text-[10px] text-muted-foreground flex items-center gap-1", children: [
