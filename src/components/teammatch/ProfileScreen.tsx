@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useCurrentUser } from "@/lib/UserContext";
+import { ACHIEVEMENTS, type Achievement } from "./achievementsData";
 
 export function ProfileScreen({
   onEdit,
@@ -45,9 +46,10 @@ export function ProfileScreen({
     createdEventsCount,
     claimCoupon,
     carisma,
+    unlockedAchievements,
   } = useCurrentUser();
 
-  const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history">("stats");
+  const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history" | "achievements">("stats");
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [showClaimSuccess, setShowClaimSuccess] = useState<{ title: string; discount: string } | null>(null);
 
@@ -60,6 +62,69 @@ export function ProfileScreen({
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  const unlockedCount = unlockedAchievements ? unlockedAchievements.length : 0;
+  const completionPercentage = ACHIEVEMENTS.length > 0 
+    ? Math.round((unlockedCount / ACHIEVEMENTS.length) * 100) 
+    : 0;
+
+  const platinumCount = unlockedAchievements ? ACHIEVEMENTS.filter(a => a.rarity === "platinum" && unlockedAchievements.includes(a.id)).length : 0;
+  const goldCount = unlockedAchievements ? ACHIEVEMENTS.filter(a => a.rarity === "gold" && unlockedAchievements.includes(a.id)).length : 0;
+  const silverCount = unlockedAchievements ? ACHIEVEMENTS.filter(a => a.rarity === "silver" && unlockedAchievements.includes(a.id)).length : 0;
+  const bronzeCount = unlockedAchievements ? ACHIEVEMENTS.filter(a => a.rarity === "bronze" && unlockedAchievements.includes(a.id)).length : 0;
+
+  const renderAchievementProgress = (ach: Achievement, isUnlocked: boolean) => {
+    if (isUnlocked) return null;
+    
+    let current = 0;
+    let target = 1;
+    
+    switch (ach.id) {
+      case "primer_paso":
+        current = joinedEventsCount;
+        target = 1;
+        break;
+      case "creador_leyendas":
+        current = createdEventsCount;
+        target = 1;
+        break;
+      case "fidelidad_hierro":
+        current = useCount;
+        target = 5;
+        break;
+      case "gran_carisma":
+        current = carisma;
+        target = 3;
+        break;
+      case "viajero_deporte":
+        current = joinedEventsCount;
+        target = 3;
+        break;
+      case "nivel_heroe":
+        current = level;
+        target = 5;
+        break;
+      default:
+        return null;
+    }
+    
+    const percentage = Math.min(100, Math.max(0, (current / target) * 100));
+    
+    return (
+      <div className="w-full mt-1.5 space-y-1">
+        <div className="flex justify-between text-[8px] font-black text-white/40">
+          <span>Progreso</span>
+          <span>{current} / {target}</span>
+        </div>
+        <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden border border-white/5">
+          <div 
+            className="h-full bg-primary/70 rounded-full transition-all duration-300"
+            style={{ width: `${percentage}%` }}
+          />
+        </div>
+      </div>
+    );
   };
 
   if (!user) {
@@ -307,14 +372,51 @@ export function ProfileScreen({
             <span>+{xpNeeded - xp} XP para Nivel {level + 1}</span>
           </div>
         </div>
+
+        {/* PlayStation-style Trophies Card (Clickable Banner) */}
+        <div 
+          onClick={() => setActiveTab("achievements")}
+          className="mt-3.5 bg-white/5 backdrop-blur-md p-3.5 rounded-2xl border border-white/5 hover:bg-white/10 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
+        >
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md">
+              <div className="h-full w-full rounded-full bg-[#0d0f14] flex items-center justify-center text-lg">
+                🏆
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h4 className="text-xs font-black uppercase tracking-wider text-white">Logros Obtenidos</h4>
+                <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
+                  {unlockedCount} / {ACHIEVEMENTS.length}
+                </span>
+              </div>
+              {/* PlayStation-style tiny trophy counters */}
+              <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-white/70">
+                <span className="flex items-center gap-0.5">🏆 <span className="text-white">{platinumCount}</span></span>
+                <span className="flex items-center gap-0.5">🥇 <span className="text-white">{goldCount}</span></span>
+                <span className="flex items-center gap-0.5">🥈 <span className="text-white">{silverCount}</span></span>
+                <span className="flex items-center gap-0.5">🥉 <span className="text-white">{bronzeCount}</span></span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="text-right">
+              <span className="text-xs font-black text-white">{completionPercentage}%</span>
+              <p className="text-[8px] text-white/50 uppercase font-black tracking-wider">Progreso</p>
+            </div>
+            <ArrowRight size={13} className="text-white/60" />
+          </div>
+        </div>
       </div>
 
       {/* Navigation Tabs (RPG Character Sheet Style) */}
       <div className="px-5 -mt-8">
-        <div className="grid grid-cols-3 gap-1 rounded-2xl bg-card p-1.5 shadow-pop border border-border">
+        <div className="grid grid-cols-4 gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border">
           {[
-            { id: "stats", label: "Hoja de Stats", icon: Shield },
-            { id: "inventory", label: "Inventario", icon: Trophy },
+            { id: "stats", label: "Stats", icon: Shield },
+            { id: "achievements", label: "Logros", icon: Award },
+            { id: "inventory", label: "Cofre", icon: Trophy },
             { id: "history", label: "Aventuras", icon: BookOpen },
           ].map((t) => {
             const ActiveIcon = t.icon;
@@ -323,13 +425,13 @@ export function ProfileScreen({
               <button
                 key={t.id}
                 onClick={() => setActiveTab(t.id as any)}
-                className={`flex flex-col items-center gap-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95 ${
+                className={`flex flex-col items-center gap-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wide transition-all active:scale-95 ${
                   isSelected
                     ? "bg-secondary text-primary shadow-sm"
                     : "text-muted-foreground hover:bg-muted/50 hover:text-secondary"
                 }`}
               >
-                <ActiveIcon size={14} className={isSelected ? "text-primary" : ""} />
+                <ActiveIcon size={13} className={isSelected ? "text-primary" : ""} />
                 {t.label}
               </button>
             );
@@ -339,6 +441,95 @@ export function ProfileScreen({
 
       {/* Tabs Content */}
       <div className="mt-6 px-5">
+        {/* TAB Logros */}
+        {activeTab === "achievements" && (
+          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
+            <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Award size={14} className="text-primary" /> Lista de Logros y Trofeos
+            </h3>
+            
+            <div className="grid gap-3">
+              {ACHIEVEMENTS.map((ach) => {
+                const isUnlocked = unlockedAchievements ? unlockedAchievements.includes(ach.id) : false;
+                
+                const rarityStyles = {
+                  bronze: {
+                    border: isUnlocked ? "border-[#cd7f32]/30" : "border-border/60",
+                    glow: "from-[#a05a2c] to-[#cd7f32]",
+                    rarityName: "Bronce 🥉",
+                    color: "text-[#cd7f32]",
+                  },
+                  silver: {
+                    border: isUnlocked ? "border-[#c0c0c0]/30" : "border-border/60",
+                    glow: "from-[#718096] to-[#cbd5e0]",
+                    rarityName: "Plata 🥈",
+                    color: "text-[#cbd5e0]",
+                  },
+                  gold: {
+                    border: isUnlocked ? "border-[#ffd700]/30" : "border-border/60",
+                    glow: "from-[#d69e2e] to-[#ecc94b]",
+                    rarityName: "Oro 🥇",
+                    color: "text-[#ecc94b]",
+                  },
+                  platinum: {
+                    border: isUnlocked ? "border-[#e5e4e2]/40 shadow-[0_0_10px_rgba(229,228,226,0.1)]" : "border-border/60",
+                    glow: "from-[#4a5568] via-[#cbd5e0] to-[#e2e8f0]",
+                    rarityName: "Platino 🏆",
+                    color: "text-[#e5e4e2] font-black",
+                  },
+                };
+                
+                const style = rarityStyles[ach.rarity];
+                
+                return (
+                  <div
+                    key={ach.id}
+                    className={`rounded-2xl p-3.5 border transition-all duration-300 flex items-center gap-3.5 bg-card ${style.border} ${
+                      !isUnlocked ? "opacity-60 grayscale bg-muted/20" : "shadow-soft border-l-4"
+                    }`}
+                  >
+                    <div className={`h-11 w-11 shrink-0 rounded-full p-[1.5px] bg-gradient-to-br ${
+                      isUnlocked ? style.glow : "from-muted to-muted-foreground/30"
+                    } flex items-center justify-center shadow-md relative`}>
+                      <div className="h-full w-full rounded-full bg-[#0d0f14] flex items-center justify-center text-lg select-none">
+                        {isUnlocked ? ach.icon : "🔒"}
+                      </div>
+                    </div>
+                    
+                    <div className="flex-1 min-w-0 space-y-0.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h4 className="text-xs font-black text-secondary truncate">
+                          {ach.title}
+                        </h4>
+                        <span className={`text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-[#0d0f14]/5 ${style.color}`}>
+                          {style.rarityName}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground leading-normal pr-2">
+                        {ach.description}
+                      </p>
+                      {renderAchievementProgress(ach, isUnlocked)}
+                    </div>
+                    
+                    <div className="text-right shrink-0 flex flex-col justify-center">
+                      <span className={`text-[9px] font-black px-2 py-0.5 rounded-full border ${
+                        isUnlocked 
+                          ? "text-primary bg-primary/10 border-primary/20" 
+                          : "text-muted-foreground bg-muted border-border"
+                      }`}>
+                        +{ach.xpReward} XP
+                      </span>
+                      <span className="text-[8px] text-muted-foreground font-semibold mt-1">
+                        {isUnlocked ? "Obtenido" : "Bloqueado"}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* TAB 1: RPG Stats */}
         {activeTab === "stats" && (
           <div className="space-y-4">

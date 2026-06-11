@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { ACHIEVEMENTS, type Achievement } from "@/components/teammatch/achievementsData";
 
 export interface RpgCoupon {
   id: string;
@@ -65,6 +66,13 @@ interface UserContextValue {
   isLoading: boolean;
   carisma: number;
   incrementCarisma: (amount?: number) => Promise<void>;
+  unlockedAchievements: string[];
+  achievementNotification: {
+    title: string;
+    rarity: "bronze" | "silver" | "gold" | "platinum";
+    icon: string;
+  } | null;
+  clearAchievementNotification: () => void;
 }
 
 const UserContext = createContext<UserContextValue>({
@@ -89,6 +97,9 @@ const UserContext = createContext<UserContextValue>({
   isLoading: true,
   carisma: 0,
   incrementCarisma: async () => {},
+  unlockedAchievements: [],
+  achievementNotification: null,
+  clearAchievementNotification: () => {},
 });
 
 function getCouponForLevel(level: number): RpgCoupon | null {
@@ -128,14 +139,184 @@ function getCouponForLevel(level: number): RpgCoupon | null {
   return null;
 }
 
+function evaluateAchievements(
+  currentUnlocked: string[],
+  stats: {
+    useCount: number;
+    joinedEventsCount: number;
+    createdEventsCount: number;
+    carisma: number;
+    level: number;
+    description: string;
+    location: string;
+    preferredSports: string[];
+    fullName: string;
+    age: number;
+    gender: string;
+    coupons: any[];
+    xpHistory: any[];
+  }
+) {
+  const newlyUnlocked: Achievement[] = [];
+  const updatedUnlocked = [...currentUnlocked];
+
+  for (const ach of ACHIEVEMENTS) {
+    if (ach.id === "maestro_teammatch") continue;
+    if (!updatedUnlocked.includes(ach.id)) {
+      let met = false;
+      
+      switch (ach.id) {
+        case "primer_paso":
+          met = stats.joinedEventsCount >= 1;
+          break;
+        case "gran_carisma":
+          met = stats.carisma >= 3;
+          break;
+        case "iniciado_uso":
+          met = stats.useCount >= 2;
+          break;
+        case "organizador_novato":
+          met = stats.createdEventsCount >= 2;
+          break;
+        case "primer_contacto":
+          met = stats.carisma >= 1;
+          break;
+        case "primer_nivel":
+          met = stats.level >= 2;
+          break;
+        case "nivel_tres":
+          met = stats.level >= 3;
+          break;
+        case "carta_presentacion":
+          met = !!stats.description && stats.description.trim().length > 0;
+          break;
+        case "establecido":
+          met = !!stats.location && stats.location.trim().length > 0;
+          break;
+        case "multidisciplinario":
+          met = stats.preferredSports && stats.preferredSports.length >= 3;
+          break;
+        case "primer_ahorro":
+          met = stats.coupons && stats.coupons.some((c: any) => c.claimed === true);
+          break;
+        case "espiritu_comunidad":
+          met = stats.carisma >= 1;
+          break;
+        case "creador_leyendas":
+          met = stats.createdEventsCount >= 1;
+          break;
+        case "fidelidad_hierro":
+          met = stats.useCount >= 5;
+          break;
+        case "habito_saludable":
+          met = stats.useCount >= 10;
+          break;
+        case "miembro_equipo":
+          met = stats.joinedEventsCount >= 5;
+          break;
+        case "popular":
+          met = stats.carisma >= 5;
+          break;
+        case "maestro_match":
+          met = stats.level >= 4;
+          break;
+        case "perfil_completo":
+          met = !!stats.fullName && !!stats.age && !!stats.gender && 
+                !!stats.description && !!stats.location;
+          break;
+        case "coleccionista_cupones":
+          met = stats.coupons && stats.coupons.length >= 3;
+          break;
+        case "favorito_casa":
+          {
+            const joinHistory = stats.xpHistory.filter(h => h.type === "join");
+            const locationsPool = ["chacao", "mercedes", "altamira", "hatillo", "castellana", "palos grandes"];
+            met = locationsPool.some(loc => 
+              joinHistory.filter(h => h.title.toLowerCase().includes(loc)).length >= 3
+            );
+          }
+          break;
+        case "viajero_deporte":
+          met = stats.joinedEventsCount >= 3;
+          break;
+        case "nivel_heroe":
+          met = stats.level >= 5;
+          break;
+        case "atleta_constante":
+          met = stats.useCount >= 20;
+          break;
+        case "imparable":
+          met = stats.useCount >= 50;
+          break;
+        case "veterano_canchas":
+          met = stats.joinedEventsCount >= 10;
+          break;
+        case "estrella_liga":
+          met = stats.joinedEventsCount >= 20;
+          break;
+        case "lider_grupo":
+          met = stats.createdEventsCount >= 5;
+          break;
+        case "director_tecnico":
+          met = stats.createdEventsCount >= 10;
+          break;
+        case "idolo_masas":
+          met = stats.carisma >= 10;
+          break;
+        case "semidios_deporte":
+          met = stats.level >= 10;
+          break;
+      }
+
+      if (met) {
+        updatedUnlocked.push(ach.id);
+        newlyUnlocked.push(ach);
+      }
+    }
+  }
+
+  // Platino si desbloqueó todos los otros 31
+  if (!updatedUnlocked.includes("maestro_teammatch")) {
+    const nonPlatinumCount = ACHIEVEMENTS.filter(a => a.id !== "maestro_teammatch").length;
+    const unlockedNonPlatinumCount = updatedUnlocked.filter(id => id !== "maestro_teammatch").length;
+    
+    if (unlockedNonPlatinumCount === nonPlatinumCount) {
+      const platAch = ACHIEVEMENTS.find(a => a.id === "maestro_teammatch");
+      if (platAch) {
+        updatedUnlocked.push("maestro_teammatch");
+        newlyUnlocked.push(platAch);
+      }
+    }
+  }
+
+  return { newlyUnlocked, updatedUnlocked };
+}
+
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [xpNotification, setXpNotification] = useState<XpNotification | null>(null);
   const [eventNotification, setEventNotification] = useState<EventNotification | null>(null);
+  const [achievementQueue, setAchievementQueue] = useState<Achievement[]>([]);
+  const [achievementNotification, setAchievementNotification] = useState<{
+    title: string;
+    rarity: "bronze" | "silver" | "gold" | "platinum";
+    icon: string;
+  } | null>(null);
   const addXpRef = useRef<(amount: number, reason: string) => Promise<void>>(async () => {});
   const previousStatuses = useRef<Record<number, string>>({});
   const isFirstFetch = useRef(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const clearAchievementNotification = () => setAchievementNotification(null);
+
+  // PlayStation style sequential notification queue
+  useEffect(() => {
+    if (!achievementNotification && achievementQueue.length > 0) {
+      const next = achievementQueue[0];
+      setAchievementNotification(next);
+      setAchievementQueue((prev) => prev.slice(1));
+    }
+  }, [achievementNotification, achievementQueue]);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -207,6 +388,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           },
         ],
         carisma: 0,
+        unlocked_achievements: [],
       };
       
       const { data: { user: updatedUser } } = await supabase.auth.updateUser({
@@ -235,21 +417,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isLevelUp = true;
       }
 
-      const newHistory = [
-        {
-          id: "use_" + Date.now(),
-          title: `Aventura Diaria (Uso #${currentUseCount}) ⚡`,
-          xp: xpGained,
-          date: new Date().toLocaleDateString(),
-          type: "use",
-        },
-        ...(meta.xp_history || []),
-      ];
-
+      // 1. Inicializar coupons y otorgar el del 5to uso si corresponde
       let newCoupons = [...(meta.coupons || [])];
       let awardedCoupon: RpgCoupon | null = null;
-
-      // Otorga cupón al 5to uso (o más si no lo tiene por si el usuario está testeando)
       if (currentUseCount >= 5 && !newCoupons.some((c: any) => c.code === "FIDELIDAD5")) {
         awardedCoupon = {
           id: "FIDELIDAD5",
@@ -263,7 +433,65 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         newCoupons.push(awardedCoupon);
       }
 
-      // Recompensa si sube de nivel por el uso diario
+      // 2. Inicializar el historial con la entrada del uso diario
+      let tempHistory = [
+        {
+          id: "use_" + Date.now(),
+          title: `Aventura Diaria (Uso #${currentUseCount}) ⚡`,
+          xp: xpGained,
+          date: new Date().toLocaleDateString(),
+          type: "use" as const,
+        },
+        ...(meta.xp_history || []),
+      ];
+
+      // 3. Evaluar logros desbloqueados por este uso (y cascada de nivel por su XP)
+      let tempXp = newXp;
+      let tempLevel = newLevel;
+      let tempUnlocked = [...(meta.unlocked_achievements || [])];
+      const allNewlyUnlocked: Achievement[] = [];
+
+      let hasNewUnlocks = true;
+      while (hasNewUnlocks) {
+        const stats = {
+          useCount: currentUseCount,
+          joinedEventsCount: meta.joined_events_count || 0,
+          createdEventsCount: meta.created_events_count || 0,
+          carisma: meta.carisma || 0,
+          level: tempLevel,
+          description: meta.description || "",
+          location: meta.location || "",
+          preferredSports: meta.preferred_sports || [],
+          fullName: meta.full_name || "",
+          age: meta.age || 0,
+          gender: meta.gender || "",
+          coupons: newCoupons,
+          xpHistory: tempHistory,
+        };
+
+        const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(tempUnlocked, stats);
+        if (newlyUnlocked.length > 0) {
+          allNewlyUnlocked.push(...newlyUnlocked);
+          tempUnlocked = updatedUnlocked;
+          
+          let achXp = 0;
+          newlyUnlocked.forEach(a => achXp += a.xpReward);
+          tempXp += achXp;
+          
+          while (tempXp >= tempLevel * 100) {
+            tempXp -= tempLevel * 100;
+            tempLevel += 1;
+            isLevelUp = true;
+          }
+        } else {
+          hasNewUnlocks = false;
+        }
+      }
+
+      newXp = tempXp;
+      newLevel = tempLevel;
+
+      // Recompensa si sube de nivel por el uso diario o logros
       if (isLevelUp) {
         const levelCoupon = getCouponForLevel(newLevel);
         if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
@@ -272,16 +500,35 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
+      const achievementHistoryEntries = allNewlyUnlocked.map((ach) => ({
+        id: "ach_" + ach.id + "_" + Date.now(),
+        title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
+        xp: ach.xpReward,
+        date: new Date().toLocaleDateString(),
+        type: "system" as const,
+      }));
+
+      // Unir los logros al historial
+      const finalHistory = [
+        ...achievementHistoryEntries,
+        ...tempHistory,
+      ];
+
       const { data: { user: updatedUser } } = await supabase.auth.updateUser({
         data: {
           xp: newXp,
           level: newLevel,
           use_count: currentUseCount,
           coupons: newCoupons,
-          xp_history: newHistory,
+          xp_history: finalHistory,
+          unlocked_achievements: tempUnlocked,
         },
       });
       if (updatedUser) setUser(updatedUser);
+
+      if (allNewlyUnlocked.length > 0) {
+        setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
+      }
 
       // Gatillar notificación
       setXpNotification({
@@ -291,6 +538,87 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         newLevel: isLevelUp ? newLevel : undefined,
         newCoupon: awardedCoupon,
       });
+    } else {
+      // Si ya fue contado en esta sesión, sincronizar logros met-but-locked por si acaso
+      const currentUnlocked = meta.unlocked_achievements || [];
+      const stats = {
+        useCount: meta.use_count || 0,
+        joinedEventsCount: meta.joined_events_count || 0,
+        createdEventsCount: meta.created_events_count || 0,
+        carisma: meta.carisma || 0,
+        level: meta.level || 1,
+        description: meta.description || "",
+        location: meta.location || "",
+        preferredSports: meta.preferred_sports || [],
+        fullName: meta.full_name || "",
+        age: meta.age || 0,
+        gender: meta.gender || "",
+        coupons: meta.coupons || [],
+        xpHistory: meta.xp_history || [],
+      };
+
+      const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(currentUnlocked, stats);
+      if (newlyUnlocked.length > 0) {
+        let tempXp = meta.xp || 0;
+        let tempLevel = meta.level || 1;
+        let isLevelUp = false;
+        
+        let achXp = 0;
+        newlyUnlocked.forEach(a => achXp += a.xpReward);
+        tempXp += achXp;
+        
+        while (tempXp >= tempLevel * 100) {
+          tempXp -= tempLevel * 100;
+          tempLevel += 1;
+          isLevelUp = true;
+        }
+
+        let newCoupons = [...(meta.coupons || [])];
+        let awardedCoupon: RpgCoupon | null = null;
+        if (isLevelUp) {
+          const levelCoupon = getCouponForLevel(tempLevel);
+          if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
+            newCoupons.push(levelCoupon);
+            awardedCoupon = levelCoupon;
+          }
+        }
+
+        const achievementHistoryEntries = newlyUnlocked.map((ach) => ({
+          id: "ach_" + ach.id + "_" + Date.now(),
+          title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
+          xp: ach.xpReward,
+          date: new Date().toLocaleDateString(),
+          type: "system" as const,
+        }));
+
+        const newHistory = [
+          ...achievementHistoryEntries,
+          ...(meta.xp_history || []),
+        ];
+
+        const { data: { user: updatedUser } } = await supabase.auth.updateUser({
+          data: {
+            xp: tempXp,
+            level: tempLevel,
+            coupons: newCoupons,
+            unlocked_achievements: updatedUnlocked,
+            xp_history: newHistory,
+          },
+        });
+        if (updatedUser) setUser(updatedUser);
+
+        setAchievementQueue((prev) => [...prev, ...newlyUnlocked]);
+
+        if (isLevelUp) {
+          setXpNotification({
+            xp: achXp,
+            reason: "¡Hazaña lograda por tus logros desbloqueados!",
+            isLevelUp,
+            newLevel: tempLevel,
+            newCoupon: awardedCoupon,
+          });
+        }
+      }
     }
   };
 
@@ -313,14 +641,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     let newCoupons = [...(meta.coupons || [])];
     let awardedCoupon: RpgCoupon | null = null;
 
-    if (isLevelUp) {
-      const levelCoupon = getCouponForLevel(newLevel);
-      if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
-        newCoupons.push(levelCoupon);
-        awardedCoupon = levelCoupon;
-      }
-    }
-
     const type =
       reason.includes("unirse") || reason.includes("Unirse")
         ? "join"
@@ -328,7 +648,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           ? "create"
           : "system";
 
-    const newHistory = [
+    const joinedDelta = type === "join" ? 1 : 0;
+    const createdDelta = type === "create" ? 1 : 0;
+
+    const nextJoinedCount = (meta.joined_events_count || 0) + joinedDelta;
+    const nextCreatedCount = (meta.created_events_count || 0) + createdDelta;
+    const currentUseCount = meta.use_count || 0;
+    const currentCarisma = meta.carisma || 0;
+
+    // 1. Inicializar tempHistory con la nueva entrada de XP antes del bucle de logros
+    const tempHistory = [
       {
         id: "xp_" + Date.now(),
         title: reason,
@@ -339,20 +668,90 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       ...(meta.xp_history || []),
     ];
 
-    const joinedDelta = type === "join" ? 1 : 0;
-    const createdDelta = type === "create" ? 1 : 0;
+    // 2. Evaluar logros
+    let tempXp = newXp;
+    let tempLevel = newLevel;
+    let tempUnlocked = [...(meta.unlocked_achievements || [])];
+    const allNewlyUnlocked: Achievement[] = [];
+
+    let hasNewUnlocks = true;
+    while (hasNewUnlocks) {
+      const stats = {
+        useCount: currentUseCount,
+        joinedEventsCount: nextJoinedCount,
+        createdEventsCount: nextCreatedCount,
+        carisma: currentCarisma,
+        level: tempLevel,
+        description: meta.description || "",
+        location: meta.location || "",
+        preferredSports: meta.preferred_sports || [],
+        fullName: meta.full_name || "",
+        age: meta.age || 0,
+        gender: meta.gender || "",
+        coupons: newCoupons,
+        xpHistory: tempHistory,
+      };
+
+      const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(tempUnlocked, stats);
+      if (newlyUnlocked.length > 0) {
+        allNewlyUnlocked.push(...newlyUnlocked);
+        tempUnlocked = updatedUnlocked;
+        
+        let achXp = 0;
+        newlyUnlocked.forEach(a => achXp += a.xpReward);
+        tempXp += achXp;
+        
+        while (tempXp >= tempLevel * 100) {
+          tempXp -= tempLevel * 100;
+          tempLevel += 1;
+          isLevelUp = true;
+        }
+      } else {
+        hasNewUnlocks = false;
+      }
+    }
+
+    newXp = tempXp;
+    newLevel = tempLevel;
+
+    // Verificar cupón de nivel basado en el nivel final
+    if (isLevelUp) {
+      const levelCoupon = getCouponForLevel(newLevel);
+      if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
+        newCoupons.push(levelCoupon);
+        awardedCoupon = levelCoupon;
+      }
+    }
+
+    const achievementHistoryEntries = allNewlyUnlocked.map((ach) => ({
+      id: "ach_" + ach.id + "_" + Date.now(),
+      title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
+      xp: ach.xpReward,
+      date: new Date().toLocaleDateString(),
+      type: "system" as const,
+    }));
+
+    const finalHistory = [
+      ...achievementHistoryEntries,
+      ...tempHistory,
+    ];
 
     const { data: { user: updatedUser } } = await supabase.auth.updateUser({
       data: {
         xp: newXp,
         level: newLevel,
         coupons: newCoupons,
-        xp_history: newHistory,
-        joined_events_count: (meta.joined_events_count || 0) + joinedDelta,
-        created_events_count: (meta.created_events_count || 0) + createdDelta,
+        xp_history: finalHistory,
+        joined_events_count: nextJoinedCount,
+        created_events_count: nextCreatedCount,
+        unlocked_achievements: tempUnlocked,
       },
     });
     if (updatedUser) setUser(updatedUser);
+
+    if (allNewlyUnlocked.length > 0) {
+      setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
+    }
 
     setXpNotification({
       xp: amount,
@@ -375,12 +774,106 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       return c;
     });
 
+    const currentXp = meta.xp || 0;
+    const currentLevel = meta.level || 1;
+
+    let newXp = currentXp;
+    let newLevel = currentLevel;
+    let isLevelUp = false;
+
+    // Evaluar logros
+    let tempXp = newXp;
+    let tempLevel = newLevel;
+    let tempUnlocked = [...(meta.unlocked_achievements || [])];
+    const allNewlyUnlocked: Achievement[] = [];
+
+    let hasNewUnlocks = true;
+    while (hasNewUnlocks) {
+      const stats = {
+        useCount: meta.use_count || 0,
+        joinedEventsCount: meta.joined_events_count || 0,
+        createdEventsCount: meta.created_events_count || 0,
+        carisma: meta.carisma || 0,
+        level: tempLevel,
+        description: meta.description || "",
+        location: meta.location || "",
+        preferredSports: meta.preferred_sports || [],
+        fullName: meta.full_name || "",
+        age: meta.age || 0,
+        gender: meta.gender || "",
+        coupons: newCoupons,
+        xpHistory: meta.xp_history || [],
+      };
+
+      const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(tempUnlocked, stats);
+      if (newlyUnlocked.length > 0) {
+        allNewlyUnlocked.push(...newlyUnlocked);
+        tempUnlocked = updatedUnlocked;
+        
+        let achXp = 0;
+        newlyUnlocked.forEach(a => achXp += a.xpReward);
+        tempXp += achXp;
+        
+        while (tempXp >= tempLevel * 100) {
+          tempXp -= tempLevel * 100;
+          tempLevel += 1;
+          isLevelUp = true;
+        }
+      } else {
+        hasNewUnlocks = false;
+      }
+    }
+
+    newXp = tempXp;
+    newLevel = tempLevel;
+
+    let levelCoupons = [...newCoupons];
+    let awardedCoupon: RpgCoupon | null = null;
+    if (isLevelUp) {
+      const levelCoupon = getCouponForLevel(newLevel);
+      if (levelCoupon && !levelCoupons.some((c: any) => c.code === levelCoupon.code)) {
+        levelCoupons.push(levelCoupon);
+        awardedCoupon = levelCoupon;
+      }
+    }
+
+    const achievementHistoryEntries = allNewlyUnlocked.map((ach) => ({
+      id: "ach_" + ach.id + "_" + Date.now(),
+      title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
+      xp: ach.xpReward,
+      date: new Date().toLocaleDateString(),
+      type: "system" as const,
+    }));
+
+    const finalHistory = [
+      ...achievementHistoryEntries,
+      ...(meta.xp_history || []),
+    ];
+
     const { data: { user: updatedUser } } = await supabase.auth.updateUser({
       data: {
-        coupons: newCoupons,
+        coupons: levelCoupons,
+        xp: newXp,
+        level: newLevel,
+        unlocked_achievements: tempUnlocked,
+        xp_history: finalHistory,
       },
     });
     if (updatedUser) setUser(updatedUser);
+
+    if (allNewlyUnlocked.length > 0) {
+      setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
+    }
+
+    if (isLevelUp) {
+      setXpNotification({
+        xp: 0,
+        reason: "¡Has subido de nivel por tus hazañas!",
+        isLevelUp,
+        newLevel,
+        newCoupon: awardedCoupon,
+      });
+    }
   };
 
   const updateProfile = async (updates: {
@@ -395,6 +888,83 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     preferredSports?: string[];
   }) => {
     if (!user) return;
+    const meta = user.user_metadata || {};
+
+    const currentXp = meta.xp || 0;
+    const currentLevel = meta.level || 1;
+
+    let newXp = currentXp;
+    let newLevel = currentLevel;
+    let isLevelUp = false;
+
+    // Evaluar logros
+    let tempXp = newXp;
+    let tempLevel = newLevel;
+    let tempUnlocked = [...(meta.unlocked_achievements || [])];
+    const allNewlyUnlocked: Achievement[] = [];
+
+    let hasNewUnlocks = true;
+    while (hasNewUnlocks) {
+      const stats = {
+        useCount: meta.use_count || 0,
+        joinedEventsCount: meta.joined_events_count || 0,
+        createdEventsCount: meta.created_events_count || 0,
+        carisma: meta.carisma || 0,
+        level: tempLevel,
+        description: updates.description || meta.description || "",
+        location: updates.location || meta.location || "",
+        preferredSports: updates.preferredSports || meta.preferred_sports || [],
+        fullName: updates.name || meta.full_name || "",
+        age: updates.age || meta.age || 0,
+        gender: updates.gender || meta.gender || "",
+        coupons: meta.coupons || [],
+        xpHistory: meta.xp_history || [],
+      };
+
+      const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(tempUnlocked, stats);
+      if (newlyUnlocked.length > 0) {
+        allNewlyUnlocked.push(...newlyUnlocked);
+        tempUnlocked = updatedUnlocked;
+        
+        let achXp = 0;
+        newlyUnlocked.forEach(a => achXp += a.xpReward);
+        tempXp += achXp;
+        
+        while (tempXp >= tempLevel * 100) {
+          tempXp -= tempLevel * 100;
+          tempLevel += 1;
+          isLevelUp = true;
+        }
+      } else {
+        hasNewUnlocks = false;
+      }
+    }
+
+    newXp = tempXp;
+    newLevel = tempLevel;
+
+    let newCoupons = [...(meta.coupons || [])];
+    let awardedCoupon: RpgCoupon | null = null;
+    if (isLevelUp) {
+      const levelCoupon = getCouponForLevel(newLevel);
+      if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
+        newCoupons.push(levelCoupon);
+        awardedCoupon = levelCoupon;
+      }
+    }
+
+    const achievementHistoryEntries = allNewlyUnlocked.map((ach) => ({
+      id: "ach_" + ach.id + "_" + Date.now(),
+      title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
+      xp: ach.xpReward,
+      date: new Date().toLocaleDateString(),
+      type: "system" as const,
+    }));
+
+    const finalHistory = [
+      ...achievementHistoryEntries,
+      ...(meta.xp_history || []),
+    ];
 
     const { data: { user: updatedUser }, error: updateError } = await supabase.auth.updateUser({
       data: {
@@ -405,7 +975,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         gender: updates.gender,
         description: updates.description,
         location: updates.location,
-        preferred_sports: updates.preferredSports
+        preferred_sports: updates.preferredSports,
+        xp: newXp,
+        level: newLevel,
+        coupons: newCoupons,
+        unlocked_achievements: tempUnlocked,
+        xp_history: finalHistory,
       },
       ...(updates.email && updates.email !== user.email && { email: updates.email })
     });
@@ -435,6 +1010,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
     if (updatedUser) {
       setUser(updatedUser);
+    }
+
+    if (allNewlyUnlocked.length > 0) {
+      setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
+    }
+
+    if (isLevelUp) {
+      setXpNotification({
+        xp: 0,
+        reason: "¡Has subido de nivel por tus hazañas!",
+        isLevelUp,
+        newLevel,
+        newCoupon: awardedCoupon,
+      });
     }
   };
 
@@ -586,13 +1175,108 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const meta = user.user_metadata || {};
     const currentCarisma = meta.carisma || 0;
     const newCarisma = currentCarisma + amount;
-    
+
+    const currentXp = meta.xp || 0;
+    const currentLevel = meta.level || 1;
+
+    let newXp = currentXp;
+    let newLevel = currentLevel;
+    let isLevelUp = false;
+
+    // Evaluar logros
+    let tempXp = newXp;
+    let tempLevel = newLevel;
+    let tempUnlocked = [...(meta.unlocked_achievements || [])];
+    const allNewlyUnlocked: Achievement[] = [];
+
+    let hasNewUnlocks = true;
+    while (hasNewUnlocks) {
+      const stats = {
+        useCount: meta.use_count || 0,
+        joinedEventsCount: meta.joined_events_count || 0,
+        createdEventsCount: meta.created_events_count || 0,
+        carisma: newCarisma,
+        level: tempLevel,
+        description: meta.description || "",
+        location: meta.location || "",
+        preferredSports: meta.preferred_sports || [],
+        fullName: meta.full_name || "",
+        age: meta.age || 0,
+        gender: meta.gender || "",
+        coupons: meta.coupons || [],
+        xpHistory: meta.xp_history || [],
+      };
+
+      const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(tempUnlocked, stats);
+      if (newlyUnlocked.length > 0) {
+        allNewlyUnlocked.push(...newlyUnlocked);
+        tempUnlocked = updatedUnlocked;
+        
+        let achXp = 0;
+        newlyUnlocked.forEach(a => achXp += a.xpReward);
+        tempXp += achXp;
+        
+        while (tempXp >= tempLevel * 100) {
+          tempXp -= tempLevel * 100;
+          tempLevel += 1;
+          isLevelUp = true;
+        }
+      } else {
+        hasNewUnlocks = false;
+      }
+    }
+
+    newXp = tempXp;
+    newLevel = tempLevel;
+
+    let newCoupons = [...(meta.coupons || [])];
+    let awardedCoupon: RpgCoupon | null = null;
+    if (isLevelUp) {
+      const levelCoupon = getCouponForLevel(newLevel);
+      if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
+        newCoupons.push(levelCoupon);
+        awardedCoupon = levelCoupon;
+      }
+    }
+
+    const achievementHistoryEntries = allNewlyUnlocked.map((ach) => ({
+      id: "ach_" + ach.id + "_" + Date.now(),
+      title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
+      xp: ach.xpReward,
+      date: new Date().toLocaleDateString(),
+      type: "system" as const,
+    }));
+
+    const finalHistory = [
+      ...achievementHistoryEntries,
+      ...(meta.xp_history || []),
+    ];
+
     const { data: { user: updatedUser } } = await supabase.auth.updateUser({
       data: {
         carisma: newCarisma,
+        xp: newXp,
+        level: newLevel,
+        coupons: newCoupons,
+        unlocked_achievements: tempUnlocked,
+        xp_history: finalHistory,
       },
     });
     if (updatedUser) setUser(updatedUser);
+
+    if (allNewlyUnlocked.length > 0) {
+      setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
+    }
+
+    if (isLevelUp) {
+      setXpNotification({
+        xp: 0,
+        reason: "¡Has subido de nivel por tus hazañas!",
+        isLevelUp,
+        newLevel,
+        newCoupon: awardedCoupon,
+      });
+    }
   };
 
   return (
@@ -619,6 +1303,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         carisma,
         incrementCarisma,
+        unlockedAchievements: user?.user_metadata?.unlocked_achievements || [],
+        achievementNotification,
+        clearAchievementNotification,
       }}
     >
       {children}
