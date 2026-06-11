@@ -5,6 +5,16 @@ import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
 import { LoginPromptModal } from "./LoginPromptModal";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+});
 
 export function EventDetailScreen({
   event,
@@ -27,44 +37,8 @@ export function EventDetailScreen({
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { addXp, coupons, claimCoupon, avatarUrl: currentUserAvatar } = useCurrentUser();
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>("");
-  const [showInviteModal, setShowInviteModal] = useState(false);
-  const [selectedUserProfile, setSelectedUserProfile] = useState<any | null>(null);
 
   const [hostProfile, setHostProfile] = useState<any>(null);
-  const [myFriends, setMyFriends] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (currentUser) {
-      fetchMyFriends();
-    }
-  }, [currentUser]);
-
-  async function fetchMyFriends() {
-    if (!currentUser?.id) return;
-    try {
-      const { data: dbProfiles } = await supabase.from("profiles").select("*");
-      const { data: requestsData } = await supabase
-        .from("friend_requests")
-        .select("*")
-        .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`);
-      
-      const requests = requestsData || [];
-      const friends: any[] = [];
-      
-      requests.forEach((req: any) => {
-        if (req.status === 'accepted') {
-          const otherUserId = req.sender_id === currentUser.id ? req.receiver_id : req.sender_id;
-          const profile = dbProfiles?.find(p => p.id === otherUserId);
-          if (profile) {
-            friends.push(profile);
-          }
-        }
-      });
-      setMyFriends(friends);
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   const renderAvatar = (username: string, sizeClass = "h-10 w-10", explicitAvatarUrl?: string | null) => {
     const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
@@ -120,9 +94,10 @@ export function EventDetailScreen({
 
   async function fetchParticipants() {
     setLoading(true);
+    // Asumimos que la tabla event_participants tiene una columna 'status' (pending, approved, rejected)
     const { data, error } = await supabase
       .from("event_participants")
-      .select("*, profiles(*)")
+      .select("*, profiles(username, rating, avatar_url)")
       .eq("event_id", event.id);
 
     if (!error && data) {
@@ -132,6 +107,7 @@ export function EventDetailScreen({
   }
 
   async function handleJoin() {
+    // Si no hay usuario autenticado, mostrar modal de login
     if (!currentUser || !currentUser.email) {
       setShowLoginPrompt(true);
       return;
@@ -183,83 +159,6 @@ export function EventDetailScreen({
     }
     setActionLoading(null);
   }
-
-  async function handleInviteFriend(friend: any) {
-    const friendEmail = friend.username || (friend.name.toLowerCase().replace(" ", "") + "@teammatch.com");
-    const invitationStatus = isHost ? "aceptado" : "pendiente";
-    try {
-      const { error } = await supabase.from("event_participants").insert({
-        event_id: event.id,
-        user_username: friendEmail,
-        status: invitationStatus
-      });
-      if (error) throw error;
-      if (invitationStatus === "aceptado") {
-        alert(`¡${friend.name} ha sido agregado al partido!`);
-      } else {
-        alert(`¡Se ha enviado la solicitud de invitación para ${friend.name}! Esperando aprobación del organizador.`);
-      }
-      fetchParticipants();
-    } catch (e: any) {
-      console.warn("Could not insert to Supabase event_participants due to RLS/schema, simulating locally:", e);
-      
-      const idHash = friend.id ? friend.id.split("-").join("") : (friend.username || friend.name);
-      let charCodeSum = 0;
-      for (let i = 0; i < idHash.length; i++) {
-        charCodeSum += idHash.charCodeAt(i);
-      }
-      const rating = 4.5 + (charCodeSum % 6) * 0.1;
-
-      // Fallback local
-      const mockParticipant = {
-        id: Math.floor(Math.random() * 100000),
-        event_id: event.id,
-        user_username: friendEmail,
-        status: invitationStatus,
-        profiles: {
-          username: friend.username || friendEmail,
-          avatar_url: null,
-          rating: Number(rating.toFixed(2)),
-          age: friend.age,
-          gender: friend.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
-          description: friend.bio,
-          location: friend.location,
-          preferred_sports: friend.sports
-        }
-      };
-      setParticipants(prev => [...prev, mockParticipant]);
-      if (invitationStatus === "aceptado") {
-        alert(`¡${friend.name} ha sido agregado al partido!`);
-      } else {
-        alert(`¡Se ha enviado la solicitud de invitación para ${friend.name}! Esperando aprobación del organizador.`);
-      }
-    }
-  }
-
-  async function handleLeave() {
-    if (!currentUser?.email) return;
-    const confirmLeave = confirm("¿Estás seguro de que deseas salirte de este partido?");
-    if (!confirmLeave) return;
-
-    try {
-      const { error } = await supabase
-        .from("event_participants")
-        .delete()
-        .eq("event_id", event.id)
-        .eq("user_username", currentUser.email);
-
-      if (error) throw error;
-      
-      alert("Te has salido del partido.");
-      fetchParticipants();
-    } catch (e: any) {
-      console.error("Error leaving event, simulating locally:", e);
-      // Local fallback
-      setParticipants(prev => prev.filter(p => p.user_username !== currentUser.email));
-      alert("Te has salido del partido.");
-    }
-  }
-
 
   const approvedPlayers = participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status); // Fallback si status no existe
   const pendingRequests = participants.filter(p => p.status === "pending" || p.status === "pendiente");
@@ -364,22 +263,62 @@ export function EventDetailScreen({
           </div>
         </div>
 
-        {/* Info grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <InfoTile icon={Calendar} label="Fecha" value={event.date} />
-          <InfoTile icon={Clock} label="Hora" value={event.time} />
-          <InfoTile 
-            icon={MapPin} 
-            label="Lugar" 
-            value={event.zone || (event.lat && event.lng ? `${event.lat.toFixed(4)}, ${event.lng.toFixed(4)}` : "Caracas")}
-            onClick={() => {
-              const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
-              const destination = `${event.lat},${event.lng}`;
-              const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-              window.open(url, '_blank');
-            }}
-          />
-          <InfoTile icon={Users} label="Cupos" value={`${approvedPlayers.length}/${event.spots}`} />
+        {/* Info grid & Map */}
+        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-3 items-stretch">
+          {/* Lado izquierdo */}
+          <div className="flex h-full flex-col justify-center gap-3 rounded-2xl bg-card p-4 shadow-soft">
+            <div className="flex items-center gap-3">
+              <Calendar size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fecha</div>
+                <div className="truncate text-sm font-bold text-secondary">{event.date}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Clock size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Hora</div>
+                <div className="truncate text-sm font-bold text-secondary">{event.time}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <MapPin size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Lugar</div>
+                <div className="truncate text-sm font-bold text-secondary" title={(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}>
+                  {(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Users size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Cupos</div>
+                <div className="truncate text-sm font-bold text-secondary">{approvedPlayers.length}/{event.spots}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Lado derecho: Mapa */}
+          {event.lat && event.lng ? (
+            <div className="h-full min-h-[160px] w-full rounded-2xl overflow-hidden shadow-soft relative z-0">
+              <MapContainer
+                center={[event.lat, event.lng]}
+                zoom={15}
+                scrollWheelZoom={false}
+                className="h-full w-full"
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[event.lat, event.lng]} />
+              </MapContainer>
+            </div>
+          ) : (
+            <div className="h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center border border-dashed border-border text-[10px] text-muted-foreground text-center p-2">
+              Ubicación no<br/>disponible
+            </div>
+          )}
         </div>
 
         {/* Botón de Google Maps */}
@@ -426,10 +365,7 @@ export function EventDetailScreen({
             <div className="space-y-2">
               {pendingRequests.map(req => (
                 <div key={req.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft">
-                  <div 
-                    onClick={() => setSelectedUserProfile(req.profiles || { username: req.user_username })}
-                    className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-                  >
+                  <div className="flex items-center gap-3">
                     {renderAvatar(req.user_username || "Usuario", "h-10 w-10", req.profiles?.avatar_url)}
                     <div>
                       <div className="text-sm font-bold text-secondary">
@@ -439,15 +375,6 @@ export function EventDetailScreen({
                         <Star size={10} className="fill-accent text-accent" />
                         {req.profiles?.rating || "5.00"}
                       </div>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedUserProfile(req.profiles || { username: req.user_username });
-                        }}
-                        className="text-[9px] font-extrabold text-primary hover:underline block text-left"
-                      >
-                        Ver Perfil 🔍
-                      </button>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -476,19 +403,8 @@ export function EventDetailScreen({
         <div>
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-sm font-bold text-secondary">Jugadores aprobados</h3>
-            <div className="flex items-center gap-2">
-              {currentUser && (
-                <button
-                  onClick={() => setShowInviteModal(true)}
-                  className="rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-black transition-all active:scale-95 shadow-sm cursor-pointer"
-                >
-                  + Invitar Amigos
-                </button>
-              )}
-              <span className="text-xs text-muted-foreground">{emptySpots} cupos disponibles</span>
-            </div>
+            <span className="text-xs text-muted-foreground">{emptySpots} cupos disponibles</span>
           </div>
-
           <div className="flex flex-wrap gap-2">
             {loading ? (
               <div className="text-xs text-muted-foreground">Cargando jugadores...</div>
@@ -517,7 +433,7 @@ export function EventDetailScreen({
       <div className="absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative">
         {showFloatXp && (
           <div className="float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50">
-            +15 XP ⚔️
+            +15 XP ⚡
           </div>
         )}
         
@@ -552,304 +468,34 @@ export function EventDetailScreen({
               {selectedCouponCode && <span className="text-[10px] text-muted-foreground line-through ml-1.5">${event.price}</span>}
             </div>
           </div>
-          {isHost ? (
-            <button
-              disabled={true}
-              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center"
-            >
-              Eres el organizador 👑
-            </button>
-          ) : isUserApproved ? (
-            <button
-              disabled={joining}
-              onClick={handleLeave}
-              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer"
-            >
-              Salir del partido 🚪
-            </button>
-          ) : isUserPending ? (
-            <button
-              disabled={joining}
-              onClick={handleLeave}
-              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer"
-            >
-              Cancelar solicitud ⏳
-            </button>
-          ) : (
-            <button
-              disabled={joining || emptySpots === 0}
-              onClick={handleJoin}
-              className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${
-                emptySpots === 0
-                  ? "bg-muted text-muted-foreground cursor-not-allowed"
-                  : "gradient-primary text-secondary"
-              }`}
-            >
-              {joining 
-                ? "Enviando..." 
-                : emptySpots === 0 
-                  ? "Evento Lleno" 
-                  : "Solicitar unirme"}
-            </button>
-          )}
+          <button
+            disabled={joining || emptySpots === 0 || isUserPending || isUserApproved}
+            onClick={handleJoin}
+            className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 ${
+              isUserApproved
+                ? "bg-primary text-secondary"
+                : isUserPending
+                  ? "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                  : emptySpots === 0
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : "gradient-primary text-secondary"
+            }`}
+          >
+            {joining 
+              ? "Enviando..." 
+              : isUserApproved 
+                ? "Ya estás dentro" 
+                : isUserPending 
+                  ? "Esperando solicitud" 
+                  : emptySpots === 0 
+                    ? "Evento Lleno" 
+                    : "Solicitar unirme"}
+          </button>
         </div>
       </div>
-
-      {/* Modal de Invitar Amigos */}
-      {showInviteModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-6 py-4 animate-in fade-in duration-300">
-          <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[80vh]">
-            <h3 className="text-lg font-black text-white flex items-center gap-2 border-b border-white/10 pb-3">
-              <Users size={20} className="text-primary animate-pulse" /> Invitar Amigos
-            </h3>
-            
-            <div className="flex-1 overflow-y-auto py-4 space-y-2 pr-1">
-              {(() => {
-                if (myFriends.length === 0) {
-                  return (
-                    <div className="text-center text-xs text-muted-foreground py-8">
-                      No tienes amigos disponibles para invitar. ¡Acepta solicitudes en la pestaña de Amigos!
-                    </div>
-                  );
-                }
-
-                return myFriends.map(profile => {
-                  const friend = getFormattedProfile(profile);
-                  if (!friend) return null;
-                  
-                  const friendEmail = friend.username || (friend.name.toLowerCase().replace(" ", "") + "@teammatch.com");
-                  const isParticipant = participants.some(p => 
-                    p.user_username === friendEmail || 
-                    p.profiles?.username === friend.name || 
-                    (friend.username && p.user_username === friend.username)
-                  );
-
-                  return (
-                    <div key={profile.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        {friend.avatar_url ? (
-                          <img src={friend.avatar_url} className="h-9 w-9 rounded-full object-cover shadow-sm shrink-0" />
-                        ) : (
-                          <div className={`h-9 w-9 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center text-base shadow-sm shrink-0`}>
-                            {friend.emoji}
-                          </div>
-                        )}
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-secondary truncate">{friend.name}</div>
-                          <div className="text-[9px] text-muted-foreground">{friend.location}</div>
-                        </div>
-                      </div>
-                      
-                      {isParticipant ? (
-                        <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg">
-                          Ya está en el partido
-                        </span>
-                      ) : (
-                        <button
-                          onClick={() => handleInviteFriend({ ...friend, id: profile.id })}
-                          className="rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
-                        >
-                          Agregar
-                        </button>
-                      )}
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-
-             <button
-              onClick={() => setShowInviteModal(false)}
-              className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Perfil de Usuario Solicitante */}
-      {selectedUserProfile && (() => {
-        const formatted = getFormattedProfile(selectedUserProfile);
-        if (!formatted) return null;
-        
-        return (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 px-6 py-4 animate-in fade-in duration-300">
-            <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col">
-              
-              {/* Banner superior con gradiente */}
-              <div className={`h-24 w-full bg-gradient-to-tr ${formatted.gradient} relative shrink-0`} />
-              
-              {/* Foto de perfil flotante */}
-              <div className="absolute top-10 left-6">
-                <div className="relative">
-                  <div className="h-16 w-16 rounded-full bg-card p-1 shadow-md ring-4 ring-secondary">
-                    {formatted.avatar_url ? (
-                      <img 
-                        src={formatted.avatar_url} 
-                        alt="Avatar" 
-                        className="h-full w-full rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className={`h-full w-full rounded-full bg-gradient-to-tr ${formatted.gradient} grid place-items-center text-2xl`}>
-                        {formatted.emoji}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Botón cerrar flotante */}
-              <button 
-                onClick={() => setSelectedUserProfile(null)}
-                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors grid place-items-center cursor-pointer"
-              >
-                <X size={16} />
-              </button>
-
-              {/* Contenido del perfil */}
-              <div className="p-6 pt-8 space-y-4 text-white">
-                <div className="space-y-1">
-                  <h3 className="text-base font-black flex items-center gap-2">
-                    {formatted.name}
-                    {formatted.is_organizer && (
-                      <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30">
-                        Organizador
-                      </span>
-                    )}
-                  </h3>
-                  <p className="text-[10px] text-white/50">{formatted.username}</p>
-                </div>
-
-                {/* Reputación / Rating */}
-                <div className="inline-flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-2.5 py-1 text-xs font-bold text-primary">
-                  <Star size={12} className="fill-primary text-primary" /> {formatted.rating.toFixed(2)} Reputación
-                </div>
-
-                {/* Grid de Atributos */}
-                <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Edad</span>
-                    <span className="font-extrabold text-white">{formatted.age} años</span>
-                  </div>
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Género</span>
-                    <span className="font-extrabold text-white truncate block">{formatted.gender}</span>
-                  </div>
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Ubicación</span>
-                    <span className="font-extrabold text-white truncate block" title={formatted.location}>
-                      {formatted.location}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Biografía / Sobre mí */}
-                <div className="space-y-1">
-                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Sobre mí</span>
-                  <p className="text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic">
-                    "{formatted.bio}"
-                  </p>
-                </div>
-
-                {/* Deportes favoritos */}
-                <div className="space-y-1.5">
-                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Deportes Favoritos</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {formatted.sports.map((sport: string) => (
-                      <span key={sport} className="rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary">
-                        {sport}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Botón cerrar */}
-                <button
-                  onClick={() => setSelectedUserProfile(null)}
-                  className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
-                >
-                  Volver al Partido
-                </button>
-              </div>
-
-            </div>
-          </div>
-        );
-      })()}
     </div>
   );
 }
-
-const getFormattedProfile = (p: any) => {
-  if (!p) return null;
-  const username = p.username || "Usuario";
-  
-  let charCodeSum = 0;
-  for (let i = 0; i < username.length; i++) {
-    charCodeSum += username.charCodeAt(i);
-  }
-  
-  const age = p.age || (20 + (charCodeSum % 15));
-  
-  const locations = ["Chacao", "Las Mercedes", "Altamira", "El Hatillo", "La Castellana", "Los Palos Grandes"];
-  const location = p.location || locations[charCodeSum % locations.length];
-  
-  const sportsPool = ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"];
-  const sportsCount = 1 + (charCodeSum % 3);
-  const sports: string[] = p.preferred_sports || [];
-  if (sports.length === 0) {
-    for (let i = 0; i < sportsCount; i++) {
-      const sport = sportsPool[(charCodeSum + i) % sportsPool.length];
-      if (!sports.includes(sport)) {
-        sports.push(sport);
-      }
-    }
-  }
-  
-  const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
-  const emoji = emojis[charCodeSum % emojis.length];
-  
-  const gradients = [
-    "from-pink-500 to-rose-400",
-    "from-emerald-500 to-teal-400",
-    "from-blue-500 to-cyan-400",
-    "from-purple-500 to-indigo-400",
-    "from-amber-500 to-orange-400",
-    "from-sky-500 to-blue-600",
-    "from-orange-400 to-red-500"
-  ];
-  const gradient = gradients[charCodeSum % gradients.length];
-  
-  const bios = [
-    "¡Me encanta el deporte y conocer gente nueva para entrenar en Caracas!",
-    "Siempre activo para jugar un partido de pádel o tenis.",
-    "Subo al Ávila todos los fines de semana. ¡Acompáñame!",
-    "Running y entrenamiento funcional. Busco motivar y que me motiven.",
-    "Jugador recreativo de vóleibol y fútbol. Buena vibra."
-  ];
-  const bio = p.description || bios[charCodeSum % bios.length];
-  
-  const name = username.includes("@") 
-    ? username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
-    : username;
-
-  return {
-    name,
-    username,
-    age,
-    gender: p.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
-    location,
-    bio,
-    sports,
-    emoji,
-    gradient,
-    rating: p.rating || 4.8,
-    avatar_url: p.avatar_url,
-    is_premium: p.is_premium || false,
-    is_organizer: p.is_organizer || false
-  };
-};
 
 function InfoTile({
   icon: Icon,
