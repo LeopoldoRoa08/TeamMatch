@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense, useMemo } from "react";
 import { Search, SlidersHorizontal, Bell, Plus, X, MapPin, Crosshair, MessageSquare, ChevronRight } from "lucide-react";
 import { CreateEventForm } from "./CreateEventForm";
 import { supabase } from "@/lib/supabase";
@@ -90,6 +90,19 @@ export function parseLocation(location: any): { lat: number; lng: number } | nul
   return null;
 }
 
+// ── Helper: Haversine distance ───────────────────────────────────────────────
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Radio de la Tierra en km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
 // ── Componente principal ──────────────────────────────────────────────────────
 export function MapScreen({
   onSelect,
@@ -106,6 +119,8 @@ export function MapScreen({
 }) {
   const [active, setActive] = useState<string>("Todos");
   const [selectedSport, setSelectedSport] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [distanceLevel, setDistanceLevel] = useState<string>("Cualquier distancia");
   const [events, setEvents] = useState<any[]>([]);
   const [canchas, setCanchas] = useState<any[]>([]);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
@@ -186,7 +201,7 @@ export function MapScreen({
     // Eventos / Partidos
     const { data, error } = await supabase
       .from("events")
-      .select("*")
+      .select("*, canchas(name)")
       .order("created_at", { ascending: false });
 
     if (error) { console.error("Error fetching events:", error); return; }
@@ -225,6 +240,8 @@ export function MapScreen({
           spots: row.max_capacity || 10,
           price: 0,
           zone: "Caracas",
+          canchas: row.canchas,
+          cancha_name: row.canchas?.name,
           description_after_arrival: row.description_after_arrival,
         };
       });
@@ -248,12 +265,34 @@ export function MapScreen({
     return () => { supabase.removeChannel(channel); };
   }, [fetchEvents]);
 
-  const filtered = active === "Todos"
-    ? events
-    : events.filter((e) => e.sport === active);
+  const filteredEvents = useMemo(() => {
+    return events.filter((e) => {
+      // Filtro por deporte
+      if (active !== "Todos" && e.sport !== active) return false;
 
-  const filteredCanchas = selectedSport
-    ? canchas.filter((c) => {
+      // Filtro por fecha
+      if (selectedDate && e.event_date) {
+        if (!e.event_date.startsWith(selectedDate)) return false;
+      }
+
+      // Filtro por distancia
+      if (userLocation && e.lat != null && e.lng != null) {
+        const dist = calculateDistance(userLocation.lat, userLocation.lng, e.lat, e.lng);
+        let maxDist = Infinity;
+        if (distanceLevel === "Cerca") maxDist = 5;
+        else if (distanceLevel === "Medio") maxDist = 15;
+        
+        if (dist > maxDist) return false;
+      }
+
+      return true;
+    });
+  }, [events, active, selectedDate, userLocation, distanceLevel]);
+
+  const filteredCanchas = useMemo(() => {
+    return canchas.filter((c) => {
+      // Filtro por deporte
+      if (selectedSport && selectedSport !== "Todos") {
         const sportIdMap: Record<string, number> = {
           "Fútbol": 1,
           "Tenis": 2,
@@ -261,9 +300,34 @@ export function MapScreen({
           "Pádel": 4,
         };
         const targetId = sportIdMap[selectedSport];
-        return c.sport_id === targetId || c.sport === selectedSport;
-      })
-    : canchas;
+        if (c.sport_id !== targetId && c.sport !== selectedSport) return false;
+      }
+
+      // Filtro por fecha: si hay una fecha seleccionada, la cancha debe tener al menos un evento en esa fecha
+      if (selectedDate) {
+        if (c.lat == null || c.lng == null) return false;
+        const hasEventOnDate = filteredEvents.some((e) => {
+          if (e.lat == null || isNaN(e.lat) || e.lng == null || isNaN(e.lng)) return false;
+          const diffLat = Math.abs(e.lat - c.lat);
+          const diffLng = Math.abs(e.lng - c.lng);
+          return diffLat < 0.0001 && diffLng < 0.0001;
+        });
+        if (!hasEventOnDate) return false;
+      }
+
+      // Filtro por distancia
+      if (userLocation && c.lat != null && c.lng != null) {
+        const dist = calculateDistance(userLocation.lat, userLocation.lng, c.lat, c.lng);
+        let maxDist = Infinity;
+        if (distanceLevel === "Cerca") maxDist = 5;
+        else if (distanceLevel === "Medio") maxDist = 15;
+        
+        if (dist > maxDist) return false;
+      }
+
+      return true;
+    });
+  }, [canchas, selectedSport, userLocation, distanceLevel, selectedDate, filteredEvents]);
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -322,6 +386,29 @@ export function MapScreen({
               </button>
             );
           })}
+
+          {/* Filtro de Fecha */}
+          <div className="snap-center shrink-0 flex items-center bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md rounded-3xl px-5 py-3 text-sm font-black tracking-wide shadow-xl transition-all border-2">
+            <input 
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="bg-transparent outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100"
+            />
+          </div>
+
+          {/* Filtro de Distancia */}
+          <div className="snap-center shrink-0 flex items-center bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md rounded-3xl px-5 py-3 text-sm font-black tracking-wide shadow-xl transition-all border-2">
+            <select
+              value={distanceLevel}
+              onChange={(e) => setDistanceLevel(e.target.value)}
+              className="bg-transparent outline-none cursor-pointer font-black"
+            >
+              <option value="Cerca">Cerca (≤ 5km)</option>
+              <option value="Medio">Medio (≤ 15km)</option>
+              <option value="Cualquier distancia">Cualquier distancia</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -391,7 +478,7 @@ export function MapScreen({
                 <p className="text-xs text-muted-foreground">Coordenadas no disponibles.</p>
               );
 
-              const canchaEvents = filtered.filter((e) => {
+              const canchaEvents = filteredEvents.filter((e) => {
                 if (e.lat == null || isNaN(e.lat) || e.lng == null || isNaN(e.lng)) return false;
                 const diffLat = Math.abs(e.lat - selectedCancha.lat);
                 const diffLng = Math.abs(e.lng - selectedCancha.lng);

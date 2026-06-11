@@ -5,6 +5,16 @@ import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
 import { LoginPromptModal } from "./LoginPromptModal";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+});
 
 export function EventDetailScreen({
   event,
@@ -253,22 +263,62 @@ export function EventDetailScreen({
           </div>
         </div>
 
-        {/* Info grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <InfoTile icon={Calendar} label="Fecha" value={event.date} />
-          <InfoTile icon={Clock} label="Hora" value={event.time} />
-          <InfoTile 
-            icon={MapPin} 
-            label="Lugar" 
-            value={event.location} 
-            onClick={() => {
-              const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
-              const destination = `${event.lat},${event.lng}`;
-              const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-              window.open(url, '_blank');
-            }}
-          />
-          <InfoTile icon={Users} label="Cupos" value={`${approvedPlayers.length}/${event.spots}`} />
+        {/* Info grid & Map */}
+        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-3 items-stretch">
+          {/* Lado izquierdo */}
+          <div className="flex h-full flex-col justify-center gap-3 rounded-2xl bg-card p-4 shadow-soft">
+            <div className="flex items-center gap-3">
+              <Calendar size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fecha</div>
+                <div className="truncate text-sm font-bold text-secondary">{event.date}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Clock size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Hora</div>
+                <div className="truncate text-sm font-bold text-secondary">{event.time}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <MapPin size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Lugar</div>
+                <div className="truncate text-sm font-bold text-secondary" title={(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}>
+                  {(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Users size={16} className="text-primary shrink-0" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Cupos</div>
+                <div className="truncate text-sm font-bold text-secondary">{approvedPlayers.length}/{event.spots}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Lado derecho: Mapa */}
+          {event.lat && event.lng ? (
+            <div className="h-full min-h-[160px] w-full rounded-2xl overflow-hidden shadow-soft relative z-0">
+              <MapContainer
+                center={[event.lat, event.lng]}
+                zoom={15}
+                scrollWheelZoom={false}
+                className="h-full w-full"
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[event.lat, event.lng]} />
+              </MapContainer>
+            </div>
+          ) : (
+            <div className="h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center border border-dashed border-border text-[10px] text-muted-foreground text-center p-2">
+              Ubicación no<br/>disponible
+            </div>
+          )}
         </div>
 
         {/* Botón de Google Maps */}

@@ -220,6 +220,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       const payload = {
         creator_username: user.email,
         sport_id: form.sportId,
+        cancha_id: form.canchaId ? parseInt(form.canchaId, 10) : null,
         location,
         event_date: eventDate,
         max_capacity: form.maxCapacity ? parseInt(form.maxCapacity, 10) : null,

@@ -18,13 +18,33 @@ export function EventCard({
   const [hasJoined, setHasJoined] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const pct = (event.joined / event.spots) * 100;
-  const isFull = event.joined >= event.spots;
+  const [joinedCount, setJoinedCount] = useState(event.joined);
+  const pct = (joinedCount / event.spots) * 100;
+  const isFull = joinedCount >= event.spots;
 
   useEffect(() => {
     let channel: any;
 
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    const fetchJoinedCount = async () => {
+      const { data, error } = await supabase
+        .from("event_participants")
+        .select("status")
+        .eq("event_id", event.id);
+      
+      if (!error && data) {
+        const approved = data.filter((p: any) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status);
+        setJoinedCount(approved.length);
+      }
+    };
+    fetchJoinedCount();
+
+    let isMounted = true;
+
+    const setupRealtime = async () => {
+      fetchJoinedCount();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!isMounted) return;
+
       if (user && user.email) {
         setCurrentUser(user);
         const fetchStatus = async () => {
@@ -34,40 +54,45 @@ export function EventCard({
             .eq("event_id", event.id)
             .eq("user_username", user.email)
             .maybeSingle();
-          if (data) {
-            setStatus(data.status);
-          } else {
-            setStatus(null);
+          if (isMounted) {
+            if (data) setStatus(data.status);
+            else setStatus(null);
           }
         };
 
         fetchStatus();
 
-        channel = supabase
-          .channel(`participant_status_${event.id}_${user.id}`)
-          .on(
-            "postgres_changes",
-            {
-              event: "*",
-              schema: "public",
-              table: "event_participants",
-              filter: `event_id=eq.${event.id}`,
-            },
-            (payload: any) => {
-              if (payload.new && payload.new.user_username === user.email) {
-                setStatus(payload.new.status);
-              } else if (payload.eventType === "DELETE" && payload.old && payload.old.user_username === user.email) {
-                setStatus(null);
-              } else {
-                fetchStatus();
-              }
+        channel = supabase.channel(`participant_status_${event.id}_${user.id}`);
+        
+        channel.on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "event_participants",
+            filter: `event_id=eq.${event.id}`,
+          },
+          (payload: any) => {
+            if (!isMounted) return;
+            if (payload.new && payload.new.user_username === user.email) {
+              setStatus(payload.new.status);
+            } else if (payload.eventType === "DELETE" && payload.old && payload.old.user_username === user.email) {
+              setStatus(null);
+            } else {
+              fetchStatus();
             }
-          )
-          .subscribe();
+            fetchJoinedCount();
+          }
+        );
+        
+        channel.subscribe();
       }
-    });
+    };
+
+    setupRealtime();
 
     return () => {
+      isMounted = false;
       if (channel) {
         supabase.removeChannel(channel);
       }
@@ -110,40 +135,45 @@ export function EventCard({
       </div>
 
       <div className="p-3 flex-1 flex flex-col justify-between w-full space-y-3">
-        <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+        <div className="flex flex-col gap-1.5 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1 font-medium text-secondary">
+            {event.date}
+          </span>
           <span className="inline-flex items-center gap-1">
             <Clock size={12} /> {event.time}
           </span>
-          <span className="inline-flex items-center gap-1">
-            <MapPin size={12} /> {event.zone}
+          <span className="inline-flex items-center gap-1 truncate" title={(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone}>
+            <MapPin size={12} className="shrink-0" /> 
+            <span className="truncate">
+              {(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone}
+            </span>
           </span>
-          <span className="ml-auto text-[11px] font-semibold text-secondary">
-            {event.distanceKm} km
-          </span>
-        </div>
-
-        {variant === "full" && (
-          <div className="w-full flex flex-col gap-2 mt-auto">
-            <div className="flex items-center gap-2">
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+          
+          <div className="mt-1 flex flex-col gap-1">
+            <span className="inline-flex items-center gap-1">
+              <Users size={12} /> {joinedCount}/{event.spots} cupos
+            </span>
+            {variant === "full" && (
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
                 <div
                   className="h-full gradient-primary transition-all"
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-secondary">
-                <Users size={12} /> {event.joined}/{event.spots}
-              </span>
-            </div>
+            )}
+          </div>
+        </div>
 
+        {variant === "full" && (
+          <div className="w-full flex flex-col gap-2 mt-auto">
             <button
               onClick={handleJoin}
-              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold transition-all active:scale-95 shadow-pop ${
+              className={`w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 shadow-pop ${
                 isAccepted
-                  ? "bg-primary text-secondary hover:bg-primary/90"
+                  ? "bg-primary text-white hover:bg-primary/90"
                   : isPending
-                    ? "bg-amber-500/20 text-amber-500 border border-amber-500/30 hover:bg-amber-500/30"
-                    : "bg-secondary text-primary-foreground hover:bg-secondary/90"
+                    ? "bg-amber-500 text-white hover:bg-amber-600"
+                    : "bg-secondary text-white hover:bg-secondary/90"
               }`}
             >
               {isAccepted
