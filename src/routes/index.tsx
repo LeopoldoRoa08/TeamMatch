@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { UserProvider, useCurrentUser } from "@/lib/UserContext";
-import { Sparkles, CheckCircle2, XCircle, Zap, X } from "lucide-react";
+import { Sparkles, CheckCircle2, XCircle, Zap, X, Award } from "lucide-react";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
 import { ProfileScreen } from "@/components/teammatch/ProfileScreen";
@@ -218,6 +218,7 @@ function AppContent() {
             {renderScreen()}
             {appState !== "auth" && <RpgNotificationManager />}
             {appState !== "auth" && <EventNotificationBanner />}
+            {appState !== "auth" && <AchievementNotificationBanner />}
             {appState !== "auth" && screen !== "detail" && screen !== "editProfile" && screen !== "comments" && (
               <BottomNav
                 current={screen}
@@ -480,6 +481,141 @@ function EventNotificationBanner() {
         setTimeout(clearEventNotification, 8000);
         return null;
       })()}
+    </div>
+  );
+}
+
+function playPlayStationTrophySound() {
+  try {
+    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    
+    // Chime note 1 (higher pitch bell sound)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(880, ctx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.15);
+    gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+    
+    // Chime note 2 (sparkly third)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = "sine";
+    osc2.frequency.setValueAtTime(1108.73, ctx.currentTime);
+    gain2.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+
+    // Low warm pad underneath
+    const osc3 = ctx.createOscillator();
+    const gain3 = ctx.createGain();
+    osc3.type = "triangle";
+    osc3.frequency.setValueAtTime(220, ctx.currentTime);
+    gain3.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc3.connect(gain3);
+    gain3.connect(ctx.destination);
+
+    osc1.start();
+    osc2.start();
+    osc3.start();
+
+    osc1.stop(ctx.currentTime + 2.0);
+    osc2.stop(ctx.currentTime + 2.0);
+    osc3.stop(ctx.currentTime + 2.0);
+  } catch (e) {
+    console.warn("Failed to play audio:", e);
+  }
+}
+
+function AchievementNotificationBanner() {
+  const { achievementNotification, clearAchievementNotification } = useCurrentUser();
+
+  useEffect(() => {
+    if (achievementNotification) {
+      playPlayStationTrophySound();
+      
+      const timer = setTimeout(() => {
+        clearAchievementNotification();
+      }, 5500);
+      return () => clearTimeout(timer);
+    }
+  }, [achievementNotification, clearAchievementNotification]);
+
+  if (!achievementNotification) return null;
+
+  const { title, rarity, icon } = achievementNotification;
+
+  const rarityColors = {
+    bronze: {
+      border: "border-[#cd7f32]/40 shadow-[0_0_10px_rgba(205,127,50,0.15)]",
+      text: "text-[#cd7f32] font-black",
+      badge: "from-[#a05a2c] to-[#cd7f32]",
+      label: "BRONCE",
+      emoji: "🥉"
+    },
+    silver: {
+      border: "border-[#c0c0c0]/40 shadow-[0_0_10px_rgba(192,192,192,0.15)]",
+      text: "text-[#cbd5e0] font-black",
+      badge: "from-[#718096] to-[#cbd5e0]",
+      label: "PLATA",
+      emoji: "🥈"
+    },
+    gold: {
+      border: "border-[#ffd700]/40 shadow-[0_0_10px_rgba(255,215,0,0.2)]",
+      text: "text-[#ecc94b] font-black",
+      badge: "from-[#d69e2e] to-[#ecc94b]",
+      label: "ORO",
+      emoji: "🥇"
+    },
+    platinum: {
+      border: "border-[#e5e4e2]/50 shadow-[0_0_15px_rgba(229,228,226,0.3)]",
+      text: "text-[#e5e4e2] font-extrabold tracking-wider animate-pulse",
+      badge: "from-[#4a5568] via-[#cbd5e0] to-[#e2e8f0]",
+      label: "PLATINO",
+      emoji: "🏆"
+    },
+  };
+
+  const style = rarityColors[rarity] || rarityColors.bronze;
+
+  return (
+    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[99999] w-[90%] max-w-[380px] rounded-full bg-[#0a0c10]/95 border border-white/10 px-4 py-2.5 flex items-center gap-3.5 shadow-2xl animate-in slide-in-from-top-12 duration-500 overflow-hidden select-none">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[reflection_3s_infinite]" />
+      
+      <div className={`h-11 w-11 shrink-0 rounded-full bg-gradient-to-br ${style.badge} p-[1.5px] flex items-center justify-center shadow-lg relative`}>
+        <div className="h-full w-full rounded-full bg-[#0a0c10] flex items-center justify-center text-xl">
+          {icon}
+        </div>
+        <span className="absolute -bottom-1 -right-1 text-[10px] bg-[#0a0c10] border border-white/10 rounded-full px-0.5">
+          {style.emoji}
+        </span>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1">
+          <span className={`text-[8px] font-black tracking-widest uppercase ${style.text}`}>
+            TROFEO DE {style.label} OBTENIDO
+          </span>
+        </div>
+        <h4 className="text-xs font-black text-white truncate leading-tight mt-0.5">
+          {title}
+        </h4>
+        <p className="text-[9px] text-white/50 truncate mt-0.5 font-medium">
+          ¡Has desbloqueado un logro!
+        </p>
+      </div>
+
+      <div className="h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+        <Award size={12} className={style.text} />
+      </div>
     </div>
   );
 }
