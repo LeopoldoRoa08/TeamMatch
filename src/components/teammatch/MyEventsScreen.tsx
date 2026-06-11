@@ -4,8 +4,9 @@ import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
 import { CouponPopup } from "./CouponPopup";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Star, X } from "lucide-react";
+import { Loader2, Star, X, Plus } from "lucide-react";
 import { UserAvatar } from "./UserAvatar";
+import { CreateEventForm } from "./CreateEventForm";
 import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
 import hikingTrail from "@/assets/hiking-trail.jpg";
@@ -26,6 +27,7 @@ const tabs = ["Próximos", "Mis Partidos", "Solicitudes"] as const;
 
 export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
   const [tab, setTab] = useState<(typeof tabs)[number]>("Próximos");
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
   const [myEvents, setMyEvents] = useState<any[]>([]);
@@ -180,7 +182,19 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
           <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
           <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
         </div>
-        <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
+        <div className="flex items-center gap-2">
+          <button
+            id="fab-create-event-btn"
+            onClick={() => setShowCreateForm(true)}
+            className="flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+            aria-label="Crear partido"
+            style={{boxShadow: "0 4px 18px rgba(99,102,241,0.45)"}}
+          >
+            <Plus size={15} strokeWidth={2.5} />
+            Crear partido
+          </button>
+          <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
+        </div>
       </header>
 
       <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
@@ -404,6 +418,25 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
           </div>
         );
       })()}
+
+      {/* ── Panel de creación de partido ── */}
+      {showCreateForm && (
+        <div className="fixed inset-0 z-50 bg-background">
+          <CreateEventForm
+            onClose={() => setShowCreateForm(false)}
+            onEventCreated={() => {
+              setShowCreateForm(false);
+              // Refrescar datos tras crear
+              supabase.auth.getUser().then(({ data }) => {
+                if (data.user) {
+                  fetchAvailable();
+                  fetchUserEvents(data.user.email);
+                }
+              });
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

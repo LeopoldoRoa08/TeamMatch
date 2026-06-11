@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense, useMemo } from "react";
-import { Search, SlidersHorizontal, Bell, Plus, X, MapPin, Crosshair, MessageSquare, ChevronRight } from "lucide-react";
-import { CreateEventForm } from "./CreateEventForm";
+import { X, MapPin, Crosshair, MessageSquare, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { UserAvatar } from "./UserAvatar";
 import footballField from "@/assets/football-field.jpg";
@@ -124,7 +123,6 @@ export function MapScreen({
   const [events, setEvents] = useState<any[]>([]);
   const [canchas, setCanchas] = useState<any[]>([]);
   const [selectedCancha, setSelectedCancha] = useState<any>(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
   const [localUserLocation, setLocalUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -413,7 +411,7 @@ export function MapScreen({
       </div>
 
       {/* ── Panel emergente de cancha ── */}
-      {selectedCancha && !showCreateForm && (
+      {selectedCancha && (
         <div className="absolute bottom-0 inset-x-0 z-40 bg-background rounded-t-3xl shadow-2xl px-5 pt-4 pb-10 border-t border-border animate-in slide-in-from-bottom duration-300">
           {/* Drag handle */}
           <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-muted-foreground/20" />
@@ -491,14 +489,7 @@ export function MapScreen({
                     <p className="text-sm font-medium text-muted-foreground mb-1">
                       No hay partidos programados aquí
                     </p>
-                    <p className="text-xs text-muted-foreground mb-4">¡Sé el primero en organizar uno!</p>
-                    <button
-                      onClick={() => { setShowCreateForm(true); }}
-                      className="w-full py-3 px-5 rounded-xl font-bold text-sm text-white"
-                      style={{background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))", boxShadow: "0 4px 16px rgba(99,102,241,0.35)"}}
-                    >
-                      + Crear un partido aquí
-                    </button>
+                    <p className="text-xs text-muted-foreground">¡Ve a la pestaña Eventos para crear uno!</p>
                   </div>
                 );
               }
@@ -568,36 +559,7 @@ export function MapScreen({
         </div>
       )}
 
-      {/* ── FAB — Crear evento ── */}
-      {!showCreateForm && (
-        <button
-          id="fab-create-event-btn"
-          onClick={() => setShowCreateForm(true)}
-          className="absolute bottom-24 right-4 z-50 flex items-center gap-2 rounded-2xl gradient-primary px-5 py-4 text-base font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
-          aria-label="Crear evento"
-          style={{boxShadow: "0 6px 24px rgba(99,102,241,0.45)"}}
-        >
-          <Plus size={20} strokeWidth={2.5} />
-          Crear partido
-        </button>
-      )}
 
-      {/* ── Panel de creación ── */}
-      {showCreateForm && (
-        <div className="absolute inset-0 z-40 bg-background">
-          <CreateEventForm
-            onClose={() => {
-              setShowCreateForm(false);
-              setSelectedCancha(null);
-            }}
-            onEventCreated={() => {
-              fetchEvents();
-              setSelectedCancha(null);
-            }}
-            initialCancha={selectedCancha}
-          />
-        </div>
-      )}
     </div>
   );
 }

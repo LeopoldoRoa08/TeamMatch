@@ -1,20 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2, Star, Check, X, Loader2, CheckCircle2, UserPlus } from "lucide-react";
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
 import { LoginPromptModal } from "./LoginPromptModal";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-});
+// Client-only: cargado con lazy() para que Leaflet nunca se evalúe en el servidor
+const EventMiniMap = lazy(() => import("./EventMiniMap"));
 
 export function EventDetailScreen({
   event,
@@ -410,20 +403,18 @@ export function EventDetailScreen({
             </div>
           </div>
 
-          {/* Lado derecho: Mapa */}
+          {/* Lado derecho: Mapa — cargado sólo en el cliente vía lazy() */}
           {event.lat && event.lng ? (
             <div className="h-full min-h-[160px] w-full rounded-2xl overflow-hidden shadow-soft relative z-0">
-              <MapContainer
-                center={[event.lat, event.lng]}
-                zoom={15}
-                scrollWheelZoom={false}
-                className="h-full w-full"
+              <Suspense
+                fallback={
+                  <div className="h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center">
+                    <Loader2 size={20} className="animate-spin text-muted-foreground" />
+                  </div>
+                }
               >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={[event.lat, event.lng]} />
-              </MapContainer>
+                <EventMiniMap lat={event.lat} lng={event.lng} />
+              </Suspense>
             </div>
           ) : (
             <div className="h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center border border-dashed border-border text-[10px] text-muted-foreground text-center p-2">
