@@ -293,18 +293,18 @@ export function ProfileScreen({
   return (
     <div className="h-full overflow-y-auto bg-background pb-28">
       {/* Hero / RPG Avatar Section */}
-      <div className="relative gradient-dark px-5 pb-24 pt-12 text-primary-foreground">
+      <div className="relative bg-background px-5 pb-24 pt-12 text-secondary">
         <div className="flex items-center justify-between">
           <button
             onClick={onEdit}
-            className="grid h-10 w-10 place-items-center rounded-full bg-card/10 text-primary transition-transform active:scale-95"
+            className="grid h-10 w-10 place-items-center rounded-full bg-muted text-primary transition-transform active:scale-95"
           >
             <Edit3 size={16} />
           </button>
           <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft">
             <Sparkles size={11} className="animate-pulse" /> Modo RPG Activo
           </div>
-          <button className="grid h-10 w-10 place-items-center rounded-full bg-card/10">
+          <button className="grid h-10 w-10 place-items-center rounded-full bg-muted text-secondary">
             <Settings size={16} />
           </button>
         </div>
@@ -333,7 +333,7 @@ export function ProfileScreen({
 
           <div className="flex-1 text-center sm:text-left space-y-1.5">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <h1 className="text-xl font-black text-white flex items-center justify-center sm:justify-start gap-2">
+              <h1 className="text-xl font-black text-secondary flex items-center justify-center sm:justify-start gap-2">
                 {displayName}
                 {user?.user_metadata?.is_organizer && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-500 shadow-pop border border-amber-500/30">
@@ -348,26 +348,26 @@ export function ProfileScreen({
               </span>
             </div>
             
-            <p className="text-xs text-white/70 font-semibold">{rpgClass}</p>
-            <p className="text-[10px] text-white/50">{email}</p>
+            <p className="text-xs text-muted-foreground font-semibold">{rpgClass}</p>
+            <p className="text-[10px] text-muted-foreground/70">{email}</p>
           </div>
         </div>
 
         {/* Experiencia Progress Bar */}
-        <div className="mt-8 space-y-1.5 bg-card/5 backdrop-blur-md p-3.5 rounded-2xl border border-white/5">
-          <div className="flex items-center justify-between text-xs font-black text-white">
+        <div className="mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border">
+          <div className="flex items-center justify-between text-xs font-black text-secondary">
             <span className="flex items-center gap-1.5">
               <Trophy size={13} className="text-primary animate-pulse" /> Puntos de Experiencia
             </span>
-            <span className="font-mono">{xp} / {xpNeeded} XP</span>
+            <span className="font-mono text-muted-foreground">{xp} / {xpNeeded} XP</span>
           </div>
-          <div className="h-3.5 w-full rounded-full bar-xp-container shadow-inner">
+          <div className="h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border">
             <div
-              className="h-full rounded-full bar-xp-glowing transition-all duration-500 ease-out"
+              className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
               style={{ width: `${xpPercentage}%` }}
             />
           </div>
-          <div className="flex justify-between items-center text-[9px] text-white/60 font-semibold">
+          <div className="flex justify-between items-center text-[9px] text-muted-foreground font-semibold">
             <span>Nivel {level}</span>
             <span>+{xpNeeded - xp} XP para Nivel {level + 1}</span>
           </div>
@@ -376,36 +376,36 @@ export function ProfileScreen({
         {/* PlayStation-style Trophies Card (Clickable Banner) */}
         <div 
           onClick={() => setActiveTab("achievements")}
-          className="mt-3.5 bg-white/5 backdrop-blur-md p-3.5 rounded-2xl border border-white/5 hover:bg-white/10 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
+          className="mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
         >
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md">
-              <div className="h-full w-full rounded-full bg-[#0d0f14] flex items-center justify-center text-lg">
+              <div className="h-full w-full rounded-full bg-background flex items-center justify-center text-lg">
                 🏆
               </div>
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h4 className="text-xs font-black uppercase tracking-wider text-white">Logros Obtenidos</h4>
+                <h4 className="text-xs font-black uppercase tracking-wider text-secondary">Logros Obtenidos</h4>
                 <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
                   {unlockedCount} / {ACHIEVEMENTS.length}
                 </span>
               </div>
               {/* PlayStation-style tiny trophy counters */}
-              <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-white/70">
-                <span className="flex items-center gap-0.5">🏆 <span className="text-white">{platinumCount}</span></span>
-                <span className="flex items-center gap-0.5">🥇 <span className="text-white">{goldCount}</span></span>
-                <span className="flex items-center gap-0.5">🥈 <span className="text-white">{silverCount}</span></span>
-                <span className="flex items-center gap-0.5">🥉 <span className="text-white">{bronzeCount}</span></span>
+              <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground">
+                <span className="flex items-center gap-0.5">🏆 <span className="text-secondary">{platinumCount}</span></span>
+                <span className="flex items-center gap-0.5">🥇 <span className="text-secondary">{goldCount}</span></span>
+                <span className="flex items-center gap-0.5">🥈 <span className="text-secondary">{silverCount}</span></span>
+                <span className="flex items-center gap-0.5">🥉 <span className="text-secondary">{bronzeCount}</span></span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <div className="text-right">
-              <span className="text-xs font-black text-white">{completionPercentage}%</span>
-              <p className="text-[8px] text-white/50 uppercase font-black tracking-wider">Progreso</p>
+              <span className="text-xs font-black text-secondary">{completionPercentage}%</span>
+              <p className="text-[8px] text-muted-foreground uppercase font-black tracking-wider">Progreso</p>
             </div>
-            <ArrowRight size={13} className="text-white/60" />
+            <ArrowRight size={13} className="text-muted-foreground" />
           </div>
         </div>
       </div>

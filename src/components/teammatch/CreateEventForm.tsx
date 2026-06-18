@@ -10,6 +10,7 @@ import {
   AlertCircle,
   MapPin,
   FileText,
+  Shield,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { AddCanchaForm } from "./CanchasScreen";
@@ -55,6 +56,7 @@ const INITIAL_FORM = {
   maxCapacity: "",
   canchaId: "",
   descriptionAfterArrival: "",
+  hostClanId: "",
 };
 
 type FormState = typeof INITIAL_FORM;
@@ -122,6 +124,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
   const [loadingCanchas, setLoadingCanchas] = useState(true);
   const [showAddCanchaForm, setShowAddCanchaForm] = useState(false);
   const [isOrganizer, setIsOrganizer] = useState(false);
+  const [captainedClans, setCaptainedClans] = useState<any[]>([]);
 
   // ── Cargar canchas al montar ───────────────────────────────────────────────
   async function loadCanchas() {
@@ -146,6 +149,9 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
     supabase.auth.getUser().then(({ data }) => {
       if (data?.user) {
         setIsOrganizer(!!data.user.user_metadata?.is_organizer);
+        supabase.from('clans').select('*, clan_members(*)').eq('captain_id', data.user.id).then(res => {
+          if (res.data) setCaptainedClans(res.data);
+        });
       }
     });
   }, []);
@@ -241,16 +247,33 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
       const newEvent = newEvents?.[0];
       if (newEvent) {
-        // Automatically join the creator to the event
-        const { error: joinError } = await supabase
-          .from("event_participants")
-          .insert({
-            event_id: newEvent.id,
-            user_username: user.email,
-            status: "aceptado"
-          });
-        if (joinError) {
-          console.error("Error adding creator as participant:", joinError);
+        if (form.hostClanId) {
+          const clan = captainedClans.find(c => c.id === form.hostClanId);
+          if (clan) {
+             const members = clan.clan_members.filter((m: any) => m.status === 'approved');
+             const { data: profiles } = await supabase.from('profiles').select('id, username').in('id', members.map((m: any) => m.user_id));
+             if (profiles) {
+                const insertData = profiles.map(p => ({
+                  event_id: newEvent.id,
+                  user_username: p.username,
+                  status: "aceptado",
+                  clan_id: clan.id
+                }));
+                await supabase.from("event_participants").insert(insertData);
+             }
+          }
+        } else {
+          // Automatically join the creator to the event
+          const { error: joinError } = await supabase
+            .from("event_participants")
+            .insert({
+              event_id: newEvent.id,
+              user_username: user.email,
+              status: "aceptado"
+            });
+          if (joinError) {
+            console.error("Error adding creator as participant:", joinError);
+          }
         }
       }
 
@@ -530,6 +553,33 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
             </div>
           )}
         </FormSection>
+
+        {/* Selección de Clan Opcional */}
+        {captainedClans.filter(c => c.sport === form.sportId).length > 0 && (
+          <FormSection
+            title="Inscribir Clan Automáticamente"
+            icon={<Shield size={13} />}
+          >
+            <div className="relative">
+              <select
+                value={form.hostClanId}
+                onChange={(e) => setField("hostClanId", e.target.value)}
+                className="w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft border-border"
+              >
+                <option value="">-- No inscribir clan completo --</option>
+                {captainedClans.filter(c => c.sport === form.sportId).map((c) => (
+                  <option key={c.id} value={c.id}>
+                    Inscribir a {c.name} ({c.clan_members.filter((m: any) => m.status === 'approved').length} miembros)
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground">
+                <Shield size={16} />
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1">Si seleccionas un clan, todos sus miembros actuales serán inscritos automáticamente en este evento.</p>
+          </FormSection>
+        )}
 
         {/* Capacidad máxima (opcional) */}
         <FormSection

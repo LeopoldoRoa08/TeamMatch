@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2, Star, Check, X, Loader2, CheckCircle2, UserPlus } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Calendar, Users, Star, Check, X, Loader2, CheckCircle2, UserPlus } from "lucide-react";
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
@@ -392,9 +392,7 @@ export function EventDetailScreen({
           >
             <ArrowLeft size={18} className="text-secondary" />
           </button>
-          <button className="grid h-10 w-10 place-items-center rounded-full glass shadow-soft">
-            <Share2 size={16} className="text-secondary" />
-          </button>
+          {/* Share button removed */}
         </div>
         <div className="absolute inset-x-0 bottom-4 px-5">
           <div className="mb-2 flex items-center gap-2">

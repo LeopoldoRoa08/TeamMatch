@@ -1,4 +1,4 @@
-export type Sport = "Running" | "Senderismo" | "Pádel" | "Tenis" | "Vóleibol";
+export type Sport = "Running" | "Senderismo" | "Pádel" | "Tenis" | "Vóleibol" | "Fútbol" | "Golf";
 export type Level = "Principiante" | "Intermedio" | "Avanzado";
 
 export interface SportEvent {

@@ -1,13 +1,17 @@
 import { jsxs, jsx } from "react/jsx-runtime";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MapPin, Navigation } from "lucide-react";
 import L from "leaflet";
+/* empty css                 */
 function FlyToUser({ location }) {
   const map = useMap();
-  if (location) {
-    map.flyTo([location.lat, location.lng], 16, { duration: 1.5 });
-  }
+  useEffect(() => {
+    if (location) {
+      map.flyTo([location.lat, location.lng], 16, { duration: 1.5 });
+    }
+  }, [map, location?.lat, location?.lng]);
   return null;
 }
 function LeafletMap({

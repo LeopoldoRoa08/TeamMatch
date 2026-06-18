@@ -42,15 +42,16 @@ export function ClansScreen({
   }, [selectedClan]);
 
   async function fetchMyClans() {
+    if (!user?.id) return;
     setLoading(true);
     try {
       // Clanes donde soy capitán
-      const { data: capClans } = await supabase.from('clans').select('*').eq('captain_id', user?.id);
+      const { data: capClans } = await supabase.from('clans').select('*').eq('captain_id', user.id);
       
       // Clanes donde soy miembro
-      const { data: memberRows } = await supabase.from('clan_members').select('clan_id').eq('user_id', user?.id).eq('status', 'approved');
+      const { data: memberRows } = await supabase.from('clan_members').select('clan_id').eq('user_id', user.id).eq('status', 'approved');
       
-      let allClans = [...(capClans || [])];
+      let allClans = [...(capClans || [])] as Clan[];
       
       if (memberRows && memberRows.length > 0) {
         const clanIds = memberRows.map((r: any) => r.clan_id);
@@ -76,7 +77,7 @@ export function ClansScreen({
         .select(`*, profiles:user_id(username, avatar_url, rating, full_name)`)
         .eq('clan_id', clanId);
       
-      if (data) setClanMembers(data);
+      if (data) setClanMembers(data as any);
     } catch (e) {
       console.error(e);
     }
@@ -307,7 +308,7 @@ export function ClansScreen({
                    ) : (
                      friends.map(f => (
                        <div key={f.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border">
-                          <span className="text-sm font-bold text-white truncate max-w-[150px]">{f.full_name || f.username}</span>
+                          <span className="text-sm font-bold text-secondary truncate max-w-[150px]">{f.full_name || f.username}</span>
                           <button onClick={() => handleInviteFriend(f.id)} className="bg-primary text-secondary text-xs font-black px-3 py-1.5 rounded-full">Agregar</button>
                        </div>
                      ))
