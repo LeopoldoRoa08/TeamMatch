@@ -42,7 +42,7 @@ export function FriendsScreen({
   onSelectEvent?: (e: any) => void;
 }) {
   const { user, addXp, incrementCarisma } = useCurrentUser();
-  const { t } = useSettings();
+  const { t, rpgMode } = useSettings();
   const [activeSubTab, setActiveSubTab] = useState<"tinder" | "friends">("tinder");
   const [searchQuery, setSearchQuery] = useState("");
   
@@ -228,9 +228,11 @@ export function FriendsScreen({
       setReceivedRequests(receivedRequests.filter(r => r.id !== request.id));
       setFriends([request, ...friends]);
       
-      await addXp(15, t("friends.acceptedXp") ? t("friends.acceptedXp").replace("{name}", request.name) : `¡Aceptaste a ${request.name} como amigo! 🤝`);
-      if (incrementCarisma) {
-        await incrementCarisma(1);
+      if (rpgMode) {
+        await addXp(15, t("friends.acceptedXp") ? t("friends.acceptedXp").replace("{name}", request.name) : `¡Aceptaste a ${request.name} como amigo! 🤝`);
+        if (incrementCarisma) {
+          await incrementCarisma(1);
+        }
       }
       
       setAcceptedMatchUser(request);

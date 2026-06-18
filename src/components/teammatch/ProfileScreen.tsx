@@ -548,47 +548,51 @@ export function ProfileScreen({
           </div>
         )}
 
-        {/* TAB 1: RPG Stats */}
+        {/* TAB 1: Stats / Info */}
         {activeTab === "stats" && (
           <div className="space-y-4">
-            <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Award size={14} className="text-primary" /> {t("profile.playerAttributes") || "Atributos del Jugador"}
-            </h3>
-            
-            <div className="grid grid-cols-2 gap-3">
-              <StatCard
-                icon={Flame}
-                label={t("profile.str") || "Fuerza (STR)"}
-                value={str}
-                colorClass="text-red-500"
-                bgClass="bg-red-500/5 border-red-500/10"
-                description={t("profile.strDesc") || "Aumenta al unirte a partidos (+2 XP/partido)"}
-              />
-              <StatCard
-                icon={BookOpen}
-                label={t("profile.wis") || "Sabiduría (WIS)"}
-                value={wis}
-                colorClass="text-blue-500"
-                bgClass="bg-blue-500/5 border-blue-500/10"
-                description={t("profile.wisDesc") || "Aumenta al crear partidos (+5 XP/partido)"}
-              />
-              <StatCard
-                icon={Shield}
-                label={t("profile.con") || "Constitución (CON)"}
-                value={con}
-                colorClass="text-emerald-500"
-                bgClass="bg-emerald-500/5 border-emerald-500/10"
-                description={t("profile.conDesc") || "Aumenta con el uso diario de la app"}
-              />
-              <StatCard
-                icon={Sparkles}
-                label={t("profile.cha") || "Carisma (CHA)"}
-                value={cha}
-                colorClass="text-amber-500"
-                bgClass="bg-amber-500/5 border-amber-500/10"
-                description={t("profile.chaDesc") || "Calculado según tu reputación deportiva"}
-              />
-            </div>
+            {rpgMode && (
+              <>
+                <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Award size={14} className="text-primary" /> {t("profile.playerAttributes") || "Atributos del Jugador"}
+                </h3>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <StatCard
+                    icon={Flame}
+                    label={t("profile.str") || "Fuerza (STR)"}
+                    value={str}
+                    colorClass="text-red-500"
+                    bgClass="bg-red-500/5 border-red-500/10"
+                    description={t("profile.strDesc") || "Aumenta al unirte a partidos (+2 XP/partido)"}
+                  />
+                  <StatCard
+                    icon={BookOpen}
+                    label={t("profile.wis") || "Sabiduría (WIS)"}
+                    value={wis}
+                    colorClass="text-blue-500"
+                    bgClass="bg-blue-500/5 border-blue-500/10"
+                    description={t("profile.wisDesc") || "Aumenta al crear partidos (+5 XP/partido)"}
+                  />
+                  <StatCard
+                    icon={Shield}
+                    label={t("profile.con") || "Constitución (CON)"}
+                    value={con}
+                    colorClass="text-emerald-500"
+                    bgClass="bg-emerald-500/5 border-emerald-500/10"
+                    description={t("profile.conDesc") || "Aumenta con el uso diario de la app"}
+                  />
+                  <StatCard
+                    icon={Sparkles}
+                    label={t("profile.cha") || "Carisma (CHA)"}
+                    value={cha}
+                    colorClass="text-amber-500"
+                    bgClass="bg-amber-500/5 border-amber-500/10"
+                    description={t("profile.chaDesc") || "Calculado según tu reputación deportiva"}
+                  />
+                </div>
+              </>
+            )}
 
             {/* Información Personal (Edad, Ubicación, Género, Deportes, Bio) */}
             <div className="rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4">
@@ -616,7 +620,7 @@ export function ProfileScreen({
               {user.user_metadata?.description && (
                 <div className="space-y-1">
                   <span className="text-[10px] text-muted-foreground font-bold">{t("profile.aboutMe") || "Sobre mí"}</span>
-                  <p className="text-xs leading-relaxed text-secondary-foreground/80 bg-muted/20 p-3 rounded-xl border border-border/30">
+                  <p className="text-xs leading-relaxed text-secondary bg-muted/20 p-3 rounded-xl border border-border/30">
                     {user.user_metadata.description}
                   </p>
                 </div>
@@ -636,16 +640,18 @@ export function ProfileScreen({
               )}
             </div>
 
-            <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
-              <h4 className="text-xs font-black uppercase tracking-wider text-secondary mb-1">
-                {t("profile.campaignSummary") || "Resumen de Campaña"}
-              </h4>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                {t("profile.campaignDesc") ? t("profile.campaignDesc").replace("{joined}", String(joinedEventsCount)).replace("{created}", String(createdEventsCount)).replace("{used}", String(useCount)) : `Has completado **${joinedEventsCount} partidos** como luchador y has guiado a otros
-                jugadores creando **${createdEventsCount} eventos**. Tu constancia te ha otorgado
-                **${useCount} días de entrenamiento** activo.`}
-              </p>
-            </div>
+            {rpgMode && (
+              <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+                <h4 className="text-xs font-black uppercase tracking-wider text-secondary mb-1">
+                  {t("profile.campaignSummary") || "Resumen de Campaña"}
+                </h4>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  {t("profile.campaignDesc") ? t("profile.campaignDesc").replace("{joined}", String(joinedEventsCount)).replace("{created}", String(createdEventsCount)).replace("{used}", String(useCount)) : `Has completado **${joinedEventsCount} partidos** como luchador y has guiado a otros
+                  jugadores creando **${createdEventsCount} eventos**. Tu constancia te ha otorgado
+                  **${useCount} días de entrenamiento** activo.`}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -761,7 +767,7 @@ export function ProfileScreen({
         {activeTab === "history" && (
           <div className="space-y-4">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Calendar size={14} className="text-primary" /> {t("profile.adventureLog") || "Registro de Aventuras (XP Log)"}
+              <Calendar size={14} className="text-primary" /> {rpgMode ? (t("profile.adventureLog") || "Registro de Aventuras (XP Log)") : (t("profile.activityLog") || "Historial de Actividad")}
             </h3>
 
             <div className="space-y-2">

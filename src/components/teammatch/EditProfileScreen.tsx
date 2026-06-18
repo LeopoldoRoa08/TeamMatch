@@ -8,6 +8,17 @@ interface Props {
   onBack: () => void;
 }
 
+const PREDEFINED_AVATARS = [
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Christian",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Destiny",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Eden",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Jude",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Mia",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver"
+];
+
 export function EditProfileScreen({ onBack }: Props) {
   const { user: currentUser, updateProfile } = useCurrentUser();
   const { t } = useSettings();
@@ -179,6 +190,21 @@ export function EditProfileScreen({ onBack }: Props) {
               </label>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t("editProfile.profilePhoto") || "Foto de perfil"}</span>
+            
+            <div className="w-full flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-2 snap-x">
+              {PREDEFINED_AVATARS.map((url, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setAvatarUrl(url)}
+                  className={`relative flex-none w-14 h-14 rounded-full overflow-hidden border-2 transition-all snap-center ${
+                    avatarUrl === url ? "border-primary scale-110 shadow-lg" : "border-transparent opacity-70 hover:opacity-100 bg-secondary/10"
+                  }`}
+                >
+                  <img src={url} alt={`Predefined ${i}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-4">

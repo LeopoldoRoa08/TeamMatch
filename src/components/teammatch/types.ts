@@ -35,6 +35,7 @@ export interface Clan {
   matches_lost: number;
   created_at: string;
   description?: string;
+  avatar_url?: string;
 }
 
 export interface ClanMember {

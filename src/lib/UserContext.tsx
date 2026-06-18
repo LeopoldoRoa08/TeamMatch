@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useSettings } from "./SettingsContext";
 import { ACHIEVEMENTS, type Achievement } from "@/components/teammatch/achievementsData";
 
 export interface RpgCoupon {
@@ -293,6 +294,7 @@ function evaluateAchievements(
 }
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
+  const { rpgMode } = useSettings();
   const [user, setUser] = useState<any>(null);
   const [xpNotification, setXpNotification] = useState<XpNotification | null>(null);
   const [eventNotification, setEventNotification] = useState<EventNotification | null>(null);
@@ -623,7 +625,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addXp = async (amount: number, reason: string) => {
-    if (!user) return;
+    if (!user || !rpgMode) return;
     const meta = user.user_metadata || {};
     const currentXp = meta.xp || 0;
     const currentLevel = meta.level || 1;
@@ -1171,7 +1173,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const carisma = user?.user_metadata?.carisma || 0;
 
   const incrementCarisma = async (amount = 1) => {
-    if (!user) return;
+    if (!user || !rpgMode) return;
     const meta = user.user_metadata || {};
     const currentCarisma = meta.carisma || 0;
     const newCarisma = currentCarisma + amount;

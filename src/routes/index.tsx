@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { UserProvider, useCurrentUser } from "@/lib/UserContext";
-import { SettingsProvider } from "@/lib/SettingsContext";
+import { SettingsProvider, useSettings } from "@/lib/SettingsContext";
 import { Sparkles, CheckCircle2, XCircle, Zap, X, Award } from "lucide-react";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
@@ -239,6 +239,7 @@ function AppContent() {
 
 function RpgNotificationManager() {
   const { xpNotification, clearNotification } = useCurrentUser();
+  const { rpgMode } = useSettings();
   const [chestState, setChestState] = useState<"closed" | "opening" | "opened">("closed");
 
   useEffect(() => {
@@ -259,6 +260,14 @@ function RpgNotificationManager() {
     }
   }, [xpNotification, clearNotification]);
 
+  // When RPG mode is off, silently clear any pending notification and render nothing
+  useEffect(() => {
+    if (!rpgMode && xpNotification) {
+      clearNotification();
+    }
+  }, [rpgMode, xpNotification, clearNotification]);
+
+  if (!rpgMode) return null;
   if (!xpNotification) return null;
 
   // Si es subida de nivel

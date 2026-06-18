@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { Shield, Plus, Users, Search, UserPlus, Check, X, Loader2, Trophy, ArrowLeft, Star, Edit3, Trash2, LogOut } from "lucide-react";
+import { Shield, Plus, Users, Search, UserPlus, Check, X, Loader2, Trophy, ArrowLeft, Star, Edit3, Trash2, LogOut, Camera } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
 import { useSettings } from "@/lib/SettingsContext";
 import type { Clan, ClanMember, Sport } from "./types";
 import { SportBadge } from "./SportBadge";
 import { toast } from "sonner";
+
+const PREDEFINED_AVATARS = [
+  "https://api.dicebear.com/9.x/shapes/svg?seed=Alpha&backgroundColor=0a0a0a",
+  "https://api.dicebear.com/9.x/shapes/svg?seed=Beta&backgroundColor=0a0a0a",
+  "https://api.dicebear.com/9.x/shapes/svg?seed=Gamma&backgroundColor=0a0a0a",
+  "https://api.dicebear.com/9.x/shapes/svg?seed=Delta&backgroundColor=0a0a0a"
+];
 
 export function ClansScreen({
   onNavigateToProfile,
@@ -30,13 +37,14 @@ export function ClansScreen({
   const [matchesPlayed, setMatchesPlayed] = useState(0);
 
   // Create Form
-  const [createData, setCreateData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "" });
+  const [createData, setCreateData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "", avatarUrl: null as string | null });
   const [creating, setCreating] = useState(false);
 
   // Edit Form
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editData, setEditData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "" });
+  const [editData, setEditData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "", avatarUrl: null as string | null });
   const [editing, setEditing] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   // Join Form
   const [inviteCode, setInviteCode] = useState("");
@@ -130,6 +138,53 @@ export function ClansScreen({
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
+  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>, setFunction: (val: any) => void) => {
+    try {
+      setUploadingImage(true);
+      if (!e.target.files || e.target.files.length === 0) return;
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `clan-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(fileName, file);
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
+      setFunction((prev: any) => ({ ...prev, avatarUrl: data.publicUrl }));
+    } catch (error: any) {
+      toast.error(t("editProfile.imgError") || "Error al subir la imagen");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const renderAvatarPicker = (data: any, setFunction: (val: any) => void) => (
+    <div className="flex flex-col gap-3">
+      <label className="text-xs font-bold text-secondary uppercase">{t("editProfile.profilePhoto") || "Foto de Perfil"}</label>
+      <div className="flex items-center gap-4">
+        <div className="relative shrink-0">
+          {data.avatarUrl ? (
+            <img src={data.avatarUrl} alt="Avatar" className="h-16 w-16 rounded-full object-cover border-2 border-primary/30" />
+          ) : (
+            <div className="h-16 w-16 rounded-full flex items-center justify-center text-2xl shadow-pop" style={{ background: `linear-gradient(135deg, ${data.primary || '#32CD32'}, ${data.secondary || '#1a1a1a'})` }}>🛡️</div>
+          )}
+          <label className="absolute -bottom-1 -right-1 grid h-7 w-7 cursor-pointer place-items-center rounded-full bg-primary text-secondary shadow-pop transition-transform active:scale-90">
+            {uploadingImage ? <Loader2 size={12} className="animate-spin" /> : <Camera size={12} />}
+            <input type="file" accept="image/*" onChange={(e) => uploadAvatar(e, setFunction)} className="hidden" disabled={uploadingImage} />
+          </label>
+        </div>
+        <div className="flex-1">
+          <p className="text-[10px] text-muted-foreground mb-2">O elige uno predeterminado:</p>
+          <div className="flex gap-2">
+            {PREDEFINED_AVATARS.map((url, i) => (
+              <button key={i} type="button" onClick={() => setFunction((prev: any) => ({ ...prev, avatarUrl: url }))} className={`h-10 w-10 shrink-0 rounded-full border-2 transition-all ${data.avatarUrl === url ? 'border-primary scale-110' : 'border-transparent hover:scale-105 opacity-70 hover:opacity-100'}`}>
+                <img src={url} alt={`Predefined ${i}`} className="h-full w-full rounded-full object-cover bg-black" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   async function handleCreateClan(e: React.FormEvent) {
     e.preventDefault();
     if (!user?.id || !createData.name) return;
@@ -143,7 +198,8 @@ export function ClansScreen({
         invite_code: code,
         hex_primary: createData.primary,
         hex_secondary: createData.secondary,
-        description: createData.description
+        description: createData.description,
+        ...(createData.avatarUrl ? { avatar_url: createData.avatarUrl } : {})
       }).select().single();
       
       if (error) throw error;
@@ -155,7 +211,7 @@ export function ClansScreen({
       });
       
       toast.success(t("common.success") || "¡Clan creado exitosamente!");
-      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
+      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "", avatarUrl: null });
       setActiveTab("mis-clanes");
       fetchMyClans();
     } catch (err: any) {
@@ -253,14 +309,15 @@ export function ClansScreen({
         sport: editData.sport,
         hex_primary: editData.primary,
         hex_secondary: editData.secondary,
-        description: editData.description
+        description: editData.description,
+        ...(editData.avatarUrl ? { avatar_url: editData.avatarUrl } : {})
       }).eq('id', selectedClan.id);
       
       if (error) throw error;
       
       toast.success(t("clans.successUpdated") || "Clan actualizado");
       setShowEditModal(false);
-      const updated = { ...selectedClan, name: editData.name, sport: editData.sport, hex_primary: editData.primary, hex_secondary: editData.secondary, description: editData.description };
+      const updated = { ...selectedClan, name: editData.name, sport: editData.sport, hex_primary: editData.primary, hex_secondary: editData.secondary, description: editData.description, avatar_url: editData.avatarUrl || selectedClan.avatar_url };
       setSelectedClan(updated);
       setClans(clans.map(c => c.id === updated.id ? updated : c));
     } catch (err: any) {
@@ -321,12 +378,16 @@ export function ClansScreen({
         <div className="p-5 space-y-6">
           <div className="flex flex-col items-center p-6 bg-card rounded-3xl border border-border shadow-soft relative overflow-hidden">
             <div className="absolute inset-0 opacity-10" style={{ background: `linear-gradient(45deg, ${selectedClan.hex_primary}, ${selectedClan.hex_secondary})` }} />
-            <div 
-              className="h-24 w-24 rounded-full flex items-center justify-center text-4xl shadow-pop z-10"
-              style={{ background: `linear-gradient(135deg, ${selectedClan.hex_primary}, ${selectedClan.hex_secondary})` }}
-            >
-              🛡️
-            </div>
+            {selectedClan.avatar_url ? (
+              <img src={selectedClan.avatar_url} alt="Clan avatar" className="h-24 w-24 rounded-full object-cover shadow-pop z-10 border-4 border-background" />
+            ) : (
+              <div 
+                className="h-24 w-24 rounded-full flex items-center justify-center text-4xl shadow-pop z-10"
+                style={{ background: `linear-gradient(135deg, ${selectedClan.hex_primary}, ${selectedClan.hex_secondary})` }}
+              >
+                🛡️
+              </div>
+            )}
             <div className="flex items-center gap-2 mt-4 z-10">
               <h2 className="text-2xl font-black text-secondary">{selectedClan.name}</h2>
               {isCaptain && (
@@ -337,7 +398,8 @@ export function ClansScreen({
                       sport: selectedClan.sport,
                       primary: selectedClan.hex_primary,
                       secondary: selectedClan.hex_secondary,
-                      description: selectedClan.description || ""
+                      description: selectedClan.description || "",
+                      avatarUrl: selectedClan.avatar_url || null
                     });
                     setShowEditModal(true);
                   }} 
@@ -462,6 +524,7 @@ export function ClansScreen({
             <div className="bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[90vh] overflow-y-auto">
               <h3 className="text-lg font-bold text-secondary mb-4">Editar Clan</h3>
               <form onSubmit={handleEditClan} className="space-y-4">
+                {renderAvatarPicker(editData, setEditData)}
                 <div>
                   <label className="text-xs font-bold text-secondary uppercase">Nombre</label>
                   <input required value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary" />
@@ -559,9 +622,13 @@ export function ClansScreen({
              ) : (
                 clans.map(clan => (
                    <div key={clan.id} onClick={() => setSelectedClan(clan)} className="bg-card p-4 rounded-3xl border border-border shadow-soft flex items-center gap-4 cursor-pointer hover:border-primary/30 transition-colors">
-                      <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-inner shrink-0" style={{ background: `linear-gradient(135deg, ${clan.hex_primary}, ${clan.hex_secondary})` }}>
-                        🛡️
-                      </div>
+                      {clan.avatar_url ? (
+                        <img src={clan.avatar_url} alt={clan.name} className="w-14 h-14 rounded-full object-cover shadow-inner shrink-0" />
+                      ) : (
+                        <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-inner shrink-0" style={{ background: `linear-gradient(135deg, ${clan.hex_primary}, ${clan.hex_secondary})` }}>
+                          🛡️
+                        </div>
+                      )}
                       <div className="flex-1 min-w-0">
                          <h3 className="text-lg font-black text-secondary truncate">{clan.name}</h3>
                          <div className="text-xs text-muted-foreground flex gap-2 items-center mt-1">
@@ -607,6 +674,8 @@ export function ClansScreen({
                    </div>
                 </div>
              </div>
+             
+             {renderAvatarPicker(createData, setCreateData)}
              
              <button disabled={creating} type="submit" className="w-full mt-4 gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
                 {creating ? (t("clans.btn.creating") || "Creando...") : (t("clans.btn.create") || "Crear Clan")}

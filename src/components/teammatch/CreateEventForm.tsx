@@ -120,7 +120,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
   const [serverError, setServerError] = useState<string | null>(null);
   const [showFloatXp, setShowFloatXp] = useState(false);
   const { addXp } = useCurrentUser();
-  const { t } = useSettings();
+  const { t, rpgMode } = useSettings();
   
   const [canchas, setCanchas] = useState<any[]>([]);
   const [loadingCanchas, setLoadingCanchas] = useState(true);
@@ -280,12 +280,14 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       }
 
       setStatus("success");
-      setShowFloatXp(true);
-      const sportLabel = SPORTS.find((s) => s.id === form.sportId)?.label || "Deporte";
-      addXp(25, `Organizar partido de ${sportLabel} en ${form.address || "Caracas"} ⚽`);
-      setTimeout(() => {
-        setShowFloatXp(false);
-      }, 1200);
+      if (rpgMode) {
+        setShowFloatXp(true);
+        const sportLabel = SPORTS.find((s) => s.id === form.sportId)?.label || "Deporte";
+        addXp(25, `Organizar partido de ${sportLabel} en ${form.address || "Caracas"} ⚽`);
+        setTimeout(() => {
+          setShowFloatXp(false);
+        }, 1200);
+      }
     } catch (err: unknown) {
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err as { message: string; details?: string; hint?: string; code?: string };
