@@ -148,11 +148,10 @@ export function FriendsScreen({
     ];
     const gradient = gradients[charCodeSum % gradients.length];
 
-    // Prefer full_name, then parse from email, then username as fallback
     let name = p.full_name || "";
     if (!name) {
       if (p.username && p.username.includes("@")) {
-        name = p.username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ");
+        name = p.username.split("@")[0].split(/[._-]/).map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ");
       } else if (p.username) {
         name = p.username;
       }

@@ -404,9 +404,9 @@ export function MapScreen({
               onChange={(e) => setDistanceLevel(e.target.value)}
               className="bg-transparent outline-none cursor-pointer font-black"
             >
-              <option value="Cerca">{t("map.distanceNear", "Cerca (≤ 5km)")}</option>
-              <option value="Medio">{t("map.distanceMedium", "Medio (≤ 15km)")}</option>
-              <option value="Cualquier distancia">{t("map.distanceAny", "Cualquier distancia")}</option>
+              <option value="Cerca">{t("map.distanceNear") || "Cerca (≤ 5km)"}</option>
+              <option value="Medio">{t("map.distanceMedium") || "Medio (≤ 15km)"}</option>
+              <option value="Cualquier distancia">{t("map.distanceAny") || "Cualquier distancia"}</option>
             </select>
           </div>
         </div>
@@ -469,13 +469,13 @@ export function MapScreen({
           {/* Partidos en esta cancha */}
           <div className="mt-5 space-y-3">
             <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              {t("map.scheduledMatches", "Partidos programados")}
+              {t("map.scheduledMatches") || "Partidos programados"}
             </h4>
 
             {(() => {
               // selectedCancha ya viene con lat/lng numéricos procesados por fetchData
               if (selectedCancha.lat == null || selectedCancha.lng == null) return (
-                <p className="text-xs text-muted-foreground">{t("map.coordsNotAvailable", "Coordenadas no disponibles.")}</p>
+                <p className="text-xs text-muted-foreground">{t("map.coordsNotAvailable") || "Coordenadas no disponibles."}</p>
               );
 
               const canchaEvents = filteredEvents.filter((e) => {

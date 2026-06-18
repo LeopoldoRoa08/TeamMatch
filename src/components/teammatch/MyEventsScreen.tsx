@@ -129,7 +129,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
     setCreatedEvents(created);
     setLoading(false);
 
-    setTab(upcoming.length > 0 ? "Mis Partidos" : "Próximos");
+    setTab(upcoming.length > 0 ? 1 : 0);
   }
 
   async function fetchRequests(email: string | undefined) {
@@ -496,7 +496,7 @@ const getFormattedProfile = (p: any) => {
   const bio = p.description || bios[charCodeSum % bios.length];
   
   const name = username.includes("@") 
-    ? username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
+    ? username.split("@")[0].split(/[._-]/).map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") 
     : username;
 
   return {

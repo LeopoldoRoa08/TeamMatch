@@ -56,6 +56,18 @@ const translations: Record<Language, Record<string, string>> = {
     "profile.editProfile": "Editar Perfil",
     // Events
     "events.joinEvent": "Unirme al Partido",
+    "events.createEvent": "Crear Evento",
+    "events.noEvents": "No hay eventos disponibles",
+    "events.search": "Buscar eventos...",
+    "events.participants": "Participantes",
+    "events.registerClan": "Inscribir mi Clan",
+    "events.tab.upcoming": "Próximos",
+    "events.tab.mine": "Mis Partidos",
+    "events.tab.requests": "Solicitudes",
+    // Friends
+    "friends.title": "Amigos",
+    "friends.findPlayers": "Buscar Jugadores",
+    "friends.myFriends": "Mis Amigos",
     "friends.noFriends": "Aún no tienes amigos",
     "friends.noCandidates": "No hay más jugadores disponibles",
     "friends.findPlayersDescription": "Explora la pestaña 'Para ti' y encuentra jugadores con tus mismos gustos deportivos.",
@@ -64,11 +76,6 @@ const translations: Record<Language, Record<string, string>> = {
     "friends.accept": "Aceptar",
     "friends.reject": "Rechazar",
     "clans.search": "Buscar clanes...",
-    "events.createEvent": "Crear Evento",
-    "events.noEvents": "No hay eventos disponibles",
-    "events.search": "Buscar eventos...",
-    "events.participants": "Participantes",
-    "events.registerClan": "Inscribir mi Clan",
     // Clans
     "clans.title": "Clanes",
     "clans.createClan": "Crear Clan",
@@ -85,6 +92,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.success": "¡Éxito!",
     "common.search": "Buscar...",
     "common.noResults": "Sin resultados",
+    "common.years": "años",
   },
   en: {
     "settings.title": "Settings",
@@ -156,6 +164,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.success": "Success!",
     "common.search": "Search...",
     "common.noResults": "No results",
+    "common.years": "years",
   },
   pt: {
     "settings.title": "Configurações",
@@ -213,6 +222,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.success": "Sucesso!",
     "common.search": "Buscar...",
     "common.noResults": "Sem resultados",
+    "common.years": "anos",
   },
   fr: {
     "settings.title": "Paramètres",
@@ -267,6 +277,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.success": "Succès !",
     "common.search": "Rechercher...",
     "common.noResults": "Aucun résultat",
+    "common.years": "ans",
   },
   it: {
     "settings.title": "Impostazioni",
@@ -321,6 +332,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.success": "Successo!",
     "common.search": "Cerca...",
     "common.noResults": "Nessun risultato",
+    "common.years": "anni",
   },
   de: {
     "settings.title": "Einstellungen",
@@ -375,6 +387,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.success": "Erfolg!",
     "common.search": "Suchen...",
     "common.noResults": "Keine Ergebnisse",
+    "common.years": "Jahre",
   },
 };
 
