@@ -1,1 +1,1 @@
-export type Screen = "map" | "events" | "sports" | "friends" | "create" | "detail" | "profile" | "editProfile" | "comments";
+export type Screen = "map" | "events" | "sports" | "friends" | "clans" | "create" | "detail" | "profile" | "editProfile" | "comments";

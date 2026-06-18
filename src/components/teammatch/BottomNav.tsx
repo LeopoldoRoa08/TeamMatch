@@ -1,4 +1,4 @@
-import { Map, CalendarCheck, User, Trophy, Users } from "lucide-react";
+import { Map, CalendarCheck, User, Trophy, Users, Shield } from "lucide-react";
 import type { Screen } from "./types-nav";
 
 interface Props {
@@ -11,6 +11,7 @@ export function BottomNav({ current, onChange }: Props) {
     { id: "events", label: "Eventos", icon: CalendarCheck },
     { id: "map", label: "Explorar", icon: Map },
     { id: "friends", label: "Amigos", icon: Users as any },
+    { id: "clans", label: "Clanes", icon: Shield as any },
     { id: "sports", label: "Deportes", icon: Trophy as any },
     { id: "profile", label: "Perfil", icon: User as any },
   ];
