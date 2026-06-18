@@ -251,7 +251,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
         <button
           onClick={onBack}
           className="grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95"
-          aria-label="Volver"
+          aria-label={t("common.back") || "Volver"}
         >
           <ArrowLeft size={18} className="text-secondary" />
         </button>
@@ -371,7 +371,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
                 type="submit"
                 disabled={submitting || !newComment.trim()}
                 className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-primary text-secondary shadow-pop transition-all active:scale-95 disabled:opacity-50 disabled:scale-100"
-                aria-label="Enviar"
+                aria-label={t("common.save") || "Enviar"}
               >
                 {submitting ? (
                   <Loader2 size={16} className="animate-spin" />

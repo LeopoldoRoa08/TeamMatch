@@ -159,8 +159,8 @@ export function ClansScreen({
       setActiveTab("mis-clanes");
       fetchMyClans();
     } catch (err: any) {
-      if (err.code === '23505') toast.error((t("common.error") || "Error") + ": Ya existe un clan con ese nombre");
-      else toast.error((t("common.error") || "Error") + " al crear clan");
+      if (err.code === '23505') toast.error(t("clans.errorDuplicateName") || "Ya existe un clan con ese nombre");
+      else toast.error(t("clans.errorCreate") || "Error al crear clan");
     }
     setCreating(false);
   }
@@ -172,7 +172,7 @@ export function ClansScreen({
     try {
       const { data: clan } = await supabase.from('clans').select('id').eq('invite_code', inviteCode.toUpperCase()).single();
       if (!clan) {
-        toast.error("Código inválido");
+        toast.error(t("clans.errorInvalidCode") || "Código inválido");
         setJoining(false);
         return;
       }
@@ -183,13 +183,13 @@ export function ClansScreen({
         status: 'pending'
       });
       
-      if (error && error.code === '23505') toast.warning("Ya enviaste una solicitud a este clan");
+      if (error && error.code === '23505') toast.warning(t("clans.errorAlreadyRequested") || "Ya enviaste una solicitud a este clan");
       else if (error) throw error;
-      else toast.success("Solicitud enviada al capitán del clan");
+      else toast.success(t("clans.successJoinRequest") || "Solicitud enviada al capitán del clan");
       
       setInviteCode("");
     } catch (err) {
-      toast.error("Error al unirse al clan");
+      toast.error(t("clans.errorJoin") || "Error al unirse al clan");
     }
     setJoining(false);
   }
@@ -234,12 +234,12 @@ export function ClansScreen({
         user_id: friendId,
         status: 'approved' // Amigos se unen de una vez si los invita el capi
       });
-      toast.success("Amigo añadido al clan");
+      toast.success(t("clans.successFriendAdded") || "Amigo añadido al clan");
       fetchClanMembers(selectedClan.id);
       setShowInviteModal(false);
     } catch (e: any) {
-      if (e.code === '23505') toast.warning("Ya está en el clan");
-      else toast.error("Error al añadir");
+      if (e.code === '23505') toast.warning(t("clans.errorAlreadyMember") || "Ya está en el clan");
+      else toast.error(t("clans.errorAddFriend") || "Error al añadir");
     }
   }
 
@@ -258,31 +258,31 @@ export function ClansScreen({
       
       if (error) throw error;
       
-      toast.success("Clan actualizado");
+      toast.success(t("clans.successUpdated") || "Clan actualizado");
       setShowEditModal(false);
       const updated = { ...selectedClan, name: editData.name, sport: editData.sport, hex_primary: editData.primary, hex_secondary: editData.secondary, description: editData.description };
       setSelectedClan(updated);
       setClans(clans.map(c => c.id === updated.id ? updated : c));
     } catch (err: any) {
-      toast.error("Error al editar: " + err.message);
+      toast.error(t("clans.errorEdit") || "Error al editar");
     }
     setEditing(false);
   }
 
   async function handleRemoveMember(memberId: string) {
-    if (!confirm("¿Seguro que deseas eliminar a este miembro del clan?")) return;
+    if (!confirm(t("clans.confirmRemoveMember") || "¿Seguro que deseas eliminar a este miembro del clan?")) return;
     try {
       const { error } = await supabase.from('clan_members').delete().eq('id', memberId);
       if (error) throw error;
       fetchClanMembers(selectedClan!.id);
     } catch (err: any) {
-      toast.error("Error al eliminar: " + err.message);
+      toast.error(t("clans.errorRemoveMember") || "Error al eliminar");
     }
   }
 
   async function handleLeaveClan() {
     if (!user?.id || !selectedClan) return;
-    if (!confirm("¿Seguro que deseas salir de este clan?")) return;
+    if (!confirm(t("clans.confirmLeave") || "¿Seguro que deseas salir de este clan?")) return;
     try {
       const { error } = await supabase
         .from('clan_members')
@@ -293,7 +293,7 @@ export function ClansScreen({
       setSelectedClan(null);
       fetchMyClans();
     } catch (err: any) {
-      toast.error("Error al salir del clan: " + err.message);
+      toast.error(t("clans.errorLeave") || "Error al salir del clan");
     }
   }
 
