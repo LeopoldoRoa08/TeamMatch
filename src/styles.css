@@ -114,6 +114,72 @@
   --ring: oklch(0.78 0.2 145);
 }
 
+.theme-neon {
+  --background: oklch(0.1 0.05 300); /* Deep dark purple */
+  --foreground: oklch(0.95 0.05 320); /* Light pinkish */
+  --card: oklch(0.15 0.08 300);
+  --card-foreground: oklch(0.95 0.05 320);
+  --popover: oklch(0.15 0.08 300);
+  --popover-foreground: oklch(0.95 0.05 320);
+  --primary: oklch(0.8 0.3 320); /* Neon Pink */
+  --primary-foreground: oklch(0.1 0 0);
+  --secondary: oklch(0.7 0.25 200); /* Neon Cyan */
+  --secondary-foreground: oklch(0.1 0 0);
+  --muted: oklch(0.2 0.08 300);
+  --muted-foreground: oklch(0.7 0.1 320);
+  --accent: oklch(0.85 0.25 100); /* Neon Yellow */
+  --accent-foreground: oklch(0.1 0 0);
+  --destructive: oklch(0.6 0.25 20);
+  --destructive-foreground: oklch(0.95 0.05 320);
+  --border: oklch(0.8 0.3 320 / 20%);
+  --input: oklch(0.8 0.3 320 / 20%);
+  --ring: oklch(0.8 0.3 320);
+}
+
+.theme-nature {
+  --background: oklch(0.96 0.02 140); /* Soft light green */
+  --foreground: oklch(0.25 0.05 140); /* Dark forest green */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.05 140);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.05 140);
+  --primary: oklch(0.5 0.15 140); /* Leaf green */
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.4 0.1 120); /* Earthy green */
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.9 0.04 140);
+  --muted-foreground: oklch(0.45 0.05 140);
+  --accent: oklch(0.6 0.15 60); /* Earthy orange */
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.85 0.05 140);
+  --input: oklch(0.85 0.05 140);
+  --ring: oklch(0.5 0.15 140);
+}
+
+.theme-ocean {
+  --background: oklch(0.95 0.03 220); /* Light water blue */
+  --foreground: oklch(0.2 0.05 240); /* Deep ocean blue */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.05 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.05 240);
+  --primary: oklch(0.6 0.15 220); /* Coral blue */
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.3 0.1 240); /* Dark water */
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.9 0.05 220);
+  --muted-foreground: oklch(0.4 0.08 240);
+  --accent: oklch(0.7 0.15 180); /* Teal / Aqua */
+  --accent-foreground: oklch(0.2 0.05 240);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.85 0.08 220);
+  --input: oklch(0.85 0.08 220);
+  --ring: oklch(0.6 0.15 220);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);

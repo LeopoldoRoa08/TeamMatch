@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useCurrentUser } from "@/lib/UserContext";
+import { SettingsModal } from "./SettingsModal";
 import { ACHIEVEMENTS, type Achievement } from "./achievementsData";
 
 export function ProfileScreen({
@@ -52,6 +53,7 @@ export function ProfileScreen({
   const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history" | "achievements">("stats");
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [showClaimSuccess, setShowClaimSuccess] = useState<{ title: string; discount: string } | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleLogout = async () => {
     const { supabase } = await import("@/lib/supabase");
@@ -293,7 +295,7 @@ export function ProfileScreen({
   return (
     <div className="h-full overflow-y-auto bg-background pb-28">
       {/* Hero / RPG Avatar Section */}
-      <div className="relative bg-background px-5 pb-24 pt-12 text-secondary">
+      <div className="relative bg-background px-5 pb-6 pt-12 text-secondary">
         <div className="flex items-center justify-between">
           <button
             onClick={onEdit}
@@ -304,7 +306,10 @@ export function ProfileScreen({
           <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft">
             <Sparkles size={11} className="animate-pulse" /> Modo RPG Activo
           </div>
-          <button className="grid h-10 w-10 place-items-center rounded-full bg-muted text-secondary">
+          <button 
+            onClick={() => setShowSettings(true)}
+            className="grid h-10 w-10 place-items-center rounded-full bg-muted text-secondary hover:bg-muted/80 transition-colors"
+          >
             <Settings size={16} />
           </button>
         </div>
@@ -411,7 +416,7 @@ export function ProfileScreen({
       </div>
 
       {/* Navigation Tabs (RPG Character Sheet Style) */}
-      <div className="px-5 -mt-8">
+      <div className="px-5">
         <div className="grid grid-cols-4 gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border">
           {[
             { id: "stats", label: "Stats", icon: Shield },
@@ -809,6 +814,12 @@ export function ProfileScreen({
           Cerrar Sesión del Héroe
         </button>
       </div>
+
+      <SettingsModal 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+        onLogout={handleLogout}
+      />
     </div>
   );
 }

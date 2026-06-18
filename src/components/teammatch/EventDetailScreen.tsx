@@ -167,12 +167,21 @@ export function EventDetailScreen({
       const { data: profiles } = await supabase.from('profiles').select('id, username').in('id', members.map((m: any) => m.user_id));
       if (!profiles) throw new Error("No profiles found");
 
-      const insertData = profiles.map(p => ({
-        event_id: event.id,
-        user_username: p.username,
-        status: "aceptado", // Clanes se aprueban automáticamente o entran como pendientes? "con un solo clic" implies direct or pending. Let's make it aceptado for immediate join.
-        clan_id: clan.id // Guardamos clan_id para saber que entraron juntos y pintar la camisa
-      }));
+      const existingUsernames = participants.map(p => p.user_username);
+      const insertData = profiles
+        .filter(p => !existingUsernames.includes(p.username))
+        .map(p => ({
+          event_id: event.id,
+          user_username: p.username,
+          status: "aceptado",
+          clan_id: clan.id
+        }));
+
+      if (insertData.length === 0) {
+        alert("Todos los miembros del clan ya están inscritos en este evento");
+        setRegisteringClan(false);
+        return;
+      }
 
       const { error } = await supabase.from("event_participants").insert(insertData);
       
@@ -186,7 +195,7 @@ export function EventDetailScreen({
       }
     } catch (err: any) {
       console.error(err);
-      alert("Error al inscribir al clan");
+      alert("Error al inscribir al clan: " + (err.message || JSON.stringify(err)));
     }
     setRegisteringClan(false);
   }
