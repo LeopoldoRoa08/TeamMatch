@@ -1332,28 +1332,156 @@ const translations = {
     "profile.history": "Aventuras",
     "profile.logout": "Cerrar Sesión del Héroe",
     "profile.editProfile": "Editar Perfil",
+    "profile.premium": "Premium",
+    "profile.basic": "Básica",
+    "profile.organizer": "Organizador",
+    "profile.age": "Edad",
+    "profile.gender": "Género",
+    "profile.location": "Ubicación",
+    "profile.aboutMe": "Sobre mí",
+    "profile.favSports": "Deportes Favoritos",
+    "profile.closeProfile": "Cerrar Perfil",
+    "profile.male": "Masculino",
+    "profile.female": "Femenino",
     // Events
     "events.joinEvent": "Unirme al Partido",
-    "friends.noFriends": "Aún no tienes amigos",
-    "friends.noCandidates": "No hay más jugadores disponibles",
-    "friends.findPlayersDescription": "Explora la pestaña 'Para ti' y encuentra jugadores con tus mismos gustos deportivos.",
-    "friends.resetList": "Reiniciar Lista",
-    "friends.requests": "Solicitudes Recibidas",
-    "friends.accept": "Aceptar",
-    "friends.reject": "Rechazar",
-    "clans.search": "Buscar clanes...",
     "events.createEvent": "Crear Evento",
     "events.noEvents": "No hay eventos disponibles",
     "events.search": "Buscar eventos...",
     "events.participants": "Participantes",
     "events.registerClan": "Inscribir mi Clan",
+    "events.tab.upcoming": "Próximos",
+    "events.tab.mine": "Mis Partidos",
+    "events.tab.requests": "Solicitudes",
+    "events.upcoming": "Próximamente",
+    "events.error.noPermission": "No tienes permiso para realizar esta acción.",
+    "events.error.processing": "Error al procesar la solicitud: ",
+    "events.noPendingRequests": "No tienes solicitudes pendientes nuevas",
+    "events.wantsToJoin": "quiere unirse a tu partido de",
+    "events.viewProfile": "Ver Perfil",
+    "events.noUpcomingMatches": "No tienes partidos próximos programados",
+    // Friends
+    "friends.title": "Amigos",
+    "friends.findPlayers": "Buscar Jugadores",
+    "friends.myFriends": "Mis Amigos",
+    "friends.noFriends": "No hay perfiles disponibles",
+    "friends.findPlayersDescription": "Vuelve más tarde o ajusta tus filtros",
+    "friends.resetList": "Reiniciar",
+    "friends.requests": "Solicitudes Recibidas",
+    "friends.accept": "Aceptar",
+    "friends.reject": "Rechazar",
+    "friends.defaultName": "Deportista",
+    "friends.unknownLocation": "Ubicación desconocida",
+    "friends.noDescription": "Sin descripción",
+    "friends.acceptedXp": "¡Aceptaste a {name} como amigo! 🤝",
+    "friends.sendingRequest": "Enviando solicitud...",
+    "friends.connectingWith": "Conectando con",
+    "friends.requestSent": "¡SOLICITUD ENVIADA! 🤝",
+    "friends.sent": "¡Enviado!",
+    "friends.requestDesc": "Has enviado una solicitud de Match a {name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.",
+    "friends.gotIt": "¡Entendido!",
+    "friends.problem": "Hubo un problema",
+    "friends.errorDesc": "No pudimos enviar tu solicitud. Verifica tu conexión.",
+    "friends.newMatch": "¡NUEVO MATCH! 🤝",
+    "friends.requestAccepted": "¡SOLICITUD ACEPTADA!",
+    "friends.nowFriends": "¡Tú y {name} ahora son amigos! Han ganado +1 punto de Carisma.",
+    "friends.forYou": "Para ti",
+    "friends.loadingProfiles": "Cargando perfiles reales...",
+    "friends.compatible": "Compatible",
+    "friends.makeMatch": "¡Hacer Match!",
+    "friends.mySavedFriends": "Mis Amigos Guardados",
+    "friends.friendsCount": "amigos",
+    "friends.searchPlaceholder": "Buscar amigo por nombre, deporte...",
+    "friends.searchEmpty": "No se encontraron amigos con ese criterio",
+    "friends.noFriendsAdded": "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!",
+    "friends.sendMessage": "Enviar Mensaje",
     // Clans
     "clans.title": "Clanes",
     "clans.createClan": "Crear Clan",
-    "clans.joinClan": "Unirme a un Clan",
+    "clans.joinClan": "Unirse a Clan",
     "clans.myClan": "Mi Clan",
     "clans.captain": "Capitán",
     "clans.members": "Miembros",
+    "clans.search": "Buscar clanes...",
+    "clans.subtitle": "Tu equipo permanente",
+    "clans.noClans": "No perteneces a ningún clan",
+    "clans.createFirst": "Crea tu primer clan",
+    "clans.form.name": "Nombre del Clan",
+    "clans.form.sport": "Deporte Principal",
+    "clans.form.primaryColor": "Color Primario",
+    "clans.form.secondaryColor": "Color Secundario",
+    "clans.form.desc": "Descripción",
+    "clans.btn.create": "Crear Clan",
+    "clans.btn.creating": "Creando...",
+    "clans.join.title": "Unirse a un Clan",
+    "clans.join.desc": "Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo.",
+    "clans.btn.join": "Solicitar Unión",
+    "common.add": "Agregar",
+    "common.delete": "Eliminar",
+    "events.error.alreadyApplied": "Ya enviaste una solicitud",
+    "events.error.joinError": "Error al solicitar unirse",
+    "events.error.allClanMembersEnrolled": "Todos los miembros seleccionados ya están inscritos en este evento",
+    "events.error.someClanMembersEnrolled": "Algunos miembros ya están inscritos en este evento",
+    "events.error.joinClanError": "Error al inscribir al clan",
+    "events.error.deleteEvent": "Error al eliminar el evento",
+    "events.error.onlyHostCanAccept": "Solo el creador del evento puede aceptar o rechazar solicitudes.",
+    "events.success.actionComplete": "Has {action} la solicitud.",
+    "events.error.updateRequest": "Error al actualizar la solicitud",
+    "events.error.alreadyInMatch": "{name} ya está en el partido.",
+    "events.success.addedToMatch": "¡{name} ha sido agregado al partido!",
+    "events.success.requestSentTo": "¡Solicitud enviada a {name}!",
+    "events.error.inviteError": "Error al invitar a {name}.",
+    "events.confirmLeave": "¿Estás seguro de que deseas salirte de este partido?",
+    "events.success.requestSentTitle": "¡Solicitud enviada!",
+    "events.success.requestSentDesc": "Tu solicitud para unirte al partido de {sport} ha sido enviada con éxito.",
+    "events.date": "Fecha",
+    "events.time": "Hora",
+    "events.location": "Lugar",
+    "events.spots": "Cupos",
+    "events.locationNotAvailable": "Ubicación no disponible",
+    "events.howToGetThere": "Cómo llegar con Google Maps",
+    "events.realTime": "En tiempo real",
+    "events.fromYourLocation": "Desde tu ubicación",
+    "events.description": "Descripción",
+    "events.defaultDescription": "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo.",
+    "events.pendingRequests": "Solicitudes pendientes",
+    "events.approvedPlayers": "Jugadores aprobados",
+    "events.inviteFriends": "Invitar Amigos",
+    "events.spotsAvailable": "cupos disponibles",
+    "events.loadingPlayers": "Cargando jugadores...",
+    "events.applyCoupon": "Aplicar Cupón RPG:",
+    "events.noCoupon": "-- Sin cupón --",
+    "events.contribution": "Aporte",
+    "events.free": "Gratis",
+    "events.youAreHost": "Eres el organizador 👑",
+    "events.deleteEvent": "Eliminar Evento",
+    "events.leaveMatch": "Salir del partido 🚪",
+    "events.cancelRequest": "Cancelar solicitud ✖️",
+    "events.sending": "Enviando...",
+    "events.eventFull": "Evento Lleno",
+    "events.requestToJoin": "Solicitar unirme",
+    "events.enrolling": "Inscribiendo...",
+    "events.enrollClan": "Inscribir Clan",
+    "events.inviteFriendsTitle": "Invitar Amigos",
+    "events.loadingFriends": "Cargando amigos...",
+    "events.noFriendsAvailable": "No tienes amigos disponibles para invitar o todos ya están en el partido.",
+    "events.backToMatch": "Volver al Partido",
+    "events.deleteEventConfirmTitle": "¿Eliminar Evento?",
+    "events.deleteEventConfirmDesc": "Esta acción eliminará {title} de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo.",
+    "events.selectMembers": "Seleccionar Miembros",
+    "events.selectMembersDesc": "El evento tiene {spots} cupos. Selecciona quiénes participarán.",
+    "events.error.maxMembers": "Solo puedes seleccionar hasta {spots} miembros.",
+    "events.join": "Unirse",
+    "events.viewRoute": "Ver Ruta",
+    "clans.btn.joining": "Enviando...",
+    "clans.inviteCode": "Código Invitación:",
+    "clans.played": "Jugados",
+    "clans.won": "Ganados",
+    "clans.lost": "Perdidos",
+    "clans.inviteFriends": "+ Invitar Amigos",
+    "clans.leaveClan": "Salir del Clan",
+    "clans.editClan": "Editar Clan",
+    "clans.requests": "Solicitudes de Unión",
     // Common
     "common.back": "Volver",
     "common.save": "Guardar",
@@ -1362,7 +1490,226 @@ const translations = {
     "common.error": "Error",
     "common.success": "¡Éxito!",
     "common.search": "Buscar...",
-    "common.noResults": "Sin resultados"
+    "common.noResults": "Sin resultados",
+    "common.years": "años",
+    "common.used": "Usado",
+    "common.copied": "Copiado",
+    "common.copy": "Copiar",
+    "common.redeem": "Canjear",
+    "common.user": "Usuario",
+    // Map
+    "map.distanceNear": "Cerca (≤ 5km)",
+    "map.distanceMedium": "Medio (≤ 15km)",
+    "map.distanceAny": "Cualquier distancia",
+    "map.scheduledMatches": "Partidos programados",
+    "map.coordsNotAvailable": "Coordenadas no disponibles.",
+    "map.loading": "Cargando mapa...",
+    "map.hub": "Hub Deportivo",
+    "map.freeAccess": "Acceso gratuito",
+    "map.perHour": "hora",
+    "map.commentsTitle": "Comentarios de la cancha",
+    "map.commentsDesc": "Mira opiniones o escribe sobre esta cancha",
+    "map.noMatches": "No hay partidos programados aquí",
+    "map.createOne": "¡Ve a la pestaña Eventos para crear uno!",
+    "map.players": "jugadores",
+    "map.myLocation": "Mi ubicación",
+    "map.gpsLoc": "Mi ubicación GPS",
+    "map.error.unsupported": "Tu navegador no soporta geolocalización",
+    "map.error.failed": "No se pudo obtener tu ubicación",
+    "map.error.denied": "Permiso de ubicación denegado",
+    "map.error.unavailable": "Ubicación no disponible",
+    "map.error.timeout": "Tiempo de espera agotado",
+    "sports.all": "Todos",
+    "sports.title": "Deportes",
+    "sports.football": "Fútbol",
+    "sports.tennis": "Tenis",
+    "sports.golf": "Golf",
+    "sports.padel": "Pádel",
+    "sports.other": "Otro",
+    "common.close": "Cerrar",
+    // CreateEventForm
+    "createEvent.title": "Nuevo evento",
+    "createEvent.subtitle": "Completa los datos para publicar tu evento",
+    "createEvent.sport": "Deporte",
+    "createEvent.intensity": "Intensidad",
+    "createEvent.date": "Fecha",
+    "createEvent.time": "Hora",
+    "createEvent.facility": "Instalación / Cancha",
+    "createEvent.loadingCourts": "Cargando canchas disponibles...",
+    "createEvent.noCourts": "No hay canchas registradas en la app.",
+    "createEvent.registerFirst": "Registra primero una cancha en la sección de Canchas.",
+    "createEvent.createCourt": "+ Crear nueva cancha",
+    "createEvent.selectCourt": "-- Selecciona una cancha --",
+    "createEvent.autoClan": "Inscribir Clan Automáticamente",
+    "createEvent.noClan": "-- No inscribir clan completo --",
+    "createEvent.enrollClan": "Inscribir a {name} ({count} miembros)",
+    "createEvent.clanNote": "Si seleccionas un clan, todos sus miembros actuales serán inscritos automáticamente en este evento.",
+    "createEvent.maxCapacity": "Capacidad máxima",
+    "createEvent.capacityPlaceholder": "Ej: 12 jugadores (opcional)",
+    "createEvent.description": "Descripción",
+    "createEvent.descPlaceholder": "Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)",
+    "createEvent.publishing": "Publicando evento…",
+    "createEvent.publish": "Publicar evento",
+    "createEvent.published": "¡EVENTO PUBLICADO! ⚽",
+    "createEvent.done": "¡Listo!",
+    "createEvent.successMsg": "Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!",
+    "createEvent.understood": "¡Entendido!",
+    "createEvent.loginRequired": "Debes iniciar sesión para crear un evento.",
+    "createEvent.emailError": "No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.",
+    "createEvent.error": "Error al crear el evento",
+    "createEvent.unexpectedError": "Error inesperado al crear el evento.",
+    "createEvent.err.sport": "Selecciona un deporte",
+    "createEvent.err.intensity": "Selecciona la intensidad",
+    "createEvent.err.date": "La fecha es obligatoria",
+    "createEvent.err.time": "La hora es obligatoria",
+    "createEvent.err.court": "Selecciona una cancha obligatoriamente",
+    // EditProfile
+    "editProfile.title": "Editar Perfil",
+    "editProfile.profilePhoto": "Foto de perfil",
+    "editProfile.fullName": "Nombre completo",
+    "editProfile.namePlaceholder": "Tu nombre",
+    "editProfile.email": "Correo electrónico",
+    "editProfile.emailNote": "Al cambiar el correo electrónico, se enviará un mensaje de confirmación.",
+    "editProfile.age": "Edad",
+    "editProfile.gender": "Género",
+    "editProfile.selectGender": "Seleccionar...",
+    "editProfile.male": "Masculino",
+    "editProfile.female": "Femenino",
+    "editProfile.other": "Otro",
+    "editProfile.location": "Ubicación (Municipio/Zona)",
+    "editProfile.locationPlaceholder": "Ej. Chacao, Caracas",
+    "editProfile.aboutMe": "Sobre mí (Descripción)",
+    "editProfile.aboutPlaceholder": "Cuéntanos un poco sobre ti, tu nivel de juego, etc.",
+    "editProfile.preferredSports": "Deportes preferidos",
+    "editProfile.organizerMode": "Modo Organizador",
+    "editProfile.organizerDesc": "Te permite registrar y gestionar tus propias instalaciones y canchas",
+    "editProfile.saveChanges": "Guardar Cambios",
+    "editProfile.success": "Perfil actualizado correctamente",
+    "editProfile.error": "Error al actualizar el perfil",
+    "editProfile.imgRequired": "Debes seleccionar una imagen.",
+    "editProfile.imgError": "Error al subir la imagen",
+    // EventCard
+    "eventCard.free": "Gratis",
+    "eventCard.spots": "cupos",
+    "eventCard.viewEvent": "Ver evento",
+    "eventCard.waitingRequest": "Esperando solicitud",
+    "eventCard.joinEvent": "Unirse al evento",
+    // CanchasScreen
+    "canchas.title": "Canchas",
+    "canchas.available": "Canchas disponibles",
+    "canchas.selectForEvent": "Selecciona una cancha para tu evento",
+    "canchas.addCourt": "Añadir cancha",
+    "canchas.add": "Añadir",
+    "canchas.noCourts": "No hay canchas por ahora",
+    "canchas.beFirst": "Sé el primero en añadir una cancha",
+    "canchas.addFirst": "Añadir primera cancha",
+    "canchas.addTitle": "Añadir cancha",
+    "canchas.addSubtitle": "Registra una nueva cancha deportiva",
+    "canchas.name": "Nombre",
+    "canchas.namePlaceholder": "Ej: Cancha San Bernardino",
+    "canchas.nameRequired": "El nombre es obligatorio",
+    "canchas.sportRequired": "Selecciona un deporte",
+    "canchas.locationRequired": "Elige la ubicación en el mapa",
+    "canchas.tapMap": "Toca el mapa para elegir la ubicación",
+    "canchas.locationSelected": "Ubicación seleccionada",
+    "canchas.description": "Descripción",
+    "canchas.descPlaceholder": "Iluminación nocturna, vestuarios, estacionamiento...",
+    "canchas.pricePerHour": "Precio por hora (Bs.)",
+    "canchas.pricePlaceholder": "Ej: 50 (opcional)",
+    "canchas.saving": "Guardando cancha…",
+    "canchas.save": "Guardar cancha",
+    "canchas.added": "¡Cancha añadida!",
+    "canchas.addedDesc": "Ya aparece en el listado de canchas",
+    "canchas.loadingMap": "Cargando mapa…",
+    "canchas.searchingAddress": "Buscando dirección...",
+    // CanchaComments
+    "comments.title": "Comentarios",
+    "comments.loading": "Cargando comentarios…",
+    "comments.noComments": "Sin comentarios aún",
+    "comments.beFirst": "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha.",
+    "comments.noCommentsYet": "Nadie ha comentado en esta cancha todavía.",
+    "comments.player": "Jugador",
+    "comments.verified": "Verificado",
+    "comments.checkingAccess": "Comprobando acceso…",
+    "comments.loginToComment": "Inicia sesión para comentar",
+    "comments.shareOpinion": "Comparte tu opinión sobre esta cancha con la comunidad.",
+    "comments.loginRegister": "Iniciar Sesión / Registrarse",
+    "comments.restricted": "Acceso restringido",
+    "comments.restrictedDesc": "Solo puedes comentar si has participado o estás participando en un evento en esta cancha. ¡Únete a un partido o crea uno aquí primero!",
+    "comments.placeholder": "Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…",
+    "comments.readyToComment": "Listo para comentar",
+    "comments.submitError": "Error al enviar el comentario.",
+    // Auth
+    "auth.welcomeBack": "Bienvenido",
+    "auth.welcomeBackEmoji": "de vuelta 👋",
+    "auth.createAccount": "Crea tu cuenta",
+    "auth.createAccountEmoji": "y entra a jugar ⚡",
+    "auth.loginSubtitle": "Inicia sesión para ver y unirte a eventos.",
+    "auth.registerSubtitle": "Regístrate gratis. En segundos estás dentro.",
+    "auth.fullName": "Nombre completo",
+    "auth.namePlaceholder": "Ej: Diego Ramírez",
+    "auth.registerAsOrganizer": "Quiero registrarme como Organizador",
+    "auth.email": "Correo electrónico",
+    "auth.password": "Contraseña",
+    "auth.minChars": "Mín. 6 caracteres",
+    "auth.yourPassword": "Tu contraseña",
+    "auth.forgotPassword": "¿Olvidaste tu contraseña?",
+    "auth.loggingIn": "Iniciando sesión...",
+    "auth.creatingAccount": "Creando cuenta...",
+    "auth.loggedIn": "¡Sesión iniciada!",
+    "auth.accountCreated": "¡Cuenta creada!",
+    "auth.login": "Iniciar sesión",
+    "auth.createFree": "Crear cuenta gratis",
+    "auth.or": "o",
+    "auth.noAccount": "¿No tienes cuenta? Regístrate",
+    "auth.hasAccount": "¿Ya tienes cuenta? Inicia sesión",
+    "auth.terms": "Al continuar aceptas los Términos de Uso y la Política de Privacidad de TeamMatch.",
+    "auth.loggedInMsg": "¡Sesión iniciada! Entrando...",
+    "auth.accountCreatedMsg": "¡Cuenta creada! Bienvenido...",
+    "auth.fillFields": "Completa todos los campos obligatorios.",
+    "auth.enterName": "Ingresa tu nombre para continuar.",
+    "auth.minPassword": "La contraseña debe tener al menos 6 caracteres.",
+    "auth.err.invalidLogin": "Correo o contraseña incorrectos. Revisa tus datos.",
+    "auth.err.emailNotConfirmed": "Confirma tu correo antes de iniciar sesión.",
+    "auth.err.alreadyRegistered": "Ya existe una cuenta con ese correo. Intenta iniciar sesión.",
+    "auth.err.weakPassword": "La contraseña debe tener al menos 6 caracteres.",
+    "auth.err.invalidEmail": "Ingresa un correo electrónico válido.",
+    "auth.err.rateLimit": "Demasiados intentos. Espera unos minutos e intenta de nuevo.",
+    // MySports
+    "mySports.title": "Mis deportes",
+    "mySports.subtitle": "Tus estadísticas y partidos por disciplina",
+    "mySports.match": "partido",
+    "mySports.matches": "partidos",
+    "mySports.noSports": "No te has unido a eventos de ningún deporte todavía",
+    // CouponPopup
+    "coupon.specialAd": "Anuncio Especial 📣",
+    "coupon.copied": "¡Copiado!",
+    "coupon.copyHint": "*Haz clic en el código para copiarlo al portapapeles.",
+    // Welcome
+    "welcome.availableIn": "Disponible en Caracas",
+    "welcome.nextMatch": "Tu próximo",
+    "welcome.awaits": "partido te espera.",
+    "welcome.subtitle": "Encuentra eventos deportivos cerca de ti, únete con un toque o crea el tuyo y arma equipo.",
+    "welcome.liveMap": "Mapa en vivo",
+    "welcome.liveMapDesc": "Eventos cerca en tiempo real",
+    "welcome.joinEasy": "Únete fácil",
+    "welcome.joinEasyDesc": "Solicita un cupo en segundos",
+    "welcome.byLevel": "Por nivel",
+    "welcome.byLevelDesc": "Juega con gente a tu altura",
+    "welcome.startPlaying": "Empezar a jugar",
+    "welcome.hasAccount": "Ya tengo cuenta",
+    "welcome.terms": "Al continuar aceptas los Términos y la Política de Privacidad",
+    // LoginPrompt
+    "loginPrompt.joinTo": "¡Únete para {action}!",
+    "loginPrompt.defaultAction": "realizar esta acción",
+    "loginPrompt.subtitle": "Crea tu cuenta gratis y accede a todos los partidos y canchas de Caracas.",
+    "loginPrompt.perk1": "Únete a partidos cerca de ti",
+    "loginPrompt.perk2": "Crea eventos y arma tu equipo",
+    "loginPrompt.perk3": "Gana XP y desbloquea recompensas",
+    "loginPrompt.perk4": "Matchmaking por nivel y deporte",
+    "loginPrompt.createFree": "Crear Cuenta Gratis",
+    "loginPrompt.hasAccount": "Ya tengo cuenta — Iniciar Sesión",
+    "loginPrompt.notNow": "Ahora no, seguir explorando"
   },
   en: {
     "settings.title": "Settings",
@@ -1397,6 +1744,17 @@ const translations = {
     "profile.history": "History",
     "profile.logout": "Logout",
     "profile.editProfile": "Edit Profile",
+    "profile.premium": "Premium",
+    "profile.basic": "Basic",
+    "profile.organizer": "Organizer",
+    "profile.age": "Age",
+    "profile.gender": "Gender",
+    "profile.location": "Location",
+    "profile.aboutMe": "About me",
+    "profile.favSports": "Favorite Sports",
+    "profile.closeProfile": "Close Profile",
+    "profile.male": "Male",
+    "profile.female": "Female",
     "events.joinEvent": "Join Match",
     "events.createEvent": "Create Event",
     "events.noEvents": "No events available",
@@ -1406,26 +1764,140 @@ const translations = {
     "events.tab.upcoming": "Upcoming",
     "events.tab.mine": "My Matches",
     "events.tab.requests": "Requests",
+    "events.upcoming": "Upcoming",
+    "events.error.noPermission": "You do not have permission to do this.",
+    "events.error.processing": "Error processing request: ",
+    "events.noPendingRequests": "No new pending requests",
+    "events.wantsToJoin": "wants to join your match of",
+    "events.viewProfile": "View Profile",
+    "events.noUpcomingMatches": "You have no upcoming matches scheduled",
+    "events.error.alreadyApplied": "You already sent a request",
+    "events.error.joinError": "Error requesting to join",
+    "events.error.allClanMembersEnrolled": "All selected members are already enrolled in this event",
+    "events.error.someClanMembersEnrolled": "Some members are already enrolled in this event",
+    "events.error.joinClanError": "Error enrolling the clan",
+    "events.error.deleteEvent": "Error deleting the event",
+    "events.error.onlyHostCanAccept": "Only the event creator can accept or reject requests.",
+    "events.success.actionComplete": "You have {action} the request.",
+    "events.error.updateRequest": "Error updating the request",
+    "events.error.alreadyInMatch": "{name} is already in the match.",
+    "events.success.addedToMatch": "¡{name} has been added to the match!",
+    "events.success.requestSentTo": "¡Request sent to {name}!",
+    "events.error.inviteError": "Error inviting {name}.",
+    "events.confirmLeave": "Are you sure you want to leave this match?",
+    "events.success.requestSentTitle": "¡Request sent!",
+    "events.success.requestSentDesc": "Your request to join the {sport} match has been sent successfully.",
+    "events.date": "Date",
+    "events.time": "Time",
+    "events.location": "Location",
+    "events.spots": "Spots",
+    "events.locationNotAvailable": "Location not available",
+    "events.howToGetThere": "How to get there with Google Maps",
+    "events.realTime": "In real time",
+    "events.fromYourLocation": "From your location",
+    "events.description": "Description",
+    "events.defaultDescription": "Friendly match, synthetic court with lights. Bring comfortable clothes and water. Players with experience accepted, respectful and competitive environment.",
+    "events.pendingRequests": "Pending requests",
+    "events.approvedPlayers": "Approved players",
+    "events.inviteFriends": "Invite Friends",
+    "events.spotsAvailable": "spots available",
+    "events.loadingPlayers": "Loading players...",
+    "events.applyCoupon": "Apply RPG Coupon:",
+    "events.noCoupon": "-- No coupon --",
+    "events.contribution": "Contribution",
+    "events.free": "Free",
+    "events.youAreHost": "You are the organizer 👑",
+    "events.deleteEvent": "Delete Event",
+    "events.leaveMatch": "Leave match 🚪",
+    "events.cancelRequest": "Cancel request ✖️",
+    "events.sending": "Sending...",
+    "events.eventFull": "Event Full",
+    "events.requestToJoin": "Request to join",
+    "events.enrolling": "Enrolling...",
+    "events.enrollClan": "Enroll Clan",
+    "events.inviteFriendsTitle": "Invite Friends",
+    "events.loadingFriends": "Loading friends...",
+    "events.noFriendsAvailable": "You have no friends available to invite or everyone is already in the match.",
+    "events.backToMatch": "Back to Match",
+    "events.deleteEventConfirmTitle": "Delete Event?",
+    "events.deleteEventConfirmDesc": "This action will permanently delete {title}. All participants will be removed and there will be no way to revert it.",
+    "events.selectMembers": "Select Members",
+    "events.selectMembersDesc": "The event has {spots} spots. Select who will participate.",
+    "events.error.maxMembers": "You can only select up to {spots} members.",
+    "events.join": "Join",
+    "events.viewRoute": "View Route",
     "clans.title": "Clans",
     "clans.createClan": "Create Clan",
-    "clans.joinClan": "Join a Clan",
+    "clans.joinClan": "Join Clan",
     "clans.myClan": "My Clan",
     "clans.captain": "Captain",
     "clans.members": "Members",
     "clans.search": "Search clans...",
-    "clans.noClans": "No clans available",
+    "clans.subtitle": "Your permanent team",
+    "clans.noClans": "You do not belong to any clan",
+    "clans.createFirst": "Create your first clan",
+    "clans.form.name": "Clan Name",
+    "clans.form.sport": "Main Sport",
+    "clans.form.primaryColor": "Primary Color",
+    "clans.form.secondaryColor": "Secondary Color",
+    "clans.form.desc": "Description",
+    "clans.btn.create": "Create Clan",
+    "clans.btn.creating": "Creating...",
+    "clans.join.title": "Join a Clan",
+    "clans.join.desc": "Ask your team captain for the invite code and enter it below.",
+    "clans.btn.join": "Request to Join",
+    "clans.btn.joining": "Sending...",
+    "clans.inviteCode": "Invite Code:",
+    "clans.played": "Played",
+    "clans.won": "Won",
+    "clans.lost": "Lost",
+    "clans.inviteFriends": "+ Invite Friends",
+    "clans.leaveClan": "Leave Clan",
+    "clans.editClan": "Edit Clan",
+    "clans.requests": "Join Requests",
+    "clans.noClansAvailable": "No clans available",
     "friends.title": "Friends",
     "friends.findPlayers": "Find Players",
     "friends.myFriends": "My Friends",
-    "friends.noFriends": "No friends yet",
-    "friends.noCandidates": "No more players available",
-    "friends.findPlayersDescription": "Explore the 'For you' tab to find players with similar sports interests.",
-    "friends.resetList": "Reset List",
+    "friends.noFriends": "No profiles available",
+    "friends.findPlayersDescription": "Come back later or adjust your filters",
+    "friends.resetList": "Reset",
     "friends.requests": "Received Requests",
     "friends.accept": "Accept",
     "friends.reject": "Reject",
-    "sports.title": "Sports",
+    "friends.defaultName": "Athlete",
+    "friends.unknownLocation": "Unknown location",
+    "friends.noDescription": "No description",
+    "friends.acceptedXp": "You accepted {name} as a friend! 🤝",
+    "friends.sendingRequest": "Sending request...",
+    "friends.connectingWith": "Connecting with",
+    "friends.requestSent": "REQUEST SENT! 🤝",
+    "friends.sent": "Sent!",
+    "friends.requestDesc": "You have sent a match request to {name}. Wait for them to approve to see them in your friends list.",
+    "friends.gotIt": "Got it!",
+    "friends.problem": "There was a problem",
+    "friends.errorDesc": "We couldn't send your request. Check your connection.",
+    "friends.newMatch": "NEW MATCH! 🤝",
+    "friends.requestAccepted": "REQUEST ACCEPTED!",
+    "friends.nowFriends": "You and {name} are now friends! You earned +1 Charisma point.",
+    "friends.forYou": "For you",
+    "friends.loadingProfiles": "Loading real profiles...",
+    "friends.compatible": "Compatible",
+    "friends.makeMatch": "Make Match!",
+    "friends.mySavedFriends": "My Saved Friends",
+    "friends.friendsCount": "friends",
+    "friends.searchPlaceholder": "Search friend by name, sport...",
+    "friends.searchEmpty": "No friends found with that criteria",
+    "friends.noFriendsAdded": "You have no friends added yet. Look for connections in the 'For you' tab!",
+    "friends.sendMessage": "Send Message",
     "sports.search": "Search sports...",
+    "sports.title": "Sports",
+    "sports.all": "All",
+    "sports.football": "Football",
+    "sports.tennis": "Tennis",
+    "sports.golf": "Golf",
+    "sports.padel": "Padel",
+    "sports.other": "Other",
     "common.back": "Back",
     "common.save": "Save",
     "common.cancel": "Cancel",
@@ -1433,7 +1905,220 @@ const translations = {
     "common.error": "Error",
     "common.success": "Success!",
     "common.search": "Search...",
-    "common.noResults": "No results"
+    "common.noResults": "No results",
+    "common.years": "years",
+    "common.used": "Used",
+    "common.copied": "Copied",
+    "common.copy": "Copy",
+    "common.redeem": "Redeem",
+    "common.add": "Add",
+    "common.delete": "Delete",
+    "common.close": "Close",
+    "common.user": "User",
+    // CreateEventForm
+    "createEvent.title": "New event",
+    "createEvent.subtitle": "Fill in the details to publish your event",
+    "createEvent.sport": "Sport",
+    "createEvent.intensity": "Intensity",
+    "createEvent.date": "Date",
+    "createEvent.time": "Time",
+    "createEvent.facility": "Facility / Court",
+    "createEvent.loadingCourts": "Loading available courts...",
+    "createEvent.noCourts": "No courts registered in the app.",
+    "createEvent.registerFirst": "Register a court first in the Courts section.",
+    "createEvent.createCourt": "+ Create new court",
+    "createEvent.selectCourt": "-- Select a court --",
+    "createEvent.autoClan": "Auto-enroll Clan",
+    "createEvent.noClan": "-- Don't enroll full clan --",
+    "createEvent.enrollClan": "Enroll {name} ({count} members)",
+    "createEvent.clanNote": "If you select a clan, all current members will be automatically enrolled in this event.",
+    "createEvent.maxCapacity": "Max capacity",
+    "createEvent.capacityPlaceholder": "E.g.: 12 players (optional)",
+    "createEvent.description": "Description",
+    "createEvent.descPlaceholder": "E.g.: Bring comfortable clothes, water and a positive attitude. (Max 150 chars)",
+    "createEvent.publishing": "Publishing event…",
+    "createEvent.publish": "Publish event",
+    "createEvent.published": "EVENT PUBLISHED! ⚽",
+    "createEvent.done": "Done!",
+    "createEvent.successMsg": "Your match is on the map, ready for other players to join. Let's play!",
+    "createEvent.understood": "Got it!",
+    "createEvent.loginRequired": "You must log in to create an event.",
+    "createEvent.emailError": "Could not get user email. Try logging out and back in.",
+    "createEvent.error": "Error creating event",
+    "createEvent.unexpectedError": "Unexpected error creating event.",
+    "createEvent.err.sport": "Select a sport",
+    "createEvent.err.intensity": "Select the intensity",
+    "createEvent.err.date": "Date is required",
+    "createEvent.err.time": "Time is required",
+    "createEvent.err.court": "You must select a court",
+    // EditProfile
+    "editProfile.title": "Edit Profile",
+    "editProfile.profilePhoto": "Profile photo",
+    "editProfile.fullName": "Full name",
+    "editProfile.namePlaceholder": "Your name",
+    "editProfile.email": "Email address",
+    "editProfile.emailNote": "Changing your email will send a confirmation message.",
+    "editProfile.age": "Age",
+    "editProfile.gender": "Gender",
+    "editProfile.selectGender": "Select...",
+    "editProfile.male": "Male",
+    "editProfile.female": "Female",
+    "editProfile.other": "Other",
+    "editProfile.location": "Location (City/Area)",
+    "editProfile.locationPlaceholder": "E.g. Chacao, Caracas",
+    "editProfile.aboutMe": "About me (Description)",
+    "editProfile.aboutPlaceholder": "Tell us a bit about yourself, your skill level, etc.",
+    "editProfile.preferredSports": "Preferred sports",
+    "editProfile.organizerMode": "Organizer Mode",
+    "editProfile.organizerDesc": "Allows you to register and manage your own facilities and courts",
+    "editProfile.saveChanges": "Save Changes",
+    "editProfile.success": "Profile updated successfully",
+    "editProfile.error": "Error updating profile",
+    "editProfile.imgRequired": "You must select an image.",
+    "editProfile.imgError": "Error uploading image",
+    // EventCard
+    "eventCard.free": "Free",
+    "eventCard.spots": "spots",
+    "eventCard.viewEvent": "View event",
+    "eventCard.waitingRequest": "Waiting for approval",
+    "eventCard.joinEvent": "Join event",
+    // CanchasScreen
+    "canchas.title": "Courts",
+    "canchas.available": "Available courts",
+    "canchas.selectForEvent": "Select a court for your event",
+    "canchas.addCourt": "Add court",
+    "canchas.add": "Add",
+    "canchas.noCourts": "No courts yet",
+    "canchas.beFirst": "Be the first to add a court",
+    "canchas.addFirst": "Add first court",
+    "canchas.addTitle": "Add court",
+    "canchas.addSubtitle": "Register a new sports court",
+    "canchas.name": "Name",
+    "canchas.namePlaceholder": "E.g.: San Bernardino Court",
+    "canchas.nameRequired": "Name is required",
+    "canchas.sportRequired": "Select a sport",
+    "canchas.locationRequired": "Choose a location on the map",
+    "canchas.tapMap": "Tap the map to choose a location",
+    "canchas.locationSelected": "Location selected",
+    "canchas.description": "Description",
+    "canchas.descPlaceholder": "Night lighting, locker rooms, parking...",
+    "canchas.pricePerHour": "Price per hour (Bs.)",
+    "canchas.pricePlaceholder": "E.g.: 50 (optional)",
+    "canchas.saving": "Saving court…",
+    "canchas.save": "Save court",
+    "canchas.added": "Court added!",
+    "canchas.addedDesc": "It now appears in the courts list",
+    "canchas.loadingMap": "Loading map…",
+    "canchas.searchingAddress": "Searching address...",
+    // CanchaComments
+    "comments.title": "Comments",
+    "comments.loading": "Loading comments…",
+    "comments.noComments": "No comments yet",
+    "comments.beFirst": "Be the first to leave a comment about the conditions or accessibility of this court.",
+    "comments.noCommentsYet": "Nobody has commented on this court yet.",
+    "comments.player": "Player",
+    "comments.verified": "Verified",
+    "comments.checkingAccess": "Checking access…",
+    "comments.loginToComment": "Log in to comment",
+    "comments.shareOpinion": "Share your opinion about this court with the community.",
+    "comments.loginRegister": "Log In / Register",
+    "comments.restricted": "Restricted access",
+    "comments.restrictedDesc": "You can only comment if you have participated or are participating in an event at this court. Join a match or create one here first!",
+    "comments.placeholder": "Write your opinion about the court (lighting, condition, etc.)…",
+    "comments.readyToComment": "Ready to comment",
+    "comments.submitError": "Error sending comment.",
+    // Auth
+    "auth.welcomeBack": "Welcome",
+    "auth.welcomeBackEmoji": "back 👋",
+    "auth.createAccount": "Create your account",
+    "auth.createAccountEmoji": "and start playing ⚡",
+    "auth.loginSubtitle": "Log in to see and join events.",
+    "auth.registerSubtitle": "Sign up for free. You'll be in within seconds.",
+    "auth.fullName": "Full name",
+    "auth.namePlaceholder": "E.g.: Diego Ramírez",
+    "auth.registerAsOrganizer": "I want to register as an Organizer",
+    "auth.email": "Email address",
+    "auth.password": "Password",
+    "auth.minChars": "Min. 6 characters",
+    "auth.yourPassword": "Your password",
+    "auth.forgotPassword": "Forgot your password?",
+    "auth.loggingIn": "Logging in...",
+    "auth.creatingAccount": "Creating account...",
+    "auth.loggedIn": "Logged in!",
+    "auth.accountCreated": "Account created!",
+    "auth.login": "Log in",
+    "auth.createFree": "Create free account",
+    "auth.or": "or",
+    "auth.noAccount": "Don't have an account? Sign up",
+    "auth.hasAccount": "Already have an account? Log in",
+    "auth.terms": "By continuing you accept TeamMatch's Terms of Use and Privacy Policy.",
+    "auth.loggedInMsg": "Logged in! Entering...",
+    "auth.accountCreatedMsg": "Account created! Welcome...",
+    "auth.fillFields": "Please fill in all required fields.",
+    "auth.enterName": "Enter your name to continue.",
+    "auth.minPassword": "Password must be at least 6 characters.",
+    "auth.err.invalidLogin": "Incorrect email or password. Check your info.",
+    "auth.err.emailNotConfirmed": "Confirm your email before logging in.",
+    "auth.err.alreadyRegistered": "An account with that email already exists. Try logging in.",
+    "auth.err.weakPassword": "Password must be at least 6 characters.",
+    "auth.err.invalidEmail": "Enter a valid email address.",
+    "auth.err.rateLimit": "Too many attempts. Wait a few minutes and try again.",
+    // MySports
+    "mySports.title": "My sports",
+    "mySports.subtitle": "Your stats and matches by sport",
+    "mySports.match": "match",
+    "mySports.matches": "matches",
+    "mySports.noSports": "You haven't joined events for any sport yet",
+    // CouponPopup
+    "coupon.specialAd": "Special Announcement 📣",
+    "coupon.copied": "Copied!",
+    "coupon.copyHint": "*Click the code to copy it to the clipboard.",
+    // Welcome
+    "welcome.availableIn": "Available in Caracas",
+    "welcome.nextMatch": "Your next",
+    "welcome.awaits": "match awaits.",
+    "welcome.subtitle": "Find sports events near you, join with a tap or create your own and build a team.",
+    "welcome.liveMap": "Live map",
+    "welcome.liveMapDesc": "Nearby events in real time",
+    "welcome.joinEasy": "Join easily",
+    "welcome.joinEasyDesc": "Request a spot in seconds",
+    "welcome.byLevel": "By level",
+    "welcome.byLevelDesc": "Play with people at your level",
+    "welcome.startPlaying": "Start playing",
+    "welcome.hasAccount": "I already have an account",
+    "welcome.terms": "By continuing you accept the Terms and Privacy Policy",
+    // LoginPrompt
+    "loginPrompt.joinTo": "Join to {action}!",
+    "loginPrompt.defaultAction": "perform this action",
+    "loginPrompt.subtitle": "Create your free account and access all matches and courts in Caracas.",
+    "loginPrompt.perk1": "Join matches near you",
+    "loginPrompt.perk2": "Create events and build your team",
+    "loginPrompt.perk3": "Earn XP and unlock rewards",
+    "loginPrompt.perk4": "Matchmaking by level and sport",
+    "loginPrompt.createFree": "Create Free Account",
+    "loginPrompt.hasAccount": "I already have an account — Log In",
+    "loginPrompt.notNow": "Not now, keep exploring",
+    "map.distanceNear": "Near (≤ 5km)",
+    "map.distanceMedium": "Medium (≤ 15km)",
+    "map.distanceAny": "Any distance",
+    "map.scheduledMatches": "Scheduled matches",
+    "map.coordsNotAvailable": "Coordinates not available.",
+    "map.loading": "Loading map...",
+    "map.hub": "Sports Hub",
+    "map.freeAccess": "Free access",
+    "map.perHour": "hour",
+    "map.commentsTitle": "Court comments",
+    "map.commentsDesc": "Read reviews or write about this court",
+    "map.noMatches": "No matches scheduled here",
+    "map.createOne": "Go to Events tab to create one!",
+    "map.players": "players",
+    "map.myLocation": "My location",
+    "map.gpsLoc": "My GPS location",
+    "map.error.unsupported": "Your browser does not support geolocation",
+    "map.error.failed": "Could not get your location",
+    "map.error.denied": "Location permission denied",
+    "map.error.unavailable": "Location not available",
+    "map.error.timeout": "Timeout reached"
   },
   pt: {
     "settings.title": "Configurações",
@@ -1490,7 +2175,8 @@ const translations = {
     "common.error": "Erro",
     "common.success": "Sucesso!",
     "common.search": "Buscar...",
-    "common.noResults": "Sem resultados"
+    "common.noResults": "Sem resultados",
+    "common.years": "anos"
   },
   fr: {
     "settings.title": "Paramètres",
@@ -1544,7 +2230,8 @@ const translations = {
     "common.error": "Erreur",
     "common.success": "Succès !",
     "common.search": "Rechercher...",
-    "common.noResults": "Aucun résultat"
+    "common.noResults": "Aucun résultat",
+    "common.years": "ans"
   },
   it: {
     "settings.title": "Impostazioni",
@@ -1598,7 +2285,8 @@ const translations = {
     "common.error": "Errore",
     "common.success": "Successo!",
     "common.search": "Cerca...",
-    "common.noResults": "Nessun risultato"
+    "common.noResults": "Nessun risultato",
+    "common.years": "anni"
   },
   de: {
     "settings.title": "Einstellungen",
@@ -1652,7 +2340,8 @@ const translations = {
     "common.error": "Fehler",
     "common.success": "Erfolg!",
     "common.search": "Suchen...",
-    "common.noResults": "Keine Ergebnisse"
+    "common.noResults": "Keine Ergebnisse",
+    "common.years": "Jahre"
   }
 };
 const SettingsContext = createContext({
@@ -1775,9 +2464,10 @@ const LeafletMap$1 = lazy(
   () => import("./LeafletMap-C3F2iawj.js").then((m) => ({ default: m.default }))
 );
 function MapSkeleton$1() {
+  const { t } = useSettings();
   return /* @__PURE__ */ jsx("div", { className: "h-full w-full animate-pulse bg-muted", children: /* @__PURE__ */ jsx("div", { className: "flex h-full items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3 text-muted-foreground", children: [
     /* @__PURE__ */ jsx("div", { className: "h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" }),
-    /* @__PURE__ */ jsx("span", { className: "text-xs font-medium", children: "Cargando mapa…" })
+    /* @__PURE__ */ jsx("span", { className: "text-xs font-medium", children: t("map.loading") || "Loading map…" })
   ] }) }) });
 }
 const sports = ["Todos", "Fútbol", "Tenis", "Golf", "Pádel"];
@@ -1866,7 +2556,7 @@ function MapScreen({
       return;
     }
     if (!navigator.geolocation) {
-      setLocationError("Tu navegador no soporta geolocalización");
+      setLocationError(t("map.error.unsupported") || "Tu navegador no soporta geolocalización");
       return;
     }
     setLocating(true);
@@ -1880,10 +2570,10 @@ function MapScreen({
       },
       (error) => {
         console.error("❌ Error GPS:", error);
-        let msg = "No se pudo obtener tu ubicación";
-        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
-        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
-        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
+        let msg = t("map.error.failed") || "No se pudo obtener tu ubicación";
+        if (error.code === error.PERMISSION_DENIED) msg = t("map.error.denied") || "Permiso de ubicación denegado";
+        else if (error.code === error.POSITION_UNAVAILABLE) msg = t("map.error.unavailable") || "Ubicación no disponible";
+        else if (error.code === error.TIMEOUT) msg = t("map.error.timeout") || "Tiempo de espera agotado";
         setLocationError(msg);
         setLocating(false);
       },
@@ -1916,7 +2606,7 @@ function MapScreen({
         const coords = parseLocation$2(row.location);
         const lat = coords?.lat ?? 0;
         const lng = coords?.lng ?? 0;
-        const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+        const sportName = row.sport_id === 1 ? t("sports.football") || "Fútbol" : row.sport_id === 2 ? t("sports.tennis") || "Tenis" : row.sport_id === 3 ? t("sports.golf") || "Golf" : row.sport_id === 4 ? t("sports.padel") || "Pádel" : t("sports.other") || "Otro";
         return {
           ...row,
           lat,
@@ -2037,7 +2727,7 @@ function MapScreen({
                 }
               },
               className: `snap-center shrink-0 whitespace-nowrap rounded-3xl px-6 py-3.5 text-sm font-black tracking-wide shadow-xl transition-all border-2 ${isActive ? "bg-primary text-secondary border-primary scale-[1.02]" : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"}`,
-              children: s === "Todos" ? t("events.all") : s
+              children: s === "Todos" ? t("sports.all") || "Todos" : t(`sports.${s.toLowerCase().replace("ú", "u").replace("á", "a")}`) || s
             },
             s
           );
@@ -2058,9 +2748,9 @@ function MapScreen({
             onChange: (e) => setDistanceLevel(e.target.value),
             className: "bg-transparent outline-none cursor-pointer font-black",
             children: [
-              /* @__PURE__ */ jsx("option", { value: "Cerca", children: t("map.distanceNear", "Cerca (≤ 5km)") }),
-              /* @__PURE__ */ jsx("option", { value: "Medio", children: t("map.distanceMedium", "Medio (≤ 15km)") }),
-              /* @__PURE__ */ jsx("option", { value: "Cualquier distancia", children: t("map.distanceAny", "Cualquier distancia") })
+              /* @__PURE__ */ jsx("option", { value: "Cerca", children: t("map.distanceNear") || "Cerca (≤ 5km)" }),
+              /* @__PURE__ */ jsx("option", { value: "Medio", children: t("map.distanceMedium") || "Medio (≤ 15km)" }),
+              /* @__PURE__ */ jsx("option", { value: "Cualquier distancia", children: t("map.distanceAny") || "Cualquier distancia" })
             ]
           }
         ) })
@@ -2072,22 +2762,24 @@ function MapScreen({
         /* @__PURE__ */ jsxs("div", { children: [
           /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200", children: [
             /* @__PURE__ */ jsx(MapPin, { size: 10 }),
-            " Hub Deportivo"
+            " ",
+            t("map.hub") || "Hub Deportivo"
           ] }),
           /* @__PURE__ */ jsx("h3", { className: "mt-1.5 text-base font-extrabold text-secondary tracking-tight", children: selectedCancha.name }),
           selectedCancha.description && /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground mt-0.5 line-clamp-1", children: selectedCancha.description }),
           selectedCancha.price != null && selectedCancha.price > 0 ? /* @__PURE__ */ jsxs("p", { className: "text-xs font-semibold text-primary mt-1", children: [
             "Bs. ",
             selectedCancha.price,
-            "/hora"
-          ] }) : /* @__PURE__ */ jsx("p", { className: "text-xs font-semibold text-emerald-600 mt-1", children: "Acceso gratuito" })
+            "/",
+            t("map.perHour") || "hora"
+          ] }) : /* @__PURE__ */ jsx("p", { className: "text-xs font-semibold text-emerald-600 mt-1", children: t("map.freeAccess") || "Acceso gratuito" })
         ] }),
         /* @__PURE__ */ jsx(
           "button",
           {
             onClick: () => setSelectedCancha(null),
             className: "grid h-8 w-8 place-items-center rounded-full bg-muted text-secondary hover:bg-muted/80 transition-colors",
-            "aria-label": "Cerrar",
+            "aria-label": t("common.close") || "Cerrar",
             children: /* @__PURE__ */ jsx(X, { size: 16, strokeWidth: 2.5 })
           }
         )
@@ -2101,8 +2793,8 @@ function MapScreen({
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
               /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-xl bg-secondary/10 text-secondary group-hover:scale-105 transition-transform", children: /* @__PURE__ */ jsx(MessageSquare, { size: 20, className: "text-primary" }) }),
               /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("div", { className: "font-bold text-xs text-secondary", children: "Comentarios de la cancha" }),
-                /* @__PURE__ */ jsx("div", { className: "text-[10px] text-muted-foreground mt-0.5", children: "Mira opiniones o escribe sobre esta cancha" })
+                /* @__PURE__ */ jsx("div", { className: "font-bold text-xs text-secondary", children: t("map.commentsTitle") || "Comentarios de la cancha" }),
+                /* @__PURE__ */ jsx("div", { className: "text-[10px] text-muted-foreground mt-0.5", children: t("map.commentsDesc") || "Mira opiniones o escribe sobre esta cancha" })
               ] })
             ] }),
             /* @__PURE__ */ jsx(ChevronRight, { size: 16, className: "text-muted-foreground group-hover:translate-x-0.5 transition-transform" })
@@ -2110,9 +2802,9 @@ function MapScreen({
         }
       ),
       /* @__PURE__ */ jsxs("div", { className: "mt-5 space-y-3", children: [
-        /* @__PURE__ */ jsx("h4", { className: "text-[10px] font-bold uppercase tracking-wider text-muted-foreground", children: t("map.scheduledMatches", "Partidos programados") }),
+        /* @__PURE__ */ jsx("h4", { className: "text-[10px] font-bold uppercase tracking-wider text-muted-foreground", children: t("map.scheduledMatches") || "Partidos programados" }),
         (() => {
-          if (selectedCancha.lat == null || selectedCancha.lng == null) return /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: t("map.coordsNotAvailable", "Coordenadas no disponibles.") });
+          if (selectedCancha.lat == null || selectedCancha.lng == null) return /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: t("map.coordsNotAvailable") || "Coordenadas no disponibles." });
           const canchaEvents = filteredEvents.filter((e) => {
             if (e.lat == null || isNaN(e.lat) || e.lng == null || isNaN(e.lng)) return false;
             const diffLat = Math.abs(e.lat - selectedCancha.lat);
@@ -2121,8 +2813,8 @@ function MapScreen({
           });
           if (canchaEvents.length === 0) {
             return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border p-6 text-center", children: [
-              /* @__PURE__ */ jsx("p", { className: "text-sm font-medium text-muted-foreground mb-1", children: "No hay partidos programados aquí" }),
-              /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "¡Ve a la pestaña Eventos para crear uno!" })
+              /* @__PURE__ */ jsx("p", { className: "text-sm font-medium text-muted-foreground mb-1", children: t("map.noMatches") || "No hay partidos programados aquí" }),
+              /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: t("map.createOne") || "¡Ve a la pestaña Eventos para crear uno!" })
             ] });
           }
           return /* @__PURE__ */ jsx("div", { className: "max-h-[180px] overflow-y-auto space-y-2.5 pr-1", children: canchaEvents.map((e) => /* @__PURE__ */ jsxs(
@@ -2144,7 +2836,8 @@ function MapScreen({
                     e.joined,
                     "/",
                     e.spots,
-                    " jugadores"
+                    " ",
+                    t("map.players") || "jugadores"
                   ] })
                 ] }),
                 /* @__PURE__ */ jsx("span", { className: "shrink-0 ml-2 rounded-full bg-secondary/10 px-2 py-0.5 text-[10px] font-bold text-secondary", children: e.sport })
@@ -2161,8 +2854,8 @@ function MapScreen({
         id: "btn-locate-user",
         onClick: handleLocateUser,
         className: `absolute bottom-40 right-4 z-30 grid h-12 w-12 place-items-center rounded-2xl shadow-soft transition-all active:scale-90 hover:scale-105 ${userLocation ? "bg-blue-500 text-white shadow-[0_8px_25px_-4px_rgba(59,130,246,0.5)]" : "glass text-secondary"}`,
-        "aria-label": "Mi ubicación",
-        title: "Mi ubicación GPS",
+        "aria-label": t("map.myLocation") || "Mi ubicación",
+        title: t("map.gpsLoc") || "Mi ubicación GPS",
         children: locating ? /* @__PURE__ */ jsx("div", { className: "h-5 w-5 rounded-full border-2 border-current border-t-transparent animate-spin" }) : /* @__PURE__ */ jsx(Crosshair, { size: 20, strokeWidth: 2.5 })
       }
     ),
@@ -2173,7 +2866,7 @@ function MapScreen({
         {
           onClick: () => setLocationError(null),
           className: "ml-2 underline opacity-80 hover:opacity-100",
-          children: "Cerrar"
+          children: t("common.close") || "Cerrar"
         }
       )
     ] }) })
@@ -2203,12 +2896,15 @@ function LoginPromptModal({
   onRegister,
   actionContext = "realizar esta acción"
 }) {
+  const { t } = useSettings();
   if (!isOpen) return null;
+  const defaultAction = t("loginPrompt.defaultAction") || "realizar esta acción";
+  const finalContext = actionContext === "realizar esta acción" ? defaultAction : actionContext;
   const perks = [
-    { icon: MapPin, text: "Únete a partidos cerca de ti" },
-    { icon: Users, text: "Crea eventos y arma tu equipo" },
-    { icon: Trophy, text: "Gana XP y desbloquea recompensas" },
-    { icon: Zap, text: "Matchmaking por nivel y deporte" }
+    { icon: MapPin, text: t("loginPrompt.perk1") || "Únete a partidos cerca de ti" },
+    { icon: Users, text: t("loginPrompt.perk2") || "Crea eventos y arma tu equipo" },
+    { icon: Trophy, text: t("loginPrompt.perk3") || "Gana XP y desbloquea recompensas" },
+    { icon: Zap, text: t("loginPrompt.perk4") || "Matchmaking por nivel y deporte" }
   ];
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(
@@ -2232,12 +2928,8 @@ function LoginPromptModal({
       /* @__PURE__ */ jsxs("div", { className: "px-6 pb-8 pt-2 space-y-5", children: [
         /* @__PURE__ */ jsxs("div", { className: "text-center space-y-2 pt-2", children: [
           /* @__PURE__ */ jsx("div", { className: "inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#32CD32] to-[#22a822] shadow-lg shadow-green-500/25 mx-auto", children: /* @__PURE__ */ jsx("span", { className: "text-3xl", children: "⚽" }) }),
-          /* @__PURE__ */ jsxs("h2", { className: "text-xl font-black text-white leading-tight", children: [
-            "¡Únete para ",
-            actionContext,
-            "!"
-          ] }),
-          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/60 leading-relaxed max-w-[280px] mx-auto", children: "Crea tu cuenta gratis y accede a todos los partidos y canchas de Caracas." })
+          /* @__PURE__ */ jsx("h2", { className: "text-xl font-black text-white leading-tight", children: t("loginPrompt.joinTo") ? t("loginPrompt.joinTo").replace("{action}", finalContext) : `¡Únete para ${finalContext}!` }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/60 leading-relaxed max-w-[280px] mx-auto", children: t("loginPrompt.subtitle") || "Crea tu cuenta gratis y accede a todos los partidos y canchas de Caracas." })
         ] }),
         /* @__PURE__ */ jsx("div", { className: "rounded-2xl bg-white/5 border border-white/8 divide-y divide-white/5", children: perks.map(({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 px-4 py-3", children: [
           /* @__PURE__ */ jsx("div", { className: "grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15", children: /* @__PURE__ */ jsx(Icon, { size: 14, className: "text-[#32CD32]" }) }),
@@ -2251,7 +2943,7 @@ function LoginPromptModal({
               onClick: onRegister,
               className: "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-lg shadow-green-500/25 transition-all active:scale-[0.98] hover:shadow-green-500/40",
               children: [
-                "Crear Cuenta Gratis",
+                t("loginPrompt.createFree") || "Crear Cuenta Gratis",
                 /* @__PURE__ */ jsx(ArrowRight, { size: 16, className: "transition-transform group-hover:translate-x-1" })
               ]
             }
@@ -2262,7 +2954,7 @@ function LoginPromptModal({
               id: "login-prompt-login-btn",
               onClick: onLogin,
               className: "w-full rounded-2xl border border-white/15 bg-white/5 py-3.5 text-sm font-bold text-white/80 transition-all hover:bg-white/10 active:scale-[0.98]",
-              children: "Ya tengo cuenta — Iniciar Sesión"
+              children: t("loginPrompt.hasAccount") || "Ya tengo cuenta — Iniciar Sesión"
             }
           )
         ] }),
@@ -2271,7 +2963,7 @@ function LoginPromptModal({
           {
             onClick: onClose,
             className: "w-full text-center text-xs text-white/30 hover:text-white/50 transition-colors py-1",
-            children: "Ahora no, seguir explorando"
+            children: t("loginPrompt.notNow") || "Ahora no, seguir explorando"
           }
         )
       ] })
@@ -2285,6 +2977,7 @@ function EventDetailScreen({
   userLocation,
   onOpenAuth
 }) {
+  const { t } = useSettings();
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [joining, setJoining] = useState(false);
@@ -2376,8 +3069,8 @@ function EventDetailScreen({
     });
     if (error) {
       console.error("Error al unirse:", error);
-      if (error.code === "23505") alert("Ya enviaste una solicitud");
-      else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
+      if (error.code === "23505") alert(t("events.error.alreadyApplied") || "Ya enviaste una solicitud");
+      else alert(`${t("events.error.joinError") || "Error al solicitar unirse"}: ${error.message || JSON.stringify(error)}`);
     } else {
       setShowSuccess(true);
       if (selectedCouponCode) {
@@ -2421,13 +3114,13 @@ function EventDetailScreen({
         clan_id: clan.id
       }));
       if (insertData.length === 0) {
-        alert("Todos los miembros seleccionados ya están inscritos en este evento");
+        alert(t("events.error.allClanMembersEnrolled") || "Todos los miembros seleccionados ya están inscritos en este evento");
         setRegisteringClan(false);
         return;
       }
       const { error } = await supabase.from("event_participants").insert(insertData);
       if (error) {
-        if (error.code === "23505") alert("Algunos miembros ya están inscritos en este evento");
+        if (error.code === "23505") alert(t("events.error.someClanMembersEnrolled") || "Algunos miembros ya están inscritos en este evento");
         else throw error;
       } else {
         setShowSuccess(true);
@@ -2437,7 +3130,7 @@ function EventDetailScreen({
       }
     } catch (err) {
       console.error(err);
-      alert("Error al inscribir al clan: " + (err.message || JSON.stringify(err)));
+      alert((t("events.error.joinClanError") || "Error al inscribir al clan: ") + (err.message || JSON.stringify(err)));
     }
     setRegisteringClan(false);
   }
@@ -2451,22 +3144,22 @@ function EventDetailScreen({
       setShowDeleteConfirm(false);
       onBack();
     } catch (err) {
-      alert("Error al eliminar el evento: " + err.message);
+      alert((t("events.error.deleteEvent") || "Error al eliminar el evento: ") + err.message);
     }
     setDeleting(false);
   }
   async function handleAction(participantId, status) {
     if (!currentUser?.email || currentUser.email !== event.host && currentUser.email !== event.hostName) {
-      alert("Solo el creador del evento puede aceptar o rechazar solicitudes.");
+      alert(t("events.error.onlyHostCanAccept") || "Solo el creador del evento puede aceptar o rechazar solicitudes.");
       return;
     }
     setActionLoading(participantId.toString());
     const { error } = await supabase.from("event_participants").update({ status }).eq("id", participantId);
     if (!error) {
-      alert(`Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
+      alert(t("events.success.actionComplete")?.replace("{action}", status === "aceptado" ? "aceptado" : "rechazado") || `Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
       fetchParticipants();
     } else {
-      alert("Error al actualizar la solicitud");
+      alert(t("events.error.updateRequest") || "Error al actualizar la solicitud");
     }
     setActionLoading(null);
   }
@@ -2525,26 +3218,26 @@ function EventDetailScreen({
       });
       if (error) {
         if (error.code === "23505") {
-          setInviteSuccess(`${friend.name} ya está en el partido.`);
+          setInviteSuccess(t("events.error.alreadyInMatch")?.replace("{name}", friend.name) || `${friend.name} ya está en el partido.`);
         } else {
           throw error;
         }
       } else {
         setInviteSuccess(
-          invitationStatus === "aceptado" ? `¡${friend.name} ha sido agregado al partido!` : `¡Solicitud enviada a ${friend.name}!`
+          invitationStatus === "aceptado" ? t("events.success.addedToMatch")?.replace("{name}", friend.name) || `¡${friend.name} ha sido agregado al partido!` : t("events.success.requestSentTo")?.replace("{name}", friend.name) || `¡Solicitud enviada a ${friend.name}!`
         );
         fetchParticipants();
       }
       setTimeout(() => setInviteSuccess(null), 3e3);
     } catch (e) {
       console.error("Error inviting friend:", e);
-      setInviteSuccess(`Error al invitar a ${friend.name}.`);
+      setInviteSuccess(t("events.error.inviteError")?.replace("{name}", friend.name) || `Error al invitar a ${friend.name}.`);
       setTimeout(() => setInviteSuccess(null), 3e3);
     }
   }
   async function handleLeave() {
     if (!currentUser?.email) return;
-    const confirmLeave = confirm("¿Estás seguro de que deseas salirte de este partido?");
+    const confirmLeave = confirm(t("events.confirmLeave") || "¿Estás seguro de que deseas salirte de este partido?");
     if (!confirmLeave) return;
     try {
       const { error } = await supabase.from("event_participants").delete().eq("event_id", event.id).eq("user_username", currentUser.email);
@@ -2586,12 +3279,8 @@ function EventDetailScreen({
     return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500", children: [
       /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: "¡Solicitud enviada!" }),
-        /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground", children: [
-          "Tu solicitud para unirte al partido de ",
-          event.sport,
-          " ha sido enviada con éxito."
-        ] })
+        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: t("events.success.requestSentTitle") || "¡Solicitud enviada!" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: t("events.success.requestSentDesc")?.replace("{sport}", event.sport) || `Tu solicitud para unirte al partido de ${event.sport} ha sido enviada con éxito.` })
       ] })
     ] });
   }
@@ -2609,7 +3298,7 @@ function EventDetailScreen({
           setShowLoginPrompt(false);
           onOpenAuth?.();
         },
-        actionContext: "unirte al partido"
+        actionContext: t("eventCard.joinEvent")?.toLowerCase() || "unirte al partido"
       }
     ),
     /* @__PURE__ */ jsxs("div", { className: "relative h-64 w-full overflow-hidden", children: [
@@ -2635,7 +3324,7 @@ function EventDetailScreen({
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-2xl bg-card p-3 shadow-soft", children: [
         renderAvatar(event.host, "h-11 w-11", hostProfile?.avatar_url),
         /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
-          /* @__PURE__ */ jsx("div", { className: "text-[11px] font-medium text-muted-foreground", children: "Organizador" }),
+          /* @__PURE__ */ jsx("div", { className: "text-[11px] font-medium text-muted-foreground", children: t("profile.organizer") || "Organizador" }),
           /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: event.host })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1 text-xs font-bold text-secondary", children: [
@@ -2648,28 +3337,28 @@ function EventDetailScreen({
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
             /* @__PURE__ */ jsx(Calendar, { size: 16, className: "text-primary shrink-0" }),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: "Fecha" }),
+              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: t("events.date") || "Fecha" }),
               /* @__PURE__ */ jsx("div", { className: "truncate text-sm font-bold text-secondary", children: event.date })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
             /* @__PURE__ */ jsx(Clock, { size: 16, className: "text-primary shrink-0" }),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: "Hora" }),
+              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: t("events.time") || "Hora" }),
               /* @__PURE__ */ jsx("div", { className: "truncate text-sm font-bold text-secondary", children: event.time })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
             /* @__PURE__ */ jsx(MapPin, { size: 16, className: "text-primary shrink-0" }),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: "Lugar" }),
+              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: t("events.location") || "Lugar" }),
               /* @__PURE__ */ jsx("div", { className: "truncate text-sm font-bold text-secondary", title: event.canchas?.name || event.cancha_name || event.place_name || event.zone || event.location, children: event.canchas?.name || event.cancha_name || event.place_name || event.zone || event.location })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
             /* @__PURE__ */ jsx(Users, { size: 16, className: "text-primary shrink-0" }),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
-              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: "Cupos" }),
+              /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground uppercase tracking-wider", children: t("events.spots") || "Cupos" }),
               /* @__PURE__ */ jsxs("div", { className: "truncate text-sm font-bold text-secondary", children: [
                 approvedPlayers.length,
                 "/",
@@ -2684,11 +3373,14 @@ function EventDetailScreen({
             fallback: /* @__PURE__ */ jsx("div", { className: "h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center", children: /* @__PURE__ */ jsx(Loader2, { size: 20, className: "animate-spin text-muted-foreground" }) }),
             children: /* @__PURE__ */ jsx(EventMiniMap, { lat: event.lat, lng: event.lng })
           }
-        ) }) : /* @__PURE__ */ jsxs("div", { className: "h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center border border-dashed border-border text-[10px] text-muted-foreground text-center p-2", children: [
+        ) }) : /* @__PURE__ */ jsx("div", { className: "h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center border border-dashed border-border text-[10px] text-muted-foreground text-center p-2", children: t("events.locationNotAvailable") ? t("events.locationNotAvailable").split("\\n").map((line, i) => /* @__PURE__ */ jsxs("span", { children: [
+          line,
+          /* @__PURE__ */ jsx("br", {})
+        ] }, i)) : /* @__PURE__ */ jsxs(Fragment, { children: [
           "Ubicación no",
           /* @__PURE__ */ jsx("br", {}),
           "disponible"
-        ] })
+        ] }) })
       ] }),
       /* @__PURE__ */ jsxs(
         "button",
@@ -2702,19 +3394,19 @@ function EventDetailScreen({
           className: "w-full flex items-center justify-center gap-2 rounded-2xl bg-secondary/10 hover:bg-secondary/20 active:scale-[0.98] py-3 text-xs font-bold text-secondary transition-all border border-secondary/20 shadow-soft",
           children: [
             /* @__PURE__ */ jsx(MapPin, { size: 16, className: "text-primary" }),
-            /* @__PURE__ */ jsx("span", { children: "Cómo llegar con Google Maps" }),
-            userLocation ? /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary animate-pulse", children: "En tiempo real" }) : /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-muted px-2 py-0.5 text-[9px] font-medium text-muted-foreground", children: "Desde tu ubicación" })
+            /* @__PURE__ */ jsx("span", { children: t("events.howToGetThere") || "Cómo llegar con Google Maps" }),
+            userLocation ? /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary animate-pulse", children: t("events.realTime") || "En tiempo real" }) : /* @__PURE__ */ jsx("span", { className: "ml-1 rounded-full bg-muted px-2 py-0.5 text-[9px] font-medium text-muted-foreground", children: t("events.fromYourLocation") || "Desde tu ubicación" })
           ]
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h3", { className: "mb-2 text-sm font-bold text-secondary", children: "Descripción" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm leading-relaxed text-muted-foreground", children: event.description_after_arrival || "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo." })
+        /* @__PURE__ */ jsx("h3", { className: "mb-2 text-sm font-bold text-secondary", children: t("events.description") || "Descripción" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm leading-relaxed text-muted-foreground", children: event.description_after_arrival || t("events.defaultDescription") || "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo." })
       ] }),
       pendingRequests.length > 0 && currentUser?.email && (currentUser.email === event.host || currentUser.email === event.hostName) && /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsxs("h3", { className: "mb-3 text-sm font-bold text-secondary flex items-center gap-2", children: [
           /* @__PURE__ */ jsx("span", { className: "flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] text-white", children: pendingRequests.length }),
-          "Solicitudes pendientes"
+          t("events.pendingRequests") || "Solicitudes pendientes"
         ] }),
         /* @__PURE__ */ jsx("div", { className: "space-y-2", children: pendingRequests.map((req) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between rounded-2xl border border-border bg-card p-3 shadow-soft", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
@@ -2751,7 +3443,7 @@ function EventDetailScreen({
       ] }),
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsxs("div", { className: "mb-2 flex items-center justify-between", children: [
-          /* @__PURE__ */ jsx("h3", { className: "text-sm font-bold text-secondary", children: "Jugadores aprobados" }),
+          /* @__PURE__ */ jsx("h3", { className: "text-sm font-bold text-secondary", children: t("events.approvedPlayers") || "Jugadores aprobados" }),
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
             currentUser && /* @__PURE__ */ jsxs(
               "button",
@@ -2763,20 +3455,22 @@ function EventDetailScreen({
                 className: "rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-black transition-all active:scale-95 shadow-sm cursor-pointer flex items-center gap-1",
                 children: [
                   /* @__PURE__ */ jsx(UserPlus, { size: 12 }),
-                  " Invitar Amigos"
+                  " ",
+                  t("events.inviteFriends") || "Invitar Amigos"
                 ]
               }
             ),
             /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
               emptySpots,
-              " cupos disponibles"
+              " ",
+              t("events.spotsAvailable") || "cupos disponibles"
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: loading ? /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: "Cargando jugadores..." }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: loading ? /* @__PURE__ */ jsx("div", { className: "text-xs text-muted-foreground", children: t("events.loadingPlayers") || "Cargando jugadores..." }) : /* @__PURE__ */ jsxs(Fragment, { children: [
           approvedPlayers.map((p, i) => /* @__PURE__ */ jsxs("div", { title: p.user_username, className: "relative", children: [
             renderAvatar(p.user_username || "Usuario", "h-10 w-10", p.profiles?.avatar_url),
-            p.clan_id && /* @__PURE__ */ jsx("div", { className: "absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-secondary flex items-center justify-center shadow-sm", title: "Miembro de Clan", children: /* @__PURE__ */ jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx("path", { d: "M20.38 3.46 16 2a8.59 8.59 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z", fill: p.clans?.hex_primary || "#32CD32", stroke: p.clans?.hex_secondary || "#1a1a1a" }) }) })
+            p.clan_id && /* @__PURE__ */ jsx("div", { className: "absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-secondary flex items-center justify-center shadow-sm", title: t("clans.member") || "Miembro de Clan", children: /* @__PURE__ */ jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx("path", { d: "M20.38 3.46 16 2a8.59 8.59 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z", fill: p.clans?.hex_primary || "#32CD32", stroke: p.clans?.hex_secondary || "#1a1a1a" }) }) })
           ] }, p.id || i)),
           Array.from({ length: emptySpots }).map((_, i) => /* @__PURE__ */ jsx(
             "div",
@@ -2792,7 +3486,10 @@ function EventDetailScreen({
     /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4 relative", children: [
       showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp absolute left-1/2 -translate-x-1/2 -top-12 z-50", children: "+15 XP ⚡" }),
       event.price > 0 && activeCoupons.length > 0 && /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-3", children: [
-        /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1", children: "📜 Aplicar Cupón RPG:" }),
+        /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1", children: [
+          "📜 ",
+          t("events.applyCoupon") || "Aplicar Cupón RPG:"
+        ] }),
         /* @__PURE__ */ jsxs(
           "select",
           {
@@ -2800,7 +3497,7 @@ function EventDetailScreen({
             onChange: (e) => setSelectedCouponCode(e.target.value),
             className: "text-xs font-bold text-secondary border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]",
             children: [
-              /* @__PURE__ */ jsx("option", { value: "", children: "-- Sin cupón --" }),
+              /* @__PURE__ */ jsx("option", { value: "", children: t("events.noCoupon") || "-- Sin cupón --" }),
               activeCoupons.map((c) => /* @__PURE__ */ jsxs("option", { value: c.code, children: [
                 c.title,
                 " (",
@@ -2814,11 +3511,12 @@ function EventDetailScreen({
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
         /* @__PURE__ */ jsxs("div", { children: [
           /* @__PURE__ */ jsxs("div", { className: "text-[11px] font-medium text-muted-foreground flex items-center gap-1", children: [
-            "Aporte ",
+            t("events.contribution") || "Aporte",
+            " ",
             selectedCouponCode && /* @__PURE__ */ jsx("span", { className: "text-[9px] font-extrabold text-primary bg-primary/10 px-1 rounded-full", children: appliedDiscountText })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "text-lg font-bold text-secondary", children: [
-            finalPrice === 0 ? "Gratis" : `$${finalPrice.toFixed(2)} USD`,
+            finalPrice === 0 ? t("events.free") || "Gratis" : `$${finalPrice.toFixed(2)} USD`,
             selectedCouponCode && /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-muted-foreground line-through ml-1.5", children: [
               "$",
               event.price
@@ -2831,7 +3529,7 @@ function EventDetailScreen({
             {
               disabled: true,
               className: "w-full rounded-2xl py-3 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center",
-              children: "Eres el organizador 👑"
+              children: t("events.youAreHost") || "Eres el organizador 👑"
             }
           ),
           /* @__PURE__ */ jsxs(
@@ -2841,7 +3539,7 @@ function EventDetailScreen({
               className: "w-full rounded-2xl py-3 text-sm font-black bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2",
               children: [
                 /* @__PURE__ */ jsx(Trash2, { size: 14 }),
-                "Eliminar Evento"
+                t("events.deleteEvent") || "Eliminar Evento"
               ]
             }
           )
@@ -2851,7 +3549,7 @@ function EventDetailScreen({
             disabled: joining,
             onClick: handleLeave,
             className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer",
-            children: "Salir del partido 🚪"
+            children: t("events.leaveMatch") || "Salir del partido 🚪"
           }
         ) : isUserPending ? /* @__PURE__ */ jsx(
           "button",
@@ -2859,7 +3557,7 @@ function EventDetailScreen({
             disabled: joining,
             onClick: handleLeave,
             className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer",
-            children: "Cancelar solicitud ✖️"
+            children: t("events.cancelRequest") || "Cancelar solicitud ✖️"
           }
         ) : /* @__PURE__ */ jsx(
           "button",
@@ -2867,7 +3565,7 @@ function EventDetailScreen({
             disabled: joining || emptySpots === 0,
             onClick: handleJoin,
             className: `ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${emptySpots === 0 ? "bg-muted text-muted-foreground cursor-not-allowed" : "gradient-primary text-secondary"}`,
-            children: joining ? "Enviando..." : emptySpots === 0 ? "Evento Lleno" : "Solicitar unirme"
+            children: joining ? t("events.sending") || "Enviando..." : emptySpots === 0 ? t("events.eventFull") || "Evento Lleno" : t("events.requestToJoin") || "Solicitar unirme"
           }
         ),
         myCaptainedClans.filter((c) => c.sport === event.sport).map((clan) => /* @__PURE__ */ jsx(
@@ -2876,7 +3574,7 @@ function EventDetailScreen({
             disabled: joining || registeringClan || emptySpots === 0,
             onClick: () => handleJoinAsClan(clan),
             className: `ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${emptySpots === 0 ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-emerald-500 hover:bg-emerald-600 text-white"}`,
-            children: registeringClan ? "Inscribiendo..." : `Inscribir Clan ${clan.name}`
+            children: registeringClan ? t("events.enrolling") || "Inscribiendo..." : `${t("events.enrollClan") || "Inscribir Clan"} ${clan.name}`
           },
           clan.id
         ))
@@ -2885,18 +3583,19 @@ function EventDetailScreen({
     showInviteModal && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-6 py-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[80vh]", children: [
       /* @__PURE__ */ jsxs("h3", { className: "text-lg font-black text-white flex items-center gap-2 border-b border-white/10 pb-3", children: [
         /* @__PURE__ */ jsx(Users, { size: 20, className: "text-primary animate-pulse" }),
-        " Invitar Amigos"
+        " ",
+        t("events.inviteFriendsTitle") || "Invitar Amigos"
       ] }),
       inviteSuccess && /* @__PURE__ */ jsx("div", { className: "mt-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30 px-3 py-2 text-xs font-bold text-emerald-400 text-center animate-in fade-in duration-200", children: inviteSuccess }),
       /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto py-4 space-y-2 pr-1", children: loadingFriends ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center gap-2 py-8", children: [
         /* @__PURE__ */ jsx(Loader2, { className: "h-6 w-6 animate-spin text-primary" }),
-        /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground", children: "Cargando amigos..." })
+        /* @__PURE__ */ jsx("span", { className: "text-xs text-muted-foreground", children: t("events.loadingFriends") || "Cargando amigos..." })
       ] }) : (() => {
         const nonParticipantFriends = inviteFriends.filter((friend) => {
           return !participants.some((p) => p.user_username === friend.username);
         });
         if (nonParticipantFriends.length === 0) {
-          return /* @__PURE__ */ jsx("div", { className: "text-center text-xs text-muted-foreground py-8", children: "No tienes amigos disponibles para invitar o todos ya están en el partido." });
+          return /* @__PURE__ */ jsx("div", { className: "text-center text-xs text-muted-foreground py-8", children: t("events.noFriendsAvailable") || "No tienes amigos disponibles para invitar o todos ya están en el partido." });
         }
         return nonParticipantFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between bg-card p-3 rounded-2xl border border-border shadow-soft", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 min-w-0", children: [
@@ -2911,7 +3610,7 @@ function EventDetailScreen({
             {
               onClick: () => handleInviteFriend(friend),
               className: "rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer",
-              children: "Agregar"
+              children: t("common.add") || "Agregar"
             }
           )
         ] }, friend.id));
@@ -2921,7 +3620,7 @@ function EventDetailScreen({
         {
           onClick: () => setShowInviteModal(false),
           className: "w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer",
-          children: "Cerrar"
+          children: t("common.close") || "Cerrar"
         }
       )
     ] }) }),
@@ -2943,7 +3642,7 @@ function EventDetailScreen({
           /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
             /* @__PURE__ */ jsxs("h3", { className: "text-base font-black flex items-center gap-2", children: [
               formatted.name,
-              formatted.is_organizer && /* @__PURE__ */ jsx("span", { className: "inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30", children: "Organizador" })
+              formatted.is_organizer && /* @__PURE__ */ jsx("span", { className: "inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30", children: t("profile.organizer") || "Organizador" })
             ] }),
             /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: formatted.username })
           ] }),
@@ -2951,27 +3650,29 @@ function EventDetailScreen({
             /* @__PURE__ */ jsx(Star, { size: 12, className: "fill-primary text-primary" }),
             " ",
             formatted.rating.toFixed(2),
-            " Reputación"
+            " ",
+            t("profile.rating") || "Reputación"
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-2 text-center text-xs", children: [
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Edad" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: t("profile.age") || "Edad" }),
               /* @__PURE__ */ jsxs("span", { className: "font-extrabold text-white", children: [
                 formatted.age,
-                " años"
+                " ",
+                t("common.years") || "años"
               ] })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Género" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: t("profile.gender") || "Género" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", children: formatted.gender })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Ubicación" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: t("profile.location") || "Ubicación" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", title: formatted.location, children: formatted.location })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Sobre mí" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: t("profile.aboutMe") || "Sobre mí" }),
             /* @__PURE__ */ jsxs("p", { className: "text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic", children: [
               '"',
               formatted.bio,
@@ -2979,7 +3680,7 @@ function EventDetailScreen({
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Deportes Favoritos" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: t("profile.favoriteSports") || "Deportes Favoritos" }),
             /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: formatted.sports.map((sport) => /* @__PURE__ */ jsx("span", { className: "rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary", children: sport }, sport)) })
           ] }),
           /* @__PURE__ */ jsx(
@@ -2987,7 +3688,7 @@ function EventDetailScreen({
             {
               onClick: () => setSelectedUserProfile(null),
               className: "w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer",
-              children: "Volver al Partido"
+              children: t("events.backToMatch") || "Volver al Partido"
             }
           )
         ] })
@@ -2998,16 +3699,8 @@ function EventDetailScreen({
       /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col items-center text-center gap-4", children: [
         /* @__PURE__ */ jsx("div", { className: "h-16 w-16 rounded-full bg-rose-500/15 border border-rose-500/30 flex items-center justify-center", children: /* @__PURE__ */ jsx(Trash2, { size: 28, className: "text-rose-500" }) }),
         /* @__PURE__ */ jsxs("div", { children: [
-          /* @__PURE__ */ jsx("h3", { className: "text-xl font-black text-secondary", children: "¿Eliminar Evento?" }),
-          /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground mt-1.5 leading-relaxed", children: [
-            "Esta acción eliminará ",
-            /* @__PURE__ */ jsxs("span", { className: "font-bold text-secondary", children: [
-              '"',
-              event.title,
-              '"'
-            ] }),
-            " de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo."
-          ] })
+          /* @__PURE__ */ jsx("h3", { className: "text-xl font-black text-secondary", children: t("events.deleteEventConfirmTitle") || "¿Eliminar Evento?" }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground mt-1.5 leading-relaxed", children: t("events.deleteEventConfirmDesc")?.replace("{title}", `"${event.title}"`) || `Esta acción eliminará "${event.title}" de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo.` })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "w-full flex gap-3 pt-2", children: [
           /* @__PURE__ */ jsx(
@@ -3016,7 +3709,7 @@ function EventDetailScreen({
               onClick: () => setShowDeleteConfirm(false),
               disabled: deleting,
               className: "flex-1 py-3.5 rounded-2xl bg-muted text-muted-foreground font-bold text-sm hover:bg-muted/80 transition-all",
-              children: "Cancelar"
+              children: t("common.cancel") || "Cancelar"
             }
           ),
           /* @__PURE__ */ jsx(
@@ -3027,7 +3720,8 @@ function EventDetailScreen({
               className: "flex-1 py-3.5 rounded-2xl bg-rose-500 text-white font-black text-sm hover:bg-rose-600 active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2",
               children: deleting ? /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }) : /* @__PURE__ */ jsxs(Fragment, { children: [
                 /* @__PURE__ */ jsx(Trash2, { size: 14 }),
-                " Eliminar"
+                " ",
+                t("common.delete") || "Eliminar"
               ] })
             }
           )
@@ -3036,12 +3730,8 @@ function EventDetailScreen({
     ] }) }),
     showClanMemberSelectModal && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm", children: /* @__PURE__ */ jsxs("div", { className: "bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col shadow-pop relative overflow-hidden", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" }),
-      /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary mb-1", children: "Seleccionar Miembros" }),
-      /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mb-4", children: [
-        "El evento tiene ",
-        Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length),
-        " cupos. Selecciona quiénes participarán."
-      ] }),
+      /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary mb-1", children: t("events.selectMembers") || "Seleccionar Miembros" }),
+      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground mb-4", children: t("events.selectMembersDesc")?.replace("{spots}", String(Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length))) || `El evento tiene ${Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length)} cupos. Selecciona quiénes participarán.` }),
       /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto space-y-2 relative z-10", children: selectableClanMembers.map((m) => {
         const isSelected = selectedClanMemberIds.includes(m.user_id);
         return /* @__PURE__ */ jsxs(
@@ -3053,7 +3743,7 @@ function EventDetailScreen({
               } else {
                 const emptySpots2 = Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
                 if (selectedClanMemberIds.length >= emptySpots2) {
-                  alert(`Solo puedes seleccionar hasta ${emptySpots2} miembros.`);
+                  alert(t("events.error.maxMembers")?.replace("{spots}", String(emptySpots2)) || `Solo puedes seleccionar hasta ${emptySpots2} miembros.`);
                   return;
                 }
                 setSelectedClanMemberIds([...selectedClanMemberIds, m.user_id]);
@@ -3072,7 +3762,7 @@ function EventDetailScreen({
         );
       }) }),
       /* @__PURE__ */ jsxs("div", { className: "mt-4 flex gap-2 relative z-10", children: [
-        /* @__PURE__ */ jsx("button", { onClick: () => setShowClanMemberSelectModal(false), className: "flex-1 bg-muted text-muted-foreground py-3 rounded-2xl font-bold text-sm", children: "Cancelar" }),
+        /* @__PURE__ */ jsx("button", { onClick: () => setShowClanMemberSelectModal(false), className: "flex-1 bg-muted text-muted-foreground py-3 rounded-2xl font-bold text-sm", children: t("common.cancel") || "Cancelar" }),
         /* @__PURE__ */ jsx(
           "button",
           {
@@ -3081,7 +3771,7 @@ function EventDetailScreen({
               executeClanJoin(clanToJoin, selectableClanMembers.filter((m) => selectedClanMemberIds.includes(m.user_id)));
             },
             className: "flex-1 gradient-primary text-secondary py-3 rounded-2xl font-black text-sm disabled:opacity-50 flex justify-center items-center",
-            children: registeringClan ? /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }) : `Unirse (${selectedClanMemberIds.length})`
+            children: registeringClan ? /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }) : `${t("events.join") || "Unirse"} (${selectedClanMemberIds.length})`
           }
         )
       ] })
@@ -3360,7 +4050,7 @@ function ProfileScreen({
     const percentage = Math.min(100, Math.max(0, current / target * 100));
     return /* @__PURE__ */ jsxs("div", { className: "w-full mt-1.5 space-y-1", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex justify-between text-[8px] font-black text-white/40", children: [
-        /* @__PURE__ */ jsx("span", { children: "Progreso" }),
+        /* @__PURE__ */ jsx("span", { children: t("profile.progress") || "Progreso" }),
         /* @__PURE__ */ jsxs("span", { children: [
           current,
           " / ",
@@ -3385,8 +4075,8 @@ function ProfileScreen({
           /* @__PURE__ */ jsx("span", { className: "text-4xl", children: "🏟️" }),
           /* @__PURE__ */ jsx("div", { className: "absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-[#0f1117] ring-2 ring-[#32CD32]/30", children: /* @__PURE__ */ jsx("span", { className: "text-base", children: "❓" }) })
         ] }),
-        /* @__PURE__ */ jsx("h1", { className: "mt-5 text-2xl font-black text-white", children: "Perfil de Invitado" }),
-        /* @__PURE__ */ jsx("p", { className: "mt-1.5 text-sm text-white/50 max-w-[260px] mx-auto", children: "Explora la app libremente. Crea tu cuenta para desbloquear todo." })
+        /* @__PURE__ */ jsx("h1", { className: "mt-5 text-2xl font-black text-white", children: t("profile.guestTitle") || "Perfil de Invitado" }),
+        /* @__PURE__ */ jsx("p", { className: "mt-1.5 text-sm text-white/50 max-w-[260px] mx-auto", children: t("profile.guestDesc") || "Explora la app libremente. Crea tu cuenta para desbloquear todo." })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "px-5 -mt-10 space-y-4", children: [
         /* @__PURE__ */ jsxs("div", { className: "rounded-3xl bg-card border border-border shadow-pop overflow-hidden", children: [
@@ -3394,16 +4084,16 @@ function ProfileScreen({
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
               /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#32CD32]/15", children: /* @__PURE__ */ jsx(Sparkles, { size: 18, className: "text-[#32CD32] animate-pulse" }) }),
               /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("h2", { className: "text-base font-black text-secondary", children: "Únete a la comunidad" }),
-                /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground", children: "Accede a todo TeamMatch gratis" })
+                /* @__PURE__ */ jsx("h2", { className: "text-base font-black text-secondary", children: t("profile.joinCommunity") || "Únete a la comunidad" }),
+                /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground", children: t("profile.joinDesc") || "Accede a todo TeamMatch gratis" })
               ] })
             ] }),
             /* @__PURE__ */ jsx("div", { className: "space-y-2", children: [
-              { icon: MapPin, text: "Encuentra partidos cerca de ti en tiempo real" },
-              { icon: Users, text: "Solicita un cupo y únete con un toque" },
-              { icon: Trophy, text: "Sube de nivel y gana recompensas exclusivas" },
-              { icon: Zap, text: "Matchmaking inteligente por nivel de juego" },
-              { icon: Star, text: "Crea tus propios eventos y arma equipo" }
+              { icon: MapPin, text: t("profile.benefit1") || "Encuentra partidos cerca de ti en tiempo real" },
+              { icon: Users, text: t("profile.benefit2") || "Solicita un cupo y únete con un toque" },
+              { icon: Trophy, text: t("profile.benefit3") || "Sube de nivel y gana recompensas exclusivas" },
+              { icon: Zap, text: t("profile.benefit4") || "Matchmaking inteligente por nivel de juego" },
+              { icon: Star, text: t("profile.benefit5") || "Crea tus propios eventos y arma equipo" }
             ].map(({ icon: Icon, text }) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2.5", children: [
               /* @__PURE__ */ jsx("div", { className: "grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15", children: /* @__PURE__ */ jsx(Icon, { size: 13, className: "text-[#32CD32]" }) }),
               /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-secondary/80", children: text })
@@ -3416,7 +4106,7 @@ function ProfileScreen({
                   onClick: onOpenRegister,
                   className: "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-[0.98] hover:shadow-green-500/30",
                   children: [
-                    "Crear Cuenta Gratis",
+                    t("profile.createFreeAccount") || "Crear Cuenta Gratis",
                     /* @__PURE__ */ jsx(ArrowRight, { size: 16, className: "transition-transform group-hover:translate-x-1" })
                   ]
                 }
@@ -3427,15 +4117,15 @@ function ProfileScreen({
                   id: "guest-profile-login-btn",
                   onClick: onOpenAuth,
                   className: "w-full rounded-2xl border border-border bg-muted/50 py-3.5 text-sm font-bold text-secondary transition-all hover:bg-muted active:scale-[0.98]",
-                  children: "Ya tengo cuenta — Iniciar Sesión"
+                  children: t("profile.loginExisting") || "Ya tengo cuenta — Iniciar Sesión"
                 }
               )
             ] })
           ] }),
           /* @__PURE__ */ jsx("div", { className: "border-t border-border grid grid-cols-3 divide-x divide-border", children: [
-            { k: "1.2k", v: "Jugadores" },
-            { k: "320", v: "Eventos/mes" },
-            { k: "4.9★", v: "Rating" }
+            { k: "1.2k", v: t("profile.players") || "Jugadores" },
+            { k: "320", v: t("profile.eventsPerMonth") || "Eventos/mes" },
+            { k: "4.9★", v: t("profile.rating") || "Rating" }
           ].map((s) => /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center py-4", children: [
             /* @__PURE__ */ jsx("div", { className: "text-lg font-black text-[#32CD32]", children: s.k }),
             /* @__PURE__ */ jsx("div", { className: "text-[10px] font-semibold text-muted-foreground", children: s.v })
@@ -3443,11 +4133,7 @@ function ProfileScreen({
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border bg-muted/20 p-4 flex items-start gap-3", children: [
           /* @__PURE__ */ jsx(Shield, { size: 18, className: "text-muted-foreground shrink-0 mt-0.5" }),
-          /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: [
-            "Tu cuenta es ",
-            /* @__PURE__ */ jsx("strong", { className: "text-secondary", children: "100% gratuita" }),
-            ". Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte."
-          ] })
+          /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: t("profile.guestDisclaimer") || "Tu cuenta es 100% gratuita. Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte." })
         ] })
       ] })
     ] });
@@ -3456,29 +4142,29 @@ function ProfileScreen({
   const initials = displayName.substring(0, 2).toUpperCase();
   const xpNeeded = level * 100;
   const xpPercentage = Math.min(100, Math.max(0, xp / xpNeeded * 100));
-  let rpgClass = "Recluta Novato 👟";
+  let rpgClass = t("profile.classRecruit") || "Recluta Novato 👟";
   let borderClass = "neon-border-bronze";
-  let rarityLabel = "Novato";
+  let rarityLabel = t("profile.rarityNovice") || "Novato";
   let rarityColor = "text-amber-600 bg-amber-500/10 border-amber-500/20";
   if (level === 2) {
-    rpgClass = "Aspirante Activo ⚡";
+    rpgClass = t("profile.classAspirant") || "Aspirante Activo ⚡";
     borderClass = "neon-border-bronze";
-    rarityLabel = "Común";
+    rarityLabel = t("profile.rarityCommon") || "Común";
     rarityColor = "text-gray-400 bg-gray-500/10 border-gray-500/20";
   } else if (level === 3) {
-    rpgClass = "Guerrero del Fitness 🏋️‍♂️";
+    rpgClass = t("profile.classWarrior") || "Guerrero del Fitness 🏋️‍♂️";
     borderClass = "neon-border-silver";
-    rarityLabel = "Raro";
+    rarityLabel = t("profile.rarityRare") || "Raro";
     rarityColor = "text-blue-400 bg-blue-500/10 border-blue-500/20";
   } else if (level === 4) {
-    rpgClass = "Maestro del Match 🏆";
+    rpgClass = t("profile.classMaster") || "Maestro del Match 🏆";
     borderClass = "neon-border-gold";
-    rarityLabel = "Épico";
+    rarityLabel = t("profile.rarityEpic") || "Épico";
     rarityColor = "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
   } else if (level >= 5) {
-    rpgClass = "Leyenda de Caracas 🌟";
+    rpgClass = t("profile.classLegend") || "Leyenda de Caracas 🌟";
     borderClass = "neon-border-legendary";
-    rarityLabel = "Legendario";
+    rarityLabel = t("profile.rarityLegendary") || "Legendario";
     rarityColor = "text-purple-400 bg-purple-500/10 border-purple-500/20";
   }
   const str = 10 + joinedEventsCount * 2;
@@ -3490,13 +4176,9 @@ function ProfileScreen({
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-10 pointer-events-none" }),
       /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-primary text-secondary shadow-pop ring-8 ring-primary/20 animate-bounce", children: /* @__PURE__ */ jsx(Check, { size: 48, strokeWidth: 3, className: "text-secondary" }) }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-black text-secondary uppercase tracking-wide", children: "¡Objeto Canjeado! 💎" }),
+        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-black text-secondary uppercase tracking-wide", children: t("profile.itemClaimed") || "¡Objeto Canjeado! 💎" }),
         /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-primary", children: showClaimSuccess.title }),
-        /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground max-w-[285px] mx-auto leading-relaxed", children: [
-          "El beneficio de **",
-          showClaimSuccess.discount,
-          "** ha sido activado con éxito para tu próxima reserva de cancha o partido."
-        ] })
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground max-w-[285px] mx-auto leading-relaxed", children: t("profile.itemClaimedDesc") ? t("profile.itemClaimedDesc").replace("{discount}", showClaimSuccess.discount) : `El beneficio de **${showClaimSuccess.discount}** ha sido activado con éxito para tu próxima reserva de cancha o partido.` })
       ] })
     ] });
   }
@@ -3543,7 +4225,8 @@ function ProfileScreen({
               displayName,
               user?.user_metadata?.is_organizer && /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-500 shadow-pop border border-amber-500/30", children: [
                 /* @__PURE__ */ jsx(Star, { size: 9, className: "fill-amber-500 text-amber-500" }),
-                " Organizador"
+                " ",
+                t("profile.organizer") || "Organizador"
               ] })
             ] }),
             rpgMode && /* @__PURE__ */ jsx(
@@ -3586,12 +4269,7 @@ function ProfileScreen({
               " ",
               level
             ] }),
-            /* @__PURE__ */ jsxs("span", { children: [
-              "+",
-              xpNeeded - xp,
-              " XP para Nivel ",
-              level + 1
-            ] })
+            /* @__PURE__ */ jsx("span", { children: t("profile.xpForNextLevel") ? t("profile.xpForNextLevel").replace("{xp}", String(xpNeeded - xp)).replace("{level}", String(level + 1)) : `+${xpNeeded - xp} XP para Nivel ${level + 1}` })
           ] })
         ] }),
         /* @__PURE__ */ jsxs(
@@ -3671,7 +4349,8 @@ function ProfileScreen({
       activeTab === "achievements" && /* @__PURE__ */ jsxs("div", { className: "space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300", children: [
         /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
           /* @__PURE__ */ jsx(Award, { size: 14, className: "text-primary" }),
-          " Lista de Logros y Trofeos"
+          " ",
+          t("profile.achievementsListTitle") || "Lista de Logros y Trofeos"
         ] }),
         /* @__PURE__ */ jsx("div", { className: "grid gap-3", children: ACHIEVEMENTS.map((ach) => {
           const isUnlocked = unlockedAchievements ? unlockedAchievements.includes(ach.id) : false;
@@ -3679,25 +4358,25 @@ function ProfileScreen({
             bronze: {
               border: isUnlocked ? "border-[#cd7f32]/30" : "border-border/60",
               glow: "from-[#a05a2c] to-[#cd7f32]",
-              rarityName: "Bronce 🥉",
+              rarityName: t("profile.bronze") || "Bronce 🥉",
               color: "text-[#cd7f32]"
             },
             silver: {
               border: isUnlocked ? "border-[#c0c0c0]/30" : "border-border/60",
               glow: "from-[#718096] to-[#cbd5e0]",
-              rarityName: "Plata 🥈",
+              rarityName: t("profile.silver") || "Plata 🥈",
               color: "text-[#cbd5e0]"
             },
             gold: {
               border: isUnlocked ? "border-[#ffd700]/30" : "border-border/60",
               glow: "from-[#d69e2e] to-[#ecc94b]",
-              rarityName: "Oro 🥇",
+              rarityName: t("profile.gold") || "Oro 🥇",
               color: "text-[#ecc94b]"
             },
             platinum: {
               border: isUnlocked ? "border-[#e5e4e2]/40 shadow-[0_0_10px_rgba(229,228,226,0.1)]" : "border-border/60",
               glow: "from-[#4a5568] via-[#cbd5e0] to-[#e2e8f0]",
-              rarityName: "Platino 🏆",
+              rarityName: t("profile.platinum") || "Platino 🏆",
               color: "text-[#e5e4e2] font-black"
             }
           };
@@ -3722,7 +4401,7 @@ function ProfileScreen({
                     ach.xpReward,
                     " XP"
                   ] }),
-                  /* @__PURE__ */ jsx("span", { className: "text-[8px] text-muted-foreground font-semibold mt-1", children: isUnlocked ? "Obtenido" : "Bloqueado" })
+                  /* @__PURE__ */ jsx("span", { className: "text-[8px] text-muted-foreground font-semibold mt-1", children: isUnlocked ? t("profile.unlocked") || "Obtenido" : t("profile.locked") || "Bloqueado" })
                 ] })
               ]
             },
@@ -3733,110 +4412,108 @@ function ProfileScreen({
       activeTab === "stats" && /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
           /* @__PURE__ */ jsx(Award, { size: 14, className: "text-primary" }),
-          " Atributos del Jugador"
+          " ",
+          t("profile.playerAttributes") || "Atributos del Jugador"
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
           /* @__PURE__ */ jsx(
             StatCard,
             {
               icon: Flame,
-              label: "Fuerza (STR)",
+              label: t("profile.str") || "Fuerza (STR)",
               value: str,
               colorClass: "text-red-500",
               bgClass: "bg-red-500/5 border-red-500/10",
-              description: "Aumenta al unirte a partidos (+2 XP/partido)"
+              description: t("profile.strDesc") || "Aumenta al unirte a partidos (+2 XP/partido)"
             }
           ),
           /* @__PURE__ */ jsx(
             StatCard,
             {
               icon: BookOpen,
-              label: "Sabiduría (WIS)",
+              label: t("profile.wis") || "Sabiduría (WIS)",
               value: wis,
               colorClass: "text-blue-500",
               bgClass: "bg-blue-500/5 border-blue-500/10",
-              description: "Aumenta al crear partidos (+5 XP/partido)"
+              description: t("profile.wisDesc") || "Aumenta al crear partidos (+5 XP/partido)"
             }
           ),
           /* @__PURE__ */ jsx(
             StatCard,
             {
               icon: Shield,
-              label: "Constitución (CON)",
+              label: t("profile.con") || "Constitución (CON)",
               value: con,
               colorClass: "text-emerald-500",
               bgClass: "bg-emerald-500/5 border-emerald-500/10",
-              description: "Aumenta con el uso diario de la app"
+              description: t("profile.conDesc") || "Aumenta con el uso diario de la app"
             }
           ),
           /* @__PURE__ */ jsx(
             StatCard,
             {
               icon: Sparkles,
-              label: "Carisma (CHA)",
+              label: t("profile.cha") || "Carisma (CHA)",
               value: cha,
               colorClass: "text-amber-500",
               bgClass: "bg-amber-500/5 border-amber-500/10",
-              description: "Calculado según tu reputación deportiva"
+              description: t("profile.chaDesc") || "Calculado según tu reputación deportiva"
             }
           )
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4", children: [
           /* @__PURE__ */ jsxs("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary flex items-center gap-1.5 border-b border-border pb-2", children: [
             /* @__PURE__ */ jsx(Sparkles, { size: 14, className: "text-primary animate-pulse" }),
-            " Información de Perfil"
+            " ",
+            t("profile.profileInfo") || "Información de Perfil"
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-2 text-center text-xs", children: [
             /* @__PURE__ */ jsxs("div", { className: "bg-muted/40 p-2.5 rounded-xl border border-border/50", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: "Edad" }),
-              /* @__PURE__ */ jsx("span", { className: "font-black text-secondary", children: user.user_metadata?.age ? `${user.user_metadata.age} años` : "—" })
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: t("profile.age") || "Edad" }),
+              /* @__PURE__ */ jsx("span", { className: "font-black text-secondary", children: user.user_metadata?.age ? `${user.user_metadata.age} ${t("common.years") || "años"}` : "—" })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-muted/40 p-2.5 rounded-xl border border-border/50", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: "Género" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: t("profile.gender") || "Género" }),
               /* @__PURE__ */ jsx("span", { className: "font-black text-secondary", children: user.user_metadata?.gender || "—" })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-muted/40 p-2.5 rounded-xl border border-border/50", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: "Ubicación" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground block font-bold", children: t("profile.location") || "Ubicación" }),
               /* @__PURE__ */ jsx("span", { className: "font-black text-secondary truncate block", title: user.user_metadata?.location || "", children: user.user_metadata?.location || "—" })
             ] })
           ] }),
           user.user_metadata?.description && /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-bold", children: "Sobre mí" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-bold", children: t("profile.aboutMe") || "Sobre mí" }),
             /* @__PURE__ */ jsx("p", { className: "text-xs leading-relaxed text-secondary-foreground/80 bg-muted/20 p-3 rounded-xl border border-border/30", children: user.user_metadata.description })
           ] }),
           user.user_metadata?.preferred_sports && user.user_metadata.preferred_sports.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-bold block", children: "Deportes favoritos" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-bold block", children: t("profile.favoriteSports") || "Deportes favoritos" }),
             /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: user.user_metadata.preferred_sports.map((sport) => /* @__PURE__ */ jsx("span", { className: "rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary", children: sport }, sport)) })
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-4 shadow-soft", children: [
-          /* @__PURE__ */ jsx("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary mb-1", children: "Resumen de Campaña" }),
-          /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: [
-            "Has completado **",
-            joinedEventsCount,
-            " partidos** como luchador y has guiado a otros jugadores creando **",
-            createdEventsCount,
-            " eventos**. Tu constancia te ha otorgado **",
-            useCount,
-            " días de entrenamiento** activo."
-          ] })
+          /* @__PURE__ */ jsx("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary mb-1", children: t("profile.campaignSummary") || "Resumen de Campaña" }),
+          /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground leading-relaxed", children: t("profile.campaignDesc") ? t("profile.campaignDesc").replace("{joined}", String(joinedEventsCount)).replace("{created}", String(createdEventsCount)).replace("{used}", String(useCount)) : `Has completado **${joinedEventsCount} partidos** como luchador y has guiado a otros
+                jugadores creando **${createdEventsCount} eventos**. Tu constancia te ha otorgado
+                **${useCount} días de entrenamiento** activo.` })
         ] })
       ] }),
       activeTab === "inventory" && /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
           /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
             /* @__PURE__ */ jsx(Trophy, { size: 14, className: "text-primary" }),
-            " Cofre de Objetos Mágicos"
+            " ",
+            t("profile.magicChest") || "Cofre de Objetos Mágicos"
           ] }),
           /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-bold text-muted-foreground", children: [
             coupons.filter((c) => !c.claimed).length,
-            " Activos"
+            " ",
+            t("profile.active") || "Activos"
           ] })
         ] }),
         coupons.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center space-y-2 animate-fade-in", children: [
           /* @__PURE__ */ jsx("div", { className: "text-4xl", children: "🎁" }),
-          /* @__PURE__ */ jsx("h4", { className: "text-sm font-bold text-secondary", children: "Cofre Vacío" }),
-          /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground max-w-[240px] mx-auto", children: "No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app diariamente para ganar cofres sorpresa!" })
+          /* @__PURE__ */ jsx("h4", { className: "text-sm font-bold text-secondary", children: t("profile.emptyChest") || "Cofre Vacío" }),
+          /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground max-w-[240px] mx-auto", children: t("profile.emptyChestDesc") || "No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app diariamente para ganar cofres sorpresa!" })
         ] }) : /* @__PURE__ */ jsx("div", { className: "grid gap-3", children: coupons.map((c) => {
           const isLegendary = c.id === "LEYENDA5";
           return /* @__PURE__ */ jsxs(
@@ -3850,7 +4527,7 @@ function ProfileScreen({
                       "span",
                       {
                         className: `inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider mb-2 ${isLegendary ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" : "bg-amber-500/20 text-amber-500 border border-amber-500/30"}`,
-                        children: isLegendary ? "Objeto Legendario ⭐" : "Objeto Épico 📜"
+                        children: isLegendary ? t("profile.legendaryItem") || "Objeto Legendario ⭐" : t("profile.epicItem") || "Objeto Épico 📜"
                       }
                     ),
                     /* @__PURE__ */ jsx("h4", { className: "text-xs font-black text-secondary", children: c.title }),
@@ -3863,7 +4540,8 @@ function ProfileScreen({
                 ] }),
                 /* @__PURE__ */ jsxs("div", { className: "mt-4 flex items-center justify-between gap-3 pt-3.5 border-t border-dashed border-border/60", children: [
                   /* @__PURE__ */ jsxs("div", { className: "font-mono text-[10px] font-black text-muted-foreground bg-muted px-2 py-1 rounded-lg", children: [
-                    "Código: ",
+                    t("profile.code") || "Código:",
+                    " ",
                     /* @__PURE__ */ jsx("span", { className: "text-secondary select-all", children: c.code })
                   ] }),
                   /* @__PURE__ */ jsxs("div", { className: "flex gap-2", children: [
@@ -3874,10 +4552,10 @@ function ProfileScreen({
                         className: "flex items-center gap-1 rounded-xl bg-card border border-border px-2.5 py-1.5 text-[10px] font-black text-secondary transition-all hover:bg-muted active:scale-95 shadow-sm",
                         children: copiedCode === c.code ? /* @__PURE__ */ jsxs(Fragment, { children: [
                           /* @__PURE__ */ jsx(Check, { size: 11, className: "text-emerald-500" }),
-                          /* @__PURE__ */ jsx("span", { children: "Copiado" })
+                          /* @__PURE__ */ jsx("span", { children: t("common.copied") || "Copiado" })
                         ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
                           /* @__PURE__ */ jsx(Copy, { size: 11 }),
-                          /* @__PURE__ */ jsx("span", { children: "Copiar" })
+                          /* @__PURE__ */ jsx("span", { children: t("common.copy") || "Copiar" })
                         ] })
                       }
                     ),
@@ -3890,9 +4568,9 @@ function ProfileScreen({
                           setTimeout(() => setShowClaimSuccess(null), 3e3);
                         },
                         className: "rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-secondary transition-all active:scale-95 shadow-sm cursor-pointer",
-                        children: "Canjear"
+                        children: t("common.redeem") || "Canjear"
                       }
-                    ) : /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black text-muted-foreground px-2 py-1.5 bg-muted/80 rounded-xl", children: "Usado" })
+                    ) : /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black text-muted-foreground px-2 py-1.5 bg-muted/80 rounded-xl", children: t("common.used") || "Usado" })
                   ] })
                 ] })
               ]
@@ -3904,9 +4582,10 @@ function ProfileScreen({
       activeTab === "history" && /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
         /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
           /* @__PURE__ */ jsx(Calendar, { size: 14, className: "text-primary" }),
-          " Registro de Aventuras (XP Log)"
+          " ",
+          t("profile.adventureLog") || "Registro de Aventuras (XP Log)"
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "space-y-2", children: xpHistory.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center py-8 text-xs text-muted-foreground", children: "Aún no has ganado experiencia. ¡Explora el mapa y únete a un partido!" }) : xpHistory.map((h) => {
+        /* @__PURE__ */ jsx("div", { className: "space-y-2", children: xpHistory.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center py-8 text-xs text-muted-foreground", children: t("profile.noXp") || "Aún no has ganado experiencia. ¡Explora el mapa y únete a un partido!" }) : xpHistory.map((h) => {
           let typeEmoji = "🎮";
           let typeBg = "bg-purple-500/10 text-purple-500 border border-purple-500/20";
           if (h.type === "join") {
@@ -3985,6 +4664,7 @@ function StatCard({
 }
 function EditProfileScreen({ onBack }) {
   const { user: currentUser, updateProfile } = useCurrentUser();
+  const { t } = useSettings();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState(null);
@@ -4036,7 +4716,7 @@ function EditProfileScreen({ onBack }) {
       setUploadingImage(true);
       setError("");
       if (!e.target.files || e.target.files.length === 0) {
-        throw new Error("Debes seleccionar una imagen.");
+        throw new Error(t("editProfile.imgRequired") || "Debes seleccionar una imagen.");
       }
       const file = e.target.files[0];
       const fileExt = file.name.split(".").pop();
@@ -4049,7 +4729,7 @@ function EditProfileScreen({ onBack }) {
       const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
       setAvatarUrl(data.publicUrl);
     } catch (error2) {
-      setError(error2.message || "Error al subir la imagen");
+      setError(error2.message || t("editProfile.imgError") || "Error al subir la imagen");
     } finally {
       setUploadingImage(false);
     }
@@ -4071,12 +4751,12 @@ function EditProfileScreen({ onBack }) {
         location,
         preferredSports
       });
-      setSuccess("Perfil actualizado correctamente");
+      setSuccess(t("editProfile.success") || "Perfil actualizado correctamente");
       setTimeout(() => {
         onBack();
       }, 1500);
     } catch (err) {
-      setError(err.message || "Error al actualizar el perfil");
+      setError(err.message || t("editProfile.error") || "Error al actualizar el perfil");
     } finally {
       setSaving(false);
     }
@@ -4094,7 +4774,7 @@ function EditProfileScreen({ onBack }) {
           children: /* @__PURE__ */ jsx(ArrowLeft, { size: 20, className: "text-secondary" })
         }
       ),
-      /* @__PURE__ */ jsx("h1", { className: "text-xl font-bold text-secondary", children: "Editar Perfil" })
+      /* @__PURE__ */ jsx("h1", { className: "text-xl font-bold text-secondary", children: t("editProfile.title") || "Editar Perfil" })
     ] }),
     /* @__PURE__ */ jsxs("form", { onSubmit: handleSave, className: "flex flex-1 flex-col overflow-hidden", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5 pt-4 pb-4 space-y-6", children: [
@@ -4108,11 +4788,11 @@ function EditProfileScreen({ onBack }) {
               /* @__PURE__ */ jsx("input", { type: "file", accept: "image/*", onChange: handleImageUpload, className: "hidden", disabled: uploadingImage })
             ] })
           ] }),
-          /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold uppercase tracking-wider text-muted-foreground", children: "Foto de perfil" })
+          /* @__PURE__ */ jsx("span", { className: "text-[10px] font-bold uppercase tracking-wider text-muted-foreground", children: t("editProfile.profilePhoto") || "Foto de perfil" })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Nombre completo" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: t("editProfile.fullName") || "Nombre completo" }),
             /* @__PURE__ */ jsx(
               "input",
               {
@@ -4120,13 +4800,13 @@ function EditProfileScreen({ onBack }) {
                 value: name,
                 onChange: (e) => setName(e.target.value),
                 className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
-                placeholder: "Tu nombre",
+                placeholder: t("editProfile.namePlaceholder") || "Tu nombre",
                 required: true
               }
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Correo electrónico" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: t("editProfile.email") || "Correo electrónico" }),
             /* @__PURE__ */ jsx(
               "input",
               {
@@ -4134,15 +4814,15 @@ function EditProfileScreen({ onBack }) {
                 value: email,
                 onChange: (e) => setEmail(e.target.value),
                 className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
-                placeholder: "tu@email.com",
+                placeholder: t("editProfile.emailPlaceholder") || "tu@email.com",
                 required: true
               }
             ),
-            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground", children: "Al cambiar el correo electrónico, se enviará un mensaje de confirmación." })
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground", children: t("editProfile.emailNote") || "Al cambiar el correo electrónico, se enviará un mensaje de confirmación." })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
             /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Edad" }),
+              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: t("editProfile.age") || "Edad" }),
               /* @__PURE__ */ jsx(
                 "input",
                 {
@@ -4150,14 +4830,14 @@ function EditProfileScreen({ onBack }) {
                   value: age ?? "",
                   onChange: (e) => setAge(e.target.value ? parseInt(e.target.value) : void 0),
                   className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
-                  placeholder: "Ej. 25",
+                  placeholder: t("editProfile.agePlaceholder") || "Ej. 25",
                   min: "1",
                   max: "120"
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Género" }),
+              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: t("editProfile.gender") || "Género" }),
               /* @__PURE__ */ jsxs(
                 "select",
                 {
@@ -4165,17 +4845,17 @@ function EditProfileScreen({ onBack }) {
                   onChange: (e) => setGender(e.target.value),
                   className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
                   children: [
-                    /* @__PURE__ */ jsx("option", { value: "", children: "Seleccionar..." }),
-                    /* @__PURE__ */ jsx("option", { value: "Masculino", children: "Masculino" }),
-                    /* @__PURE__ */ jsx("option", { value: "Femenino", children: "Femenino" }),
-                    /* @__PURE__ */ jsx("option", { value: "Otro", children: "Otro" })
+                    /* @__PURE__ */ jsx("option", { value: "", children: t("editProfile.selectGender") || "Seleccionar..." }),
+                    /* @__PURE__ */ jsx("option", { value: "Masculino", children: t("editProfile.male") || "Masculino" }),
+                    /* @__PURE__ */ jsx("option", { value: "Femenino", children: t("editProfile.female") || "Femenino" }),
+                    /* @__PURE__ */ jsx("option", { value: "Otro", children: t("editProfile.other") || "Otro" })
                   ]
                 }
               )
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Ubicación (Municipio/Zona)" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: t("editProfile.location") || "Ubicación (Municipio/Zona)" }),
             /* @__PURE__ */ jsx(
               "input",
               {
@@ -4183,12 +4863,12 @@ function EditProfileScreen({ onBack }) {
                 value: location,
                 onChange: (e) => setLocation(e.target.value),
                 className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary",
-                placeholder: "Ej. Chacao, Caracas"
+                placeholder: t("editProfile.locationPlaceholder") || "Ej. Chacao, Caracas"
               }
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: "Sobre mí (Descripción)" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground", children: t("editProfile.aboutMe") || "Sobre mí (Descripción)" }),
             /* @__PURE__ */ jsx(
               "textarea",
               {
@@ -4196,14 +4876,20 @@ function EditProfileScreen({ onBack }) {
                 onChange: (e) => setDescription(e.target.value),
                 rows: 3,
                 className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none",
-                placeholder: "Cuéntanos un poco sobre ti, tu nivel de juego, etc."
+                placeholder: t("editProfile.aboutPlaceholder") || "Cuéntanos un poco sobre ti, tu nivel de juego, etc."
               }
             )
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground block", children: "Deportes preferidos" }),
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-muted-foreground block", children: t("editProfile.preferredSports") || "Deportes preferidos" }),
             /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"].map((sport) => {
               const isSelected = preferredSports.includes(sport);
+              let displaySport = sport;
+              if (sport === "Running") displaySport = t("sports.running") || "Running";
+              else if (sport === "Senderismo") displaySport = t("sports.hiking") || "Senderismo";
+              else if (sport === "Pádel") displaySport = t("sports.padel") || "Pádel";
+              else if (sport === "Tenis") displaySport = t("sports.tennis") || "Tenis";
+              else if (sport === "Vóleibol") displaySport = t("sports.volleyball") || "Vóleibol";
               return /* @__PURE__ */ jsx(
                 "button",
                 {
@@ -4216,7 +4902,7 @@ function EditProfileScreen({ onBack }) {
                     }
                   },
                   className: `rounded-full px-3 py-1.5 text-xs font-bold border transition-all ${isSelected ? "bg-primary/20 text-primary border-primary" : "bg-card text-muted-foreground border-border hover:border-muted-foreground"}`,
-                  children: sport
+                  children: displaySport
                 },
                 sport
               );
@@ -4233,8 +4919,8 @@ function EditProfileScreen({ onBack }) {
               }
             ),
             /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary block", children: "Modo Organizador" }),
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground", children: "Te permite registrar y gestionar tus propias instalaciones y canchas" })
+              /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary block", children: t("editProfile.organizerMode") || "Modo Organizador" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground", children: t("editProfile.organizerDesc") || "Te permite registrar y gestionar tus propias instalaciones y canchas" })
             ] })
           ] }) })
         ] })
@@ -4247,7 +4933,7 @@ function EditProfileScreen({ onBack }) {
           className: "flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-sm font-bold text-secondary shadow-pop transition-transform active:scale-[0.98] disabled:opacity-70",
           children: saving ? /* @__PURE__ */ jsx(Loader2, { size: 18, className: "animate-spin" }) : /* @__PURE__ */ jsxs(Fragment, { children: [
             /* @__PURE__ */ jsx(Save, { size: 18 }),
-            "Guardar Cambios"
+            t("editProfile.saveChanges") || "Guardar Cambios"
           ] })
         }
       ) })
@@ -4303,6 +4989,7 @@ function parseLocation$1(location) {
 }
 function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
   const { user } = useCurrentUser();
+  const { t } = useSettings();
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [newComment, setNewComment] = useState("");
@@ -4419,7 +5106,7 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
       fetchComments();
     } catch (err) {
       console.error("Error posting comment:", err);
-      setErrorMessage(err.message || "Error al enviar el comentario.");
+      setErrorMessage(err.message || t("comments.submitError") || "Error al enviar el comentario.");
     } finally {
       setSubmitting(false);
     }
@@ -4449,18 +5136,18 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-lg font-bold text-secondary", children: "Comentarios" }),
+        /* @__PURE__ */ jsx("h1", { className: "text-lg font-bold text-secondary", children: t("comments.title") || "Comentarios" }),
         /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground truncate max-w-[280px]", children: cancha.name })
       ] })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto px-5 py-5 space-y-4 pb-36", children: loadingComments ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground", children: [
       /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary", size: 24 }),
-      /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold", children: "Cargando comentarios…" })
+      /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold", children: t("comments.loading") || "Cargando comentarios…" })
     ] }) : comments.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center gap-4 py-20 text-center", children: [
       /* @__PURE__ */ jsx("div", { className: "grid h-20 w-20 place-items-center rounded-full bg-muted text-4xl", children: "💬" }),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("p", { className: "text-base font-bold text-secondary", children: "Sin comentarios aún" }),
-        /* @__PURE__ */ jsx("p", { className: "mt-1 text-sm text-muted-foreground max-w-[220px]", children: canComment ? "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha." : "Nadie ha comentado en esta cancha todavía." })
+        /* @__PURE__ */ jsx("p", { className: "text-base font-bold text-secondary", children: t("comments.noComments") || "Sin comentarios aún" }),
+        /* @__PURE__ */ jsx("p", { className: "mt-1 text-sm text-muted-foreground max-w-[220px]", children: canComment ? t("comments.beFirst") || "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha." : t("comments.noCommentsYet") || "Nadie ha comentado en esta cancha todavía." })
       ] })
     ] }) : /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
       comments.map((c) => /* @__PURE__ */ jsxs(
@@ -4472,10 +5159,11 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
               /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
                 /* @__PURE__ */ jsx("div", { className: "grid h-7 w-7 place-items-center rounded-full bg-secondary/15 text-[11px] font-bold text-secondary", children: "JD" }),
                 /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("span", { className: "text-xs font-extrabold text-secondary flex items-center gap-1", children: [
-                  "Jugador",
+                  t("comments.player") || "Jugador",
                   /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold text-emerald-700 ring-1 ring-emerald-200", children: [
                     /* @__PURE__ */ jsx(ShieldCheck, { size: 9 }),
-                    " Verificado"
+                    " ",
+                    t("comments.verified") || "Verificado"
                   ] })
                 ] }) })
               ] }),
@@ -4490,12 +5178,12 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
     ] }) }),
     /* @__PURE__ */ jsx("div", { className: "absolute inset-x-0 bottom-0 z-20 glass border-t border-border px-5 py-4", children: checkingPermission ? /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-2 py-2", children: [
       /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary", size: 14 }),
-      /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground", children: "Comprobando acceso…" })
+      /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground", children: t("comments.checkingAccess") || "Comprobando acceso…" })
     ] }) : !user ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3 rounded-2xl bg-muted/30 p-5 border border-dashed border-border", children: [
       /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full bg-muted text-lg", children: "💬" }),
       /* @__PURE__ */ jsxs("div", { className: "text-center space-y-1", children: [
-        /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-secondary", children: "Inicia sesión para comentar" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Comparte tu opinión sobre esta cancha con la comunidad." })
+        /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-secondary", children: t("comments.loginToComment") || "Inicia sesión para comentar" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: t("comments.shareOpinion") || "Comparte tu opinión sobre esta cancha con la comunidad." })
       ] }),
       /* @__PURE__ */ jsx(
         "button",
@@ -4503,14 +5191,14 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
           id: "comments-login-btn",
           onClick: onOpenAuth,
           className: "flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#32CD32] to-[#22a822] px-5 py-2.5 text-xs font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-95 hover:shadow-green-500/30",
-          children: "Iniciar Sesión / Registrarse"
+          children: t("comments.loginRegister") || "Iniciar Sesión / Registrarse"
         }
       )
     ] }) : !canComment ? /* @__PURE__ */ jsxs("div", { className: "flex gap-2.5 items-start rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3.5", children: [
       /* @__PURE__ */ jsx(AlertCircle, { size: 16, className: "text-amber-600 mt-0.5 shrink-0" }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-        /* @__PURE__ */ jsx("h4", { className: "text-xs font-bold text-amber-800", children: "Acceso restringido" }),
-        /* @__PURE__ */ jsx("p", { className: "text-[11px] leading-relaxed text-amber-700", children: "Solo puedes comentar si has participado o estás participando en un evento en esta cancha. ¡Únete a un partido o crea uno aquí primero!" })
+        /* @__PURE__ */ jsx("h4", { className: "text-xs font-bold text-amber-800", children: t("comments.restricted") || "Acceso restringido" }),
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] leading-relaxed text-amber-700", children: t("comments.restrictedDesc") || "Solo puedes comentar si has participado o estás participando en un evento en esta cancha. ¡Únete a un partido o crea uno aquí primero!" })
       ] })
     ] }) : /* @__PURE__ */ jsxs("form", { onSubmit: handleSubmitComment, className: "space-y-3", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-end gap-2.5 bg-card border border-border rounded-2xl p-3 focus-within:border-primary transition-colors", children: [
@@ -4519,7 +5207,7 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
           {
             value: newComment,
             onChange: (e) => setNewComment(e.target.value),
-            placeholder: "Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…",
+            placeholder: t("comments.placeholder") || "Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…",
             maxLength: 300,
             rows: 2,
             className: "w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/45 resize-none py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
@@ -4540,7 +5228,7 @@ function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }) {
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-[10px] text-muted-foreground px-1", children: [
         /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1", children: [
           /* @__PURE__ */ jsx(CalendarCheck, { size: 11, className: "text-primary" }),
-          "Listo para comentar"
+          t("comments.readyToComment") || "Listo para comentar"
         ] }),
         /* @__PURE__ */ jsxs("span", { children: [
           newComment.length,
@@ -4560,6 +5248,7 @@ function EventCard({
   onClick,
   variant = "full"
 }) {
+  const { t } = useSettings();
   const [joining, setJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
   const [status, setStatus] = useState(null);
@@ -4649,7 +5338,7 @@ function EventCard({
           ),
           /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-t from-secondary/70 via-secondary/0 to-secondary/0" }),
           /* @__PURE__ */ jsx("div", { className: "absolute left-3 top-3", children: /* @__PURE__ */ jsx(SportBadge, { sport: event.sport }) }),
-          /* @__PURE__ */ jsx("div", { className: "absolute right-3 top-3 rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-secondary", children: event.price === 0 ? "Gratis" : `$${event.price}` }),
+          /* @__PURE__ */ jsx("div", { className: "absolute right-3 top-3 rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-secondary", children: event.price === 0 ? t("eventCard.free") || "Gratis" : `$${event.price}` }),
           /* @__PURE__ */ jsx("div", { className: "absolute bottom-2 left-3 right-3 flex items-end justify-between text-primary-foreground", children: /* @__PURE__ */ jsxs("div", { children: [
             /* @__PURE__ */ jsx("div", { className: "text-[11px] font-medium opacity-90", children: event.date }),
             /* @__PURE__ */ jsx("div", { className: "text-base font-bold leading-tight drop-shadow", children: event.title })
@@ -4674,7 +5363,8 @@ function EventCard({
                 joinedCount,
                 "/",
                 event.spots,
-                " cupos"
+                " ",
+                t("eventCard.spots") || "cupos"
               ] }),
               variant === "full" && /* @__PURE__ */ jsx("div", { className: "h-1.5 w-full overflow-hidden rounded-full bg-muted", children: /* @__PURE__ */ jsx(
                 "div",
@@ -4690,7 +5380,7 @@ function EventCard({
             {
               onClick: handleJoin,
               className: `w-full flex items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all active:scale-95 shadow-pop ${isAccepted ? "bg-primary text-white hover:bg-primary/90" : isPending ? "bg-amber-500 text-white hover:bg-amber-600" : "bg-secondary text-white hover:bg-secondary/90"}`,
-              children: isAccepted ? "Ver evento" : isPending ? "Esperando solicitud" : "Unirse al evento"
+              children: isAccepted ? t("eventCard.viewEvent") || "Ver evento" : isPending ? t("eventCard.waitingRequest") || "Esperando solicitud" : t("eventCard.joinEvent") || "Unirse al evento"
             }
           ) })
         ] })
@@ -4699,6 +5389,7 @@ function EventCard({
   );
 }
 function CouponPopup() {
+  const { t } = useSettings();
   const [coupons, setCoupons] = useState([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -4775,7 +5466,7 @@ function CouponPopup() {
         ),
         /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col h-full justify-between p-6 pt-12 pb-8 text-center text-white", children: [
           /* @__PURE__ */ jsxs("div", { className: "animate-in fade-in slide-in-from-top-3 duration-500", children: [
-            /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse mb-3", children: "Anuncio Especial 📣" }),
+            /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse mb-3", children: t("coupon.specialAd") || "Anuncio Especial 📣" }),
             /* @__PURE__ */ jsx("h2", { className: "text-2xl md:text-3xl font-extrabold tracking-tight leading-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]", children: couponTitle })
           ] }, `title-${activeIdx}`),
           /* @__PURE__ */ jsx("div", { className: "px-2 py-4 animate-in fade-in duration-500 max-h-[140px] overflow-y-auto", children: /* @__PURE__ */ jsx("p", { className: "text-sm md:text-base text-gray-200 font-medium leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]", children: couponDesc }) }, `desc-${activeIdx}`),
@@ -4789,12 +5480,12 @@ function CouponPopup() {
                 children: [
                   /* @__PURE__ */ jsx("div", { className: "flex-1 font-mono text-lg font-black tracking-wider text-primary select-all", children: couponCode }),
                   /* @__PURE__ */ jsx("div", { className: "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/25 text-primary transition-transform group-hover:scale-110", children: copied ? /* @__PURE__ */ jsx(Check, { size: 14, className: "text-emerald-400" }) : /* @__PURE__ */ jsx(Copy, { size: 14 }) }),
-                  copied && /* @__PURE__ */ jsx("span", { className: "absolute -top-7 left-1/2 -translate-x-1/2 rounded bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-bounce", children: "¡Copiado!" })
+                  copied && /* @__PURE__ */ jsx("span", { className: "absolute -top-7 left-1/2 -translate-x-1/2 rounded bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-bounce", children: t("coupon.copied") || "¡Copiado!" })
                 ]
               },
               `code-${activeIdx}`
             ),
-            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: "*Haz clic en el código para copiarlo al portapapeles." })
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: t("coupon.copyHint") || "*Haz clic en el código para copiarlo al portapapeles." })
           ] })
         ] }),
         coupons.length > 1 && /* @__PURE__ */ jsx(
@@ -4827,9 +5518,10 @@ const LeafletMap = lazy(
   () => import("./LeafletMap-C3F2iawj.js").then((m) => ({ default: m.default }))
 );
 function MapSkeleton() {
+  const { t } = useSettings();
   return /* @__PURE__ */ jsx("div", { className: "flex h-[220px] w-full items-center justify-center bg-muted", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3 text-muted-foreground", children: [
     /* @__PURE__ */ jsx("div", { className: "h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" }),
-    /* @__PURE__ */ jsx("span", { className: "text-xs font-medium", children: "Cargando mapa…" })
+    /* @__PURE__ */ jsx("span", { className: "text-xs font-medium", children: t("canchas.loadingMap") || "Cargando mapa…" })
   ] }) });
 }
 const SPORTS$1 = [
@@ -4839,6 +5531,7 @@ const SPORTS$1 = [
   { id: 4, label: "Pádel", emoji: "🏓" }
 ];
 function AddCanchaForm({ onBack, onSaved }) {
+  const { t } = useSettings();
   const [name, setName] = useState("");
   const [sportId, setSportId] = useState(null);
   const [description, setDescription] = useState("");
@@ -4851,7 +5544,7 @@ function AddCanchaForm({ onBack, onSaved }) {
   async function handleMapClick(lat, lng) {
     setLatitude(lat.toString());
     setLongitude(lng.toString());
-    setAddress("Buscando dirección...");
+    setAddress(t("canchas.searchingAddress") || "Buscando dirección...");
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
@@ -4869,9 +5562,9 @@ function AddCanchaForm({ onBack, onSaved }) {
   }
   function validate() {
     const e = {};
-    if (!name.trim()) e.name = "El nombre es obligatorio";
-    if (!sportId) e.sportId = "Selecciona un deporte";
-    if (!latitude || !longitude) e.location = "Elige la ubicación en el mapa";
+    if (!name.trim()) e.name = t("canchas.nameRequired") || "El nombre es obligatorio";
+    if (!sportId) e.sportId = t("canchas.sportRequired") || "Selecciona un deporte";
+    if (!latitude || !longitude) e.location = t("canchas.locationRequired") || "Elige la ubicación en el mapa";
     return e;
   }
   async function handleSubmit() {
@@ -4905,8 +5598,8 @@ function AddCanchaForm({ onBack, onSaved }) {
     return /* @__PURE__ */ jsxs("div", { className: "flex h-full flex-col items-center justify-center gap-6 px-6 text-center bg-background", children: [
       /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: "¡Cancha añadida!" }),
-        /* @__PURE__ */ jsx("p", { className: "mt-1 text-sm text-muted-foreground", children: "Ya aparece en el listado de canchas" })
+        /* @__PURE__ */ jsx("h2", { className: "text-2xl font-bold text-secondary", children: t("canchas.added") || "¡Cancha añadida!" }),
+        /* @__PURE__ */ jsx("p", { className: "mt-1 text-sm text-muted-foreground", children: t("canchas.addedDesc") || "Ya aparece en el listado de canchas" })
       ] })
     ] });
   }
@@ -4922,14 +5615,16 @@ function AddCanchaForm({ onBack, onSaved }) {
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-lg md:text-3xl font-bold text-secondary", children: "Añadir cancha" }),
-        /* @__PURE__ */ jsx("p", { className: "text-[11px] md:text-sm text-muted-foreground", children: "Registra una nueva cancha deportiva" })
+        /* @__PURE__ */ jsx("h1", { className: "text-lg md:text-3xl font-bold text-secondary", children: t("canchas.addTitle") || "Añadir cancha" }),
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] md:text-sm text-muted-foreground", children: t("canchas.addSubtitle") || "Registra una nueva cancha deportiva" })
       ] })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5 md:px-12 py-5 md:py-8 pb-32 space-y-6 md:space-y-8 max-w-2xl mx-auto w-full", children: [
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
         /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: [
-          "🏟️ Nombre ",
+          "🏟️ ",
+          t("canchas.name") || "Nombre",
+          " ",
           /* @__PURE__ */ jsx("span", { className: "text-primary", children: "*" })
         ] }),
         /* @__PURE__ */ jsx(
@@ -4937,7 +5632,7 @@ function AddCanchaForm({ onBack, onSaved }) {
           {
             value: name,
             onChange: (e) => setName(e.target.value),
-            placeholder: "Ej: Cancha San Bernardino",
+            placeholder: t("canchas.namePlaceholder") || "Ej: Cancha San Bernardino",
             className: `w-full rounded-2xl border bg-card px-4 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${errors.name ? "border-destructive" : "border-border"}`
           }
         ),
@@ -4949,21 +5644,30 @@ function AddCanchaForm({ onBack, onSaved }) {
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
         /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: [
-          "⚡ Deporte ",
+          "⚡ ",
+          t("createEvent.sport") || "Deporte",
+          " ",
           /* @__PURE__ */ jsx("span", { className: "text-primary", children: "*" })
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-2 gap-2", children: SPORTS$1.map((s) => /* @__PURE__ */ jsxs(
-          "button",
-          {
-            onClick: () => setSportId(s.id),
-            className: `flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all active:scale-[0.97] ${sportId === s.id ? "gradient-primary border-transparent text-secondary shadow-pop" : "border-border bg-card text-muted-foreground hover:border-primary/40"}`,
-            children: [
-              /* @__PURE__ */ jsx("span", { className: "text-xl", children: s.emoji }),
-              s.label
-            ]
-          },
-          s.id
-        )) }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-2 gap-2", children: SPORTS$1.map((s) => {
+          let displayLabel = s.label;
+          if (s.id === 1) displayLabel = t("sports.football") || "Fútbol";
+          else if (s.id === 2) displayLabel = t("sports.tennis") || "Tenis";
+          else if (s.id === 3) displayLabel = t("sports.golf") || "Golf";
+          else if (s.id === 4) displayLabel = t("sports.padel") || "Pádel";
+          return /* @__PURE__ */ jsxs(
+            "button",
+            {
+              onClick: () => setSportId(s.id),
+              className: `flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all active:scale-[0.97] ${sportId === s.id ? "gradient-primary border-transparent text-secondary shadow-pop" : "border-border bg-card text-muted-foreground hover:border-primary/40"}`,
+              children: [
+                /* @__PURE__ */ jsx("span", { className: "text-xl", children: s.emoji }),
+                displayLabel
+              ]
+            },
+            s.id
+          );
+        }) }),
         errors.sportId && /* @__PURE__ */ jsxs("p", { className: "flex items-center gap-1 text-[11px] font-medium text-destructive", children: [
           /* @__PURE__ */ jsx(AlertCircle, { size: 11 }),
           " ",
@@ -4972,18 +5676,20 @@ function AddCanchaForm({ onBack, onSaved }) {
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
         /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: [
-          "📍 Ubicación ",
+          "📍 ",
+          t("editProfile.location") || "Ubicación",
+          " ",
           /* @__PURE__ */ jsx("span", { className: "text-primary", children: "*" })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "overflow-hidden rounded-2xl border border-border bg-card shadow-soft", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3", children: [
             /* @__PURE__ */ jsx(MapPin, { size: 16, className: "text-primary shrink-0" }),
-            /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground line-clamp-1", children: address || "Toca el mapa para elegir la ubicación" })
+            /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground line-clamp-1", children: address || (t("canchas.tapMap") || "Toca el mapa para elegir la ubicación") })
           ] }),
           /* @__PURE__ */ jsx("div", { className: "relative z-0 h-[220px] w-full", children: /* @__PURE__ */ jsx(Suspense, { fallback: /* @__PURE__ */ jsx(MapSkeleton, {}), children: /* @__PURE__ */ jsx(LeafletMap, { onLocationSelect: handleMapClick }) }) }),
           latitude && longitude && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5 border-t border-border bg-emerald-50 px-3 py-2", children: [
             /* @__PURE__ */ jsx(CheckCircle2, { size: 12, className: "text-emerald-600" }),
-            /* @__PURE__ */ jsx("span", { className: "text-[11px] font-medium text-emerald-700", children: "Ubicación seleccionada" })
+            /* @__PURE__ */ jsx("span", { className: "text-[11px] font-medium text-emerald-700", children: t("canchas.locationSelected") || "Ubicación seleccionada" })
           ] })
         ] }),
         errors.location && /* @__PURE__ */ jsxs("p", { className: "flex items-center gap-1 text-[11px] font-medium text-destructive", children: [
@@ -4993,20 +5699,26 @@ function AddCanchaForm({ onBack, onSaved }) {
         ] })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsx("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: "📝 Descripción" }),
+        /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: [
+          "📝 ",
+          t("canchas.description") || "Descripción"
+        ] }),
         /* @__PURE__ */ jsx(
           "textarea",
           {
             value: description,
             onChange: (e) => setDescription(e.target.value),
-            placeholder: "Iluminación nocturna, vestuarios, estacionamiento...",
+            placeholder: t("canchas.descPlaceholder") || "Iluminación nocturna, vestuarios, estacionamiento...",
             rows: 3,
             className: "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary resize-none placeholder:text-muted-foreground/50"
           }
         )
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsx("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: "💰 Precio por hora (Bs.)" }),
+        /* @__PURE__ */ jsxs("label", { className: "flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground", children: [
+          "💰 ",
+          t("canchas.pricePerHour") || "Precio por hora (Bs.)"
+        ] }),
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-soft focus-within:border-primary transition-colors", children: [
           /* @__PURE__ */ jsx("span", { className: "text-sm font-semibold text-muted-foreground", children: "Bs." }),
           /* @__PURE__ */ jsx(
@@ -5016,7 +5728,7 @@ function AddCanchaForm({ onBack, onSaved }) {
               min: 0,
               value: price,
               onChange: (e) => setPrice(e.target.value),
-              placeholder: "Ej: 50 (opcional)",
+              placeholder: t("canchas.pricePlaceholder") || "Ej: 50 (opcional)",
               className: "w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
             }
           )
@@ -5035,8 +5747,8 @@ function AddCanchaForm({ onBack, onSaved }) {
         className: "w-full rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop transition-all active:scale-[0.98] disabled:opacity-70",
         children: status === "loading" ? /* @__PURE__ */ jsxs("span", { className: "flex items-center justify-center gap-2", children: [
           /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }),
-          "Guardando cancha…"
-        ] }) : "Guardar cancha"
+          t("canchas.saving") || "Guardando cancha…"
+        ] }) : t("canchas.save") || "Guardar cancha"
       }
     ) })
   ] });
@@ -5120,6 +5832,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
   const [serverError, setServerError] = useState(null);
   const [showFloatXp, setShowFloatXp] = useState(false);
   const { addXp } = useCurrentUser();
+  const { t } = useSettings();
   const [canchas, setCanchas] = useState([]);
   const [loadingCanchas, setLoadingCanchas] = useState(true);
   const [showAddCanchaForm, setShowAddCanchaForm] = useState(false);
@@ -5167,11 +5880,11 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
   }
   function validate() {
     const newErrors = {};
-    if (!form.sportId) newErrors.sportId = "Selecciona un deporte";
-    if (!form.intensity) newErrors.intensity = "Selecciona la intensidad";
-    if (!form.date) newErrors.date = "La fecha es obligatoria";
-    if (!form.time) newErrors.time = "La hora es obligatoria";
-    if (!form.canchaId) newErrors.canchaId = "Selecciona una cancha obligatoriamente";
+    if (!form.sportId) newErrors.sportId = t("createEvent.err.sport") || "Selecciona un deporte";
+    if (!form.intensity) newErrors.intensity = t("createEvent.err.intensity") || "Selecciona la intensidad";
+    if (!form.date) newErrors.date = t("createEvent.err.date") || "La fecha es obligatoria";
+    if (!form.time) newErrors.time = t("createEvent.err.time") || "La hora es obligatoria";
+    if (!form.canchaId) newErrors.canchaId = t("createEvent.err.court") || "Selecciona una cancha obligatoriamente";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -5187,12 +5900,12 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
         error: authError
       } = await supabase.auth.getUser();
       if (authError || !user) {
-        setServerError("Debes iniciar sesión para crear un evento.");
+        setServerError(t("createEvent.loginRequired") || "Debes iniciar sesión para crear un evento.");
         setStatus("error");
         return;
       }
       if (!user.email) {
-        setServerError("No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
+        setServerError(t("createEvent.emailError") || "No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
         setStatus("error");
         return;
       }
@@ -5250,10 +5963,10 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err;
         console.error("❌ Supabase insert error:", pgErr);
-        setServerError(`Error al crear el evento: ${pgErr.message}`);
+        setServerError(`${t("createEvent.error") || "Error al crear el evento"}: ${pgErr.message}`);
       } else {
         console.error("❌ Error inesperado:", err);
-        setServerError("Error inesperado al crear el evento.");
+        setServerError(t("createEvent.unexpectedError") || "Error inesperado al crear el evento.");
       }
       setStatus("error");
     }
@@ -5289,11 +6002,11 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
     return /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex h-full flex-col items-center justify-center bg-black/95 px-6 text-center animate-in fade-in duration-300", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 pointer-events-none", style: { background: "radial-gradient(circle at 50% 40%, rgba(16,185,129,0.15) 0%, transparent 70%)" } }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡EVENTO PUBLICADO! ⚽" }),
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: t("createEvent.published") || "¡EVENTO PUBLICADO! ⚽" }),
         /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
         /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight drop-shadow-md", children: "¡Listo!" }),
-          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/80 px-4 leading-relaxed", children: "Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!" })
+          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight drop-shadow-md", children: t("createEvent.done") || "¡Listo!" }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/80 px-4 leading-relaxed", children: t("createEvent.successMsg") || "Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!" })
         ] }),
         showFloatXp && /* @__PURE__ */ jsx("div", { className: "float-xp z-50", children: "+25 XP ⚡" }),
         /* @__PURE__ */ jsx(
@@ -5301,7 +6014,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
           {
             onClick: handleDismissSuccess,
             className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer",
-            children: "¡Entendido!"
+            children: t("createEvent.understood") || "¡Entendido!"
           }
         )
       ] })
@@ -5319,15 +6032,15 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-lg font-bold text-secondary", children: "Nuevo evento" }),
-        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground", children: "Completa los datos para publicar tu evento" })
+        /* @__PURE__ */ jsx("h1", { className: "text-lg font-bold text-secondary", children: t("createEvent.title") || "Nuevo evento" }),
+        /* @__PURE__ */ jsx("p", { className: "text-[11px] text-muted-foreground", children: t("createEvent.subtitle") || "Completa los datos para publicar tu evento" })
       ] })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5 py-5 pb-32 space-y-6", children: [
       /* @__PURE__ */ jsx(
         FormSection,
         {
-          title: "Deporte",
+          title: t("createEvent.sport") || "Deporte",
           icon: /* @__PURE__ */ jsx(Zap, { size: 13 }),
           error: errors.sportId,
           required: true,
@@ -5349,7 +6062,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       /* @__PURE__ */ jsx(
         FormSection,
         {
-          title: "Intensidad",
+          title: t("createEvent.intensity") || "Intensidad",
           icon: /* @__PURE__ */ jsx(Zap, { size: 13 }),
           error: errors.intensity,
           required: true,
@@ -5369,7 +6082,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
         /* @__PURE__ */ jsx(
           FormSection,
           {
-            title: "Fecha",
+            title: t("createEvent.date") || "Fecha",
             icon: /* @__PURE__ */ jsx(Calendar, { size: 13 }),
             error: errors.date,
             required: true,
@@ -5389,7 +6102,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
         /* @__PURE__ */ jsx(
           FormSection,
           {
-            title: "Hora",
+            title: t("createEvent.time") || "Hora",
             icon: /* @__PURE__ */ jsx(Clock, { size: 13 }),
             error: errors.time,
             required: true,
@@ -5409,23 +6122,26 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       /* @__PURE__ */ jsx(
         FormSection,
         {
-          title: "Instalación / Cancha",
+          title: t("createEvent.facility") || "Instalación / Cancha",
           icon: /* @__PURE__ */ jsx(MapPin, { size: 13 }),
           error: errors.canchaId,
           required: true,
           children: loadingCanchas ? /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-soft animate-pulse", children: [
             /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin text-primary shrink-0" }),
-            /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground", children: "Cargando canchas disponibles..." })
+            /* @__PURE__ */ jsx("span", { className: "text-xs font-semibold text-muted-foreground", children: t("createEvent.loadingCourts") || "Cargando canchas disponibles..." })
           ] }) : canchas.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-center", children: [
-            /* @__PURE__ */ jsx("p", { className: "text-xs font-semibold text-destructive", children: "No hay canchas registradas en la app." }),
-            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-1", children: "Registra primero una cancha en la sección de Canchas." }),
-            isOrganizer && /* @__PURE__ */ jsx(
+            /* @__PURE__ */ jsx("p", { className: "text-xs font-semibold text-destructive", children: t("createEvent.noCourts") || "No hay canchas registradas en la app." }),
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-1", children: t("createEvent.registerFirst") || "Registra primero una cancha en la sección de Canchas." }),
+            isOrganizer && /* @__PURE__ */ jsxs(
               "button",
               {
                 type: "button",
                 onClick: () => setShowAddCanchaForm(true),
                 className: "mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline",
-                children: "+ Crear nueva cancha"
+                children: [
+                  "+ ",
+                  t("createEvent.createCourt") || "+ Crear nueva cancha"
+                ]
               }
             )
           ] }) : /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
@@ -5454,7 +6170,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
                   },
                   className: `w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft ${errors.canchaId ? "border-destructive" : "border-border"}`,
                   children: [
-                    /* @__PURE__ */ jsx("option", { value: "", children: "-- Selecciona una cancha --" }),
+                    /* @__PURE__ */ jsx("option", { value: "", children: t("createEvent.selectCourt") || "-- Selecciona una cancha --" }),
                     canchas.map((c) => /* @__PURE__ */ jsxs("option", { value: c.id, children: [
                       c.name,
                       " ",
@@ -5480,7 +6196,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       captainedClans.filter((c) => c.sport === form.sportId).length > 0 && /* @__PURE__ */ jsxs(
         FormSection,
         {
-          title: "Inscribir Clan Automáticamente",
+          title: t("createEvent.autoClan") || "Inscribir Clan Automáticamente",
           icon: /* @__PURE__ */ jsx(Shield, { size: 13 }),
           children: [
             /* @__PURE__ */ jsxs("div", { className: "relative", children: [
@@ -5491,27 +6207,21 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
                   onChange: (e) => setField("hostClanId", e.target.value),
                   className: "w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft border-border",
                   children: [
-                    /* @__PURE__ */ jsx("option", { value: "", children: "-- No inscribir clan completo --" }),
-                    captainedClans.filter((c) => c.sport === form.sportId).map((c) => /* @__PURE__ */ jsxs("option", { value: c.id, children: [
-                      "Inscribir a ",
-                      c.name,
-                      " (",
-                      c.clan_members.filter((m) => m.status === "approved").length,
-                      " miembros)"
-                    ] }, c.id))
+                    /* @__PURE__ */ jsx("option", { value: "", children: t("createEvent.noClan") || "-- No inscribir clan completo --" }),
+                    captainedClans.filter((c) => c.sport === form.sportId).map((c) => /* @__PURE__ */ jsx("option", { value: c.id, children: t("createEvent.enrollClan")?.replace("{name}", c.name).replace("{count}", c.clan_members.filter((m) => m.status === "approved").length) || `Inscribir a ${c.name} (${c.clan_members.filter((m) => m.status === "approved").length} miembros)` }, c.id))
                   ]
                 }
               ),
               /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-y-0 right-4 flex items-center text-muted-foreground", children: /* @__PURE__ */ jsx(Shield, { size: 16 }) })
             ] }),
-            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-1", children: "Si seleccionas un clan, todos sus miembros actuales serán inscritos automáticamente en este evento." })
+            /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-1", children: t("createEvent.clanNote") || "Si seleccionas un clan, todos sus miembros actuales serán inscritos automáticamente en este evento." })
           ]
         }
       ),
       /* @__PURE__ */ jsx(
         FormSection,
         {
-          title: "Capacidad máxima",
+          title: t("createEvent.maxCapacity") || "Capacidad máxima",
           icon: /* @__PURE__ */ jsx(Users, { size: 13 }),
           children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-soft focus-within:border-primary transition-colors", children: [
             /* @__PURE__ */ jsx(Users, { size: 16, className: "shrink-0 text-muted-foreground" }),
@@ -5522,7 +6232,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
                 type: "number",
                 min: 1,
                 max: 100,
-                placeholder: "Ej: 12 jugadores (opcional)",
+                placeholder: t("createEvent.capacityPlaceholder") || "Ej: 12 jugadores (opcional)",
                 value: form.maxCapacity,
                 onChange: (e) => setField("maxCapacity", e.target.value),
                 className: "w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
@@ -5534,7 +6244,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
       /* @__PURE__ */ jsx(
         FormSection,
         {
-          title: "Descripción",
+          title: t("createEvent.description") || "Descripción",
           icon: /* @__PURE__ */ jsx(FileText, { size: 13 }),
           children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-1 rounded-2xl border border-border bg-card px-4 py-3 shadow-soft focus-within:border-primary transition-colors", children: [
             /* @__PURE__ */ jsx(
@@ -5543,7 +6253,7 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
                 id: "event-description-input",
                 maxLength: 150,
                 rows: 3,
-                placeholder: "Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)",
+                placeholder: t("createEvent.descPlaceholder") || "Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)",
                 value: form.descriptionAfterArrival,
                 onChange: (e) => setField("descriptionAfterArrival", e.target.value),
                 className: "w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50 resize-none py-1"
@@ -5591,8 +6301,8 @@ function CreateEventForm({ onClose, onEventCreated, initialCancha }) {
           className: `w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${status === "loading" ? "gradient-primary cursor-not-allowed opacity-70 text-secondary" : "gradient-primary text-secondary shadow-pop hover:shadow-lg"}`,
           children: status === "loading" ? /* @__PURE__ */ jsxs("span", { className: "flex items-center justify-center gap-2", children: [
             /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }),
-            "Publicando evento…"
-          ] }) : "Publicar evento"
+            t("createEvent.publishing") || "Publicando evento…"
+          ] }) : t("createEvent.publish") || "Publicar evento"
         }
       )
     ] })
@@ -5643,17 +6353,17 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     const coords = parseLocation$2(row.location);
     const lat = coords?.lat ?? 0;
     const lng = coords?.lng ?? 0;
-    const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+    const sportName = row.sport_id === 1 ? t("sports.football") || "Fútbol" : row.sport_id === 2 ? t("sports.tennis") || "Tenis" : row.sport_id === 3 ? t("sports.golf") || "Golf" : row.sport_id === 4 ? t("sports.padel") || "Pádel" : t("sports.other") || "Otro";
     return {
       ...row,
       lat,
       lng,
       sport: sportName,
       title: row.title || `Evento de ${sportName}`,
-      host: row.creator_username || "Usuario",
+      host: row.creator_username || (t("common.user") || "Usuario"),
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
-      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
+      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : t("events.upcoming") || "Próximamente",
       image: getSportImage$1(row.sport_id),
       distanceKm: 2.5,
       joined: row.joined ?? 1,
@@ -5704,7 +6414,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     setPastEvents(past);
     setCreatedEvents(created);
     setLoading(false);
-    setTab(upcoming.length > 0 ? "Mis Partidos" : "Próximos");
+    setTab(upcoming.length > 0 ? 1 : 0);
   }
   async function fetchRequests(email) {
     if (!email) return;
@@ -5724,7 +6434,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
   async function handleAction(participantId, status) {
     const req = pendingRequests.find((r) => r.id === participantId);
     if (!req || req.events?.creator_username !== currentUser?.email) {
-      alert("No tienes permiso para realizar esta acción.");
+      alert(t("events.error.noPermission") || "No tienes permiso para realizar esta acción.");
       return;
     }
     setActionLoading(participantId.toString());
@@ -5733,7 +6443,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
       setPendingRequests((prev) => prev.filter((r) => r.id !== participantId));
     } else {
       console.error(error);
-      alert("Error al procesar la solicitud: " + error.message);
+      alert((t("events.error.processing") || "Error al procesar la solicitud: ") + error.message);
     }
     setActionLoading(null);
   }
@@ -5751,7 +6461,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
             id: "fab-create-event-btn",
             onClick: () => setShowCreateForm(true),
             className: "flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105",
-            "aria-label": "Crear partido",
+            "aria-label": t("events.createEvent") || "Crear partido",
             style: { boxShadow: "0 4px 18px rgba(99,102,241,0.45)" },
             children: [
               /* @__PURE__ */ jsx(Plus, { size: 15, strokeWidth: 2.5 }),
@@ -5778,9 +6488,9 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
         label
       );
     }) }) }),
-    tab === 2 ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
+    tab === 2 ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: t("events.noPendingRequests") || "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
       const isPremium = req.profiles?.is_premium;
-      const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
+      const sportName = req.events?.sport_id === 1 ? t("sports.football") || "Fútbol" : req.events?.sport_id === 2 ? t("sports.tennis") || "Tenis" : req.events?.sport_id === 3 ? t("sports.golf") || "Golf" : req.events?.sport_id === 4 ? t("sports.padel") || "Pádel" : "Evento";
       return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl bg-card p-4 shadow-soft", children: [
         /* @__PURE__ */ jsxs(
           "div",
@@ -5798,16 +6508,18 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
               ) : /* @__PURE__ */ jsx("div", { className: "grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary", children: (req.user_username || "U").substring(0, 2).toUpperCase() }),
               /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
                 /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
-                  /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: req.user_username?.split("@")[0] || "Usuario" }),
+                  /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: req.user_username?.split("@")[0] || (t("common.user") || "Usuario") }),
                   isPremium ? /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700", children: [
                     /* @__PURE__ */ jsx(Star, { size: 8, className: "fill-amber-500" }),
-                    " Premium"
-                  ] }) : /* @__PURE__ */ jsx("span", { className: "rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground", children: "Básica" })
+                    " ",
+                    t("profile.premium") || "Premium"
+                  ] }) : /* @__PURE__ */ jsx("span", { className: "rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground", children: t("profile.basic") || "Básica" })
                 ] }),
                 /* @__PURE__ */ jsxs("div", { className: "text-xs text-muted-foreground mt-0.5", children: [
-                  "quiere unirse a tu partido de ",
+                  t("events.wantsToJoin") || "quiere unirse a tu partido de",
+                  " ",
                   sportName,
-                  /* @__PURE__ */ jsx(
+                  /* @__PURE__ */ jsxs(
                     "button",
                     {
                       onClick: (e) => {
@@ -5815,7 +6527,10 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
                         setSelectedUserProfile(req.profiles || { username: req.user_username });
                       },
                       className: "text-[10px] font-extrabold text-primary hover:underline block text-left mt-1",
-                      children: "Ver Perfil 🔍"
+                      children: [
+                        t("events.viewProfile") || "Ver Perfil",
+                        " 🔍"
+                      ]
                     }
                   )
                 ] })
@@ -5830,7 +6545,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
               disabled: actionLoading === req.id.toString(),
               onClick: () => handleAction(req.id, "rechazado"),
               className: "flex-1 rounded-xl bg-muted py-2.5 text-xs font-semibold text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors disabled:opacity-50",
-              children: "Rechazar"
+              children: t("friends.reject") || "Rechazar"
             }
           ),
           /* @__PURE__ */ jsx(
@@ -5839,7 +6554,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
               disabled: actionLoading === req.id.toString(),
               onClick: () => handleAction(req.id, "aceptado"),
               className: "flex flex-1 items-center justify-center rounded-xl gradient-primary py-2.5 text-xs font-bold text-secondary shadow-pop disabled:opacity-50",
-              children: actionLoading === req.id.toString() ? /* @__PURE__ */ jsx(Loader2, { size: 14, className: "animate-spin" }) : "Aceptar"
+              children: actionLoading === req.id.toString() ? /* @__PURE__ */ jsx(Loader2, { size: 14, className: "animate-spin" }) : t("friends.accept") || "Aceptar"
             }
           )
         ] })
@@ -5851,11 +6566,11 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
       ] }),
       tab === 1 && /* @__PURE__ */ jsxs(Fragment, { children: [
         myEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
-        myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos próximos programados" })
+        myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: t("events.noUpcomingMatches") || "No tienes partidos próximos programados" })
       ] })
     ] }),
     selectedUserProfile && (() => {
-      const formatted = getFormattedProfile(selectedUserProfile);
+      const formatted = getFormattedProfile(selectedUserProfile, t);
       if (!formatted) return null;
       return /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[9999] flex items-center justify-center bg-black/75 px-6 py-4 animate-in fade-in duration-300", children: /* @__PURE__ */ jsxs("div", { className: "relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col", children: [
         /* @__PURE__ */ jsx("div", { className: `h-24 w-full bg-gradient-to-tr ${formatted.gradient} relative shrink-0` }),
@@ -5879,29 +6594,30 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
           /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
             /* @__PURE__ */ jsxs("h3", { className: "text-base font-black flex items-center gap-2", children: [
               formatted.name,
-              formatted.is_organizer && /* @__PURE__ */ jsx("span", { className: "inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30", children: "Organizador" })
+              formatted.is_organizer && /* @__PURE__ */ jsx("span", { className: "inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30", children: t("profile.organizer") || "Organizador" })
             ] }),
             /* @__PURE__ */ jsx("p", { className: "text-[10px] text-white/50", children: formatted.username })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-2 text-center text-xs", children: [
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Edad" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: t("profile.age") || "Edad" }),
               /* @__PURE__ */ jsxs("span", { className: "font-extrabold text-white", children: [
                 formatted.age,
-                " años"
+                " ",
+                t("common.years") || "años"
               ] })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Género" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: t("profile.gender") || "Género" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", children: formatted.gender })
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "bg-white/5 p-2 rounded-xl border border-white/10", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: "Ubicación" }),
+              /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 block font-bold", children: t("profile.location") || "Ubicación" }),
               /* @__PURE__ */ jsx("span", { className: "font-extrabold text-white truncate block", title: formatted.location, children: formatted.location })
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Sobre mí" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: t("profile.aboutMe") || "Sobre mí" }),
             /* @__PURE__ */ jsxs("p", { className: "text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic", children: [
               '"',
               formatted.bio,
@@ -5909,7 +6625,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
             ] })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: "Deportes Favoritos" }),
+            /* @__PURE__ */ jsx("span", { className: "text-[9px] text-white/50 font-bold uppercase tracking-wider block", children: t("profile.favSports") || "Deportes Favoritos" }),
             /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: formatted.sports.map((sport) => /* @__PURE__ */ jsx("span", { className: "rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary", children: sport }, sport)) })
           ] }),
           /* @__PURE__ */ jsx(
@@ -5917,7 +6633,7 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
             {
               onClick: () => setSelectedUserProfile(null),
               className: "w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer",
-              children: "Cerrar Perfil"
+              children: t("profile.closeProfile") || "Cerrar Perfil"
             }
           )
         ] })
@@ -5940,9 +6656,9 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     ) })
   ] });
 }
-const getFormattedProfile = (p) => {
+const getFormattedProfile = (p, t) => {
   if (!p) return null;
-  const username = p.username || "Usuario";
+  const username = p.username || (t ? t("common.user") : "Usuario");
   let charCodeSum = 0;
   for (let i = 0; i < username.length; i++) {
     charCodeSum += username.charCodeAt(i);
@@ -5981,12 +6697,12 @@ const getFormattedProfile = (p) => {
     "Jugador recreativo de vóleibol y fútbol. Buena vibra."
   ];
   const bio = p.description || bios[charCodeSum % bios.length];
-  const name = username.includes("@") ? username.split("@")[0].split(".").map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") : username;
+  const name = username.includes("@") ? username.split("@")[0].split(/[._-]/).map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ") : username;
   return {
     name,
     username,
     age,
-    gender: p.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
+    gender: p.gender || (charCodeSum % 2 === 0 ? t ? t("profile.male") : "Masculino" : t ? t("profile.female") : "Femenino"),
     location,
     bio,
     sports: sports2,
@@ -5999,15 +6715,6 @@ const getFormattedProfile = (p) => {
   };
 };
 const hikingTrail = "/assets/hiking-trail-BbQuy3Lk.jpg";
-const SPORT_NAMES = {
-  1: "Fútbol",
-  2: "Tenis",
-  3: "Golf",
-  4: "Pádel",
-  5: "Senderismo",
-  6: "Running",
-  7: "Vóleibol"
-};
 const SPORT_EMOJIS = {
   1: "⚽",
   2: "🎾",
@@ -6025,9 +6732,19 @@ const getSportImage = (sportId) => {
   if (sportId === 5) return hikingTrail;
   return runningTrail;
 };
-function formatEvent(row) {
+function formatEvent(row, t) {
   if (!row) return null;
-  const sportName = SPORT_NAMES[row.sport_id] || "Deporte";
+  const getSportName = (id) => {
+    if (id === 1) return t("sports.football") || "Fútbol";
+    if (id === 2) return t("sports.tennis") || "Tenis";
+    if (id === 3) return t("sports.golf") || "Golf";
+    if (id === 4) return t("sports.padel") || "Pádel";
+    if (id === 5) return t("sports.hiking") || "Senderismo";
+    if (id === 6) return t("sports.running") || "Running";
+    if (id === 7) return t("sports.volleyball") || "Vóleibol";
+    return t("sports.other") || "Deporte";
+  };
+  const sportName = getSportName(row.sport_id);
   return {
     ...row,
     sport: sportName,
@@ -6039,7 +6756,7 @@ function formatEvent(row) {
       weekday: "short",
       day: "numeric",
       month: "short"
-    }) : "Próximamente",
+    }) : t("common.soon") || "Próximamente",
     image: getSportImage(row.sport_id),
     distanceKm: 2.5,
     joined: row.joined ?? 1,
@@ -6049,6 +6766,7 @@ function formatEvent(row) {
   };
 }
 function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
+  const { t } = useSettings();
   const [loading, setLoading] = useState(true);
   const [sportGroups, setSportGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -6058,6 +6776,16 @@ function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
         const { data } = await supabase.from("event_participants").select(`events!inner(*)`).eq("user_username", user.email);
         if (data && data.length > 0) {
           const groups = {};
+          const getSportName = (id) => {
+            if (id === 1) return t("sports.football") || "Fútbol";
+            if (id === 2) return t("sports.tennis") || "Tenis";
+            if (id === 3) return t("sports.golf") || "Golf";
+            if (id === 4) return t("sports.padel") || "Pádel";
+            if (id === 5) return t("sports.hiking") || "Senderismo";
+            if (id === 6) return t("sports.running") || "Running";
+            if (id === 7) return t("sports.volleyball") || "Vóleibol";
+            return t("sports.other") || "Deporte";
+          };
           data.forEach((p) => {
             const ev = p.events;
             if (!ev) return;
@@ -6065,21 +6793,21 @@ function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
             if (!groups[sid]) {
               groups[sid] = {
                 sportId: sid,
-                name: SPORT_NAMES[sid] || "Deporte",
+                name: getSportName(sid),
                 emoji: SPORT_EMOJIS[sid] || "🏅",
                 count: 0,
                 events: []
               };
             }
             groups[sid].count += 1;
-            groups[sid].events.push(formatEvent(ev));
+            groups[sid].events.push(formatEvent(ev, t));
           });
           setSportGroups(Object.values(groups));
         }
       }
       setLoading(false);
     });
-  }, []);
+  }, [t]);
   if (loading) {
     return /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center bg-background", children: /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }) });
   }
@@ -6102,8 +6830,8 @@ function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
           ] }),
           /* @__PURE__ */ jsxs("p", { className: "text-[11px] text-muted-foreground", children: [
             selectedGroup.count,
-            " partido",
-            selectedGroup.count !== 1 ? "s" : ""
+            " ",
+            selectedGroup.count === 1 ? t("mySports.match") || "partido" : t("mySports.matches") || "partidos"
           ] })
         ] })
       ] }),
@@ -6144,9 +6872,9 @@ function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
       /* @__PURE__ */ jsxs("div", { children: [
         /* @__PURE__ */ jsxs("h1", { className: "text-2xl font-bold text-secondary flex items-center gap-2", children: [
           /* @__PURE__ */ jsx(Trophy, { size: 24, className: "text-primary" }),
-          "Mis deportes"
+          t("mySports.title") || "Mis deportes"
         ] }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tus estadísticas y partidos por disciplina" })
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: t("mySports.subtitle") || "Tus estadísticas y partidos por disciplina" })
       ] }),
       /* @__PURE__ */ jsx(UserAvatar, { size: "md", className: "cursor-pointer", onClick: onNavigateToProfile })
     ] }),
@@ -6161,15 +6889,15 @@ function MySportsScreen({ onSelectEvent, onNavigateToProfile }) {
             /* @__PURE__ */ jsx("div", { className: "text-sm font-bold text-secondary", children: g.name }),
             /* @__PURE__ */ jsxs("div", { className: "text-xs text-muted-foreground", children: [
               g.count,
-              " partido",
-              g.count !== 1 ? "s" : ""
+              " ",
+              g.count === 1 ? t("mySports.match") || "partido" : t("mySports.matches") || "partidos"
             ] })
           ] }),
           /* @__PURE__ */ jsx(ChevronRight, { size: 16, className: "text-primary shrink-0" })
         ]
       },
       g.sportId
-    )) : /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground p-3 text-center bg-card rounded-2xl shadow-soft", children: "No te has unido a eventos de ningún deporte todavía" }) }) })
+    )) : /* @__PURE__ */ jsx("div", { className: "text-sm text-muted-foreground p-3 text-center bg-card rounded-2xl shadow-soft", children: t("mySports.noSports") || "No te has unido a eventos de ningún deporte todavía" }) }) })
   ] });
 }
 function FriendsScreen({
@@ -6258,18 +6986,18 @@ function FriendsScreen({
     let name = p.full_name || "";
     if (!name) {
       if (p.username && p.username.includes("@")) {
-        name = p.username.split("@")[0].split(".").map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ");
+        name = p.username.split("@")[0].split(/[._-]/).map((n) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ");
       } else if (p.username) {
         name = p.username;
       }
     }
     return {
       id: p.id,
-      name: name || "Deportista",
+      name: name || (t("friends.defaultName") || "Deportista"),
       username: p.username,
       age: p.age || "?",
-      location: p.location || "Ubicación desconocida",
-      bio: p.description || "Sin descripción",
+      location: p.location || (t("friends.unknownLocation") || "Ubicación desconocida"),
+      bio: p.description || (t("friends.noDescription") || "Sin descripción"),
       sports: p.preferred_sports || [],
       avatar_url: p.avatar_url || null,
       emoji,
@@ -6318,7 +7046,7 @@ function FriendsScreen({
       if (error) throw error;
       setReceivedRequests(receivedRequests.filter((r) => r.id !== request.id));
       setFriends([request, ...friends]);
-      await addXp(15, `¡Aceptaste a ${request.name} como amigo! 🤝`);
+      await addXp(15, t("friends.acceptedXp") ? t("friends.acceptedXp").replace("{name}", request.name) : `¡Aceptaste a ${request.name} como amigo! 🤝`);
       if (incrementCarisma) {
         await incrementCarisma(1);
       }
@@ -6366,23 +7094,20 @@ function FriendsScreen({
           /* @__PURE__ */ jsx("div", { className: "h-16 w-16 rounded-full bg-primary/10 border border-primary/30 text-primary grid place-items-center animate-pulse", children: /* @__PURE__ */ jsx(Heart, { size: 32, className: "fill-current text-primary animate-bounce" }) })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20", children: "Enviando solicitud..." }),
+          /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-primary/20 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20", children: t("friends.sendingRequest") || "Enviando solicitud..." }),
           /* @__PURE__ */ jsxs("h3", { className: "text-xl font-black text-white", children: [
-            "Conectando con ",
+            t("friends.connectingWith") || "Conectando con",
+            " ",
             activeRequestUser.name
           ] })
         ] })
       ] }),
       matchProgress === "sent" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡SOLICITUD ENVIADA! 🤝" }),
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: t("friends.requestSent") || "¡SOLICITUD ENVIADA! 🤝" }),
         /* @__PURE__ */ jsx("div", { className: "grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20", children: /* @__PURE__ */ jsx(CheckCircle2, { size: 48, strokeWidth: 2.5 }) }),
         /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight drop-shadow-md", children: "¡Enviado!" }),
-          /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80 px-4 leading-relaxed", children: [
-            "Has enviado una solicitud de Match a ",
-            activeRequestUser.name,
-            ". Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos."
-          ] })
+          /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight drop-shadow-md", children: t("friends.sent") || "¡Enviado!" }),
+          /* @__PURE__ */ jsx("p", { className: "text-sm text-white/80 px-4 leading-relaxed", children: t("friends.requestDesc") ? t("friends.requestDesc").replace("{name}", activeRequestUser.name) : `Has enviado una solicitud de Match a ${activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.` })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-8 py-6 relative", children: [
           /* @__PURE__ */ jsx("div", { className: "relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500 overflow-hidden", children: user?.user_metadata?.avatar_url ? /* @__PURE__ */ jsx("img", { src: user.user_metadata.avatar_url, className: "w-full h-full object-cover" }) : (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase() }),
@@ -6398,14 +7123,17 @@ function FriendsScreen({
               setCurrentIndex((prev) => prev + 1);
             },
             className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer",
-            children: "¡Entendido!"
+            children: t("friends.gotIt") || "¡Entendido!"
           }
         )
       ] }),
       matchProgress === "error" && /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30", children: "ERROR 💔" }),
-        /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight", children: "Hubo un problema" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5", children: "No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests." }),
+        /* @__PURE__ */ jsxs("span", { className: "inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30", children: [
+          (t("common.error") || "ERROR").toUpperCase(),
+          " 💔"
+        ] }),
+        /* @__PURE__ */ jsx("h2", { className: "text-3xl font-black text-white tracking-tight", children: t("friends.problem") || "Hubo un problema" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5", children: t("friends.errorDesc") || "No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests." }),
         /* @__PURE__ */ jsx(
           "button",
           {
@@ -6414,7 +7142,7 @@ function FriendsScreen({
               setActiveRequestUser(null);
             },
             className: "w-full rounded-2xl bg-red-500 hover:bg-red-600 text-white py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95 cursor-pointer",
-            children: "Cerrar"
+            children: t("common.close") || "Cerrar"
           }
         )
       ] })
@@ -6422,13 +7150,9 @@ function FriendsScreen({
     acceptedMatchUser && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300 backdrop-blur-sm", children: [
       /* @__PURE__ */ jsx("div", { className: "absolute inset-0 sunburst-rays opacity-20 pointer-events-none" }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500", children: [
-        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: "¡NUEVO MATCH! 🤝" }),
-        /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: "¡SOLICITUD ACEPTADA!" }),
-        /* @__PURE__ */ jsxs("p", { className: "text-sm text-white/80 px-4", children: [
-          "¡Tú y ",
-          acceptedMatchUser.name,
-          " ahora son amigos! Han ganado +1 punto de Carisma."
-        ] }),
+        /* @__PURE__ */ jsx("span", { className: "inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse", children: t("friends.newMatch") || "¡NUEVO MATCH! 🤝" }),
+        /* @__PURE__ */ jsx("h2", { className: "text-4xl font-black text-white tracking-tight drop-shadow-md", children: t("friends.requestAccepted") || "¡SOLICITUD ACEPTADA!" }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-white/80 px-4", children: t("friends.nowFriends") ? t("friends.nowFriends").replace("{name}", acceptedMatchUser.name) : `¡Tú y ${acceptedMatchUser.name} ahora son amigos! Han ganado +1 punto de Carisma.` }),
         /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-center gap-8 py-8 relative", children: [
           /* @__PURE__ */ jsx("div", { className: "relative h-24 w-24 rounded-full border-4 border-primary bg-secondary grid place-items-center text-5xl shadow-pop animate-in slide-in-from-left duration-500 overflow-hidden", children: user?.user_metadata?.avatar_url ? /* @__PURE__ */ jsx("img", { src: user.user_metadata.avatar_url, className: "w-full h-full object-cover" }) : (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase() }),
           /* @__PURE__ */ jsx("div", { className: "absolute left-1/2 -translate-x-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-2xl animate-bounce", children: /* @__PURE__ */ jsx(Heart, { className: "fill-current", size: 24 }) }),
@@ -6439,7 +7163,7 @@ function FriendsScreen({
           {
             onClick: () => setAcceptedMatchUser(null),
             className: "w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer",
-            children: "Cerrar"
+            children: t("common.close") || "Cerrar"
           }
         )
       ] })
@@ -6466,7 +7190,7 @@ function FriendsScreen({
           className: `flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeSubTab === "tinder" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`,
           children: [
             /* @__PURE__ */ jsx(Flame, { size: 14, className: activeSubTab === "tinder" ? "text-primary" : "" }),
-            "Para ti"
+            t("friends.forYou") || "Para ti"
           ]
         }
       ),
@@ -6487,7 +7211,7 @@ function FriendsScreen({
     ] }) }),
     /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto px-5 pt-3", children: activeSubTab === "tinder" ? /* @__PURE__ */ jsx("div", { className: "h-full flex flex-col items-center justify-center pb-4 relative", children: loadingProfiles ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center justify-center gap-3 py-12", children: [
       /* @__PURE__ */ jsx(Loader2, { className: "h-8 w-8 animate-spin text-primary" }),
-      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse", children: "Cargando perfiles reales..." })
+      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse", children: t("friends.loadingProfiles") || "Cargando perfiles reales..." })
     ] }) : activeCandidate ? /* @__PURE__ */ jsxs("div", { className: "w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300", children: [
       /* @__PURE__ */ jsxs("div", { className: `h-40 shrink-0 flex items-center justify-center relative bg-gradient-to-tr ${activeCandidate.gradient}`, children: [
         activeCandidate.avatar_url ? /* @__PURE__ */ jsx("img", { src: activeCandidate.avatar_url, className: "absolute inset-0 w-full h-full object-cover" }) : /* @__PURE__ */ jsx("div", { className: "text-6xl drop-shadow-md select-none", children: activeCandidate.emoji }),
@@ -6495,7 +7219,8 @@ function FriendsScreen({
           /* @__PURE__ */ jsx(Sparkles, { size: 10, className: "text-primary animate-pulse" }),
           /* @__PURE__ */ jsxs("span", { children: [
             getCompatibilityScore(activeCandidate.sports),
-            "% Compatible"
+            "% ",
+            t("friends.compatible") || "Compatible"
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft", children: [
@@ -6509,7 +7234,8 @@ function FriendsScreen({
             /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: activeCandidate.name }),
             /* @__PURE__ */ jsxs("span", { className: "text-sm font-bold text-muted-foreground", children: [
               activeCandidate.age,
-              " años"
+              " ",
+              t("common.years") || "años"
             ] })
           ] }),
           /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground leading-relaxed line-clamp-3", children: [
@@ -6519,7 +7245,7 @@ function FriendsScreen({
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "space-y-1.5 border-t border-dashed border-border/80 pt-3", children: [
-          /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-black uppercase tracking-wider block", children: "Deportes" }),
+          /* @__PURE__ */ jsx("span", { className: "text-[10px] text-muted-foreground font-black uppercase tracking-wider block", children: t("sports.title") || "Deportes" }),
           /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: activeCandidate.sports.map((sport) => /* @__PURE__ */ jsx(SportBadge, { sport }, sport)) })
         ] })
       ] }),
@@ -6529,7 +7255,7 @@ function FriendsScreen({
           {
             onClick: handleReject,
             className: "grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft",
-            title: "Descartar",
+            title: t("friends.reject") || "Descartar",
             children: /* @__PURE__ */ jsx(X, { size: 20, strokeWidth: 2.5 })
           }
         ),
@@ -6538,7 +7264,7 @@ function FriendsScreen({
           {
             onClick: () => handleLike(activeCandidate),
             className: "grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop",
-            title: "¡Hacer Match!",
+            title: t("friends.makeMatch") || "¡Hacer Match!",
             children: /* @__PURE__ */ jsx(Heart, { size: 20, strokeWidth: 2.5, className: "fill-current" })
           }
         )
@@ -6607,11 +7333,13 @@ function FriendsScreen({
         /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
           /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
             /* @__PURE__ */ jsx(UserCheck, { size: 14, className: "text-primary" }),
-            " Mis Amigos Guardados"
+            " ",
+            t("friends.mySavedFriends") || "Mis Amigos Guardados"
           ] }),
           /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-bold text-muted-foreground", children: [
             filteredFriends.length,
-            " amigos"
+            " ",
+            t("friends.friendsCount") || "amigos"
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "relative", children: [
@@ -6619,7 +7347,7 @@ function FriendsScreen({
             "input",
             {
               type: "text",
-              placeholder: "Buscar amigo por nombre, deporte...",
+              placeholder: t("friends.searchPlaceholder") || "Buscar amigo por nombre, deporte...",
               value: searchQuery,
               onChange: (e) => setSearchQuery(e.target.value),
               className: "w-full rounded-2xl border border-border bg-card pl-10 pr-4 py-2.5 text-xs text-secondary outline-none transition-colors focus:border-primary"
@@ -6627,7 +7355,7 @@ function FriendsScreen({
           ),
           /* @__PURE__ */ jsx(Search, { size: 14, className: "absolute left-3.5 top-3.5 text-muted-foreground" })
         ] }),
-        filteredFriends.length === 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground", children: searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!" }) : /* @__PURE__ */ jsx("div", { className: "space-y-2", children: filteredFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all", children: [
+        filteredFriends.length === 0 ? /* @__PURE__ */ jsx("div", { className: "rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground", children: searchQuery ? t("friends.searchEmpty") || "No se encontraron amigos con ese criterio" : t("friends.noFriendsAdded") || "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!" }) : /* @__PURE__ */ jsx("div", { className: "space-y-2", children: filteredFriends.map((friend) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
             renderAvatar(friend, "h-11 w-11 text-xl"),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
@@ -6635,7 +7363,8 @@ function FriendsScreen({
                 /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate", children: friend.name }),
                 /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
                   friend.age,
-                  " años"
+                  " ",
+                  t("common.years") || "años"
                 ] })
               ] }),
               /* @__PURE__ */ jsxs("div", { className: "text-[10px] text-muted-foreground flex items-center gap-1", children: [
@@ -6649,7 +7378,7 @@ function FriendsScreen({
             "button",
             {
               className: "grid h-9 w-9 place-items-center rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 active:scale-95 transition-all shadow-soft shrink-0 border border-secondary/10",
-              title: "Enviar Mensaje",
+              title: t("friends.sendMessage") || "Enviar Mensaje",
               children: /* @__PURE__ */ jsx(MessageSquare, { size: 14, className: "text-primary" })
             }
           )
@@ -6741,13 +7470,13 @@ function ClansScreen({
         user_id: user.id,
         status: "approved"
       });
-      alert("¡Clan creado exitosamente!");
+      alert(t("common.success") || "¡Clan creado exitosamente!");
       setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
       setActiveTab("mis-clanes");
       fetchMyClans();
     } catch (err) {
-      if (err.code === "23505") alert("Ya existe un clan con ese nombre");
-      else alert("Error al crear clan");
+      if (err.code === "23505") alert((t("common.error") || "Error") + ": Ya existe un clan con ese nombre");
+      else alert((t("common.error") || "Error") + " al crear clan");
     }
     setCreating(false);
   }
@@ -6867,7 +7596,7 @@ function ClansScreen({
       return /* @__PURE__ */ jsxs("div", { className: "bg-card border border-border p-4 rounded-2xl shadow-soft space-y-3", children: [
         /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase text-secondary flex items-center gap-2", children: [
           /* @__PURE__ */ jsx("span", { className: "bg-rose-500 text-white px-2 py-0.5 rounded-full", children: pendingMembers.length }),
-          "Solicitudes de Unión"
+          t("clans.requests") || "Solicitudes de Unión"
         ] }),
         /* @__PURE__ */ jsx("div", { className: "space-y-2", children: pendingMembers.map((req) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between bg-muted/30 p-2 rounded-xl", children: [
           /* @__PURE__ */ jsx("span", { className: "text-xs font-bold text-secondary truncate max-w-[120px]", children: req.profiles?.full_name || req.profiles?.username }),
@@ -6922,22 +7651,23 @@ function ClansScreen({
           ] }),
           selectedClan.description && /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground mt-1 z-10 text-center max-w-[280px]", children: selectedClan.description }),
           isCaptain && /* @__PURE__ */ jsxs("div", { className: "mt-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 z-10", children: [
-            "Código Invitación: ",
+            t("clans.inviteCode") || "Código Invitación:",
+            " ",
             /* @__PURE__ */ jsx("span", { className: "font-mono text-secondary", children: selectedClan.invite_code })
           ] })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-3", children: [
           /* @__PURE__ */ jsxs("div", { className: "bg-card border border-border rounded-2xl p-3 text-center shadow-soft", children: [
             /* @__PURE__ */ jsx("div", { className: "text-2xl font-black text-secondary", children: selectedClan.matches_played }),
-            /* @__PURE__ */ jsx("div", { className: "text-[10px] text-muted-foreground font-bold uppercase", children: "Jugados" })
+            /* @__PURE__ */ jsx("div", { className: "text-[10px] text-muted-foreground font-bold uppercase", children: t("clans.played") || "Jugados" })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "bg-card border border-border rounded-2xl p-3 text-center shadow-soft", children: [
             /* @__PURE__ */ jsx("div", { className: "text-2xl font-black text-emerald-500", children: selectedClan.matches_won }),
-            /* @__PURE__ */ jsx("div", { className: "text-[10px] text-emerald-500/70 font-bold uppercase", children: "Ganados" })
+            /* @__PURE__ */ jsx("div", { className: "text-[10px] text-emerald-500/70 font-bold uppercase", children: t("clans.won") || "Ganados" })
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "bg-card border border-border rounded-2xl p-3 text-center shadow-soft", children: [
             /* @__PURE__ */ jsx("div", { className: "text-2xl font-black text-rose-500", children: selectedClan.matches_lost }),
-            /* @__PURE__ */ jsx("div", { className: "text-[10px] text-rose-500/70 font-bold uppercase", children: "Perdidos" })
+            /* @__PURE__ */ jsx("div", { className: "text-[10px] text-rose-500/70 font-bold uppercase", children: t("clans.lost") || "Perdidos" })
           ] })
         ] }),
         isCaptain && pendingRequestsSection(),
@@ -6945,7 +7675,9 @@ function ClansScreen({
           /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between mb-3", children: [
             /* @__PURE__ */ jsxs("h3", { className: "text-sm font-bold text-secondary flex items-center gap-2", children: [
               /* @__PURE__ */ jsx(Users, { size: 16, className: "text-primary" }),
-              " Miembros (",
+              " ",
+              t("clans.members") || "Miembros",
+              " (",
               approvedMembers.length,
               ")"
             ] }),
@@ -6966,7 +7698,7 @@ function ClansScreen({
             /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxs("div", { className: "text-sm font-bold text-secondary flex items-center gap-2", children: [
                 /* @__PURE__ */ jsx("span", { className: "truncate", children: m.profiles?.full_name || m.profiles?.username?.split("@")[0] }),
-                m.user_id === selectedClan.captain_id && /* @__PURE__ */ jsx("span", { className: "text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0", children: "Capitán" })
+                m.user_id === selectedClan.captain_id && /* @__PURE__ */ jsx("span", { className: "text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0", children: t("clans.captain") || "Capitán" })
               ] }),
               /* @__PURE__ */ jsxs("div", { className: "text-[10px] text-muted-foreground flex items-center gap-1", children: [
                 /* @__PURE__ */ jsx(Star, { size: 10, className: "fill-accent text-accent" }),
@@ -7041,7 +7773,7 @@ function ClansScreen({
   return /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col bg-background relative overflow-hidden pb-24", children: [
     /* @__PURE__ */ jsxs("header", { className: "px-5 pt-12 pb-3", children: [
       /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: t("clans.title") }),
-      /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tu equipo permanente" })
+      /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: t("clans.subtitle") || "Tu equipo permanente" })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "px-5 pb-4", children: /* @__PURE__ */ jsxs("div", { className: "flex gap-1 rounded-full bg-muted p-1 border border-border/40", children: [
       /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("mis-clanes"), className: `flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "mis-clanes" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`, children: [
@@ -7063,8 +7795,8 @@ function ClansScreen({
     /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5", children: [
       activeTab === "mis-clanes" && /* @__PURE__ */ jsx("div", { className: "space-y-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "text-center py-10", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary mx-auto" }) }) : clans.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "text-center py-12 bg-card rounded-3xl border border-dashed border-border mt-4", children: [
         /* @__PURE__ */ jsx(Shield, { size: 48, className: "mx-auto text-muted-foreground/30 mb-3" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-secondary", children: "No perteneces a ningún clan" }),
-        /* @__PURE__ */ jsx("button", { onClick: () => setActiveTab("crear"), className: "mt-4 text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-full", children: "Crea tu primer clan" })
+        /* @__PURE__ */ jsx("p", { className: "text-sm font-bold text-secondary", children: t("clans.noClans") || "No perteneces a ningún clan" }),
+        /* @__PURE__ */ jsx("button", { onClick: () => setActiveTab("crear"), className: "mt-4 text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-full", children: t("clans.createFirst") || "Crea tu primer clan" })
       ] }) : clans.map((clan) => /* @__PURE__ */ jsxs("div", { onClick: () => setSelectedClan(clan), className: "bg-card p-4 rounded-3xl border border-border shadow-soft flex items-center gap-4 cursor-pointer hover:border-primary/30 transition-colors", children: [
         /* @__PURE__ */ jsx("div", { className: "w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-inner shrink-0", style: { background: `linear-gradient(135deg, ${clan.hex_primary}, ${clan.hex_secondary})` }, children: "🛡️" }),
         /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
@@ -7106,14 +7838,14 @@ function ClansScreen({
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsx("button", { disabled: creating, type: "submit", className: "w-full mt-4 gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all", children: creating ? "Creando..." : "Crear Clan" })
+        /* @__PURE__ */ jsx("button", { disabled: creating, type: "submit", className: "w-full mt-4 gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all", children: creating ? t("clans.btn.creating") || "Creando..." : t("clans.btn.create") || "Crear Clan" })
       ] }),
       activeTab === "unirse" && /* @__PURE__ */ jsxs("form", { onSubmit: handleJoinClan, className: "space-y-4 bg-card p-5 rounded-3xl border border-border shadow-soft text-center py-8", children: [
         /* @__PURE__ */ jsx("div", { className: "w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4", children: /* @__PURE__ */ jsx(Search, { size: 28 }) }),
-        /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: "Unirse a un Clan" }),
-        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo." }),
+        /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary", children: t("clans.join.title") || "Unirse a un Clan" }),
+        /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: t("clans.join.desc") || "Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo." }),
         /* @__PURE__ */ jsx("input", { required: true, value: inviteCode, onChange: (e) => setInviteCode(e.target.value), placeholder: "Ej: A4F9K2", className: "w-full max-w-[200px] mx-auto text-center font-mono text-xl tracking-widest uppercase bg-muted/50 border border-border rounded-xl px-4 py-3 text-secondary outline-none focus:border-primary" }),
-        /* @__PURE__ */ jsx("button", { disabled: joining, type: "submit", className: "w-full gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all", children: joining ? "Enviando..." : "Solicitar Unión" })
+        /* @__PURE__ */ jsx("button", { disabled: joining, type: "submit", className: "w-full gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all", children: joining ? t("clans.btn.joining") || "Enviando..." : t("clans.btn.join") || "Solicitar Unión" })
       ] })
     ] })
   ] });
@@ -7132,6 +7864,7 @@ function Logo({ size = 28 }) {
   ] });
 }
 function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
+  const { t } = useSettings();
   const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -7147,31 +7880,31 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
   }
   function translateError(msg) {
     if (msg.includes("Invalid login credentials"))
-      return "Correo o contraseña incorrectos. Revisa tus datos.";
+      return t("auth.err.invalidLogin") || "Correo o contraseña incorrectos. Revisa tus datos.";
     if (msg.includes("Email not confirmed"))
-      return "Confirma tu correo antes de iniciar sesión.";
+      return t("auth.err.emailNotConfirmed") || "Confirma tu correo antes de iniciar sesión.";
     if (msg.includes("User already registered"))
-      return "Ya existe una cuenta con ese correo. Intenta iniciar sesión.";
+      return t("auth.err.alreadyRegistered") || "Ya existe una cuenta con ese correo. Intenta iniciar sesión.";
     if (msg.includes("Password should be at least"))
-      return "La contraseña debe tener al menos 6 caracteres.";
+      return t("auth.err.weakPassword") || "La contraseña debe tener al menos 6 caracteres.";
     if (msg.includes("Unable to validate email"))
-      return "Ingresa un correo electrónico válido.";
+      return t("auth.err.invalidEmail") || "Ingresa un correo electrónico válido.";
     if (msg.includes("Email rate limit exceeded"))
-      return "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
+      return t("auth.err.rateLimit") || "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
     return msg;
   }
   async function handleSubmit() {
     setError(null);
     if (!email.trim() || !password.trim()) {
-      setError("Completa todos los campos obligatorios.");
+      setError(t("auth.fillFields") || "Completa todos los campos obligatorios.");
       return;
     }
     if (mode === "register" && !name.trim()) {
-      setError("Ingresa tu nombre para continuar.");
+      setError(t("auth.enterName") || "Ingresa tu nombre para continuar.");
       return;
     }
     if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres.");
+      setError(t("auth.minPassword") || "La contraseña debe tener al menos 6 caracteres.");
       return;
     }
     setStatus("loading");
@@ -7220,15 +7953,15 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "relative z-10 px-7 pt-6", children: [
       /* @__PURE__ */ jsx("h1", { className: "text-3xl font-bold leading-tight tracking-tight", children: mode === "login" ? /* @__PURE__ */ jsxs(Fragment, { children: [
-        "Bienvenido",
+        t("auth.welcomeBack") || "Bienvenido",
         /* @__PURE__ */ jsx("br", {}),
-        /* @__PURE__ */ jsx("span", { className: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", children: "de vuelta 👋" })
+        /* @__PURE__ */ jsx("span", { className: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", children: t("auth.welcomeBackEmoji") || "de vuelta 👋" })
       ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-        "Crea tu cuenta",
+        t("auth.createAccount") || "Crea tu cuenta",
         /* @__PURE__ */ jsx("br", {}),
-        /* @__PURE__ */ jsx("span", { className: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", children: "y entra a jugar ⚡" })
+        /* @__PURE__ */ jsx("span", { className: "bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", children: t("auth.createAccountEmoji") || "y entra a jugar ⚡" })
       ] }) }),
-      /* @__PURE__ */ jsx("p", { className: "mt-2 text-sm text-secondary-foreground/60", children: mode === "login" ? "Inicia sesión para ver y unirte a eventos." : "Regístrate gratis. En segundos estás dentro." })
+      /* @__PURE__ */ jsx("p", { className: "mt-2 text-sm text-secondary-foreground/60", children: mode === "login" ? t("auth.loginSubtitle") || "Inicia sesión para ver y unirte a eventos." : t("auth.registerSubtitle") || "Regístrate gratis. En segundos estás dentro." })
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex-1 overflow-y-auto px-7 pt-8 pb-6 space-y-4", children: [
       mode === "register" && /* @__PURE__ */ jsxs(Fragment, { children: [
@@ -7236,9 +7969,9 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
           InputField,
           {
             id: "auth-name-input",
-            label: "Nombre completo",
+            label: t("auth.fullName") || "Nombre completo",
             type: "text",
-            placeholder: "Ej: Diego Ramírez",
+            placeholder: t("auth.namePlaceholder") || "Ej: Diego Ramírez",
             value: name,
             onChange: setName,
             icon: /* @__PURE__ */ jsx(User, { size: 16, className: "text-muted-foreground" }),
@@ -7256,14 +7989,14 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
               disabled: isLoading
             }
           ),
-          /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-secondary-foreground", children: "Quiero registrarme como Organizador" })
+          /* @__PURE__ */ jsx("span", { className: "text-sm font-medium text-secondary-foreground", children: t("auth.registerAsOrganizer") || "Quiero registrarme como Organizador" })
         ] })
       ] }),
       /* @__PURE__ */ jsx(
         InputField,
         {
           id: "auth-email-input",
-          label: "Correo electrónico",
+          label: t("auth.email") || "Correo electrónico",
           type: "email",
           placeholder: "tu@email.com",
           value: email,
@@ -7273,7 +8006,7 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
         }
       ),
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("label", { className: "mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary-foreground/50", children: "Contraseña" }),
+        /* @__PURE__ */ jsx("label", { className: "mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary-foreground/50", children: t("auth.password") || "Contraseña" }),
         /* @__PURE__ */ jsxs(
           "div",
           {
@@ -7285,7 +8018,7 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
                 {
                   id: "auth-password-input",
                   type: showPassword ? "text" : "password",
-                  placeholder: mode === "register" ? "Mín. 6 caracteres" : "Tu contraseña",
+                  placeholder: mode === "register" ? t("auth.minChars") || "Mín. 6 caracteres" : t("auth.yourPassword") || "Tu contraseña",
                   value: password,
                   onChange: (e) => setPassword(e.target.value),
                   disabled: isLoading,
@@ -7306,7 +8039,7 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
             ]
           }
         ),
-        mode === "login" && /* @__PURE__ */ jsx("button", { className: "mt-1.5 text-[11px] text-primary hover:underline", children: "¿Olvidaste tu contraseña?" })
+        mode === "login" && /* @__PURE__ */ jsx("button", { className: "mt-1.5 text-[11px] text-primary hover:underline", children: t("auth.forgotPassword") || "¿Olvidaste tu contraseña?" })
       ] }),
       error && /* @__PURE__ */ jsxs("div", { className: "flex items-start gap-2.5 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3", children: [
         /* @__PURE__ */ jsx(AlertCircle, { size: 15, className: "mt-0.5 shrink-0 text-destructive" }),
@@ -7314,7 +8047,7 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
       ] }),
       isSuccess && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3", children: [
         /* @__PURE__ */ jsx(CheckCircle2, { size: 15, className: "shrink-0 text-emerald-400" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm font-medium text-emerald-300", children: mode === "login" ? "¡Sesión iniciada! Entrando..." : "¡Cuenta creada! Bienvenido..." })
+        /* @__PURE__ */ jsx("p", { className: "text-sm font-medium text-emerald-300", children: mode === "login" ? t("auth.loggedInMsg") || "¡Sesión iniciada! Entrando..." : t("auth.accountCreatedMsg") || "¡Cuenta creada! Bienvenido..." })
       ] }),
       /* @__PURE__ */ jsxs(
         "button",
@@ -7333,13 +8066,13 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
                 className: "transition-transform group-hover:translate-x-1"
               }
             ),
-            isLoading ? mode === "login" ? "Iniciando sesión..." : "Creando cuenta..." : isSuccess ? mode === "login" ? "¡Sesión iniciada!" : "¡Cuenta creada!" : mode === "login" ? "Iniciar sesión" : "Crear cuenta gratis"
+            isLoading ? mode === "login" ? t("auth.loggingIn") || "Iniciando sesión..." : t("auth.creatingAccount") || "Creando cuenta..." : isSuccess ? mode === "login" ? t("auth.loggedIn") || "¡Sesión iniciada!" : t("auth.accountCreated") || "¡Cuenta creada!" : mode === "login" ? t("auth.login") || "Iniciar sesión" : t("auth.createFree") || "Crear cuenta gratis"
           ]
         }
       ),
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 py-1", children: [
         /* @__PURE__ */ jsx("div", { className: "h-px flex-1 bg-primary-foreground/10" }),
-        /* @__PURE__ */ jsx("span", { className: "text-[11px] text-secondary-foreground/40", children: "o" }),
+        /* @__PURE__ */ jsx("span", { className: "text-[11px] text-secondary-foreground/40", children: t("auth.or") || "o" }),
         /* @__PURE__ */ jsx("div", { className: "h-px flex-1 bg-primary-foreground/10" })
       ] }),
       /* @__PURE__ */ jsx(
@@ -7349,10 +8082,10 @@ function AuthScreen({ initialMode = "login", onSuccess, onClose }) {
           onClick: () => switchMode(mode === "login" ? "register" : "login"),
           disabled: isLoading,
           className: "w-full rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 py-3.5 text-sm font-medium text-secondary-foreground/80 transition-all hover:bg-primary-foreground/10 active:scale-[0.98] disabled:opacity-50",
-          children: mode === "login" ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"
+          children: mode === "login" ? t("auth.noAccount") || "¿No tienes cuenta? Regístrate" : t("auth.hasAccount") || "¿Ya tienes cuenta? Inicia sesión"
         }
       ),
-      /* @__PURE__ */ jsx("p", { className: "pt-1 text-center text-[10px] text-secondary-foreground/30", children: "Al continuar aceptas los Términos de Uso y la Política de Privacidad de TeamMatch." })
+      /* @__PURE__ */ jsx("p", { className: "pt-1 text-center text-[10px] text-secondary-foreground/30", children: t("auth.terms") || "Al continuar aceptas los Términos de Uso y la Política de Privacidad de TeamMatch." })
     ] })
   ] });
 }

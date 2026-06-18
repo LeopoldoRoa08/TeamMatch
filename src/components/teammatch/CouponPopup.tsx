@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { X, ChevronRight, Copy, Check } from "lucide-react";
+import { useSettings } from "@/lib/SettingsContext";
 
 interface Coupon {
   id: string | number;
@@ -15,6 +16,7 @@ interface Coupon {
 }
 
 export function CouponPopup() {
+  const { t } = useSettings();
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +117,7 @@ export function CouponPopup() {
           {/* Parte Superior: Título */}
           <div key={`title-${activeIdx}`} className="animate-in fade-in slide-in-from-top-3 duration-500">
             <span className="inline-flex rounded-full bg-primary/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/30 animate-pulse mb-3">
-              Anuncio Especial 📣
+              {t("coupon.specialAd") || "Anuncio Especial 📣"}
             </span>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight leading-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
               {couponTitle}
@@ -146,13 +148,13 @@ export function CouponPopup() {
 
               {copied && (
                 <span className="absolute -top-7 left-1/2 -translate-x-1/2 rounded bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md animate-bounce">
-                  ¡Copiado!
+                  {t("coupon.copied") || "¡Copiado!"}
                 </span>
               )}
             </div>
 
             <p className="text-[10px] text-white/50">
-              *Haz clic en el código para copiarlo al portapapeles.
+              {t("coupon.copyHint") || "*Haz clic en el código para copiarlo al portapapeles."}
             </p>
           </div>
         </div>

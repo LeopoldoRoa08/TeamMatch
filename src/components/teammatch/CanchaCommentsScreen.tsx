@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, MessageSquare, Send, Loader2, AlertCircle, CalendarCheck, ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
+import { useSettings } from "@/lib/SettingsContext";
 
 // Helper function to parse location coordinates
 function parseLocation(location: any): { lat: number; lng: number } | null {
@@ -60,6 +61,7 @@ interface CanchaCommentsScreenProps {
 
 export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaCommentsScreenProps) {
   const { user } = useCurrentUser();
+  const { t } = useSettings();
   const [comments, setComments] = useState<any[]>([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [newComment, setNewComment] = useState("");
@@ -222,7 +224,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
       fetchComments();
     } catch (err: any) {
       console.error("Error posting comment:", err);
-      setErrorMessage(err.message || "Error al enviar el comentario.");
+      setErrorMessage(err.message || t("comments.submitError") || "Error al enviar el comentario.");
     } finally {
       setSubmitting(false);
     }
@@ -254,7 +256,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
           <ArrowLeft size={18} className="text-secondary" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-secondary">Comentarios</h1>
+          <h1 className="text-lg font-bold text-secondary">{t("comments.title") || "Comentarios"}</h1>
           <p className="text-[11px] text-muted-foreground truncate max-w-[280px]">
             {cancha.name}
           </p>
@@ -266,7 +268,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
         {loadingComments ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3 text-muted-foreground">
             <Loader2 className="animate-spin text-primary" size={24} />
-            <span className="text-xs font-semibold">Cargando comentarios…</span>
+            <span className="text-xs font-semibold">{t("comments.loading") || "Cargando comentarios…"}</span>
           </div>
         ) : comments.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
@@ -274,11 +276,11 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
               💬
             </div>
             <div>
-              <p className="text-base font-bold text-secondary">Sin comentarios aún</p>
+              <p className="text-base font-bold text-secondary">{t("comments.noComments") || "Sin comentarios aún"}</p>
               <p className="mt-1 text-sm text-muted-foreground max-w-[220px]">
                 {canComment
-                  ? "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha."
-                  : "Nadie ha comentado en esta cancha todavía."}
+                  ? (t("comments.beFirst") || "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha.")
+                  : (t("comments.noCommentsYet") || "Nadie ha comentado en esta cancha todavía.")}
               </p>
             </div>
           </div>
@@ -296,9 +298,9 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
                     </div>
                     <div>
                       <span className="text-xs font-extrabold text-secondary flex items-center gap-1">
-                        Jugador
+                        {t("comments.player") || "Jugador"}
                         <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold text-emerald-700 ring-1 ring-emerald-200">
-                          <ShieldCheck size={9} /> Verificado
+                          <ShieldCheck size={9} /> {t("comments.verified") || "Verificado"}
                         </span>
                       </span>
                     </div>
@@ -323,16 +325,16 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
           <div className="flex items-center justify-center gap-2 py-2">
             <Loader2 className="animate-spin text-primary" size={14} />
             <span className="text-xs font-semibold text-muted-foreground">
-              Comprobando acceso…
+              {t("comments.checkingAccess") || "Comprobando acceso…"}
             </span>
           </div>
         ) : !user ? (
           <div className="flex flex-col items-center gap-3 rounded-2xl bg-muted/30 p-5 border border-dashed border-border">
             <div className="grid h-10 w-10 place-items-center rounded-full bg-muted text-lg">💬</div>
             <div className="text-center space-y-1">
-              <p className="text-sm font-bold text-secondary">Inicia sesión para comentar</p>
+              <p className="text-sm font-bold text-secondary">{t("comments.loginToComment") || "Inicia sesión para comentar"}</p>
               <p className="text-xs text-muted-foreground">
-                Comparte tu opinión sobre esta cancha con la comunidad.
+                {t("comments.shareOpinion") || "Comparte tu opinión sobre esta cancha con la comunidad."}
               </p>
             </div>
             <button
@@ -340,16 +342,16 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
               onClick={onOpenAuth}
               className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#32CD32] to-[#22a822] px-5 py-2.5 text-xs font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-95 hover:shadow-green-500/30"
             >
-              Iniciar Sesión / Registrarse
+              {t("comments.loginRegister") || "Iniciar Sesión / Registrarse"}
             </button>
           </div>
         ) : !canComment ? (
           <div className="flex gap-2.5 items-start rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3.5">
             <AlertCircle size={16} className="text-amber-600 mt-0.5 shrink-0" />
             <div className="space-y-1">
-              <h4 className="text-xs font-bold text-amber-800">Acceso restringido</h4>
+              <h4 className="text-xs font-bold text-amber-800">{t("comments.restricted") || "Acceso restringido"}</h4>
               <p className="text-[11px] leading-relaxed text-amber-700">
-                Solo puedes comentar si has participado o estás participando en un evento en esta cancha. ¡Únete a un partido o crea uno aquí primero!
+                {t("comments.restrictedDesc") || "Solo puedes comentar si has participado o estás participando en un evento en esta cancha. ¡Únete a un partido o crea uno aquí primero!"}
               </p>
             </div>
           </div>
@@ -359,7 +361,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
               <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…"
+                placeholder={t("comments.placeholder") || "Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…"}
                 maxLength={300}
                 rows={2}
                 className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/45 resize-none py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -381,7 +383,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
             <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1">
               <span className="flex items-center gap-1">
                 <CalendarCheck size={11} className="text-primary" />
-                Listo para comentar
+                {t("comments.readyToComment") || "Listo para comentar"}
               </span>
               <span>{newComment.length}/300</span>
             </div>

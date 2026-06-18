@@ -5,6 +5,7 @@ import { useCurrentUser } from "@/lib/UserContext";
 import { useSettings } from "@/lib/SettingsContext";
 import type { Clan, ClanMember, Sport } from "./types";
 import { SportBadge } from "./SportBadge";
+import { toast } from "sonner";
 
 export function ClansScreen({
   onNavigateToProfile,
@@ -26,6 +27,7 @@ export function ClansScreen({
   const [loadingMembers, setLoadingMembers] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [friends, setFriends] = useState<any[]>([]);
+  const [matchesPlayed, setMatchesPlayed] = useState(0);
 
   // Create Form
   const [createData, setCreateData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "" });
@@ -45,8 +47,41 @@ export function ClansScreen({
   }, [user]);
 
   useEffect(() => {
-    if (selectedClan) fetchClanMembers(selectedClan.id);
+    if (selectedClan) {
+      fetchClanMembers(selectedClan.id);
+      fetchMatchesPlayed(selectedClan.id);
+    }
   }, [selectedClan]);
+
+  async function fetchMatchesPlayed(clanId: string) {
+    try {
+      // Count distinct events where any clan member participated
+      const { data: members } = await supabase
+        .from('clan_members')
+        .select('user_id')
+        .eq('clan_id', clanId)
+        .eq('status', 'approved');
+      if (!members || members.length === 0) { setMatchesPlayed(0); return; }
+      const userIds = members.map((m: any) => m.user_id);
+      // Get all profiles to get usernames (emails)
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, username')
+        .in('id', userIds);
+      if (!profiles || profiles.length === 0) { setMatchesPlayed(0); return; }
+      const usernames = profiles.map((p: any) => p.username).filter(Boolean);
+      if (usernames.length === 0) { setMatchesPlayed(0); return; }
+      // Count distinct events any member is enrolled in
+      const { data: participations } = await supabase
+        .from('event_participants')
+        .select('event_id')
+        .in('user_username', usernames);
+      const uniqueEvents = new Set((participations || []).map((p: any) => p.event_id));
+      setMatchesPlayed(uniqueEvents.size);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   async function fetchMyClans() {
     if (!user?.id) return;
@@ -119,13 +154,13 @@ export function ClansScreen({
         status: 'approved'
       });
       
-      alert("¡Clan creado exitosamente!");
+      toast.success(t("common.success") || "¡Clan creado exitosamente!");
       setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
       setActiveTab("mis-clanes");
       fetchMyClans();
     } catch (err: any) {
-      if (err.code === '23505') alert("Ya existe un clan con ese nombre");
-      else alert("Error al crear clan");
+      if (err.code === '23505') toast.error((t("common.error") || "Error") + ": Ya existe un clan con ese nombre");
+      else toast.error((t("common.error") || "Error") + " al crear clan");
     }
     setCreating(false);
   }
@@ -137,7 +172,7 @@ export function ClansScreen({
     try {
       const { data: clan } = await supabase.from('clans').select('id').eq('invite_code', inviteCode.toUpperCase()).single();
       if (!clan) {
-        alert("Código inválido");
+        toast.error("Código inválido");
         setJoining(false);
         return;
       }
@@ -148,13 +183,13 @@ export function ClansScreen({
         status: 'pending'
       });
       
-      if (error && error.code === '23505') alert("Ya enviaste una solicitud a este clan");
+      if (error && error.code === '23505') toast.warning("Ya enviaste una solicitud a este clan");
       else if (error) throw error;
-      else alert("Solicitud enviada al capitán del clan");
+      else toast.success("Solicitud enviada al capitán del clan");
       
       setInviteCode("");
     } catch (err) {
-      alert("Error al unirse al clan");
+      toast.error("Error al unirse al clan");
     }
     setJoining(false);
   }
@@ -199,12 +234,12 @@ export function ClansScreen({
         user_id: friendId,
         status: 'approved' // Amigos se unen de una vez si los invita el capi
       });
-      alert("Amigo añadido al clan");
+      toast.success("Amigo añadido al clan");
       fetchClanMembers(selectedClan.id);
       setShowInviteModal(false);
     } catch (e: any) {
-      if (e.code === '23505') alert("Ya está en el clan");
-      else alert("Error al añadir");
+      if (e.code === '23505') toast.warning("Ya está en el clan");
+      else toast.error("Error al añadir");
     }
   }
 
@@ -223,13 +258,13 @@ export function ClansScreen({
       
       if (error) throw error;
       
-      alert("Clan actualizado");
+      toast.success("Clan actualizado");
       setShowEditModal(false);
       const updated = { ...selectedClan, name: editData.name, sport: editData.sport, hex_primary: editData.primary, hex_secondary: editData.secondary, description: editData.description };
       setSelectedClan(updated);
       setClans(clans.map(c => c.id === updated.id ? updated : c));
     } catch (err: any) {
-      alert("Error al editar: " + err.message);
+      toast.error("Error al editar: " + err.message);
     }
     setEditing(false);
   }
@@ -241,7 +276,7 @@ export function ClansScreen({
       if (error) throw error;
       fetchClanMembers(selectedClan!.id);
     } catch (err: any) {
-      alert("Error al eliminar: " + err.message);
+      toast.error("Error al eliminar: " + err.message);
     }
   }
 
@@ -258,7 +293,7 @@ export function ClansScreen({
       setSelectedClan(null);
       fetchMyClans();
     } catch (err: any) {
-      alert("Error al salir del clan: " + err.message);
+      toast.error("Error al salir del clan: " + err.message);
     }
   }
 
@@ -319,23 +354,15 @@ export function ClansScreen({
             )}
             {isCaptain && (
               <div className="mt-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 z-10">
-                Código Invitación: <span className="font-mono text-secondary">{selectedClan.invite_code}</span>
+                {t("clans.inviteCode") || "Código Invitación:"} <span className="font-mono text-secondary">{selectedClan.invite_code}</span>
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-card border border-border rounded-2xl p-3 text-center shadow-soft">
-              <div className="text-2xl font-black text-secondary">{selectedClan.matches_played}</div>
-              <div className="text-[10px] text-muted-foreground font-bold uppercase">Jugados</div>
-            </div>
-            <div className="bg-card border border-border rounded-2xl p-3 text-center shadow-soft">
-              <div className="text-2xl font-black text-emerald-500">{selectedClan.matches_won}</div>
-              <div className="text-[10px] text-emerald-500/70 font-bold uppercase">Ganados</div>
-            </div>
-            <div className="bg-card border border-border rounded-2xl p-3 text-center shadow-soft">
-              <div className="text-2xl font-black text-rose-500">{selectedClan.matches_lost}</div>
-              <div className="text-[10px] text-rose-500/70 font-bold uppercase">Perdidos</div>
+          <div className="flex justify-center">
+            <div className="bg-card border border-border rounded-2xl px-10 py-4 text-center shadow-soft">
+              <div className="text-3xl font-black text-secondary">{matchesPlayed}</div>
+              <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1">{t("clans.played") || "Partidos Jugados"}</div>
             </div>
           </div>
 
@@ -344,7 +371,7 @@ export function ClansScreen({
           <div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-bold text-secondary flex items-center gap-2">
-                <Users size={16} className="text-primary"/> Miembros ({approvedMembers.length})
+                <Users size={16} className="text-primary"/> {t("clans.members") || "Miembros"} ({approvedMembers.length})
               </h3>
               {isCaptain && (
                 <button 
@@ -372,7 +399,7 @@ export function ClansScreen({
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-bold text-secondary flex items-center gap-2">
                         <span className="truncate">{m.profiles?.full_name || m.profiles?.username?.split('@')[0]}</span>
-                        {m.user_id === selectedClan.captain_id && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0">Capitán</span>}
+                        {m.user_id === selectedClan.captain_id && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0">{t("clans.captain") || "Capitán"}</span>}
                       </div>
                       <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                         <Star size={10} className="fill-accent text-accent" /> {m.profiles?.rating || "5.0"}
@@ -442,7 +469,7 @@ export function ClansScreen({
                 <div>
                   <label className="text-xs font-bold text-secondary uppercase">Deporte</label>
                   <select value={editData.sport} onChange={e => setEditData({...editData, sport: e.target.value as Sport})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary">
-                    {["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol", "Fútbol", "Golf"].map(s => <option key={s} value={s}>{s}</option>)}
+                    {["Pádel", "Tenis", "Vóleibol", "Fútbol", "Golf"].map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div>
@@ -478,7 +505,7 @@ export function ClansScreen({
         <div className="bg-card border border-border p-4 rounded-2xl shadow-soft space-y-3">
           <h3 className="text-xs font-black uppercase text-secondary flex items-center gap-2">
              <span className="bg-rose-500 text-white px-2 py-0.5 rounded-full">{pendingMembers.length}</span>
-             Solicitudes de Unión
+             {t("clans.requests") || "Solicitudes de Unión"}
           </h3>
           <div className="space-y-2">
             {pendingMembers.map(req => (
@@ -501,7 +528,7 @@ export function ClansScreen({
     <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
       <header className="px-5 pt-12 pb-3">
         <h1 className="text-2xl font-bold text-secondary">{t("clans.title")}</h1>
-        <p className="text-sm text-muted-foreground">Tu equipo permanente</p>
+        <p className="text-sm text-muted-foreground">{t("clans.subtitle") || "Tu equipo permanente"}</p>
       </header>
 
       <div className="px-5 pb-4">
@@ -526,8 +553,8 @@ export function ClansScreen({
              ) : clans.length === 0 ? (
                 <div className="text-center py-12 bg-card rounded-3xl border border-dashed border-border mt-4">
                    <Shield size={48} className="mx-auto text-muted-foreground/30 mb-3" />
-                   <p className="text-sm font-bold text-secondary">No perteneces a ningún clan</p>
-                   <button onClick={() => setActiveTab("crear")} className="mt-4 text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-full">Crea tu primer clan</button>
+                   <p className="text-sm font-bold text-secondary">{t("clans.noClans") || "No perteneces a ningún clan"}</p>
+                   <button onClick={() => setActiveTab("crear")} className="mt-4 text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-full">{t("clans.createFirst") || "Crea tu primer clan"}</button>
                 </div>
              ) : (
                 clans.map(clan => (
@@ -560,7 +587,7 @@ export function ClansScreen({
                    <option value="Pádel">Pádel</option>
                    <option value="Fútbol">Fútbol</option>
                    <option value="Tenis">Tenis</option>
-                   <option value="Running">Running</option>
+                   <option value="Golf">Golf</option>
                    <option value="Vóleibol">Vóleibol</option>
                 </select>
              </div>
@@ -582,7 +609,7 @@ export function ClansScreen({
              </div>
              
              <button disabled={creating} type="submit" className="w-full mt-4 gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
-                {creating ? "Creando..." : "Crear Clan"}
+                {creating ? (t("clans.btn.creating") || "Creando...") : (t("clans.btn.create") || "Crear Clan")}
              </button>
           </form>
         )}
@@ -592,11 +619,11 @@ export function ClansScreen({
              <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
                 <Search size={28} />
              </div>
-             <h3 className="text-lg font-black text-secondary">Unirse a un Clan</h3>
-             <p className="text-xs text-muted-foreground">Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo.</p>
+             <h3 className="text-lg font-black text-secondary">{t("clans.join.title") || "Unirse a un Clan"}</h3>
+             <p className="text-xs text-muted-foreground">{t("clans.join.desc") || "Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo."}</p>
              <input required value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Ej: A4F9K2" className="w-full max-w-[200px] mx-auto text-center font-mono text-xl tracking-widest uppercase bg-muted/50 border border-border rounded-xl px-4 py-3 text-secondary outline-none focus:border-primary" />
              <button disabled={joining} type="submit" className="w-full gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
-                {joining ? "Enviando..." : "Solicitar Unión"}
+                {joining ? (t("clans.btn.joining") || "Enviando...") : (t("clans.btn.join") || "Solicitar Unión")}
              </button>
           </form>
         )}

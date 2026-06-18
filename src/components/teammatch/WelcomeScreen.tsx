@@ -1,5 +1,6 @@
 import { MapPin, Users, Trophy, ArrowRight } from "lucide-react";
 import { Logo } from "./Logo";
+import { useSettings } from "@/lib/SettingsContext";
 import caracasMap from "@/assets/caracas-map.jpg";
 
 export function WelcomeScreen({
@@ -9,6 +10,7 @@ export function WelcomeScreen({
   onRegister: () => void;
   onLogin: () => void;
 }) {
+  const { t } = useSettings();
   return (
     <div className="relative h-full w-full overflow-hidden gradient-dark text-secondary-foreground">
       {/* Background map */}
@@ -28,25 +30,25 @@ export function WelcomeScreen({
 
         <div className="mt-12 flex flex-1 flex-col">
           <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Disponible en Caracas
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {t("welcome.availableIn") || "Disponible en Caracas"}
           </span>
 
           <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight">
-            Tu próximo
+            {t("welcome.nextMatch") || "Tu próximo"}
             <br />
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              partido te espera.
+              {t("welcome.awaits") || "partido te espera."}
             </span>
           </h1>
           <p className="mt-4 max-w-[300px] text-sm leading-relaxed text-secondary-foreground/70">
-            Encuentra eventos deportivos cerca de ti, únete con un toque o crea el tuyo y arma equipo.
+            {t("welcome.subtitle") || "Encuentra eventos deportivos cerca de ti, únete con un toque o crea el tuyo y arma equipo."}
           </p>
 
           <div className="mt-8 space-y-3">
             {[
-              { icon: MapPin, title: "Mapa en vivo", desc: "Eventos cerca en tiempo real" },
-              { icon: Users, title: "Únete fácil", desc: "Solicita un cupo en segundos" },
-              { icon: Trophy, title: "Por nivel", desc: "Juega con gente a tu altura" },
+              { icon: MapPin, title: t("welcome.liveMap") || "Mapa en vivo", desc: t("welcome.liveMapDesc") || "Eventos cerca en tiempo real" },
+              { icon: Users, title: t("welcome.joinEasy") || "Únete fácil", desc: t("welcome.joinEasyDesc") || "Solicita un cupo en segundos" },
+              { icon: Trophy, title: t("welcome.byLevel") || "Por nivel", desc: t("welcome.byLevelDesc") || "Juega con gente a tu altura" },
             ].map(({ icon: Icon, title, desc }) => (
               <div
                 key={title}
@@ -70,7 +72,7 @@ export function WelcomeScreen({
             onClick={onRegister}
             className="group flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-base font-bold text-secondary shadow-pop transition active:scale-[0.98]"
           >
-            Empezar a jugar
+            {t("welcome.startPlaying") || "Empezar a jugar"}
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />
           </button>
           <button
@@ -78,10 +80,10 @@ export function WelcomeScreen({
             onClick={onLogin}
             className="w-full rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 py-3 text-sm font-medium text-secondary-foreground/80 transition hover:bg-primary-foreground/10 active:scale-[0.98]"
           >
-            Ya tengo cuenta
+            {t("welcome.hasAccount") || "Ya tengo cuenta"}
           </button>
           <p className="pt-1 text-center text-[11px] text-secondary-foreground/40">
-            Al continuar aceptas los Términos y la Política de Privacidad
+            {t("welcome.terms") || "Al continuar aceptas los Términos y la Política de Privacidad"}
           </p>
         </div>
       </div>

@@ -159,11 +159,11 @@ export function FriendsScreen({
 
     return {
       id: p.id,
-      name: name || "Deportista",
+      name: name || (t("friends.defaultName") || "Deportista"),
       username: p.username,
       age: p.age || "?",
-      location: p.location || "Ubicación desconocida",
-      bio: p.description || "Sin descripción",
+      location: p.location || (t("friends.unknownLocation") || "Ubicación desconocida"),
+      bio: p.description || (t("friends.noDescription") || "Sin descripción"),
       sports: p.preferred_sports || [],
       avatar_url: p.avatar_url || null,
       emoji,
@@ -228,7 +228,7 @@ export function FriendsScreen({
       setReceivedRequests(receivedRequests.filter(r => r.id !== request.id));
       setFriends([request, ...friends]);
       
-      await addXp(15, `¡Aceptaste a ${request.name} como amigo! 🤝`);
+      await addXp(15, t("friends.acceptedXp") ? t("friends.acceptedXp").replace("{name}", request.name) : `¡Aceptaste a ${request.name} como amigo! 🤝`);
       if (incrementCarisma) {
         await incrementCarisma(1);
       }
@@ -300,9 +300,9 @@ export function FriendsScreen({
               
               <div className="space-y-2">
                 <span className="inline-flex rounded-full bg-primary/20 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20">
-                  Enviando solicitud...
+                  {t("friends.sendingRequest") || "Enviando solicitud..."}
                 </span>
-                <h3 className="text-xl font-black text-white">Conectando con {activeRequestUser.name}</h3>
+                <h3 className="text-xl font-black text-white">{t("friends.connectingWith") || "Conectando con"} {activeRequestUser.name}</h3>
               </div>
             </div>
           )}
@@ -310,7 +310,7 @@ export function FriendsScreen({
           {matchProgress === "sent" && (
             <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
               <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-                ¡SOLICITUD ENVIADA! 🤝
+                {t("friends.requestSent") || "¡SOLICITUD ENVIADA! 🤝"}
               </span>
 
               <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
@@ -319,10 +319,10 @@ export function FriendsScreen({
               
               <div className="space-y-2">
                 <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-md">
-                  ¡Enviado!
+                  {t("friends.sent") || "¡Enviado!"}
                 </h2>
                 <p className="text-sm text-white/80 px-4 leading-relaxed">
-                  Has enviado una solicitud de Match a {activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.
+                  {t("friends.requestDesc") ? t("friends.requestDesc").replace("{name}", activeRequestUser.name) : `Has enviado una solicitud de Match a ${activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.`}
                 </p>
               </div>
 
@@ -350,7 +350,7 @@ export function FriendsScreen({
                 }}
                 className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
               >
-                ¡Entendido!
+                {t("friends.gotIt") || "¡Entendido!"}
               </button>
             </div>
           )}
@@ -358,15 +358,15 @@ export function FriendsScreen({
           {matchProgress === "error" && (
             <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
               <span className="inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30">
-                ERROR 💔
+                {(t("common.error") || "ERROR").toUpperCase()} 💔
               </span>
               
               <h2 className="text-3xl font-black text-white tracking-tight">
-                Hubo un problema
+                {t("friends.problem") || "Hubo un problema"}
               </h2>
               
               <p className="text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5">
-                No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests.
+                {t("friends.errorDesc") || "No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests."}
               </p>
 
               <button
@@ -376,7 +376,7 @@ export function FriendsScreen({
                 }}
                 className="w-full rounded-2xl bg-red-500 hover:bg-red-600 text-white py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95 cursor-pointer"
               >
-                Cerrar
+                {t("common.close") || "Cerrar"}
               </button>
             </div>
           )}
@@ -389,14 +389,14 @@ export function FriendsScreen({
           
           <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
             <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-              ¡NUEVO MATCH! 🤝
+              {t("friends.newMatch") || "¡NUEVO MATCH! 🤝"}
             </span>
             
             <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
-              ¡SOLICITUD ACEPTADA!
+              {t("friends.requestAccepted") || "¡SOLICITUD ACEPTADA!"}
             </h2>
             <p className="text-sm text-white/80 px-4">
-              ¡Tú y {acceptedMatchUser.name} ahora son amigos! Han ganado +1 punto de Carisma.
+              {t("friends.nowFriends") ? t("friends.nowFriends").replace("{name}", acceptedMatchUser.name) : `¡Tú y ${acceptedMatchUser.name} ahora son amigos! Han ganado +1 punto de Carisma.`}
             </p>
 
             <div className="flex items-center justify-center gap-8 py-8 relative">
@@ -419,7 +419,7 @@ export function FriendsScreen({
               onClick={() => setAcceptedMatchUser(null)}
               className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
             >
-              Cerrar
+              {t("common.close") || "Cerrar"}
             </button>
           </div>
         </div>
@@ -449,7 +449,7 @@ export function FriendsScreen({
             }`}
           >
             <Flame size={14} className={activeSubTab === "tinder" ? "text-primary" : ""} />
-            Para ti
+            {t("friends.forYou") || "Para ti"}
           </button>
           <button
             onClick={() => setActiveSubTab("friends")}
@@ -471,7 +471,7 @@ export function FriendsScreen({
             {loadingProfiles ? (
               <div className="flex flex-col items-center justify-center gap-3 py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Cargando perfiles reales...</p>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">{t("friends.loadingProfiles") || "Cargando perfiles reales..."}</p>
               </div>
             ) : activeCandidate ? (
               <div className="w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300">
@@ -484,7 +484,7 @@ export function FriendsScreen({
                   
                   <div className="absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop">
                     <Sparkles size={10} className="text-primary animate-pulse" />
-                    <span>{getCompatibilityScore(activeCandidate.sports)}% Compatible</span>
+                    <span>{getCompatibilityScore(activeCandidate.sports)}% {t("friends.compatible") || "Compatible"}</span>
                   </div>
 
                   <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft">
@@ -497,7 +497,7 @@ export function FriendsScreen({
                   <div className="space-y-2">
                     <div className="flex items-baseline gap-2">
                       <h3 className="text-lg font-black text-secondary">{activeCandidate.name}</h3>
-                      <span className="text-sm font-bold text-muted-foreground">{activeCandidate.age} años</span>
+                      <span className="text-sm font-bold text-muted-foreground">{activeCandidate.age} {t("common.years") || "años"}</span>
                     </div>
 
                     <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
@@ -506,7 +506,7 @@ export function FriendsScreen({
                   </div>
 
                   <div className="space-y-1.5 border-t border-dashed border-border/80 pt-3">
-                    <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider block">Deportes</span>
+                    <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider block">{t("sports.title") || "Deportes"}</span>
                     <div className="flex flex-wrap gap-1.5">
                       {activeCandidate.sports.map(sport => (
                         <SportBadge key={sport} sport={sport as any} />
@@ -519,7 +519,7 @@ export function FriendsScreen({
                   <button
                     onClick={handleReject}
                     className="grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft"
-                    title="Descartar"
+                    title={t("friends.reject") || "Descartar"}
                   >
                     <X size={20} strokeWidth={2.5} />
                   </button>
@@ -527,7 +527,7 @@ export function FriendsScreen({
                   <button
                     onClick={() => handleLike(activeCandidate)}
                     className="grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop"
-                    title="¡Hacer Match!"
+                    title={t("friends.makeMatch") || "¡Hacer Match!"}
                   >
                     <Heart size={20} strokeWidth={2.5} className="fill-current" />
                   </button>
@@ -597,15 +597,15 @@ export function FriendsScreen({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <UserCheck size={14} className="text-primary" /> Mis Amigos Guardados
+                  <UserCheck size={14} className="text-primary" /> {t("friends.mySavedFriends") || "Mis Amigos Guardados"}
                 </h3>
-                <span className="text-[10px] font-bold text-muted-foreground">{filteredFriends.length} amigos</span>
+                <span className="text-[10px] font-bold text-muted-foreground">{filteredFriends.length} {t("friends.friendsCount") || "amigos"}</span>
               </div>
 
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Buscar amigo por nombre, deporte..."
+                  placeholder={t("friends.searchPlaceholder") || "Buscar amigo por nombre, deporte..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full rounded-2xl border border-border bg-card pl-10 pr-4 py-2.5 text-xs text-secondary outline-none transition-colors focus:border-primary"
@@ -615,7 +615,7 @@ export function FriendsScreen({
 
               {filteredFriends.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground">
-                  {searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!"}
+                  {searchQuery ? (t("friends.searchEmpty") || "No se encontraron amigos con ese criterio") : (t("friends.noFriendsAdded") || "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!")}
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -626,7 +626,7 @@ export function FriendsScreen({
                         <div className="min-w-0">
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-sm font-bold text-secondary truncate">{friend.name}</span>
-                            <span className="text-xs text-muted-foreground">{friend.age} años</span>
+                            <span className="text-xs text-muted-foreground">{friend.age} {t("common.years") || "años"}</span>
                           </div>
                           <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                             <MapPin size={9} className="text-primary" />
@@ -644,7 +644,7 @@ export function FriendsScreen({
 
                       <button
                         className="grid h-9 w-9 place-items-center rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 active:scale-95 transition-all shadow-soft shrink-0 border border-secondary/10"
-                        title="Enviar Mensaje"
+                        title={t("friends.sendMessage") || "Enviar Mensaje"}
                       >
                         <MessageSquare size={14} className="text-primary" />
                       </button>

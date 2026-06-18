@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
+import { useSettings } from "@/lib/SettingsContext";
 
 export function EventCard({
   event,
@@ -14,6 +15,7 @@ export function EventCard({
   onClick?: () => void;
   variant?: "full" | "compact";
 }) {
+  const { t } = useSettings();
   const [joining, setJoining] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -124,7 +126,7 @@ export function EventCard({
           <SportBadge sport={event.sport} />
         </div>
         <div className="absolute right-3 top-3 rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-secondary">
-          {event.price === 0 ? "Gratis" : `$${event.price}`}
+          {event.price === 0 ? (t("eventCard.free") || "Gratis") : `$${event.price}`}
         </div>
         <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between text-primary-foreground">
           <div>
@@ -151,7 +153,7 @@ export function EventCard({
           
           <div className="mt-1 flex flex-col gap-1">
             <span className="inline-flex items-center gap-1">
-              <Users size={12} /> {joinedCount}/{event.spots} cupos
+              <Users size={12} /> {joinedCount}/{event.spots} {t("eventCard.spots") || "cupos"}
             </span>
             {variant === "full" && (
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -177,10 +179,10 @@ export function EventCard({
               }`}
             >
               {isAccepted
-                ? "Ver evento"
+                ? (t("eventCard.viewEvent") || "Ver evento")
                 : isPending
-                  ? "Esperando solicitud"
-                  : "Unirse al evento"}
+                  ? (t("eventCard.waitingRequest") || "Esperando solicitud")
+                  : (t("eventCard.joinEvent") || "Unirse al evento")}
             </button>
           </div>
         )}

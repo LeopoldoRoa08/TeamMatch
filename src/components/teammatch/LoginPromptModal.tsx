@@ -1,4 +1,5 @@
 import { Trophy, MapPin, Users, X, ArrowRight, Zap } from "lucide-react";
+import { useSettings } from "@/lib/SettingsContext";
 
 interface LoginPromptModalProps {
   isOpen: boolean;
@@ -16,13 +17,17 @@ export function LoginPromptModal({
   onRegister,
   actionContext = "realizar esta acción",
 }: LoginPromptModalProps) {
+  const { t } = useSettings();
   if (!isOpen) return null;
 
+  const defaultAction = t("loginPrompt.defaultAction") || "realizar esta acción";
+  const finalContext = actionContext === "realizar esta acción" ? defaultAction : actionContext;
+
   const perks = [
-    { icon: MapPin, text: "Únete a partidos cerca de ti" },
-    { icon: Users, text: "Crea eventos y arma tu equipo" },
-    { icon: Trophy, text: "Gana XP y desbloquea recompensas" },
-    { icon: Zap, text: "Matchmaking por nivel y deporte" },
+    { icon: MapPin, text: t("loginPrompt.perk1") || "Únete a partidos cerca de ti" },
+    { icon: Users, text: t("loginPrompt.perk2") || "Crea eventos y arma tu equipo" },
+    { icon: Trophy, text: t("loginPrompt.perk3") || "Gana XP y desbloquea recompensas" },
+    { icon: Zap, text: t("loginPrompt.perk4") || "Matchmaking por nivel y deporte" },
   ];
 
   return (
@@ -58,10 +63,10 @@ export function LoginPromptModal({
                 <span className="text-3xl">⚽</span>
               </div>
               <h2 className="text-xl font-black text-white leading-tight">
-                ¡Únete para {actionContext}!
+                {t("loginPrompt.joinTo") ? t("loginPrompt.joinTo").replace("{action}", finalContext) : `¡Únete para ${finalContext}!`}
               </h2>
               <p className="text-sm text-white/60 leading-relaxed max-w-[280px] mx-auto">
-                Crea tu cuenta gratis y accede a todos los partidos y canchas de Caracas.
+                {t("loginPrompt.subtitle") || "Crea tu cuenta gratis y accede a todos los partidos y canchas de Caracas."}
               </p>
             </div>
 
@@ -84,7 +89,7 @@ export function LoginPromptModal({
                 onClick={onRegister}
                 className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-lg shadow-green-500/25 transition-all active:scale-[0.98] hover:shadow-green-500/40"
               >
-                Crear Cuenta Gratis
+                {t("loginPrompt.createFree") || "Crear Cuenta Gratis"}
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </button>
               <button
@@ -92,7 +97,7 @@ export function LoginPromptModal({
                 onClick={onLogin}
                 className="w-full rounded-2xl border border-white/15 bg-white/5 py-3.5 text-sm font-bold text-white/80 transition-all hover:bg-white/10 active:scale-[0.98]"
               >
-                Ya tengo cuenta — Iniciar Sesión
+                {t("loginPrompt.hasAccount") || "Ya tengo cuenta — Iniciar Sesión"}
               </button>
             </div>
 
@@ -101,7 +106,7 @@ export function LoginPromptModal({
               onClick={onClose}
               className="w-full text-center text-xs text-white/30 hover:text-white/50 transition-colors py-1"
             >
-              Ahora no, seguir explorando
+              {t("loginPrompt.notNow") || "Ahora no, seguir explorando"}
             </button>
           </div>
         </div>

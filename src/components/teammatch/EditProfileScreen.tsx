@@ -1,7 +1,8 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, Loader2, Save, Camera } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
+import { useSettings } from "@/lib/SettingsContext";
 
 interface Props {
   onBack: () => void;
@@ -9,6 +10,7 @@ interface Props {
 
 export function EditProfileScreen({ onBack }: Props) {
   const { user: currentUser, updateProfile } = useCurrentUser();
+  const { t } = useSettings();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -71,7 +73,7 @@ export function EditProfileScreen({ onBack }: Props) {
       setError("");
 
       if (!e.target.files || e.target.files.length === 0) {
-        throw new Error('Debes seleccionar una imagen.');
+        throw new Error(t("editProfile.imgRequired") || 'Debes seleccionar una imagen.');
       }
 
       const file = e.target.files[0];
@@ -91,7 +93,7 @@ export function EditProfileScreen({ onBack }: Props) {
       
       setAvatarUrl(data.publicUrl);
     } catch (error: any) {
-      setError(error.message || 'Error al subir la imagen');
+      setError(error.message || t("editProfile.imgError") || 'Error al subir la imagen');
     } finally {
       setUploadingImage(false);
     }
@@ -116,12 +118,12 @@ export function EditProfileScreen({ onBack }: Props) {
         preferredSports
       });
       
-      setSuccess("Perfil actualizado correctamente");
+      setSuccess(t("editProfile.success") || "Perfil actualizado correctamente");
       setTimeout(() => {
         onBack();
       }, 1500);
     } catch (err: any) {
-      setError(err.message || "Error al actualizar el perfil");
+      setError(err.message || t("editProfile.error") || "Error al actualizar el perfil");
     } finally {
       setSaving(false);
     }
@@ -145,7 +147,7 @@ export function EditProfileScreen({ onBack }: Props) {
         >
           <ArrowLeft size={20} className="text-secondary" />
         </button>
-        <h1 className="text-xl font-bold text-secondary">Editar Perfil</h1>
+        <h1 className="text-xl font-bold text-secondary">{t("editProfile.title") || "Editar Perfil"}</h1>
       </header>
 
       <form onSubmit={handleSave} className="flex flex-1 flex-col overflow-hidden">
@@ -176,92 +178,99 @@ export function EditProfileScreen({ onBack }: Props) {
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploadingImage} />
               </label>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Foto de perfil</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t("editProfile.profilePhoto") || "Foto de perfil"}</span>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-muted-foreground">Nombre completo</label>
+              <label className="text-xs font-bold text-muted-foreground">{t("editProfile.fullName") || "Nombre completo"}</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
-                placeholder="Tu nombre"
+                placeholder={t("editProfile.namePlaceholder") || "Tu nombre"}
                 required
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-muted-foreground">Correo electrónico</label>
+              <label className="text-xs font-bold text-muted-foreground">{t("editProfile.email") || "Correo electrónico"}</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
-                placeholder="tu@email.com"
+                placeholder={t("editProfile.emailPlaceholder") || "tu@email.com"}
                 required
               />
               <p className="text-[10px] text-muted-foreground">
-                Al cambiar el correo electrónico, se enviará un mensaje de confirmación.
+                {t("editProfile.emailNote") || "Al cambiar el correo electrónico, se enviará un mensaje de confirmación."}
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-muted-foreground">Edad</label>
+                <label className="text-xs font-bold text-muted-foreground">{t("editProfile.age") || "Edad"}</label>
                 <input
                   type="number"
                   value={age ?? ""}
                   onChange={(e) => setAge(e.target.value ? parseInt(e.target.value) : undefined)}
                   className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
-                  placeholder="Ej. 25"
+                  placeholder={t("editProfile.agePlaceholder") || "Ej. 25"}
                   min="1"
                   max="120"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-muted-foreground">Género</label>
+                <label className="text-xs font-bold text-muted-foreground">{t("editProfile.gender") || "Género"}</label>
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                   className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
                 >
-                  <option value="">Seleccionar...</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                  <option value="Otro">Otro</option>
+                  <option value="">{t("editProfile.selectGender") || "Seleccionar..."}</option>
+                  <option value="Masculino">{t("editProfile.male") || "Masculino"}</option>
+                  <option value="Femenino">{t("editProfile.female") || "Femenino"}</option>
+                  <option value="Otro">{t("editProfile.other") || "Otro"}</option>
                 </select>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-muted-foreground">Ubicación (Municipio/Zona)</label>
+              <label className="text-xs font-bold text-muted-foreground">{t("editProfile.location") || "Ubicación (Municipio/Zona)"}</label>
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
-                placeholder="Ej. Chacao, Caracas"
+                placeholder={t("editProfile.locationPlaceholder") || "Ej. Chacao, Caracas"}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-muted-foreground">Sobre mí (Descripción)</label>
+              <label className="text-xs font-bold text-muted-foreground">{t("editProfile.aboutMe") || "Sobre mí (Descripción)"}</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
                 className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none"
-                placeholder="Cuéntanos un poco sobre ti, tu nivel de juego, etc."
+                placeholder={t("editProfile.aboutPlaceholder") || "Cuéntanos un poco sobre ti, tu nivel de juego, etc."}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-muted-foreground block">Deportes preferidos</label>
+              <label className="text-xs font-bold text-muted-foreground block">{t("editProfile.preferredSports") || "Deportes preferidos"}</label>
               <div className="flex flex-wrap gap-2">
                 {["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol"].map((sport) => {
                   const isSelected = preferredSports.includes(sport);
+                  let displaySport = sport;
+                  if (sport === "Running") displaySport = t("sports.running") || "Running";
+                  else if (sport === "Senderismo") displaySport = t("sports.hiking") || "Senderismo";
+                  else if (sport === "Pádel") displaySport = t("sports.padel") || "Pádel";
+                  else if (sport === "Tenis") displaySport = t("sports.tennis") || "Tenis";
+                  else if (sport === "Vóleibol") displaySport = t("sports.volleyball") || "Vóleibol";
+
                   return (
                     <button
                       key={sport}
@@ -279,7 +288,7 @@ export function EditProfileScreen({ onBack }: Props) {
                           : "bg-card text-muted-foreground border-border hover:border-muted-foreground"
                       }`}
                     >
-                      {sport}
+                      {displaySport}
                     </button>
                   );
                 })}
@@ -296,10 +305,10 @@ export function EditProfileScreen({ onBack }: Props) {
                 />
                 <div className="text-left">
                   <span className="text-sm font-bold text-secondary block">
-                    Modo Organizador
+                    {t("editProfile.organizerMode") || "Modo Organizador"}
                   </span>
                   <span className="text-[10px] text-muted-foreground">
-                    Te permite registrar y gestionar tus propias instalaciones y canchas
+                    {t("editProfile.organizerDesc") || "Te permite registrar y gestionar tus propias instalaciones y canchas"}
                   </span>
                 </div>
               </label>
@@ -319,7 +328,7 @@ export function EditProfileScreen({ onBack }: Props) {
             ) : (
               <>
                 <Save size={18} />
-                Guardar Cambios
+                {t("editProfile.saveChanges") || "Guardar Cambios"}
               </>
             )}
           </button>

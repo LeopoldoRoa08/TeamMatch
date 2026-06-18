@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Logo } from "./Logo";
+import { useSettings } from "@/lib/SettingsContext";
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 export type AuthMode = "login" | "register";
@@ -25,6 +26,7 @@ interface Props {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props) {
+  const { t } = useSettings();
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,17 +46,17 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
   // ── Traducir errores de Supabase ──────────────────────────────────────────
   function translateError(msg: string): string {
     if (msg.includes("Invalid login credentials"))
-      return "Correo o contraseña incorrectos. Revisa tus datos.";
+      return t("auth.err.invalidLogin") || "Correo o contraseña incorrectos. Revisa tus datos.";
     if (msg.includes("Email not confirmed"))
-      return "Confirma tu correo antes de iniciar sesión.";
+      return t("auth.err.emailNotConfirmed") || "Confirma tu correo antes de iniciar sesión.";
     if (msg.includes("User already registered"))
-      return "Ya existe una cuenta con ese correo. Intenta iniciar sesión.";
+      return t("auth.err.alreadyRegistered") || "Ya existe una cuenta con ese correo. Intenta iniciar sesión.";
     if (msg.includes("Password should be at least"))
-      return "La contraseña debe tener al menos 6 caracteres.";
+      return t("auth.err.weakPassword") || "La contraseña debe tener al menos 6 caracteres.";
     if (msg.includes("Unable to validate email"))
-      return "Ingresa un correo electrónico válido.";
+      return t("auth.err.invalidEmail") || "Ingresa un correo electrónico válido.";
     if (msg.includes("Email rate limit exceeded"))
-      return "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
+      return t("auth.err.rateLimit") || "Demasiados intentos. Espera unos minutos e intenta de nuevo.";
     return msg;
   }
 
@@ -64,15 +66,15 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
 
     // Validación básica
     if (!email.trim() || !password.trim()) {
-      setError("Completa todos los campos obligatorios.");
+      setError(t("auth.fillFields") || "Completa todos los campos obligatorios.");
       return;
     }
     if (mode === "register" && !name.trim()) {
-      setError("Ingresa tu nombre para continuar.");
+      setError(t("auth.enterName") || "Ingresa tu nombre para continuar.");
       return;
     }
     if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres.");
+      setError(t("auth.minPassword") || "La contraseña debe tener al menos 6 caracteres.");
       return;
     }
 
@@ -133,26 +135,26 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
         <h1 className="text-3xl font-bold leading-tight tracking-tight">
           {mode === "login" ? (
             <>
-              Bienvenido
+              {t("auth.welcomeBack") || "Bienvenido"}
               <br />
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                de vuelta 👋
+                {t("auth.welcomeBackEmoji") || "de vuelta 👋"}
               </span>
             </>
           ) : (
             <>
-              Crea tu cuenta
+              {t("auth.createAccount") || "Crea tu cuenta"}
               <br />
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                y entra a jugar ⚡
+                {t("auth.createAccountEmoji") || "y entra a jugar ⚡"}
               </span>
             </>
           )}
         </h1>
         <p className="mt-2 text-sm text-secondary-foreground/60">
           {mode === "login"
-            ? "Inicia sesión para ver y unirte a eventos."
-            : "Regístrate gratis. En segundos estás dentro."}
+            ? (t("auth.loginSubtitle") || "Inicia sesión para ver y unirte a eventos.")
+            : (t("auth.registerSubtitle") || "Regístrate gratis. En segundos estás dentro.")}
         </p>
       </div>
 
@@ -163,9 +165,9 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           <>
             <InputField
               id="auth-name-input"
-              label="Nombre completo"
+              label={t("auth.fullName") || "Nombre completo"}
               type="text"
-              placeholder="Ej: Diego Ramírez"
+              placeholder={t("auth.namePlaceholder") || "Ej: Diego Ramírez"}
               value={name}
               onChange={setName}
               icon={<User size={16} className="text-muted-foreground" />}
@@ -181,7 +183,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
                 disabled={isLoading}
               />
               <span className="text-sm font-medium text-secondary-foreground">
-                Quiero registrarme como Organizador
+                {t("auth.registerAsOrganizer") || "Quiero registrarme como Organizador"}
               </span>
             </label>
           </>
@@ -190,7 +192,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
         {/* Email */}
         <InputField
           id="auth-email-input"
-          label="Correo electrónico"
+          label={t("auth.email") || "Correo electrónico"}
           type="email"
           placeholder="tu@email.com"
           value={email}
@@ -202,7 +204,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
         {/* Contraseña */}
         <div>
           <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-secondary-foreground/50">
-            Contraseña
+            {t("auth.password") || "Contraseña"}
           </label>
           <div
             className={`flex items-center gap-3 rounded-2xl border px-4 py-3.5 backdrop-blur transition-colors focus-within:border-primary ${error ? "border-destructive/60" : "border-primary-foreground/15 bg-primary-foreground/8"
@@ -212,7 +214,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
             <input
               id="auth-password-input"
               type={showPassword ? "text" : "password"}
-              placeholder={mode === "register" ? "Mín. 6 caracteres" : "Tu contraseña"}
+              placeholder={mode === "register" ? (t("auth.minChars") || "Mín. 6 caracteres") : (t("auth.yourPassword") || "Tu contraseña")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
@@ -230,7 +232,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           </div>
           {mode === "login" && (
             <button className="mt-1.5 text-[11px] text-primary hover:underline">
-              ¿Olvidaste tu contraseña?
+              {t("auth.forgotPassword") || "¿Olvidaste tu contraseña?"}
             </button>
           )}
         </div>
@@ -248,7 +250,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           <div className="flex items-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-3">
             <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
             <p className="text-sm font-medium text-emerald-300">
-              {mode === "login" ? "¡Sesión iniciada! Entrando..." : "¡Cuenta creada! Bienvenido..."}
+              {mode === "login" ? (t("auth.loggedInMsg") || "¡Sesión iniciada! Entrando...") : (t("auth.accountCreatedMsg") || "¡Cuenta creada! Bienvenido...")}
             </p>
           </div>
         )}
@@ -273,21 +275,21 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           )}
           {isLoading
             ? mode === "login"
-              ? "Iniciando sesión..."
-              : "Creando cuenta..."
+              ? (t("auth.loggingIn") || "Iniciando sesión...")
+              : (t("auth.creatingAccount") || "Creando cuenta...")
             : isSuccess
               ? mode === "login"
-                ? "¡Sesión iniciada!"
-                : "¡Cuenta creada!"
+                ? (t("auth.loggedIn") || "¡Sesión iniciada!")
+                : (t("auth.accountCreated") || "¡Cuenta creada!")
               : mode === "login"
-                ? "Iniciar sesión"
-                : "Crear cuenta gratis"}
+                ? (t("auth.login") || "Iniciar sesión")
+                : (t("auth.createFree") || "Crear cuenta gratis")}
         </button>
 
         {/* Divisor */}
         <div className="flex items-center gap-3 py-1">
           <div className="h-px flex-1 bg-primary-foreground/10" />
-          <span className="text-[11px] text-secondary-foreground/40">o</span>
+          <span className="text-[11px] text-secondary-foreground/40">{t("auth.or") || "o"}</span>
           <div className="h-px flex-1 bg-primary-foreground/10" />
         </div>
 
@@ -298,11 +300,11 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           disabled={isLoading}
           className="w-full rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 py-3.5 text-sm font-medium text-secondary-foreground/80 transition-all hover:bg-primary-foreground/10 active:scale-[0.98] disabled:opacity-50"
         >
-          {mode === "login" ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Inicia sesión"}
+          {mode === "login" ? (t("auth.noAccount") || "¿No tienes cuenta? Regístrate") : (t("auth.hasAccount") || "¿Ya tienes cuenta? Inicia sesión")}
         </button>
 
         <p className="pt-1 text-center text-[10px] text-secondary-foreground/30">
-          Al continuar aceptas los Términos de Uso y la Política de Privacidad de TeamMatch.
+          {t("auth.terms") || "Al continuar aceptas los Términos de Uso y la Política de Privacidad de TeamMatch."}
         </p>
       </div>
     </div>

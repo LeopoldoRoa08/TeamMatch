@@ -25,12 +25,13 @@ const LeafletMap = lazy(() =>
 
 // ── Esqueleto mientras carga el mapa ─────────────────────────────────────────
 function MapSkeleton() {
+  const { t } = useSettings();
   return (
     <div className="h-full w-full animate-pulse bg-muted">
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-muted-foreground">
           <div className="h-10 w-10 rounded-full border-4 border-primary border-t-transparent animate-spin" />
-          <span className="text-xs font-medium">Cargando mapa…</span>
+          <span className="text-xs font-medium">{t("map.loading") || "Loading map…"}</span>
         </div>
       </div>
     </div>
@@ -150,7 +151,7 @@ export function MapScreen({
     }
 
     if (!navigator.geolocation) {
-      setLocationError("Tu navegador no soporta geolocalización");
+      setLocationError(t("map.error.unsupported") || "Tu navegador no soporta geolocalización");
       return;
     }
 
@@ -166,10 +167,10 @@ export function MapScreen({
       },
       (error) => {
         console.error("❌ Error GPS:", error);
-        let msg = "No se pudo obtener tu ubicación";
-        if (error.code === error.PERMISSION_DENIED) msg = "Permiso de ubicación denegado";
-        else if (error.code === error.POSITION_UNAVAILABLE) msg = "Ubicación no disponible";
-        else if (error.code === error.TIMEOUT) msg = "Tiempo de espera agotado";
+        let msg = t("map.error.failed") || "No se pudo obtener tu ubicación";
+        if (error.code === error.PERMISSION_DENIED) msg = t("map.error.denied") || "Permiso de ubicación denegado";
+        else if (error.code === error.POSITION_UNAVAILABLE) msg = t("map.error.unavailable") || "Ubicación no disponible";
+        else if (error.code === error.TIMEOUT) msg = t("map.error.timeout") || "Tiempo de espera agotado";
         setLocationError(msg);
         setLocating(false);
       },
@@ -213,11 +214,11 @@ export function MapScreen({
         const lng = coords?.lng ?? 0;
 
         const sportName =
-          row.sport_id === 1 ? "Fútbol"
-          : row.sport_id === 2 ? "Tenis"
-          : row.sport_id === 3 ? "Golf"
-          : row.sport_id === 4 ? "Pádel"
-          : "Otro";
+          row.sport_id === 1 ? (t("sports.football") || "Fútbol")
+          : row.sport_id === 2 ? (t("sports.tennis") || "Tenis")
+          : row.sport_id === 3 ? (t("sports.golf") || "Golf")
+          : row.sport_id === 4 ? (t("sports.padel") || "Pádel")
+          : (t("sports.other") || "Otro");
 
         return {
           ...row,
@@ -382,7 +383,7 @@ export function MapScreen({
                     : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"
                 }`}
               >
-                {s === "Todos" ? t("events.all") : s}
+                {s === "Todos" ? (t("sports.all") || "Todos") : (t(`sports.${s.toLowerCase().replace('ú', 'u').replace('á', 'a')}`) || s)}
               </button>
             );
           })}
@@ -422,7 +423,7 @@ export function MapScreen({
           <div className="flex items-start justify-between">
             <div>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
-                <MapPin size={10} /> Hub Deportivo
+                <MapPin size={10} /> {t("map.hub") || "Hub Deportivo"}
               </span>
               <h3 className="mt-1.5 text-base font-extrabold text-secondary tracking-tight">
                 {selectedCancha.name}
@@ -433,15 +434,15 @@ export function MapScreen({
                 </p>
               )}
               {selectedCancha.price != null && selectedCancha.price > 0 ? (
-                <p className="text-xs font-semibold text-primary mt-1">Bs. {selectedCancha.price}/hora</p>
+                <p className="text-xs font-semibold text-primary mt-1">Bs. {selectedCancha.price}/{t("map.perHour") || "hora"}</p>
               ) : (
-                <p className="text-xs font-semibold text-emerald-600 mt-1">Acceso gratuito</p>
+                <p className="text-xs font-semibold text-emerald-600 mt-1">{t("map.freeAccess") || "Acceso gratuito"}</p>
               )}
             </div>
             <button
               onClick={() => setSelectedCancha(null)}
               className="grid h-8 w-8 place-items-center rounded-full bg-muted text-secondary hover:bg-muted/80 transition-colors"
-              aria-label="Cerrar"
+              aria-label={t("common.close") || "Cerrar"}
             >
               <X size={16} strokeWidth={2.5} />
             </button>
@@ -457,9 +458,9 @@ export function MapScreen({
                 <MessageSquare size={20} className="text-primary" />
               </div>
               <div>
-                <div className="font-bold text-xs text-secondary">Comentarios de la cancha</div>
+                <div className="font-bold text-xs text-secondary">{t("map.commentsTitle") || "Comentarios de la cancha"}</div>
                 <div className="text-[10px] text-muted-foreground mt-0.5">
-                  Mira opiniones o escribe sobre esta cancha
+                  {t("map.commentsDesc") || "Mira opiniones o escribe sobre esta cancha"}
                 </div>
               </div>
             </div>
@@ -489,9 +490,9 @@ export function MapScreen({
                 return (
                   <div className="rounded-2xl border border-dashed border-border p-6 text-center">
                     <p className="text-sm font-medium text-muted-foreground mb-1">
-                      No hay partidos programados aquí
+                      {t("map.noMatches") || "No hay partidos programados aquí"}
                     </p>
-                    <p className="text-xs text-muted-foreground">¡Ve a la pestaña Eventos para crear uno!</p>
+                    <p className="text-xs text-muted-foreground">{t("map.createOne") || "¡Ve a la pestaña Eventos para crear uno!"}</p>
                   </div>
                 );
               }
@@ -510,7 +511,7 @@ export function MapScreen({
                           ⏰ {e.date} · {e.time}
                         </div>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
-                          👥 {e.joined}/{e.spots} jugadores
+                          👥 {e.joined}/{e.spots} {t("map.players") || "jugadores"}
                         </div>
                       </div>
                       <span className="shrink-0 ml-2 rounded-full bg-secondary/10 px-2 py-0.5 text-[10px] font-bold text-secondary">
@@ -535,8 +536,8 @@ export function MapScreen({
               ? "bg-blue-500 text-white shadow-[0_8px_25px_-4px_rgba(59,130,246,0.5)]"
               : "glass text-secondary"
           }`}
-          aria-label="Mi ubicación"
-          title="Mi ubicación GPS"
+          aria-label={t("map.myLocation") || "Mi ubicación"}
+          title={t("map.gpsLoc") || "Mi ubicación GPS"}
         >
           {locating ? (
             <div className="h-5 w-5 rounded-full border-2 border-current border-t-transparent animate-spin" />
@@ -555,7 +556,7 @@ export function MapScreen({
               onClick={() => setLocationError(null)}
               className="ml-2 underline opacity-80 hover:opacity-100"
             >
-              Cerrar
+              {t("common.close") || "Cerrar"}
             </button>
           </div>
         </div>

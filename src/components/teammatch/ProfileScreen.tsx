@@ -119,7 +119,7 @@ export function ProfileScreen({
     return (
       <div className="w-full mt-1.5 space-y-1">
         <div className="flex justify-between text-[8px] font-black text-white/40">
-          <span>Progreso</span>
+          <span>{t("profile.progress") || "Progreso"}</span>
           <span>{current} / {target}</span>
         </div>
         <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden border border-white/5">
@@ -149,9 +149,9 @@ export function ProfileScreen({
             </div>
           </div>
 
-          <h1 className="mt-5 text-2xl font-black text-white">Perfil de Invitado</h1>
+          <h1 className="mt-5 text-2xl font-black text-white">{t("profile.guestTitle") || "Perfil de Invitado"}</h1>
           <p className="mt-1.5 text-sm text-white/50 max-w-[260px] mx-auto">
-            Explora la app libremente. Crea tu cuenta para desbloquear todo.
+            {t("profile.guestDesc") || "Explora la app libremente. Crea tu cuenta para desbloquear todo."}
           </p>
         </div>
 
@@ -165,19 +165,19 @@ export function ProfileScreen({
                   <Sparkles size={18} className="text-[#32CD32] animate-pulse" />
                 </div>
                 <div>
-                  <h2 className="text-base font-black text-secondary">Únete a la comunidad</h2>
-                  <p className="text-[11px] text-muted-foreground">Accede a todo TeamMatch gratis</p>
+                  <h2 className="text-base font-black text-secondary">{t("profile.joinCommunity") || "Únete a la comunidad"}</h2>
+                  <p className="text-[11px] text-muted-foreground">{t("profile.joinDesc") || "Accede a todo TeamMatch gratis"}</p>
                 </div>
               </div>
 
               {/* Lista de beneficios */}
               <div className="space-y-2">
                 {[
-                  { icon: MapPin, text: "Encuentra partidos cerca de ti en tiempo real" },
-                  { icon: Users, text: "Solicita un cupo y únete con un toque" },
-                  { icon: Trophy, text: "Sube de nivel y gana recompensas exclusivas" },
-                  { icon: Zap, text: "Matchmaking inteligente por nivel de juego" },
-                  { icon: Star, text: "Crea tus propios eventos y arma equipo" },
+                  { icon: MapPin, text: t("profile.benefit1") || "Encuentra partidos cerca de ti en tiempo real" },
+                  { icon: Users, text: t("profile.benefit2") || "Solicita un cupo y únete con un toque" },
+                  { icon: Trophy, text: t("profile.benefit3") || "Sube de nivel y gana recompensas exclusivas" },
+                  { icon: Zap, text: t("profile.benefit4") || "Matchmaking inteligente por nivel de juego" },
+                  { icon: Star, text: t("profile.benefit5") || "Crea tus propios eventos y arma equipo" },
                 ].map(({ icon: Icon, text }) => (
                   <div key={text} className="flex items-center gap-3 rounded-xl bg-muted/50 px-3 py-2.5">
                     <div className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15">
@@ -195,7 +195,7 @@ export function ProfileScreen({
                   onClick={onOpenRegister}
                   className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#32CD32] to-[#22a822] py-4 text-sm font-black text-[#0f1117] shadow-pop shadow-green-500/20 transition-all active:scale-[0.98] hover:shadow-green-500/30"
                 >
-                  Crear Cuenta Gratis
+                  {t("profile.createFreeAccount") || "Crear Cuenta Gratis"}
                   <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
                 </button>
                 <button
@@ -203,7 +203,7 @@ export function ProfileScreen({
                   onClick={onOpenAuth}
                   className="w-full rounded-2xl border border-border bg-muted/50 py-3.5 text-sm font-bold text-secondary transition-all hover:bg-muted active:scale-[0.98]"
                 >
-                  Ya tengo cuenta — Iniciar Sesión
+                  {t("profile.loginExisting") || "Ya tengo cuenta — Iniciar Sesión"}
                 </button>
               </div>
             </div>
@@ -211,9 +211,9 @@ export function ProfileScreen({
             {/* Estadisticas animadas como placeholders */}
             <div className="border-t border-border grid grid-cols-3 divide-x divide-border">
               {[
-                { k: "1.2k", v: "Jugadores" },
-                { k: "320", v: "Eventos/mes" },
-                { k: "4.9★", v: "Rating" },
+                { k: "1.2k", v: t("profile.players") || "Jugadores" },
+                { k: "320", v: t("profile.eventsPerMonth") || "Eventos/mes" },
+                { k: "4.9★", v: t("profile.rating") || "Rating" },
               ].map((s) => (
                 <div key={s.v} className="flex flex-col items-center py-4">
                   <div className="text-lg font-black text-[#32CD32]">{s.k}</div>
@@ -227,7 +227,7 @@ export function ProfileScreen({
           <div className="rounded-2xl border border-dashed border-border bg-muted/20 p-4 flex items-start gap-3">
             <Shield size={18} className="text-muted-foreground shrink-0 mt-0.5" />
             <p className="text-[11px] text-muted-foreground leading-relaxed">
-              Tu cuenta es <strong className="text-secondary">100% gratuita</strong>. Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte.
+              {t("profile.guestDisclaimer") || "Tu cuenta es 100% gratuita. Puedes explorar el mapa, ver eventos y canchas sin necesidad de registrarte."}
             </p>
           </div>
         </div>
@@ -242,30 +242,30 @@ export function ProfileScreen({
   const xpNeeded = level * 100;
   const xpPercentage = Math.min(100, Math.max(0, (xp / xpNeeded) * 100));
 
-  let rpgClass = "Recluta Novato 👟";
+  let rpgClass = t("profile.classRecruit") || "Recluta Novato 👟";
   let borderClass = "neon-border-bronze";
-  let rarityLabel = "Novato";
+  let rarityLabel = t("profile.rarityNovice") || "Novato";
   let rarityColor = "text-amber-600 bg-amber-500/10 border-amber-500/20";
 
   if (level === 2) {
-    rpgClass = "Aspirante Activo ⚡";
+    rpgClass = t("profile.classAspirant") || "Aspirante Activo ⚡";
     borderClass = "neon-border-bronze";
-    rarityLabel = "Común";
+    rarityLabel = t("profile.rarityCommon") || "Común";
     rarityColor = "text-gray-400 bg-gray-500/10 border-gray-500/20";
   } else if (level === 3) {
-    rpgClass = "Guerrero del Fitness 🏋️‍♂️";
+    rpgClass = t("profile.classWarrior") || "Guerrero del Fitness 🏋️‍♂️";
     borderClass = "neon-border-silver";
-    rarityLabel = "Raro";
+    rarityLabel = t("profile.rarityRare") || "Raro";
     rarityColor = "text-blue-400 bg-blue-500/10 border-blue-500/20";
   } else if (level === 4) {
-    rpgClass = "Maestro del Match 🏆";
+    rpgClass = t("profile.classMaster") || "Maestro del Match 🏆";
     borderClass = "neon-border-gold";
-    rarityLabel = "Épico";
+    rarityLabel = t("profile.rarityEpic") || "Épico";
     rarityColor = "text-yellow-400 bg-yellow-500/10 border-yellow-500/20";
   } else if (level >= 5) {
-    rpgClass = "Leyenda de Caracas 🌟";
+    rpgClass = t("profile.classLegend") || "Leyenda de Caracas 🌟";
     borderClass = "neon-border-legendary";
-    rarityLabel = "Legendario";
+    rarityLabel = t("profile.rarityLegendary") || "Legendario";
     rarityColor = "text-purple-400 bg-purple-500/10 border-purple-500/20";
   }
 
@@ -283,12 +283,12 @@ export function ProfileScreen({
           <Check size={48} strokeWidth={3} className="text-secondary" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-secondary uppercase tracking-wide">¡Objeto Canjeado! 💎</h2>
+          <h2 className="text-2xl font-black text-secondary uppercase tracking-wide">{t("profile.itemClaimed") || "¡Objeto Canjeado! 💎"}</h2>
           <p className="text-sm font-bold text-primary">
             {showClaimSuccess.title}
           </p>
           <p className="text-xs text-muted-foreground max-w-[285px] mx-auto leading-relaxed">
-            El beneficio de **{showClaimSuccess.discount}** ha sido activado con éxito para tu próxima reserva de cancha o partido.
+            {t("profile.itemClaimedDesc") ? t("profile.itemClaimedDesc").replace("{discount}", showClaimSuccess.discount) : `El beneficio de **${showClaimSuccess.discount}** ha sido activado con éxito para tu próxima reserva de cancha o partido.`}
           </p>
         </div>
       </div>
@@ -349,7 +349,7 @@ export function ProfileScreen({
                 {displayName}
                 {user?.user_metadata?.is_organizer && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-500 shadow-pop border border-amber-500/30">
-                    <Star size={9} className="fill-amber-500 text-amber-500" /> Organizador
+                    <Star size={9} className="fill-amber-500 text-amber-500" /> {t("profile.organizer") || "Organizador"}
                   </span>
                 )}
               </h1>
@@ -385,7 +385,7 @@ export function ProfileScreen({
               </div>
               <div className="flex justify-between items-center text-[9px] text-muted-foreground font-semibold">
                 <span>{t("profile.level")} {level}</span>
-                <span>+{xpNeeded - xp} XP para Nivel {level + 1}</span>
+                <span>{t("profile.xpForNextLevel") ? t("profile.xpForNextLevel").replace("{xp}", String(xpNeeded - xp)).replace("{level}", String(level + 1)) : `+${xpNeeded - xp} XP para Nivel ${level + 1}`}</span>
               </div>
             </div>
 
@@ -463,7 +463,7 @@ export function ProfileScreen({
         {activeTab === "achievements" && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-300">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Award size={14} className="text-primary" /> Lista de Logros y Trofeos
+              <Award size={14} className="text-primary" /> {t("profile.achievementsListTitle") || "Lista de Logros y Trofeos"}
             </h3>
             
             <div className="grid gap-3">
@@ -474,25 +474,25 @@ export function ProfileScreen({
                   bronze: {
                     border: isUnlocked ? "border-[#cd7f32]/30" : "border-border/60",
                     glow: "from-[#a05a2c] to-[#cd7f32]",
-                    rarityName: "Bronce 🥉",
+                    rarityName: t("profile.bronze") || "Bronce 🥉",
                     color: "text-[#cd7f32]",
                   },
                   silver: {
                     border: isUnlocked ? "border-[#c0c0c0]/30" : "border-border/60",
                     glow: "from-[#718096] to-[#cbd5e0]",
-                    rarityName: "Plata 🥈",
+                    rarityName: t("profile.silver") || "Plata 🥈",
                     color: "text-[#cbd5e0]",
                   },
                   gold: {
                     border: isUnlocked ? "border-[#ffd700]/30" : "border-border/60",
                     glow: "from-[#d69e2e] to-[#ecc94b]",
-                    rarityName: "Oro 🥇",
+                    rarityName: t("profile.gold") || "Oro 🥇",
                     color: "text-[#ecc94b]",
                   },
                   platinum: {
                     border: isUnlocked ? "border-[#e5e4e2]/40 shadow-[0_0_10px_rgba(229,228,226,0.1)]" : "border-border/60",
                     glow: "from-[#4a5568] via-[#cbd5e0] to-[#e2e8f0]",
-                    rarityName: "Platino 🏆",
+                    rarityName: t("profile.platinum") || "Platino 🏆",
                     color: "text-[#e5e4e2] font-black",
                   },
                 };
@@ -538,7 +538,7 @@ export function ProfileScreen({
                         +{ach.xpReward} XP
                       </span>
                       <span className="text-[8px] text-muted-foreground font-semibold mt-1">
-                        {isUnlocked ? "Obtenido" : "Bloqueado"}
+                        {isUnlocked ? (t("profile.unlocked") || "Obtenido") : (t("profile.locked") || "Bloqueado")}
                       </span>
                     </div>
                   </div>
@@ -552,61 +552,61 @@ export function ProfileScreen({
         {activeTab === "stats" && (
           <div className="space-y-4">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Award size={14} className="text-primary" /> Atributos del Jugador
+              <Award size={14} className="text-primary" /> {t("profile.playerAttributes") || "Atributos del Jugador"}
             </h3>
             
             <div className="grid grid-cols-2 gap-3">
               <StatCard
                 icon={Flame}
-                label="Fuerza (STR)"
+                label={t("profile.str") || "Fuerza (STR)"}
                 value={str}
                 colorClass="text-red-500"
                 bgClass="bg-red-500/5 border-red-500/10"
-                description="Aumenta al unirte a partidos (+2 XP/partido)"
+                description={t("profile.strDesc") || "Aumenta al unirte a partidos (+2 XP/partido)"}
               />
               <StatCard
                 icon={BookOpen}
-                label="Sabiduría (WIS)"
+                label={t("profile.wis") || "Sabiduría (WIS)"}
                 value={wis}
                 colorClass="text-blue-500"
                 bgClass="bg-blue-500/5 border-blue-500/10"
-                description="Aumenta al crear partidos (+5 XP/partido)"
+                description={t("profile.wisDesc") || "Aumenta al crear partidos (+5 XP/partido)"}
               />
               <StatCard
                 icon={Shield}
-                label="Constitución (CON)"
+                label={t("profile.con") || "Constitución (CON)"}
                 value={con}
                 colorClass="text-emerald-500"
                 bgClass="bg-emerald-500/5 border-emerald-500/10"
-                description="Aumenta con el uso diario de la app"
+                description={t("profile.conDesc") || "Aumenta con el uso diario de la app"}
               />
               <StatCard
                 icon={Sparkles}
-                label="Carisma (CHA)"
+                label={t("profile.cha") || "Carisma (CHA)"}
                 value={cha}
                 colorClass="text-amber-500"
                 bgClass="bg-amber-500/5 border-amber-500/10"
-                description="Calculado según tu reputación deportiva"
+                description={t("profile.chaDesc") || "Calculado según tu reputación deportiva"}
               />
             </div>
 
             {/* Información Personal (Edad, Ubicación, Género, Deportes, Bio) */}
             <div className="rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4">
               <h4 className="text-xs font-black uppercase tracking-wider text-secondary flex items-center gap-1.5 border-b border-border pb-2">
-                <Sparkles size={14} className="text-primary animate-pulse" /> Información de Perfil
+                <Sparkles size={14} className="text-primary animate-pulse" /> {t("profile.profileInfo") || "Información de Perfil"}
               </h4>
               
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
                 <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
-                  <span className="text-[10px] text-muted-foreground block font-bold">Edad</span>
-                  <span className="font-black text-secondary">{user.user_metadata?.age ? `${user.user_metadata.age} años` : "—"}</span>
+                  <span className="text-[10px] text-muted-foreground block font-bold">{t("profile.age") || "Edad"}</span>
+                  <span className="font-black text-secondary">{user.user_metadata?.age ? `${user.user_metadata.age} ${t("common.years") || "años"}` : "—"}</span>
                 </div>
                 <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
-                  <span className="text-[10px] text-muted-foreground block font-bold">Género</span>
+                  <span className="text-[10px] text-muted-foreground block font-bold">{t("profile.gender") || "Género"}</span>
                   <span className="font-black text-secondary">{user.user_metadata?.gender || "—"}</span>
                 </div>
                 <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
-                  <span className="text-[10px] text-muted-foreground block font-bold">Ubicación</span>
+                  <span className="text-[10px] text-muted-foreground block font-bold">{t("profile.location") || "Ubicación"}</span>
                   <span className="font-black text-secondary truncate block" title={user.user_metadata?.location || ""}>
                     {user.user_metadata?.location || "—"}
                   </span>
@@ -615,7 +615,7 @@ export function ProfileScreen({
 
               {user.user_metadata?.description && (
                 <div className="space-y-1">
-                  <span className="text-[10px] text-muted-foreground font-bold">Sobre mí</span>
+                  <span className="text-[10px] text-muted-foreground font-bold">{t("profile.aboutMe") || "Sobre mí"}</span>
                   <p className="text-xs leading-relaxed text-secondary-foreground/80 bg-muted/20 p-3 rounded-xl border border-border/30">
                     {user.user_metadata.description}
                   </p>
@@ -624,7 +624,7 @@ export function ProfileScreen({
 
               {user.user_metadata?.preferred_sports && user.user_metadata.preferred_sports.length > 0 && (
                 <div className="space-y-1.5">
-                  <span className="text-[10px] text-muted-foreground font-bold block">Deportes favoritos</span>
+                  <span className="text-[10px] text-muted-foreground font-bold block">{t("profile.favoriteSports") || "Deportes favoritos"}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {user.user_metadata.preferred_sports.map((sport: string) => (
                       <span key={sport} className="rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary">
@@ -638,12 +638,12 @@ export function ProfileScreen({
 
             <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
               <h4 className="text-xs font-black uppercase tracking-wider text-secondary mb-1">
-                Resumen de Campaña
+                {t("profile.campaignSummary") || "Resumen de Campaña"}
               </h4>
               <p className="text-[11px] text-muted-foreground leading-relaxed">
-                Has completado **{joinedEventsCount} partidos** como luchador y has guiado a otros
-                jugadores creando **{createdEventsCount} eventos**. Tu constancia te ha otorgado
-                **{useCount} días de entrenamiento** activo.
+                {t("profile.campaignDesc") ? t("profile.campaignDesc").replace("{joined}", String(joinedEventsCount)).replace("{created}", String(createdEventsCount)).replace("{used}", String(useCount)) : `Has completado **${joinedEventsCount} partidos** como luchador y has guiado a otros
+                jugadores creando **${createdEventsCount} eventos**. Tu constancia te ha otorgado
+                **${useCount} días de entrenamiento** activo.`}
               </p>
             </div>
           </div>
@@ -654,20 +654,19 @@ export function ProfileScreen({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Trophy size={14} className="text-primary" /> Cofre de Objetos Mágicos
+                <Trophy size={14} className="text-primary" /> {t("profile.magicChest") || "Cofre de Objetos Mágicos"}
               </h3>
               <span className="text-[10px] font-bold text-muted-foreground">
-                {coupons.filter((c) => !c.claimed).length} Activos
+                {coupons.filter((c) => !c.claimed).length} {t("profile.active") || "Activos"}
               </span>
             </div>
 
             {coupons.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center space-y-2 animate-fade-in">
                 <div className="text-4xl">🎁</div>
-                <h4 className="text-sm font-bold text-secondary">Cofre Vacío</h4>
+                <h4 className="text-sm font-bold text-secondary">{t("profile.emptyChest") || "Cofre Vacío"}</h4>
                 <p className="text-[11px] text-muted-foreground max-w-[240px] mx-auto">
-                  No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app
-                  diariamente para ganar cofres sorpresa!
+                  {t("profile.emptyChestDesc") || "No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app diariamente para ganar cofres sorpresa!"}
                 </p>
               </div>
             ) : (
@@ -694,7 +693,7 @@ export function ProfileScreen({
                                 : "bg-amber-500/20 text-amber-500 border border-amber-500/30"
                             }`}
                           >
-                            {isLegendary ? "Objeto Legendario ⭐" : "Objeto Épico 📜"}
+                            {isLegendary ? (t("profile.legendaryItem") || "Objeto Legendario ⭐") : (t("profile.epicItem") || "Objeto Épico 📜")}
                           </span>
                           <h4 className="text-xs font-black text-secondary">{c.title}</h4>
                           <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
@@ -713,7 +712,7 @@ export function ProfileScreen({
 
                       <div className="mt-4 flex items-center justify-between gap-3 pt-3.5 border-t border-dashed border-border/60">
                         <div className="font-mono text-[10px] font-black text-muted-foreground bg-muted px-2 py-1 rounded-lg">
-                          Código: <span className="text-secondary select-all">{c.code}</span>
+                          {t("profile.code") || "Código:"} <span className="text-secondary select-all">{c.code}</span>
                         </div>
                         <div className="flex gap-2">
                           <button
@@ -723,12 +722,12 @@ export function ProfileScreen({
                             {copiedCode === c.code ? (
                               <>
                                 <Check size={11} className="text-emerald-500" />
-                                <span>Copiado</span>
+                                <span>{t("common.copied") || "Copiado"}</span>
                               </>
                             ) : (
                               <>
                                 <Copy size={11} />
-                                <span>Copiar</span>
+                                <span>{t("common.copy") || "Copiar"}</span>
                               </>
                             )}
                           </button>
@@ -741,11 +740,11 @@ export function ProfileScreen({
                               }}
                               className="rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-secondary transition-all active:scale-95 shadow-sm cursor-pointer"
                             >
-                              Canjear
+                              {t("common.redeem") || "Canjear"}
                             </button>
                           ) : (
                             <span className="text-[10px] font-black text-muted-foreground px-2 py-1.5 bg-muted/80 rounded-xl">
-                              Usado
+                              {t("common.used") || "Usado"}
                             </span>
                           )}
                         </div>
@@ -762,13 +761,13 @@ export function ProfileScreen({
         {activeTab === "history" && (
           <div className="space-y-4">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Calendar size={14} className="text-primary" /> Registro de Aventuras (XP Log)
+              <Calendar size={14} className="text-primary" /> {t("profile.adventureLog") || "Registro de Aventuras (XP Log)"}
             </h3>
 
             <div className="space-y-2">
               {xpHistory.length === 0 ? (
                 <div className="text-center py-8 text-xs text-muted-foreground">
-                  Aún no has ganado experiencia. ¡Explora el mapa y únete a un partido!
+                  {t("profile.noXp") || "Aún no has ganado experiencia. ¡Explora el mapa y únete a un partido!"}
                 </div>
               ) : (
                 xpHistory.map((h: any) => {

@@ -5,6 +5,8 @@ import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
 import { LoginPromptModal } from "./LoginPromptModal";
+import { useSettings } from "@/lib/SettingsContext";
+import { toast } from "sonner";
 
 // Client-only: cargado con lazy() para que Leaflet nunca se evalúe en el servidor
 const EventMiniMap = lazy(() => import("./EventMiniMap"));
@@ -20,6 +22,7 @@ export function EventDetailScreen({
   userLocation?: { lat: number; lng: number } | null;
   onOpenAuth?: () => void;
 }) {
+  const { t } = useSettings();
   const [participants, setParticipants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [joining, setJoining] = useState(false);
@@ -141,8 +144,8 @@ export function EventDetailScreen({
 
     if (error) {
       console.error("Error al unirse:", error);
-      if (error.code === '23505') alert("Ya enviaste una solicitud");
-      else alert(`Error al solicitar unirse: ${error.message || JSON.stringify(error)}`);
+      if (error.code === '23505') toast.warning(t("events.error.alreadyApplied") || "Ya enviaste una solicitud");
+      else toast.error(`${t("events.error.joinError") || "Error al solicitar unirse"}: ${error.message || JSON.stringify(error)}`);
     } else {
       setShowSuccess(true);
       if (selectedCouponCode) {
@@ -196,7 +199,7 @@ export function EventDetailScreen({
         }));
 
       if (insertData.length === 0) {
-        alert("Todos los miembros seleccionados ya están inscritos en este evento");
+        toast.error(t("events.error.allClanMembersEnrolled") || "Todos los miembros seleccionados ya están inscritos en este evento");
         setRegisteringClan(false);
         return;
       }
@@ -204,7 +207,7 @@ export function EventDetailScreen({
       const { error } = await supabase.from("event_participants").insert(insertData);
       
       if (error) {
-         if (error.code === '23505') alert("Algunos miembros ya están inscritos en este evento");
+         if (error.code === '23505') toast.warning(t("events.error.someClanMembersEnrolled") || "Algunos miembros ya están inscritos en este evento");
          else throw error;
       } else {
         setShowSuccess(true);
@@ -214,7 +217,7 @@ export function EventDetailScreen({
       }
     } catch (err: any) {
       console.error(err);
-      alert("Error al inscribir al clan: " + (err.message || JSON.stringify(err)));
+      toast.error((t("events.error.joinClanError") || "Error al inscribir al clan: ") + (err.message || JSON.stringify(err)));
     }
     setRegisteringClan(false);
   }
@@ -231,14 +234,14 @@ export function EventDetailScreen({
       setShowDeleteConfirm(false);
       onBack();
     } catch (err: any) {
-      alert('Error al eliminar el evento: ' + err.message);
+      toast.error((t("events.error.deleteEvent") || 'Error al eliminar el evento: ') + err.message);
     }
     setDeleting(false);
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
     if (!currentUser?.email || (currentUser.email !== event.host && currentUser.email !== (event as any).hostName)) {
-      alert("Solo el creador del evento puede aceptar o rechazar solicitudes.");
+      toast.error(t("events.error.onlyHostCanAccept") || "Solo el creador del evento puede aceptar o rechazar solicitudes.");
       return;
     }
 
@@ -250,10 +253,10 @@ export function EventDetailScreen({
 
     if (!error) {
       // Simular la notificación al usuario
-      alert(`Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
+      toast.success(t("events.success.actionComplete")?.replace("{action}", status === "aceptado" ? "aceptado" : "rechazado") || `Has ${status === "aceptado" ? "aceptado" : "rechazado"} la solicitud.`);
       fetchParticipants();
     } else {
-      alert("Error al actualizar la solicitud");
+      toast.error(t("events.error.updateRequest") || "Error al actualizar la solicitud");
     }
     setActionLoading(null);
   }
@@ -324,29 +327,29 @@ export function EventDetailScreen({
       });
       if (error) {
         if (error.code === '23505') {
-          setInviteSuccess(`${friend.name} ya está en el partido.`);
+          setInviteSuccess(t("events.error.alreadyInMatch")?.replace("{name}", friend.name) || `${friend.name} ya está en el partido.`);
         } else {
           throw error;
         }
       } else {
         setInviteSuccess(
           invitationStatus === 'aceptado'
-            ? `¡${friend.name} ha sido agregado al partido!`
-            : `¡Solicitud enviada a ${friend.name}!`
+            ? (t("events.success.addedToMatch")?.replace("{name}", friend.name) || `¡${friend.name} ha sido agregado al partido!`)
+            : (t("events.success.requestSentTo")?.replace("{name}", friend.name) || `¡Solicitud enviada a ${friend.name}!`)
         );
         fetchParticipants();
       }
       setTimeout(() => setInviteSuccess(null), 3000);
     } catch (e: any) {
       console.error('Error inviting friend:', e);
-      setInviteSuccess(`Error al invitar a ${friend.name}.`);
+      setInviteSuccess(t("events.error.inviteError")?.replace("{name}", friend.name) || `Error al invitar a ${friend.name}.`);
       setTimeout(() => setInviteSuccess(null), 3000);
     }
   }
 
   async function handleLeave() {
     if (!currentUser?.email) return;
-    const confirmLeave = confirm('¿Estás seguro de que deseas salirte de este partido?');
+    const confirmLeave = confirm(t("events.confirmLeave") || '¿Estás seguro de que deseas salirte de este partido?');
     if (!confirmLeave) return;
 
     try {
@@ -401,9 +404,9 @@ export function EventDetailScreen({
           <CheckCircle2 size={48} strokeWidth={2.5} />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-secondary">¡Solicitud enviada!</h2>
+          <h2 className="text-2xl font-bold text-secondary">{t("events.success.requestSentTitle") || "¡Solicitud enviada!"}</h2>
           <p className="text-sm text-muted-foreground">
-            Tu solicitud para unirte al partido de {event.sport} ha sido enviada con éxito.
+            {t("events.success.requestSentDesc")?.replace("{sport}", event.sport) || `Tu solicitud para unirte al partido de ${event.sport} ha sido enviada con éxito.`}
           </p>
         </div>
       </div>
@@ -424,7 +427,7 @@ export function EventDetailScreen({
           setShowLoginPrompt(false);
           onOpenAuth?.();
         }}
-        actionContext="unirte al partido"
+        actionContext={t("eventCard.joinEvent")?.toLowerCase() || "unirte al partido"}
       />
       {/* Hero */}
       <div className="relative h-64 w-full overflow-hidden">
@@ -457,7 +460,7 @@ export function EventDetailScreen({
         <div className="flex items-center gap-3 rounded-2xl bg-card p-3 shadow-soft">
           {renderAvatar(event.host, "h-11 w-11", hostProfile?.avatar_url)}
           <div className="flex-1">
-            <div className="text-[11px] font-medium text-muted-foreground">Organizador</div>
+            <div className="text-[11px] font-medium text-muted-foreground">{t("profile.organizer") || "Organizador"}</div>
             <div className="text-sm font-bold text-secondary">{event.host}</div>
           </div>
           <div className="flex items-center gap-1 text-xs font-bold text-secondary">
@@ -472,21 +475,21 @@ export function EventDetailScreen({
             <div className="flex items-center gap-3">
               <Calendar size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Fecha</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.date") || "Fecha"}</div>
                 <div className="truncate text-sm font-bold text-secondary">{event.date}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Clock size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Hora</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.time") || "Hora"}</div>
                 <div className="truncate text-sm font-bold text-secondary">{event.time}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <MapPin size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Lugar</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.location") || "Lugar"}</div>
                 <div className="truncate text-sm font-bold text-secondary" title={(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}>
                   {(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}
                 </div>
@@ -495,7 +498,7 @@ export function EventDetailScreen({
             <div className="flex items-center gap-3">
               <Users size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Cupos</div>
+                <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.spots") || "Cupos"}</div>
                 <div className="truncate text-sm font-bold text-secondary">{approvedPlayers.length}/{event.spots}</div>
               </div>
             </div>
@@ -516,7 +519,7 @@ export function EventDetailScreen({
             </div>
           ) : (
             <div className="h-full min-h-[160px] w-full rounded-2xl bg-muted flex items-center justify-center border border-dashed border-border text-[10px] text-muted-foreground text-center p-2">
-              Ubicación no<br/>disponible
+              {t("events.locationNotAvailable") ? t("events.locationNotAvailable").split("\\n").map((line:string, i:number) => <span key={i}>{line}<br/></span>) : <>Ubicación no<br/>disponible</>}
             </div>
           )}
         </div>
@@ -532,23 +535,23 @@ export function EventDetailScreen({
           className="w-full flex items-center justify-center gap-2 rounded-2xl bg-secondary/10 hover:bg-secondary/20 active:scale-[0.98] py-3 text-xs font-bold text-secondary transition-all border border-secondary/20 shadow-soft"
         >
           <MapPin size={16} className="text-primary" />
-          <span>Cómo llegar con Google Maps</span>
+          <span>{t("events.howToGetThere") || "Cómo llegar con Google Maps"}</span>
           {userLocation ? (
             <span className="ml-1 rounded-full bg-primary/20 px-2 py-0.5 text-[9px] font-bold text-primary animate-pulse">
-              En tiempo real
+              {t("events.realTime") || "En tiempo real"}
             </span>
           ) : (
             <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-[9px] font-medium text-muted-foreground">
-              Desde tu ubicación
+              {t("events.fromYourLocation") || "Desde tu ubicación"}
             </span>
           )}
         </button>
 
         {/* Description */}
         <div>
-          <h3 className="mb-2 text-sm font-bold text-secondary">Descripción</h3>
+          <h3 className="mb-2 text-sm font-bold text-secondary">{t("events.description") || "Descripción"}</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {event.description_after_arrival || 
+            {event.description_after_arrival || t("events.defaultDescription") || 
               "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo."}
           </p>
         </div>
@@ -560,7 +563,7 @@ export function EventDetailScreen({
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] text-white">
                 {pendingRequests.length}
               </span>
-              Solicitudes pendientes
+              {t("events.pendingRequests") || "Solicitudes pendientes"}
             </h3>
             <div className="space-y-2">
               {pendingRequests.map(req => (
@@ -602,7 +605,7 @@ export function EventDetailScreen({
         {/* Players */}
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-secondary">Jugadores aprobados</h3>
+            <h3 className="text-sm font-bold text-secondary">{t("events.approvedPlayers") || "Jugadores aprobados"}</h3>
             <div className="flex items-center gap-2">
               {currentUser && (
                 <button
@@ -612,22 +615,22 @@ export function EventDetailScreen({
                   }}
                   className="rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary px-3 py-1.5 text-xs font-black transition-all active:scale-95 shadow-sm cursor-pointer flex items-center gap-1"
                 >
-                  <UserPlus size={12} /> Invitar Amigos
+                  <UserPlus size={12} /> {t("events.inviteFriends") || "Invitar Amigos"}
                 </button>
               )}
-              <span className="text-xs text-muted-foreground">{emptySpots} cupos disponibles</span>
+              <span className="text-xs text-muted-foreground">{emptySpots} {t("events.spotsAvailable") || "cupos disponibles"}</span>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
             {loading ? (
-              <div className="text-xs text-muted-foreground">Cargando jugadores...</div>
+              <div className="text-xs text-muted-foreground">{t("events.loadingPlayers") || "Cargando jugadores..."}</div>
             ) : (
               <>
                 {approvedPlayers.map((p, i) => (
                   <div key={p.id || i} title={p.user_username} className="relative">
                     {renderAvatar(p.user_username || "Usuario", "h-10 w-10", p.profiles?.avatar_url)}
                     {p.clan_id && (
-                       <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-secondary flex items-center justify-center shadow-sm" title="Miembro de Clan">
+                       <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-secondary flex items-center justify-center shadow-sm" title={t("clans.member") || "Miembro de Clan"}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M20.38 3.46 16 2a8.59 8.59 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" fill={p.clans?.hex_primary || "#32CD32"} stroke={p.clans?.hex_secondary || "#1a1a1a"} />
                           </svg>
@@ -661,14 +664,14 @@ export function EventDetailScreen({
         {event.price > 0 && activeCoupons.length > 0 && (
           <div className="mb-3 flex items-center justify-between gap-2 border-b border-border/60 pb-3">
             <span className="text-[10px] font-black uppercase text-muted-foreground flex items-center gap-1">
-              📜 Aplicar Cupón RPG:
+              📜 {t("events.applyCoupon") || "Aplicar Cupón RPG:"}
             </span>
             <select
               value={selectedCouponCode}
               onChange={(e) => setSelectedCouponCode(e.target.value)}
               className="text-xs font-bold text-secondary border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]"
             >
-              <option value="">-- Sin cupón --</option>
+              <option value="">{t("events.noCoupon") || "-- Sin cupón --"}</option>
               {activeCoupons.map((c: any) => (
                 <option key={c.code} value={c.code}>
                   {c.title} ({c.discount})
@@ -681,10 +684,10 @@ export function EventDetailScreen({
         <div className="flex items-center gap-3">
           <div>
             <div className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
-              Aporte {selectedCouponCode && <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-1 rounded-full">{appliedDiscountText}</span>}
+              {t("events.contribution") || "Aporte"} {selectedCouponCode && <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-1 rounded-full">{appliedDiscountText}</span>}
             </div>
             <div className="text-lg font-bold text-secondary">
-              {finalPrice === 0 ? "Gratis" : `$${finalPrice.toFixed(2)} USD`}
+              {finalPrice === 0 ? (t("events.free") || "Gratis") : `$${finalPrice.toFixed(2)} USD`}
               {selectedCouponCode && <span className="text-[10px] text-muted-foreground line-through ml-1.5">${event.price}</span>}
             </div>
           </div>
@@ -694,14 +697,14 @@ export function EventDetailScreen({
                 disabled={true}
                 className="w-full rounded-2xl py-3 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center"
               >
-                Eres el organizador 👑
+                {t("events.youAreHost") || "Eres el organizador 👑"}
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
                 className="w-full rounded-2xl py-3 text-sm font-black bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
                 <Trash2 size={14} />
-                Eliminar Evento
+                {t("events.deleteEvent") || "Eliminar Evento"}
               </button>
             </div>
           ) : isUserApproved ? (
@@ -710,7 +713,7 @@ export function EventDetailScreen({
               onClick={handleLeave}
               className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 active:scale-[0.98] transition-all text-center cursor-pointer"
             >
-              Salir del partido 🚪
+              {t("events.leaveMatch") || "Salir del partido 🚪"}
             </button>
           ) : isUserPending ? (
             <button
@@ -718,7 +721,7 @@ export function EventDetailScreen({
               onClick={handleLeave}
               className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 hover:bg-red-500/10 hover:text-red-500 active:scale-[0.98] transition-all text-center cursor-pointer"
             >
-              Cancelar solicitud ✖️
+              {t("events.cancelRequest") || "Cancelar solicitud ✖️"}
             </button>
           ) : (
             <button
@@ -731,10 +734,10 @@ export function EventDetailScreen({
               }`}
             >
               {joining
-                ? "Enviando..."
+                ? (t("events.sending") || "Enviando...")
                 : emptySpots === 0
-                  ? "Evento Lleno"
-                  : "Solicitar unirme"}
+                  ? (t("events.eventFull") || "Evento Lleno")
+                  : (t("events.requestToJoin") || "Solicitar unirme")}
             </button>
           )}
           
@@ -749,7 +752,7 @@ export function EventDetailScreen({
                     : "bg-emerald-500 hover:bg-emerald-600 text-white"
                 }`}
               >
-                {registeringClan ? "Inscribiendo..." : `Inscribir Clan ${clan.name}`}
+                {registeringClan ? (t("events.enrolling") || "Inscribiendo...") : `${t("events.enrollClan") || "Inscribir Clan"} ${clan.name}`}
              </button>
           ))}
         </div>
@@ -760,7 +763,7 @@ export function EventDetailScreen({
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-6 py-4 animate-in fade-in duration-300">
           <div className="relative w-full max-w-sm rounded-3xl bg-secondary border border-primary/30 p-6 shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[80vh]">
             <h3 className="text-lg font-black text-white flex items-center gap-2 border-b border-white/10 pb-3">
-              <Users size={20} className="text-primary animate-pulse" /> Invitar Amigos
+              <Users size={20} className="text-primary animate-pulse" /> {t("events.inviteFriendsTitle") || "Invitar Amigos"}
             </h3>
 
             {inviteSuccess && (
@@ -773,7 +776,7 @@ export function EventDetailScreen({
               {loadingFriends ? (
                 <div className="flex flex-col items-center justify-center gap-2 py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                  <span className="text-xs text-muted-foreground">Cargando amigos...</span>
+                  <span className="text-xs text-muted-foreground">{t("events.loadingFriends") || "Cargando amigos..."}</span>
                 </div>
               ) : (() => {
                 const nonParticipantFriends = inviteFriends.filter(friend => {
@@ -783,7 +786,7 @@ export function EventDetailScreen({
                 if (nonParticipantFriends.length === 0) {
                   return (
                     <div className="text-center text-xs text-muted-foreground py-8">
-                      No tienes amigos disponibles para invitar o todos ya están en el partido.
+                      {t("events.noFriendsAvailable") || "No tienes amigos disponibles para invitar o todos ya están en el partido."}
                     </div>
                   );
                 }
@@ -807,7 +810,7 @@ export function EventDetailScreen({
                       onClick={() => handleInviteFriend(friend)}
                       className="rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
                     >
-                      Agregar
+                      {t("common.add") || "Agregar"}
                     </button>
                   </div>
                 ));
@@ -818,7 +821,7 @@ export function EventDetailScreen({
               onClick={() => setShowInviteModal(false)}
               className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
             >
-              Cerrar
+              {t("common.close") || "Cerrar"}
             </button>
           </div>
         </div>
@@ -858,37 +861,37 @@ export function EventDetailScreen({
                     {formatted.name}
                     {formatted.is_organizer && (
                       <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30">
-                        Organizador
+                        {t("profile.organizer") || "Organizador"}
                       </span>
                     )}
                   </h3>
                   <p className="text-[10px] text-white/50">{formatted.username}</p>
                 </div>
                 <div className="inline-flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-2.5 py-1 text-xs font-bold text-primary">
-                  <Star size={12} className="fill-primary text-primary" /> {formatted.rating.toFixed(2)} Reputación
+                  <Star size={12} className="fill-primary text-primary" /> {formatted.rating.toFixed(2)} {t("profile.rating") || "Reputación"}
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
                   <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Edad</span>
-                    <span className="font-extrabold text-white">{formatted.age} años</span>
+                    <span className="text-[9px] text-white/50 block font-bold">{t("profile.age") || "Edad"}</span>
+                    <span className="font-extrabold text-white">{formatted.age} {t("common.years") || "años"}</span>
                   </div>
                   <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Género</span>
+                    <span className="text-[9px] text-white/50 block font-bold">{t("profile.gender") || "Género"}</span>
                     <span className="font-extrabold text-white truncate block">{formatted.gender}</span>
                   </div>
                   <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Ubicación</span>
+                    <span className="text-[9px] text-white/50 block font-bold">{t("profile.location") || "Ubicación"}</span>
                     <span className="font-extrabold text-white truncate block" title={formatted.location}>{formatted.location}</span>
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Sobre mí</span>
+                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">{t("profile.aboutMe") || "Sobre mí"}</span>
                   <p className="text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic">
                     "{formatted.bio}"
                   </p>
                 </div>
                 <div className="space-y-1.5">
-                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Deportes Favoritos</span>
+                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">{t("profile.favoriteSports") || "Deportes Favoritos"}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {formatted.sports.map((sport: string) => (
                       <span key={sport} className="rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary">
@@ -901,7 +904,7 @@ export function EventDetailScreen({
                   onClick={() => setSelectedUserProfile(null)}
                   className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
                 >
-                  Volver al Partido
+                  {t("events.backToMatch") || "Volver al Partido"}
                 </button>
               </div>
             </div>
@@ -919,9 +922,9 @@ export function EventDetailScreen({
                 <Trash2 size={28} className="text-rose-500" />
               </div>
               <div>
-                <h3 className="text-xl font-black text-secondary">¿Eliminar Evento?</h3>
+                <h3 className="text-xl font-black text-secondary">{t("events.deleteEventConfirmTitle") || "¿Eliminar Evento?"}</h3>
                 <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
-                  Esta acción eliminará <span className="font-bold text-secondary">"{event.title}"</span> de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo.
+                  {t("events.deleteEventConfirmDesc")?.replace("{title}", `"${event.title}"`) || `Esta acción eliminará "${event.title}" de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo.`}
                 </p>
               </div>
               <div className="w-full flex gap-3 pt-2">
@@ -930,14 +933,14 @@ export function EventDetailScreen({
                   disabled={deleting}
                   className="flex-1 py-3.5 rounded-2xl bg-muted text-muted-foreground font-bold text-sm hover:bg-muted/80 transition-all"
                 >
-                  Cancelar
+                  {t("common.cancel") || "Cancelar"}
                 </button>
                 <button
                   onClick={handleDeleteEvent}
                   disabled={deleting}
                   className="flex-1 py-3.5 rounded-2xl bg-rose-500 text-white font-black text-sm hover:bg-rose-600 active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                 >
-                  {deleting ? <Loader2 size={16} className="animate-spin" /> : <><Trash2 size={14} /> Eliminar</>}
+                  {deleting ? <Loader2 size={16} className="animate-spin" /> : <><Trash2 size={14} /> {t("common.delete") || "Eliminar"}</>}
                 </button>
               </div>
             </div>
@@ -950,8 +953,10 @@ export function EventDetailScreen({
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
            <div className="bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col shadow-pop relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" />
-              <h3 className="text-lg font-black text-secondary mb-1">Seleccionar Miembros</h3>
-              <p className="text-xs text-muted-foreground mb-4">El evento tiene {Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length)} cupos. Selecciona quiénes participarán.</p>
+              <h3 className="text-lg font-black text-secondary mb-1">{t("events.selectMembers") || "Seleccionar Miembros"}</h3>
+              <p className="text-xs text-muted-foreground mb-4">
+                {t("events.selectMembersDesc")?.replace("{spots}", String(Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length))) || `El evento tiene ${Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length)} cupos. Selecciona quiénes participarán.`}
+              </p>
               <div className="flex-1 overflow-y-auto space-y-2 relative z-10">
                  {selectableClanMembers.map((m: any) => {
                    const isSelected = selectedClanMemberIds.includes(m.user_id);
@@ -964,7 +969,7 @@ export function EventDetailScreen({
                          } else {
                            const emptySpots = Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
                            if (selectedClanMemberIds.length >= emptySpots) {
-                             alert(`Solo puedes seleccionar hasta ${emptySpots} miembros.`);
+                             toast.warning(t("events.error.maxMembers")?.replace("{spots}", String(emptySpots)) || `Solo puedes seleccionar hasta ${emptySpots} miembros.`);
                              return;
                            }
                            setSelectedClanMemberIds([...selectedClanMemberIds, m.user_id]);
@@ -984,7 +989,7 @@ export function EventDetailScreen({
                  })}
               </div>
               <div className="mt-4 flex gap-2 relative z-10">
-                <button onClick={() => setShowClanMemberSelectModal(false)} className="flex-1 bg-muted text-muted-foreground py-3 rounded-2xl font-bold text-sm">Cancelar</button>
+                <button onClick={() => setShowClanMemberSelectModal(false)} className="flex-1 bg-muted text-muted-foreground py-3 rounded-2xl font-bold text-sm">{t("common.cancel") || "Cancelar"}</button>
                 <button 
                   disabled={selectedClanMemberIds.length === 0 || registeringClan}
                   onClick={() => {
@@ -992,7 +997,7 @@ export function EventDetailScreen({
                   }} 
                   className="flex-1 gradient-primary text-secondary py-3 rounded-2xl font-black text-sm disabled:opacity-50 flex justify-center items-center"
                 >
-                  {registeringClan ? <Loader2 size={16} className="animate-spin" /> : `Unirse (${selectedClanMemberIds.length})`}
+                  {registeringClan ? <Loader2 size={16} className="animate-spin" /> : `${t("events.join") || "Unirse"} (${selectedClanMemberIds.length})`}
                 </button>
               </div>
            </div>
@@ -1010,7 +1015,7 @@ const getFormattedProfile = (p: any) => {
   const age = p.age || (20 + (charCodeSum % 15));
   const locations = ['Chacao','Las Mercedes','Altamira','El Hatillo','La Castellana','Los Palos Grandes'];
   const location = p.location || locations[charCodeSum % locations.length];
-  const sportsPool = ['Running','Senderismo','Pádel','Tenis','Vóleibol'];
+  const sportsPool = ['Pádel','Tenis','Vóleibol','Fútbol','Golf'];
   const sportsCount = 1 + (charCodeSum % 3);
   const sports: string[] = p.preferred_sports || [];
   if (sports.length === 0) {
@@ -1057,7 +1062,7 @@ function InfoTile({
         </div>
         {onClick && (
           <span className="text-[9px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full">
-            Ver Ruta
+            {useSettings().t("events.viewRoute") || "Ver Ruta"}
           </span>
         )}
       </div>

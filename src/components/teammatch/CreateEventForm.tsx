@@ -15,6 +15,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { AddCanchaForm } from "./CanchasScreen";
 import { useCurrentUser } from "@/lib/UserContext";
+import { useSettings } from "@/lib/SettingsContext";
 
 // ─── Catálogo de deportes ───────────────────────────────────────────────────
 const SPORTS = [
@@ -119,6 +120,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
   const [serverError, setServerError] = useState<string | null>(null);
   const [showFloatXp, setShowFloatXp] = useState(false);
   const { addXp } = useCurrentUser();
+  const { t } = useSettings();
   
   const [canchas, setCanchas] = useState<any[]>([]);
   const [loadingCanchas, setLoadingCanchas] = useState(true);
@@ -181,11 +183,11 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
   function validate(): boolean {
     const newErrors: FieldError = {};
 
-    if (!form.sportId) newErrors.sportId = "Selecciona un deporte";
-    if (!form.intensity) newErrors.intensity = "Selecciona la intensidad";
-    if (!form.date) newErrors.date = "La fecha es obligatoria";
-    if (!form.time) newErrors.time = "La hora es obligatoria";
-    if (!form.canchaId) newErrors.canchaId = "Selecciona una cancha obligatoriamente";
+    if (!form.sportId) newErrors.sportId = t("createEvent.err.sport") || "Selecciona un deporte";
+    if (!form.intensity) newErrors.intensity = t("createEvent.err.intensity") || "Selecciona la intensidad";
+    if (!form.date) newErrors.date = t("createEvent.err.date") || "La fecha es obligatoria";
+    if (!form.time) newErrors.time = t("createEvent.err.time") || "La hora es obligatoria";
+    if (!form.canchaId) newErrors.canchaId = t("createEvent.err.court") || "Selecciona una cancha obligatoriamente";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -212,13 +214,13 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       } = await supabase.auth.getUser();
 
       if (authError || !user) {
-        setServerError("Debes iniciar sesión para crear un evento.");
+        setServerError(t("createEvent.loginRequired") || "Debes iniciar sesión para crear un evento.");
         setStatus("error");
         return;
       }
 
       if (!user.email) {
-        setServerError("No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
+        setServerError(t("createEvent.emailError") || "No se pudo obtener el email del usuario. Intenta cerrar sesión y volver a entrar.");
         setStatus("error");
         return;
       }
@@ -288,10 +290,10 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
       if (err && typeof err === "object" && "message" in err) {
         const pgErr = err as { message: string; details?: string; hint?: string; code?: string };
         console.error("❌ Supabase insert error:", pgErr);
-        setServerError(`Error al crear el evento: ${pgErr.message}`);
+        setServerError(`${t("createEvent.error") || "Error al crear el evento"}: ${pgErr.message}`);
       } else {
         console.error("❌ Error inesperado:", err);
-        setServerError("Error inesperado al crear el evento.");
+        setServerError(t("createEvent.unexpectedError") || "Error inesperado al crear el evento.");
       }
       setStatus("error");
     }
@@ -333,7 +335,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
         <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
           <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-            ¡EVENTO PUBLICADO! ⚽
+            {t("createEvent.published") || "¡EVENTO PUBLICADO! ⚽"}
           </span>
 
           <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
@@ -341,9 +343,9 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-md">¡Listo!</h2>
+            <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-md">{t("createEvent.done") || "¡Listo!"}</h2>
             <p className="text-sm text-white/80 px-4 leading-relaxed">
-              Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!
+              {t("createEvent.successMsg") || "Tu partido ya está en el mapa, listo para que otros jugadores se unan. ¡A jugar!"}
             </p>
           </div>
 
@@ -357,7 +359,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
             onClick={handleDismissSuccess}
             className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
           >
-            ¡Entendido!
+            {t("createEvent.understood") || "¡Entendido!"}
           </button>
         </div>
       </div>
@@ -376,9 +378,9 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
           <ArrowLeft size={18} className="text-secondary" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-secondary">Nuevo evento</h1>
+          <h1 className="text-lg font-bold text-secondary">{t("createEvent.title") || "Nuevo evento"}</h1>
           <p className="text-[11px] text-muted-foreground">
-            Completa los datos para publicar tu evento
+            {t("createEvent.subtitle") || "Completa los datos para publicar tu evento"}
           </p>
         </div>
       </div>
@@ -388,7 +390,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
         {/* Deporte */}
         <FormSection
-          title="Deporte"
+          title={t("createEvent.sport") || "Deporte"}
           icon={<Zap size={13} />}
           error={errors.sportId}
           required
@@ -414,7 +416,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
         {/* Intensidad */}
         <FormSection
-          title="Intensidad"
+          title={t("createEvent.intensity") || "Intensidad"}
           icon={<Zap size={13} />}
           error={errors.intensity}
           required
@@ -440,7 +442,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
         {/* Fecha y Hora */}
         <div className="grid grid-cols-2 gap-3">
           <FormSection
-            title="Fecha"
+            title={t("createEvent.date") || "Fecha"}
             icon={<Calendar size={13} />}
             error={errors.date}
             required
@@ -458,7 +460,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
           </FormSection>
 
           <FormSection
-            title="Hora"
+            title={t("createEvent.time") || "Hora"}
             icon={<Clock size={13} />}
             error={errors.time}
             required
@@ -477,7 +479,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
         {/* Selección de Cancha */}
         <FormSection
-          title="Instalación / Cancha"
+          title={t("createEvent.facility") || "Instalación / Cancha"}
           icon={<MapPin size={13} />}
           error={errors.canchaId}
           required
@@ -486,20 +488,20 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
             <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-soft animate-pulse">
               <Loader2 size={16} className="animate-spin text-primary shrink-0" />
               <span className="text-xs font-semibold text-muted-foreground">
-                Cargando canchas disponibles...
+                {t("createEvent.loadingCourts") || "Cargando canchas disponibles..."}
               </span>
             </div>
           ) : canchas.length === 0 ? (
             <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-center">
-              <p className="text-xs font-semibold text-destructive">No hay canchas registradas en la app.</p>
-              <p className="text-[10px] text-muted-foreground mt-1">Registra primero una cancha en la sección de Canchas.</p>
+              <p className="text-xs font-semibold text-destructive">{t("createEvent.noCourts") || "No hay canchas registradas en la app."}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">{t("createEvent.registerFirst") || "Registra primero una cancha en la sección de Canchas."}</p>
               {isOrganizer && (
                 <button
                   type="button"
                   onClick={() => setShowAddCanchaForm(true)}
                   className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                 >
-                  + Crear nueva cancha
+                  + {t("createEvent.createCourt") || "+ Crear nueva cancha"}
                 </button>
               )}
             </div>
@@ -530,7 +532,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                     errors.canchaId ? "border-destructive" : "border-border"
                   }`}
                 >
-                  <option value="">-- Selecciona una cancha --</option>
+                  <option value="">{t("createEvent.selectCourt") || "-- Selecciona una cancha --"}</option>
                   {canchas.map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name} {c.price ? `(Bs. ${c.price}/h)` : ""}
@@ -557,7 +559,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
         {/* Selección de Clan Opcional */}
         {captainedClans.filter(c => c.sport === form.sportId).length > 0 && (
           <FormSection
-            title="Inscribir Clan Automáticamente"
+            title={t("createEvent.autoClan") || "Inscribir Clan Automáticamente"}
             icon={<Shield size={13} />}
           >
             <div className="relative">
@@ -566,10 +568,10 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                 onChange={(e) => setField("hostClanId", e.target.value)}
                 className="w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft border-border"
               >
-                <option value="">-- No inscribir clan completo --</option>
+                <option value="">{t("createEvent.noClan") || "-- No inscribir clan completo --"}</option>
                 {captainedClans.filter(c => c.sport === form.sportId).map((c) => (
                   <option key={c.id} value={c.id}>
-                    Inscribir a {c.name} ({c.clan_members.filter((m: any) => m.status === 'approved').length} miembros)
+                    {t("createEvent.enrollClan")?.replace("{name}", c.name).replace("{count}", c.clan_members.filter((m: any) => m.status === 'approved').length) || `Inscribir a ${c.name} (${c.clan_members.filter((m: any) => m.status === 'approved').length} miembros)`}
                   </option>
                 ))}
               </select>
@@ -577,13 +579,13 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                 <Shield size={16} />
               </div>
             </div>
-            <p className="text-[10px] text-muted-foreground mt-1">Si seleccionas un clan, todos sus miembros actuales serán inscritos automáticamente en este evento.</p>
+            <p className="text-[10px] text-muted-foreground mt-1">{t("createEvent.clanNote") || "Si seleccionas un clan, todos sus miembros actuales serán inscritos automáticamente en este evento."}</p>
           </FormSection>
         )}
 
         {/* Capacidad máxima (opcional) */}
         <FormSection
-          title="Capacidad máxima"
+          title={t("createEvent.maxCapacity") || "Capacidad máxima"}
           icon={<Users size={13} />}
         >
           <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-soft focus-within:border-primary transition-colors">
@@ -593,7 +595,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               type="number"
               min={1}
               max={100}
-              placeholder="Ej: 12 jugadores (opcional)"
+              placeholder={t("createEvent.capacityPlaceholder") || "Ej: 12 jugadores (opcional)"}
               value={form.maxCapacity}
               onChange={(e) => setField("maxCapacity", e.target.value)}
               className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
@@ -603,7 +605,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
         {/* Descripción (opcional, máx 150 caracteres) */}
         <FormSection
-          title="Descripción"
+          title={t("createEvent.description") || "Descripción"}
           icon={<FileText size={13} />}
         >
           <div className="flex flex-col gap-1 rounded-2xl border border-border bg-card px-4 py-3 shadow-soft focus-within:border-primary transition-colors">
@@ -611,7 +613,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               id="event-description-input"
               maxLength={150}
               rows={3}
-              placeholder="Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)"
+              placeholder={t("createEvent.descPlaceholder") || "Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)"}
               value={form.descriptionAfterArrival}
               onChange={(e) => setField("descriptionAfterArrival", e.target.value)}
               className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50 resize-none py-1"
@@ -677,10 +679,10 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
           {status === "loading" ? (
             <span className="flex items-center justify-center gap-2">
               <Loader2 size={16} className="animate-spin" />
-              Publicando evento…
+              {t("createEvent.publishing") || "Publicando evento…"}
             </span>
           ) : (
-            "Publicar evento"
+            t("createEvent.publish") || "Publicar evento"
           )}
         </button>
       </div>

@@ -1,6 +1,7 @@
 import { Trophy, ChevronRight, Calendar, Clock, MapPin, ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useSettings } from "@/lib/SettingsContext";
 import { UserAvatar } from "./UserAvatar";
 import type { SportEvent } from "./types";
 import footballField from "@/assets/football-field.jpg";
@@ -15,8 +16,6 @@ const SPORT_NAMES: Record<number, string> = {
   2: "Tenis",
   3: "Golf",
   4: "Pádel",
-  5: "Senderismo",
-  6: "Running",
   7: "Vóleibol",
 };
 
@@ -25,8 +24,6 @@ const SPORT_EMOJIS: Record<number, string> = {
   2: "🎾",
   3: "⛳",
   4: "🏓",
-  5: "🥾",
-  6: "🏃",
   7: "🏐",
 };
 
@@ -47,9 +44,19 @@ const getSportImage = (sportId: number) => {
   return runningTrail;
 };
 
-function formatEvent(row: any): any {
+function formatEvent(row: any, t: any): any {
   if (!row) return null;
-  const sportName = SPORT_NAMES[row.sport_id] || "Deporte";
+  const getSportName = (id: number) => {
+    if (id === 1) return t("sports.football") || "Fútbol";
+    if (id === 2) return t("sports.tennis") || "Tenis";
+    if (id === 3) return t("sports.golf") || "Golf";
+    if (id === 4) return t("sports.padel") || "Pádel";
+    if (id === 5) return t("sports.hiking") || "Senderismo";
+    if (id === 6) return t("sports.running") || "Running";
+    if (id === 7) return t("sports.volleyball") || "Vóleibol";
+    return t("sports.other") || "Deporte";
+  };
+  const sportName = getSportName(row.sport_id);
   return {
     ...row,
     sport: sportName,
@@ -65,7 +72,7 @@ function formatEvent(row: any): any {
           day: "numeric",
           month: "short",
         })
-      : "Próximamente",
+      : t("common.soon") || "Próximamente",
     image: getSportImage(row.sport_id),
     distanceKm: 2.5,
     joined: row.joined ?? 1,
@@ -76,6 +83,7 @@ function formatEvent(row: any): any {
 }
 
 export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelectEvent?: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
+  const { t } = useSettings();
   const [loading, setLoading] = useState(true);
   const [sportGroups, setSportGroups] = useState<SportGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<SportGroup | null>(null);
@@ -92,6 +100,16 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
         if (data && data.length > 0) {
           // Agrupar por deporte
           const groups: Record<number, SportGroup> = {};
+          const getSportName = (id: number) => {
+            if (id === 1) return t("sports.football") || "Fútbol";
+            if (id === 2) return t("sports.tennis") || "Tenis";
+            if (id === 3) return t("sports.golf") || "Golf";
+            if (id === 4) return t("sports.padel") || "Pádel";
+            if (id === 5) return t("sports.hiking") || "Senderismo";
+            if (id === 6) return t("sports.running") || "Running";
+            if (id === 7) return t("sports.volleyball") || "Vóleibol";
+            return t("sports.other") || "Deporte";
+          };
           data.forEach((p: any) => {
             const ev = p.events;
             if (!ev) return;
@@ -99,21 +117,21 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
             if (!groups[sid]) {
               groups[sid] = {
                 sportId: sid,
-                name: SPORT_NAMES[sid] || "Deporte",
+                name: getSportName(sid),
                 emoji: SPORT_EMOJIS[sid] || "🏅",
                 count: 0,
                 events: [],
               };
             }
             groups[sid].count += 1;
-            groups[sid].events.push(formatEvent(ev));
+            groups[sid].events.push(formatEvent(ev, t));
           });
           setSportGroups(Object.values(groups));
         }
       }
       setLoading(false);
     });
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
@@ -140,7 +158,7 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
               {selectedGroup.emoji} {selectedGroup.name}
             </h1>
             <p className="text-[11px] text-muted-foreground">
-              {selectedGroup.count} partido{selectedGroup.count !== 1 ? "s" : ""}
+              {selectedGroup.count} {selectedGroup.count === 1 ? (t("mySports.match") || "partido") : (t("mySports.matches") || "partidos")}
             </p>
           </div>
         </div>
@@ -195,9 +213,9 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
         <div>
           <h1 className="text-2xl font-bold text-secondary flex items-center gap-2">
             <Trophy size={24} className="text-primary" />
-            Mis deportes
+            {t("mySports.title") || "Mis deportes"}
           </h1>
-          <p className="text-sm text-muted-foreground">Tus estadísticas y partidos por disciplina</p>
+          <p className="text-sm text-muted-foreground">{t("mySports.subtitle") || "Tus estadísticas y partidos por disciplina"}</p>
         </div>
         <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
       </header>
@@ -217,7 +235,7 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
                 <div className="flex-1 text-left">
                   <div className="text-sm font-bold text-secondary">{g.name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {g.count} partido{g.count !== 1 ? "s" : ""}
+                    {g.count} {g.count === 1 ? (t("mySports.match") || "partido") : (t("mySports.matches") || "partidos")}
                   </div>
                 </div>
                 <ChevronRight size={16} className="text-primary shrink-0" />
@@ -225,7 +243,7 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
             ))
           ) : (
             <div className="text-sm text-muted-foreground p-3 text-center bg-card rounded-2xl shadow-soft">
-              No te has unido a eventos de ningún deporte todavía
+              {t("mySports.noSports") || "No te has unido a eventos de ningún deporte todavía"}
             </div>
           )}
         </div>

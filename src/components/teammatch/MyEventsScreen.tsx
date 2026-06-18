@@ -10,18 +10,17 @@ import { CreateEventForm } from "./CreateEventForm";
 import { useSettings } from "@/lib/SettingsContext";
 import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
-import hikingTrail from "@/assets/hiking-trail.jpg";
-import runningTrail from "@/assets/running-trail.jpg";
 import tennisCourt from "@/assets/tennis-court.png";
 import golfCourse from "@/assets/golf-course.png";
 import { parseLocation } from "./MapScreen";
+import { toast } from "sonner";
 
 const getSportImage = (sportId: number) => {
   if (sportId === 1) return footballField;
   if (sportId === 2) return tennisCourt;
   if (sportId === 3) return golfCourse;
   if (sportId === 4) return padelCourt;
-  return runningTrail;
+  return footballField; // Fallback default
 };
 
 const tabs = ["Próximos", "Mis Partidos", "Solicitudes"] as const;
@@ -45,17 +44,17 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
     const coords = parseLocation(row.location);
     const lat = coords?.lat ?? 0;
     const lng = coords?.lng ?? 0;
-    const sportName = row.sport_id === 1 ? "Fútbol" : row.sport_id === 2 ? "Tenis" : row.sport_id === 3 ? "Golf" : row.sport_id === 4 ? "Pádel" : "Otro";
+    const sportName = row.sport_id === 1 ? (t("sports.football") || "Fútbol") : row.sport_id === 2 ? (t("sports.tennis") || "Tenis") : row.sport_id === 3 ? (t("sports.golf") || "Golf") : row.sport_id === 4 ? (t("sports.padel") || "Pádel") : (t("sports.other") || "Otro");
     return {
       ...row,
       lat,
       lng,
       sport: sportName,
       title: row.title || `Evento de ${sportName}`,
-      host: row.creator_username || "Usuario",
+      host: row.creator_username || (t("common.user") || "Usuario"),
       hostAvatar: (row.creator_username || "U").substring(0, 2).toUpperCase(),
       time: row.event_date ? new Date(row.event_date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "00:00",
-      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : "Próximamente",
+      date: row.event_date ? new Date(row.event_date).toLocaleDateString("es-VE", { weekday: "short", day: "numeric", month: "short" }) : (t("events.upcoming") || "Próximamente"),
       image: getSportImage(row.sport_id),
       distanceKm: 2.5,
       joined: row.joined ?? 1,
@@ -157,7 +156,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
     const req = pendingRequests.find(r => r.id === participantId);
     if (!req || req.events?.creator_username !== currentUser?.email) {
-      alert("No tienes permiso para realizar esta acción.");
+      toast.error(t("events.error.noPermission") || "No tienes permiso para realizar esta acción.");
       return;
     }
 
@@ -171,7 +170,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       setPendingRequests(prev => prev.filter(r => r.id !== participantId));
     } else {
       console.error(error);
-      alert("Error al procesar la solicitud: " + error.message);
+      toast.error((t("events.error.processing") || "Error al procesar la solicitud: ") + error.message);
     }
     setActionLoading(null);
   }
@@ -189,7 +188,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
             id="fab-create-event-btn"
             onClick={() => setShowCreateForm(true)}
             className="flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
-            aria-label="Crear partido"
+            aria-label={t("events.createEvent") || "Crear partido"}
             style={{boxShadow: "0 4px 18px rgba(99,102,241,0.45)"}}
           >
             <Plus size={15} strokeWidth={2.5} />
@@ -226,11 +225,11 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
           {loading ? (
             <div className="flex justify-center p-5"><Loader2 className="animate-spin text-primary" /></div>
           ) : pendingRequests.length === 0 ? (
-            <div className="text-center text-sm text-muted-foreground p-5">No tienes solicitudes pendientes nuevas</div>
+            <div className="text-center text-sm text-muted-foreground p-5">{t("events.noPendingRequests") || "No tienes solicitudes pendientes nuevas"}</div>
           ) : (
             pendingRequests.map((req) => {
               const isPremium = req.profiles?.is_premium;
-              const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
+              const sportName = req.events?.sport_id === 1 ? (t("sports.football") || "Fútbol") : req.events?.sport_id === 2 ? (t("sports.tennis") || "Tenis") : req.events?.sport_id === 3 ? (t("sports.golf") || "Golf") : req.events?.sport_id === 4 ? (t("sports.padel") || "Pádel") : "Evento";
 
               return (
                 <div key={req.id} className="rounded-2xl bg-card p-4 shadow-soft">
@@ -252,20 +251,20 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5">
                         <div className="text-sm font-bold text-secondary">
-                          {req.user_username?.split('@')[0] || "Usuario"}
+                          {req.user_username?.split('@')[0] || (t("common.user") || "Usuario")}
                         </div>
                         {isPremium ? (
                           <span className="flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
-                            <Star size={8} className="fill-amber-500" /> Premium
+                            <Star size={8} className="fill-amber-500" /> {t("profile.premium") || "Premium"}
                           </span>
                         ) : (
                           <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-bold text-muted-foreground">
-                            Básica
+                            {t("profile.basic") || "Básica"}
                           </span>
                         )}
                       </div>
                       <div className="text-xs text-muted-foreground mt-0.5">
-                        quiere unirse a tu partido de {sportName}
+                        {t("events.wantsToJoin") || "quiere unirse a tu partido de"} {sportName}
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
@@ -273,7 +272,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                           }}
                           className="text-[10px] font-extrabold text-primary hover:underline block text-left mt-1"
                         >
-                          Ver Perfil 🔍
+                          {t("events.viewProfile") || "Ver Perfil"} 🔍
                         </button>
                       </div>
                     </div>
@@ -284,14 +283,14 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                       onClick={() => handleAction(req.id, "rechazado")}
                       className="flex-1 rounded-xl bg-muted py-2.5 text-xs font-semibold text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors disabled:opacity-50"
                     >
-                      Rechazar
+                      {t("friends.reject") || "Rechazar"}
                     </button>
                     <button
                       disabled={actionLoading === req.id.toString()}
                       onClick={() => handleAction(req.id, "aceptado")}
                       className="flex flex-1 items-center justify-center rounded-xl gradient-primary py-2.5 text-xs font-bold text-secondary shadow-pop disabled:opacity-50"
                     >
-                      {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : "Aceptar"}
+                      {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : (t("friends.accept") || "Aceptar")}
                     </button>
                   </div>
                 </div>
@@ -320,7 +319,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
               ))}
               {myEvents.length === 0 && (
                 <div className="w-full text-center text-sm text-muted-foreground p-5 mt-10">
-                  No tienes partidos próximos programados
+                  {t("events.noUpcomingMatches") || "No tienes partidos próximos programados"}
                 </div>
               )}
             </>
@@ -329,7 +328,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       )}
 
       {selectedUserProfile && (() => {
-        const formatted = getFormattedProfile(selectedUserProfile);
+        const formatted = getFormattedProfile(selectedUserProfile, t);
         if (!formatted) return null;
         
         return (
@@ -369,7 +368,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                     {formatted.name}
                     {formatted.is_organizer && (
                       <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-wider text-amber-500 border border-amber-500/30">
-                        Organizador
+                        {t("profile.organizer") || "Organizador"}
                       </span>
                     )}
                   </h3>
@@ -378,15 +377,15 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
                 <div className="grid grid-cols-3 gap-2 text-center text-xs">
                   <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Edad</span>
-                    <span className="font-extrabold text-white">{formatted.age} años</span>
+                    <span className="text-[9px] text-white/50 block font-bold">{t("profile.age") || "Edad"}</span>
+                    <span className="font-extrabold text-white">{formatted.age} {t("common.years") || "años"}</span>
                   </div>
                   <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Género</span>
+                    <span className="text-[9px] text-white/50 block font-bold">{t("profile.gender") || "Género"}</span>
                     <span className="font-extrabold text-white truncate block">{formatted.gender}</span>
                   </div>
                   <div className="bg-white/5 p-2 rounded-xl border border-white/10">
-                    <span className="text-[9px] text-white/50 block font-bold">Ubicación</span>
+                    <span className="text-[9px] text-white/50 block font-bold">{t("profile.location") || "Ubicación"}</span>
                     <span className="font-extrabold text-white truncate block" title={formatted.location}>
                       {formatted.location}
                     </span>
@@ -394,14 +393,14 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                 </div>
 
                 <div className="space-y-1">
-                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Sobre mí</span>
+                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">{t("profile.aboutMe") || "Sobre mí"}</span>
                   <p className="text-xs leading-relaxed text-white/80 bg-white/5 p-3 rounded-xl border border-white/5 italic">
                     "{formatted.bio}"
                   </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">Deportes Favoritos</span>
+                  <span className="text-[9px] text-white/50 font-bold uppercase tracking-wider block">{t("profile.favSports") || "Deportes Favoritos"}</span>
                   <div className="flex flex-wrap gap-1.5">
                     {formatted.sports.map((sport: string) => (
                       <span key={sport} className="rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[9px] font-bold text-primary">
@@ -415,7 +414,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                   onClick={() => setSelectedUserProfile(null)}
                   className="w-full rounded-2xl bg-muted py-3 text-xs font-black uppercase tracking-wider text-muted-foreground shadow-sm hover:bg-muted/80 transition-all mt-2 cursor-pointer"
                 >
-                  Cerrar Perfil
+                  {t("profile.closeProfile") || "Cerrar Perfil"}
                 </button>
               </div>
 
@@ -446,9 +445,9 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
   );
 }
 
-const getFormattedProfile = (p: any) => {
+const getFormattedProfile = (p: any, t?: any) => {
   if (!p) return null;
-  const username = p.username || "Usuario";
+  const username = p.username || (t ? t("common.user") : "Usuario");
   
   let charCodeSum = 0;
   for (let i = 0; i < username.length; i++) {
@@ -503,7 +502,7 @@ const getFormattedProfile = (p: any) => {
     name,
     username,
     age,
-    gender: p.gender || (charCodeSum % 2 === 0 ? "Masculino" : "Femenino"),
+    gender: p.gender || (charCodeSum % 2 === 0 ? (t ? t("profile.male") : "Masculino") : (t ? t("profile.female") : "Femenino")),
     location,
     bio,
     sports,
