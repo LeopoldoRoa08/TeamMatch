@@ -1,658 +1,452 @@
 import { useState, useEffect } from "react";
-import { 
-  Users, 
-  UserPlus, 
-  Sparkles, 
-  MapPin, 
-  Heart, 
-  X, 
-  Search, 
-  MessageSquare, 
-  UserCheck, 
-  UserX,
-  Flame,
-  Check,
-  CheckCircle2,
-  Loader2
-} from "lucide-react";
-import { useCurrentUser } from "@/lib/UserContext";
-import { SportBadge } from "./SportBadge";
+import { Shield, Plus, Users, Search, UserPlus, Check, X, Loader2, Trophy, ArrowLeft, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useCurrentUser } from "@/lib/UserContext";
+import type { Clan, ClanMember, Sport } from "./types";
+import { SportBadge } from "./SportBadge";
 
-interface Friend {
-  id: string;
-  name: string;
-  username: string;
-  age: number | string;
-  location: string;
-  bio: string;
-  sports: string[];
-  avatar_url: string | null;
-  emoji: string;
-  gradient: string;
-  request_id?: string;
-}
-
-export function ClansScreen({ 
+export function ClansScreen({
   onNavigateToProfile,
-  onSelectEvent 
-}: { 
+  onSelectEvent
+}: {
   onNavigateToProfile?: () => void;
   onSelectEvent?: (e: any) => void;
 }) {
-  const { user, addXp, incrementCarisma } = useCurrentUser();
-  const [activeSubTab, setActiveSubTab] = useState<"tinder" | "friends">("tinder");
-  const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useCurrentUser();
+  const [activeTab, setActiveTab] = useState<"mis-clanes" | "crear" | "unirse">("mis-clanes");
   
-  const [candidates, setCandidates] = useState<Friend[]>([]);
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [receivedRequests, setReceivedRequests] = useState<Friend[]>([]);
-  const [loadingProfiles, setLoadingProfiles] = useState(true);
+  const [clans, setClans] = useState<Clan[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [matchProgress, setMatchProgress] = useState<null | "sending" | "sent" | "error">(null);
-  const [activeRequestUser, setActiveRequestUser] = useState<Friend | null>(null);
-  const [acceptedMatchUser, setAcceptedMatchUser] = useState<Friend | null>(null);
+  // Selected Clan View
+  const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
+  const [clanMembers, setClanMembers] = useState<ClanMember[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [friends, setFriends] = useState<any[]>([]);
+
+  // Create Form
+  const [createData, setCreateData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a" });
+  const [creating, setCreating] = useState(false);
+
+  // Join Form
+  const [inviteCode, setInviteCode] = useState("");
+  const [joining, setJoining] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-      if (!user?.id) return;
-      try {
-        setLoadingProfiles(true);
-
-        const { data: dbProfiles, error: profilesError } = await supabase
-          .from("profiles")
-          .select("*");
-        
-        if (profilesError) throw profilesError;
-
-        const { data: requestsData, error: requestsError } = await supabase
-          .from("friend_requests")
-          .select("*")
-          .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`);
-          
-        if (requestsError && requestsError.code !== '42P01') { 
-          console.error("Error fetching requests", requestsError);
-        }
-
-        const requests = requestsData || [];
-        const myFriends: Friend[] = [];
-        const myReceivedReqs: Friend[] = [];
-        const existingRelations = new Set<string>();
-
-        requests.forEach((req: any) => {
-          const otherUserId = req.sender_id === user.id ? req.receiver_id : req.sender_id;
-          existingRelations.add(otherUserId);
-
-          const profile = dbProfiles?.find(p => p.id === otherUserId);
-          if (!profile) return;
-
-          const mappedProfile = mapProfile(profile, req.id);
-
-          if (req.status === 'accepted') {
-            myFriends.push(mappedProfile);
-          } else if (req.status === 'pending' && req.receiver_id === user.id) {
-            myReceivedReqs.push(mappedProfile);
-          }
-        });
-
-        setFriends(myFriends);
-        setReceivedRequests(myReceivedReqs);
-
-        const candidatesFiltered = (dbProfiles || [])
-          .filter((p: any) => p.id !== user.id && !existingRelations.has(p.id))
-          .map((p: any) => mapProfile(p));
-          
-        setCandidates(candidatesFiltered);
-
-      } catch (err) {
-        console.error("Error loading data:", err);
-      } finally {
-        setLoadingProfiles(false);
-      }
-    }
-
-    if (user) {
-      fetchData();
-      
-      const channel = supabase
-        .channel('public:friend_requests')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'friend_requests' }, () => {
-          fetchData();
-        })
-        .subscribe();
-        
-      return () => {
-        supabase.removeChannel(channel);
-      };
-    } else {
-      setLoadingProfiles(false);
-    }
+    if (user?.id) fetchMyClans();
   }, [user]);
 
-  function mapProfile(p: any, requestId?: string): Friend {
-    const idHash = p.id ? p.id.split("-").join("") : p.username;
-    let charCodeSum = 0;
-    for (let i = 0; i < idHash.length; i++) {
-      charCodeSum += idHash.charCodeAt(i);
-    }
-    const emojis = ["🏃‍♂️", "🎯", "🥊", "🏄", "🧗‍♀️", "🛹", "🪼", "🪨", "🐾", "🐺"];
-    const emoji = emojis[charCodeSum % emojis.length];
-    const gradients = [
-      "from-pink-500 to-rose-400", "from-emerald-500 to-teal-400", 
-      "from-blue-500 to-cyan-400", "from-purple-500 to-indigo-400",
-      "from-amber-500 to-orange-400", "from-sky-500 to-blue-600",
-      "from-orange-400 to-red-500"
-    ];
-    const gradient = gradients[charCodeSum % gradients.length];
+  useEffect(() => {
+    if (selectedClan) fetchClanMembers(selectedClan.id);
+  }, [selectedClan]);
 
-    // Prefer full_name, then parse from email, then username as fallback
-    let name = p.full_name || "";
-    if (!name) {
-      if (p.username && p.username.includes("@")) {
-        name = p.username.split("@")[0].split(".").map((n: string) => n.charAt(0).toUpperCase() + n.slice(1)).join(" ");
-      } else if (p.username) {
-        name = p.username;
+  async function fetchMyClans() {
+    setLoading(true);
+    try {
+      // Clanes donde soy capitán
+      const { data: capClans } = await supabase.from('clans').select('*').eq('captain_id', user?.id);
+      
+      // Clanes donde soy miembro
+      const { data: memberRows } = await supabase.from('clan_members').select('clan_id').eq('user_id', user?.id).eq('status', 'approved');
+      
+      let allClans = [...(capClans || [])];
+      
+      if (memberRows && memberRows.length > 0) {
+        const clanIds = memberRows.map((r: any) => r.clan_id);
+        const { data: memberClans } = await supabase.from('clans').select('*').in('id', clanIds);
+        if (memberClans) {
+          memberClans.forEach(mc => {
+            if (!allClans.find(c => c.id === mc.id)) allClans.push(mc);
+          });
+        }
       }
+      setClans(allClans);
+    } catch (e) {
+      console.error(e);
     }
-
-    return {
-      id: p.id,
-      name: name || "Deportista",
-      username: p.username,
-      age: p.age || "?",
-      location: p.location || "Ubicación desconocida",
-      bio: p.description || "Sin descripción",
-      sports: p.preferred_sports || [],
-      avatar_url: p.avatar_url || null,
-      emoji,
-      gradient,
-      request_id: requestId
-    };
+    setLoading(false);
   }
 
-  const userSports = user?.user_metadata?.preferred_sports || [];
-
-  const getCompatibilityScore = (candidateSports: string[]) => {
-    if (userSports.length === 0 || candidateSports.length === 0) {
-      return 50;
+  async function fetchClanMembers(clanId: string) {
+    setLoadingMembers(true);
+    try {
+      const { data } = await supabase
+        .from('clan_members')
+        .select(`*, profiles:user_id(username, avatar_url, rating, full_name)`)
+        .eq('clan_id', clanId);
+      
+      if (data) setClanMembers(data);
+    } catch (e) {
+      console.error(e);
     }
-    const common = candidateSports.filter(s => userSports.includes(s)).length;
-    const score = Math.round(50 + (common / Math.max(1, userSports.length)) * 48);
-    return Math.min(99, score);
-  };
+    setLoadingMembers(false);
+  }
 
-  const handleLike = async (candidate: Friend) => {
+  async function handleCreateClan(e: React.FormEvent) {
+    e.preventDefault();
     if (!user?.id) return;
-    setActiveRequestUser(candidate);
-    setMatchProgress("sending");
+    setCreating(true);
+    
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
     
     try {
-      const { error } = await supabase.from('friend_requests').insert({
-        sender_id: user.id,
-        receiver_id: candidate.id,
+      const { data: clan, error } = await supabase.from('clans').insert({
+        name: createData.name,
+        sport: createData.sport,
+        captain_id: user.id,
+        invite_code: code,
+        hex_primary: createData.primary,
+        hex_secondary: createData.secondary
+      }).select().single();
+      
+      if (error) throw error;
+      
+      await supabase.from('clan_members').insert({
+        clan_id: clan.id,
+        user_id: user.id,
+        status: 'approved'
+      });
+      
+      alert("¡Clan creado exitosamente!");
+      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a" });
+      setActiveTab("mis-clanes");
+      fetchMyClans();
+    } catch (err: any) {
+      if (err.code === '23505') alert("Ya existe un clan con ese nombre");
+      else alert("Error al crear clan");
+    }
+    setCreating(false);
+  }
+
+  async function handleJoinClan(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user?.id || !inviteCode) return;
+    setJoining(true);
+    try {
+      const { data: clan } = await supabase.from('clans').select('id').eq('invite_code', inviteCode.toUpperCase()).single();
+      if (!clan) {
+        alert("Código inválido");
+        setJoining(false);
+        return;
+      }
+      
+      const { error } = await supabase.from('clan_members').insert({
+        clan_id: clan.id,
+        user_id: user.id,
         status: 'pending'
       });
       
-      if (error) {
-         console.error("Error creating friend request:", error);
-         setMatchProgress("error");
-         return;
+      if (error && error.code === '23505') alert("Ya enviaste una solicitud a este clan");
+      else if (error) throw error;
+      else alert("Solicitud enviada al capitán del clan");
+      
+      setInviteCode("");
+    } catch (err) {
+      alert("Error al unirse al clan");
+    }
+    setJoining(false);
+  }
+
+  async function handleApproveMember(memberId: string) {
+    await supabase.from('clan_members').update({ status: 'approved' }).eq('id', memberId);
+    if (selectedClan) fetchClanMembers(selectedClan.id);
+  }
+
+  async function handleRejectMember(memberId: string) {
+    await supabase.from('clan_members').update({ status: 'rejected' }).eq('id', memberId);
+    if (selectedClan) fetchClanMembers(selectedClan.id);
+  }
+
+  async function fetchFriendsToInvite() {
+    if (!user?.id) return;
+    try {
+      const { data: requestsData } = await supabase
+        .from('friend_requests')
+        .select('*')
+        .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+        .eq('status', 'accepted');
+
+      const friendIds = (requestsData || []).map((r: any) =>
+        r.sender_id === user.id ? r.receiver_id : r.sender_id
+      );
+
+      if (friendIds.length > 0) {
+        const { data: profiles } = await supabase.from('profiles').select('*').in('id', friendIds);
+        setFriends(profiles || []);
       }
-      
-      setCandidates(candidates.filter(c => c.id !== candidate.id));
-      
-      setMatchProgress("sent");
-      
     } catch (err) {
       console.error(err);
-      setMatchProgress("error");
     }
-  };
+  }
 
-  const handleReject = () => {
-    setCurrentIndex(prev => prev + 1);
-  };
-
-  const handleAcceptRequest = async (request: Friend) => {
-    if (!request.request_id) return;
+  async function handleInviteFriend(friendId: string) {
+    if (!selectedClan || !user?.id) return;
     try {
-      const { error } = await supabase
-        .from('friend_requests')
-        .update({ status: 'accepted' })
-        .eq('id', request.request_id);
-
-      if (error) throw error;
-      
-      setReceivedRequests(receivedRequests.filter(r => r.id !== request.id));
-      setFriends([request, ...friends]);
-      
-      await addXp(15, `¡Aceptaste a ${request.name} como amigo! 🤝`);
-      if (incrementCarisma) {
-        await incrementCarisma(1);
-      }
-      
-      setAcceptedMatchUser(request);
-      setTimeout(() => {
-        setAcceptedMatchUser(null);
-      }, 30000); // 30 seconds
-    } catch (error) {
-      console.error("Error accepting request:", error);
+      await supabase.from('clan_members').insert({
+        clan_id: selectedClan.id,
+        user_id: friendId,
+        status: 'approved' // Amigos se unen de una vez si los invita el capi
+      });
+      alert("Amigo añadido al clan");
+      fetchClanMembers(selectedClan.id);
+      setShowInviteModal(false);
+    } catch (e: any) {
+      if (e.code === '23505') alert("Ya está en el clan");
+      else alert("Error al añadir");
     }
-  };
+  }
 
-  const handleRejectRequest = async (request: Friend) => {
-    if (!request.request_id) return;
-    try {
-      const { error } = await supabase
-        .from('friend_requests')
-        .update({ status: 'rejected' })
-        .eq('id', request.request_id);
+  // --- RENDERS ---
 
-      if (error) throw error;
-      
-      setReceivedRequests(receivedRequests.filter(r => r.id !== request.id));
-    } catch (error) {
-      console.error("Error rejecting request:", error);
-    }
-  };
+  if (selectedClan) {
+    const isCaptain = selectedClan.captain_id === user?.id;
+    const approvedMembers = clanMembers.filter(m => m.status === 'approved');
+    const pendingMembers = clanMembers.filter(m => m.status === 'pending');
 
-  const filteredFriends = friends.filter(friend => 
-    friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    friend.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    friend.sports.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
-  const activeCandidate = candidates[currentIndex];
-
-  const renderAvatar = (friend: Friend, sizeClass: string = "h-11 w-11 text-xl") => {
-    if (friend.avatar_url) {
-      return (
-        <img 
-          src={friend.avatar_url} 
-          alt={friend.name} 
-          className={`${sizeClass} shrink-0 rounded-full object-cover shadow-soft border-2 border-white/10`} 
-        />
-      );
-    }
     return (
-      <div className={`${sizeClass} shrink-0 rounded-full bg-gradient-to-tr ${friend.gradient} grid place-items-center shadow-soft`}>
-        {friend.emoji}
-      </div>
-    );
-  };
-
-  return (
-    <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
-      {matchProgress && activeRequestUser && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/95 p-6 text-center animate-in fade-in duration-300">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 40%, rgba(16,185,129,0.15) 0%, transparent 70%)' }} />
-          
-          {matchProgress === "sending" && (
-            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-300 relative z-10">
-              <div className="relative flex items-center justify-center h-24 w-24">
-                <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping duration-1000" />
-                <div className="h-16 w-16 rounded-full bg-primary/10 border border-primary/30 text-primary grid place-items-center animate-pulse">
-                  <Heart size={32} className="fill-current text-primary animate-bounce" />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <span className="inline-flex rounded-full bg-primary/20 px-3.5 py-1 text-[10px] font-black uppercase tracking-widest text-primary border border-primary/20">
-                  Enviando solicitud...
-                </span>
-                <h3 className="text-xl font-black text-white">Conectando con {activeRequestUser.name}</h3>
-              </div>
+      <div className="h-full flex flex-col bg-background relative overflow-y-auto pb-24">
+        <header className="sticky top-0 z-10 flex items-center gap-3 bg-background/90 px-5 py-4 backdrop-blur-md border-b border-border">
+          <button onClick={() => setSelectedClan(null)} className="h-10 w-10 grid place-items-center rounded-full glass">
+            <ArrowLeft size={18} className="text-secondary" />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold text-secondary">{selectedClan.name}</h1>
+            <div className="text-xs text-muted-foreground flex items-center gap-1">
+              <SportBadge sport={selectedClan.sport} />
             </div>
-          )}
+          </div>
+        </header>
 
-          {matchProgress === "sent" && (
-            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
-              <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-                ¡SOLICITUD ENVIADA! 🤝
-              </span>
-
-              <div className="grid h-24 w-24 place-items-center rounded-full bg-emerald-500 text-white shadow-pop ring-8 ring-emerald-500/20">
-                <CheckCircle2 size={48} strokeWidth={2.5} />
-              </div>
-              
-              <div className="space-y-2">
-                <h2 className="text-3xl font-black text-white tracking-tight drop-shadow-md">
-                  ¡Enviado!
-                </h2>
-                <p className="text-sm text-white/80 px-4 leading-relaxed">
-                  Has enviado una solicitud de Match a {activeRequestUser.name}. Ahora debes esperar a que la apruebe para aparecer en tu lista de amigos.
-                </p>
-              </div>
-
-              <div className="flex items-center justify-center gap-8 py-6 relative">
-                <div className="relative h-20 w-20 rounded-full border-4 border-primary bg-secondary grid place-items-center text-4xl shadow-pop animate-in slide-in-from-left duration-500 overflow-hidden">
-                  {user?.user_metadata?.avatar_url ? (
-                    <img src={user.user_metadata.avatar_url} className="w-full h-full object-cover" />
-                  ) : (
-                    (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase()
-                  )}
-                </div>
-                <div className="absolute left-1/2 -translate-x-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-lg animate-bounce">
-                  ⚔️
-                </div>
-                <div className="relative h-20 w-20 shadow-pop animate-in slide-in-from-right duration-500">
-                   {renderAvatar(activeRequestUser, "h-20 w-20 text-4xl")}
-                </div>
-              </div>
-
-              <button
-                onClick={() => {
-                  setMatchProgress(null);
-                  setActiveRequestUser(null);
-                  setCurrentIndex(prev => prev + 1);
-                }}
-                className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
-              >
-                ¡Entendido!
-              </button>
-            </div>
-          )}
-
-          {matchProgress === "error" && (
-            <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500 relative z-10">
-              <span className="inline-flex rounded-full bg-red-500/20 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-red-500 border border-red-500/30">
-                ERROR 💔
-              </span>
-              
-              <h2 className="text-3xl font-black text-white tracking-tight">
-                Hubo un problema
-              </h2>
-              
-              <p className="text-xs text-white/80 leading-relaxed px-6 bg-white/5 p-4 rounded-2xl border border-white/5">
-                No pudimos enviar tu solicitud. Verifica tu conexión o asegúrate de haber creado la tabla de friend_requests.
-              </p>
-
-              <button
-                onClick={() => {
-                  setMatchProgress(null);
-                  setActiveRequestUser(null);
-                }}
-                className="w-full rounded-2xl bg-red-500 hover:bg-red-600 text-white py-3.5 text-xs font-black uppercase tracking-wider shadow-pop transition-all active:scale-95 cursor-pointer"
-              >
-                Cerrar
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {acceptedMatchUser && (
-        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-6 text-center animate-in fade-in duration-300 backdrop-blur-sm">
-          <div className="absolute inset-0 sunburst-rays opacity-20 pointer-events-none" />
-          
-          <div className="space-y-6 max-w-sm flex flex-col items-center animate-in zoom-in-95 duration-500">
-            <span className="inline-flex rounded-full bg-emerald-500/25 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 border border-emerald-500/30 animate-pulse">
-              ¡NUEVO MATCH! 🤝
-            </span>
-            
-            <h2 className="text-4xl font-black text-white tracking-tight drop-shadow-md">
-              ¡SOLICITUD ACEPTADA!
-            </h2>
-            <p className="text-sm text-white/80 px-4">
-              ¡Tú y {acceptedMatchUser.name} ahora son amigos! Han ganado +1 punto de Carisma.
-            </p>
-
-            <div className="flex items-center justify-center gap-8 py-8 relative">
-              <div className="relative h-24 w-24 rounded-full border-4 border-primary bg-secondary grid place-items-center text-5xl shadow-pop animate-in slide-in-from-left duration-500 overflow-hidden">
-                {user?.user_metadata?.avatar_url ? (
-                  <img src={user.user_metadata.avatar_url} className="w-full h-full object-cover" />
-                ) : (
-                  (user?.user_metadata?.full_name || "U").substring(0, 2).toUpperCase()
-                )}
-              </div>
-              <div className="absolute left-1/2 -translate-x-1/2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-secondary font-black shadow-pop text-2xl animate-bounce">
-                <Heart className="fill-current" size={24} />
-              </div>
-              <div className="relative h-24 w-24 shadow-pop animate-in slide-in-from-right duration-500">
-                 {renderAvatar(acceptedMatchUser, "h-24 w-24 text-5xl")}
-              </div>
-            </div>
-
-            <button
-              onClick={() => setAcceptedMatchUser(null)}
-              className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
+        <div className="p-5 space-y-6">
+          <div className="flex flex-col items-center p-6 bg-card rounded-3xl border border-border shadow-soft relative overflow-hidden">
+            <div className="absolute inset-0 opacity-10" style={{ background: `linear-gradient(45deg, ${selectedClan.hex_primary}, ${selectedClan.hex_secondary})` }} />
+            <div 
+              className="h-24 w-24 rounded-full flex items-center justify-center text-4xl shadow-pop z-10"
+              style={{ background: `linear-gradient(135deg, ${selectedClan.hex_primary}, ${selectedClan.hex_secondary})` }}
             >
-              Cerrar
-            </button>
+              🛡️
+            </div>
+            <h2 className="text-2xl font-black text-secondary mt-4 z-10">{selectedClan.name}</h2>
+            {isCaptain && (
+              <div className="mt-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 z-10">
+                Código Invitación: <span className="font-mono text-secondary">{selectedClan.invite_code}</span>
+              </div>
+            )}
           </div>
-        </div>
-      )}
 
-      <header className="flex items-center justify-between px-5 pb-3 pt-12">
-        <div>
-          <h1 className="text-2xl font-bold text-secondary">Clanes</h1>
-          <p className="text-sm text-muted-foreground">Crea un clan y conecta con tu equipo</p>
-        </div>
-        <button 
-          onClick={onNavigateToProfile}
-          className="h-10 w-10 rounded-full bg-card shadow-soft border border-border grid place-items-center text-secondary transition-transform active:scale-95"
-        >
-          <Users size={18} />
-        </button>
-      </header>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="bg-card border border-border rounded-2xl p-3 text-center shadow-soft">
+              <div className="text-2xl font-black text-secondary">{selectedClan.matches_played}</div>
+              <div className="text-[10px] text-muted-foreground font-bold uppercase">Jugados</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-3 text-center shadow-soft">
+              <div className="text-2xl font-black text-emerald-500">{selectedClan.matches_won}</div>
+              <div className="text-[10px] text-emerald-500/70 font-bold uppercase">Ganados</div>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-3 text-center shadow-soft">
+              <div className="text-2xl font-black text-rose-500">{selectedClan.matches_lost}</div>
+              <div className="text-[10px] text-rose-500/70 font-bold uppercase">Perdidos</div>
+            </div>
+          </div>
 
-      <div className="px-5 pb-3 pt-1">
-        <div className="flex gap-1 rounded-full bg-muted p-1 border border-border/40">
-          <button
-            onClick={() => setActiveSubTab("tinder")}
-            className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
-              activeSubTab === "tinder" 
-                ? "bg-card text-secondary shadow-soft border border-border/20" 
-                : "text-muted-foreground"
-            }`}
-          >
-            <Flame size={14} className={activeSubTab === "tinder" ? "text-primary" : ""} />
-            Para ti
-          </button>
-          <button
-            onClick={() => setActiveSubTab("friends")}
-            className={`flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
-              activeSubTab === "friends" 
-                ? "bg-card text-secondary shadow-soft border border-border/20" 
-                : "text-muted-foreground"
-            }`}
-          >
-            <UserCheck size={14} className={activeSubTab === "friends" ? "text-primary" : ""} />
-            Miembros ({friends.length})
-          </button>
-        </div>
-      </div>
+          {isCaptain && pendingRequestsSection()}
 
-      <div className="flex-1 overflow-y-auto px-5 pt-3">
-        {activeSubTab === "tinder" ? (
-          <div className="h-full flex flex-col items-center justify-center pb-4 relative">
-            {loadingProfiles ? (
-              <div className="flex flex-col items-center justify-center gap-3 py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider animate-pulse">Cargando perfiles reales...</p>
-              </div>
-            ) : activeCandidate ? (
-              <div className="w-full max-w-sm h-full max-h-[460px] flex flex-col justify-between rounded-3xl bg-card border border-border shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-300">
-                <div className={`h-40 shrink-0 flex items-center justify-center relative bg-gradient-to-tr ${activeCandidate.gradient}`}>
-                  {activeCandidate.avatar_url ? (
-                    <img src={activeCandidate.avatar_url} className="absolute inset-0 w-full h-full object-cover" />
-                  ) : (
-                    <div className="text-6xl drop-shadow-md select-none">{activeCandidate.emoji}</div>
-                  )}
-                  
-                  <div className="absolute top-4 right-4 flex items-center gap-1 rounded-full bg-black/40 backdrop-blur-md px-3 py-1 text-[10px] font-black text-white border border-white/10 shadow-pop">
-                    <Sparkles size={10} className="text-primary animate-pulse" />
-                    <span>{getCompatibilityScore(activeCandidate.sports)}% Compatible</span>
-                  </div>
-
-                  <div className="absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-card/90 px-3 py-1.5 text-[10px] font-bold text-secondary border border-border shadow-soft">
-                    <MapPin size={10} className="text-primary" />
-                    <span>{activeCandidate.location}</span>
-                  </div>
-                </div>
-
-                <div className="flex-1 p-5 space-y-3.5 flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-baseline gap-2">
-                      <h3 className="text-lg font-black text-secondary">{activeCandidate.name}</h3>
-                      <span className="text-sm font-bold text-muted-foreground">{activeCandidate.age} años</span>
-                    </div>
-
-                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
-                      "{activeCandidate.bio}"
-                    </p>
-                  </div>
-
-                  <div className="space-y-1.5 border-t border-dashed border-border/80 pt-3">
-                    <span className="text-[10px] text-muted-foreground font-black uppercase tracking-wider block">Deportes</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {activeCandidate.sports.map(sport => (
-                        <SportBadge key={sport} sport={sport as any} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-4 border-t border-border/60 bg-muted/20 flex justify-center gap-6">
-                  <button
-                    onClick={handleReject}
-                    className="grid h-12 w-12 place-items-center rounded-full bg-card border border-border text-muted-foreground hover:text-rose-500 hover:border-rose-200 active:scale-90 transition-all shadow-soft"
-                    title="Descartar"
-                  >
-                    <X size={20} strokeWidth={2.5} />
-                  </button>
-
-                  <button
-                    onClick={() => handleLike(activeCandidate)}
-                    className="grid h-12 w-12 place-items-center rounded-full gradient-primary text-secondary hover:shadow-lg active:scale-90 transition-all shadow-pop"
-                    title="¡Hacer Match!"
-                  >
-                    <Heart size={20} strokeWidth={2.5} className="fill-current" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12">
-                <div className="text-5xl">⚔️</div>
-                <h3 className="text-base font-black text-secondary">¡Eso es todo por hoy!</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos.
-                </p>
-                <button
-                  onClick={() => setCurrentIndex(0)}
-                  className="rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20"
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-bold text-secondary flex items-center gap-2">
+                <Users size={16} className="text-primary"/> Miembros ({approvedMembers.length})
+              </h3>
+              {isCaptain && (
+                <button 
+                  onClick={() => { fetchFriendsToInvite(); setShowInviteModal(true); }}
+                  className="text-xs font-black text-primary bg-primary/10 px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors"
                 >
-                  Reiniciar Lista 🔄
+                  + Invitar Amigos
                 </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-5 pb-8">
-            {receivedRequests.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <UserPlus size={14} className="text-primary" /> Solicitudes Recibidas
-                </h3>
-
-                <div className="space-y-2">
-                  {receivedRequests.map(req => (
-                    <div key={req.id} className="rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 animate-in slide-in-from-top duration-300">
-                      <div className="flex items-center gap-3 min-w-0">
-                        {renderAvatar(req, "h-11 w-11 text-xl")}
-                        <div className="min-w-0">
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-sm font-bold text-secondary truncate">{req.name}</span>
-                            <span className="text-xs text-muted-foreground">{req.age} años</span>
-                          </div>
-                          <div className="text-[10px] text-primary font-extrabold">{req.location}</div>
-                          <p className="text-[10px] text-muted-foreground truncate max-w-[160px]">{req.bio}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-1.5 shrink-0">
-                        <button
-                          onClick={() => handleRejectRequest(req)}
-                          className="grid h-8 w-8 place-items-center rounded-xl bg-muted/60 text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 transition-colors"
-                          title="Rechazar"
-                        >
-                          <UserX size={15} />
-                        </button>
-                        <button
-                          onClick={() => handleAcceptRequest(req)}
-                          className="grid h-8 w-8 place-items-center rounded-xl gradient-primary text-secondary shadow-sm"
-                          title="Aceptar Match"
-                        >
-                          <UserCheck size={15} />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <UserCheck size={14} className="text-primary" /> Miembros del clan
-                </h3>
-                <span className="text-[10px] font-bold text-muted-foreground">{filteredFriends.length} miembros</span>
-              </div>
-
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Buscar amigo por nombre, deporte..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-2xl border border-border bg-card pl-10 pr-4 py-2.5 text-xs text-secondary outline-none transition-colors focus:border-primary"
-                />
-                <Search size={14} className="absolute left-3.5 top-3.5 text-muted-foreground" />
-              </div>
-
-              {filteredFriends.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center text-xs text-muted-foreground">
-                  {searchQuery ? "No se encontraron amigos con ese criterio" : "Aún no tienes amigos agregados. ¡Busca conexiones en la pestaña 'Para ti'!"}
-                </div>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              {loadingMembers ? (
+                 <div className="text-center py-4"><Loader2 className="animate-spin text-primary inline" /></div>
               ) : (
-                <div className="space-y-2">
-                  {filteredFriends.map(friend => (
-                    <div key={friend.id} className="rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 hover:border-primary/20 transition-all">
-                      <div className="flex items-center gap-3 min-w-0">
-                        {renderAvatar(friend, "h-11 w-11 text-xl")}
-                        <div className="min-w-0">
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-sm font-bold text-secondary truncate">{friend.name}</span>
-                            <span className="text-xs text-muted-foreground">{friend.age} años</span>
-                          </div>
-                          <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                            <MapPin size={9} className="text-primary" />
-                            <span>{friend.location}</span>
-                          </div>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {friend.sports.map(s => (
-                              <span key={s} className="rounded-full bg-muted px-2 py-0.5 text-[8px] font-bold text-muted-foreground border border-border/50">
-                                {s}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                approvedMembers.map(m => (
+                  <div key={m.id} className="flex items-center gap-3 bg-card p-3 rounded-2xl border border-border shadow-soft">
+                    {m.profiles?.avatar_url ? (
+                      <img src={m.profiles.avatar_url} className="w-10 h-10 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full gradient-primary grid place-items-center font-bold text-secondary">
+                         {m.profiles?.username?.substring(0, 2).toUpperCase() || "U"}
                       </div>
-
-                      <button
-                        className="grid h-9 w-9 place-items-center rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 active:scale-95 transition-all shadow-soft shrink-0 border border-secondary/10"
-                        title="Enviar Mensaje"
-                      >
-                        <MessageSquare size={14} className="text-primary" />
-                      </button>
+                    )}
+                    <div className="flex-1">
+                      <div className="text-sm font-bold text-secondary flex items-center gap-2">
+                        {m.profiles?.full_name || m.profiles?.username?.split('@')[0]}
+                        {m.user_id === selectedClan.captain_id && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase">Capitán</span>}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        <Star size={10} className="fill-accent text-accent" /> {m.profiles?.rating || "5.0"}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
+        </div>
+
+        {/* Modal de Amigos */}
+        {showInviteModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+             <div className="bg-secondary p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col">
+                <h3 className="text-lg font-bold text-white mb-4">Invitar Amigos</h3>
+                <div className="flex-1 overflow-y-auto space-y-2">
+                   {friends.length === 0 ? (
+                     <div className="text-center text-white/50 text-xs py-4">No tienes amigos para invitar.</div>
+                   ) : (
+                     friends.map(f => (
+                       <div key={f.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border">
+                          <span className="text-sm font-bold text-white truncate max-w-[150px]">{f.full_name || f.username}</span>
+                          <button onClick={() => handleInviteFriend(f.id)} className="bg-primary text-secondary text-xs font-black px-3 py-1.5 rounded-full">Agregar</button>
+                       </div>
+                     ))
+                   )}
+                </div>
+                <button onClick={() => setShowInviteModal(false)} className="mt-4 w-full bg-muted text-muted-foreground py-3 rounded-2xl font-bold">Cerrar</button>
+             </div>
+          </div>
+        )}
+      </div>
+    );
+
+    function pendingRequestsSection() {
+      if (pendingMembers.length === 0) return null;
+      return (
+        <div className="bg-card border border-border p-4 rounded-2xl shadow-soft space-y-3">
+          <h3 className="text-xs font-black uppercase text-secondary flex items-center gap-2">
+             <span className="bg-rose-500 text-white px-2 py-0.5 rounded-full">{pendingMembers.length}</span>
+             Solicitudes de Unión
+          </h3>
+          <div className="space-y-2">
+            {pendingMembers.map(req => (
+               <div key={req.id} className="flex items-center justify-between bg-muted/30 p-2 rounded-xl">
+                  <span className="text-xs font-bold text-secondary truncate max-w-[120px]">{req.profiles?.full_name || req.profiles?.username}</span>
+                  <div className="flex gap-1">
+                     <button onClick={() => handleRejectMember(req.id)} className="w-8 h-8 rounded-full bg-rose-500/10 text-rose-500 grid place-items-center"><X size={14}/></button>
+                     <button onClick={() => handleApproveMember(req.id)} className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500 grid place-items-center"><Check size={14}/></button>
+                  </div>
+               </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  // --- MAIN VIEW ---
+  return (
+    <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
+      <header className="px-5 pt-12 pb-3">
+        <h1 className="text-2xl font-bold text-secondary">Clanes</h1>
+        <p className="text-sm text-muted-foreground">Tu equipo permanente</p>
+      </header>
+
+      <div className="px-5 pb-4">
+        <div className="flex gap-1 rounded-full bg-muted p-1 border border-border/40">
+          <button onClick={() => setActiveTab("mis-clanes")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "mis-clanes" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
+            <Shield size={14} className={activeTab === "mis-clanes" ? "text-primary" : ""} /> Mis Clanes
+          </button>
+          <button onClick={() => setActiveTab("crear")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "crear" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
+            <Plus size={14} className={activeTab === "crear" ? "text-primary" : ""} /> Crear Clan
+          </button>
+          <button onClick={() => setActiveTab("unirse")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "unirse" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
+            <Search size={14} className={activeTab === "unirse" ? "text-primary" : ""} /> Unirse
+          </button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5">
+        {activeTab === "mis-clanes" && (
+          <div className="space-y-3">
+             {loading ? (
+                <div className="text-center py-10"><Loader2 className="animate-spin text-primary mx-auto" /></div>
+             ) : clans.length === 0 ? (
+                <div className="text-center py-12 bg-card rounded-3xl border border-dashed border-border mt-4">
+                   <Shield size={48} className="mx-auto text-muted-foreground/30 mb-3" />
+                   <p className="text-sm font-bold text-secondary">No perteneces a ningún clan</p>
+                   <button onClick={() => setActiveTab("crear")} className="mt-4 text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-full">Crea tu primer clan</button>
+                </div>
+             ) : (
+                clans.map(clan => (
+                   <div key={clan.id} onClick={() => setSelectedClan(clan)} className="bg-card p-4 rounded-3xl border border-border shadow-soft flex items-center gap-4 cursor-pointer hover:border-primary/30 transition-colors">
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-inner shrink-0" style={{ background: `linear-gradient(135deg, ${clan.hex_primary}, ${clan.hex_secondary})` }}>
+                        🛡️
+                      </div>
+                      <div className="flex-1 min-w-0">
+                         <h3 className="text-lg font-black text-secondary truncate">{clan.name}</h3>
+                         <div className="text-xs text-muted-foreground flex gap-2 items-center mt-1">
+                           <SportBadge sport={clan.sport} />
+                           {clan.captain_id === user?.id && <span className="bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black text-[9px] uppercase">Capitán</span>}
+                         </div>
+                      </div>
+                   </div>
+                ))
+             )}
+          </div>
+        )}
+
+        {activeTab === "crear" && (
+          <form onSubmit={handleCreateClan} className="space-y-4 bg-card p-5 rounded-3xl border border-border shadow-soft">
+             <div>
+                <label className="text-xs font-black uppercase text-muted-foreground mb-1 block">Nombre del Clan</label>
+                <input required value={createData.name} onChange={e => setCreateData({...createData, name: e.target.value})} placeholder="Ej: Los Invencibles" className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-secondary outline-none focus:border-primary" />
+             </div>
+             <div>
+                <label className="text-xs font-black uppercase text-muted-foreground mb-1 block">Deporte Principal</label>
+                <select value={createData.sport} onChange={e => setCreateData({...createData, sport: e.target.value as Sport})} className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm text-secondary outline-none focus:border-primary">
+                   <option value="Pádel">Pádel</option>
+                   <option value="Fútbol">Fútbol</option>
+                   <option value="Tenis">Tenis</option>
+                   <option value="Running">Running</option>
+                   <option value="Vóleibol">Vóleibol</option>
+                </select>
+             </div>
+             <div className="grid grid-cols-2 gap-4">
+                <div>
+                   <label className="text-xs font-black uppercase text-muted-foreground mb-1 block">Color Primario</label>
+                   <div className="flex items-center gap-2">
+                     <input type="color" value={createData.primary} onChange={e => setCreateData({...createData, primary: e.target.value})} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0" />
+                     <span className="text-xs font-mono text-secondary">{createData.primary}</span>
+                   </div>
+                </div>
+                <div>
+                   <label className="text-xs font-black uppercase text-muted-foreground mb-1 block">Color Secundario</label>
+                   <div className="flex items-center gap-2">
+                     <input type="color" value={createData.secondary} onChange={e => setCreateData({...createData, secondary: e.target.value})} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0" />
+                     <span className="text-xs font-mono text-secondary">{createData.secondary}</span>
+                   </div>
+                </div>
+             </div>
+             
+             <button disabled={creating} type="submit" className="w-full mt-4 gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
+                {creating ? "Creando..." : "Crear Clan"}
+             </button>
+          </form>
+        )}
+
+        {activeTab === "unirse" && (
+          <form onSubmit={handleJoinClan} className="space-y-4 bg-card p-5 rounded-3xl border border-border shadow-soft text-center py-8">
+             <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
+                <Search size={28} />
+             </div>
+             <h3 className="text-lg font-black text-secondary">Unirse a un Clan</h3>
+             <p className="text-xs text-muted-foreground">Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo.</p>
+             <input required value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Ej: A4F9K2" className="w-full max-w-[200px] mx-auto text-center font-mono text-xl tracking-widest uppercase bg-muted/50 border border-border rounded-xl px-4 py-3 text-secondary outline-none focus:border-primary" />
+             <button disabled={joining} type="submit" className="w-full gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
+                {joining ? "Enviando..." : "Solicitar Unión"}
+             </button>
+          </form>
         )}
       </div>
     </div>

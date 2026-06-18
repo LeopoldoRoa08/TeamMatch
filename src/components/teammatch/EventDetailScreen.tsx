@@ -38,6 +38,9 @@ export function EventDetailScreen({
 
   const [hostProfile, setHostProfile] = useState<any>(null);
 
+  const [myCaptainedClans, setMyCaptainedClans] = useState<any[]>([]);
+  const [registeringClan, setRegisteringClan] = useState(false);
+
   const renderAvatar = (username: string, sizeClass = "h-10 w-10", explicitAvatarUrl?: string | null) => {
     const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
     const url = isCurrentUser ? (currentUserAvatar || explicitAvatarUrl) : explicitAvatarUrl;
@@ -58,7 +61,14 @@ export function EventDetailScreen({
   };
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setCurrentUser(data.user));
+    supabase.auth.getUser().then(({ data }) => {
+      setCurrentUser(data.user);
+      if (data.user?.id) {
+        supabase.from('clans').select('*, clan_members(*)').eq('captain_id', data.user.id).then(res => {
+          if (res.data) setMyCaptainedClans(res.data);
+        });
+      }
+    });
     fetchParticipants();
     fetchHostProfile();
 
@@ -95,7 +105,7 @@ export function EventDetailScreen({
     // Asumimos que la tabla event_participants tiene una columna 'status' (pending, approved, rejected)
     const { data, error } = await supabase
       .from("event_participants")
-      .select("*, profiles(username, rating, avatar_url)")
+      .select("*, profiles(username, rating, avatar_url), clans(hex_primary, hex_secondary)")
       .eq("event_id", event.id);
 
     if (!error && data) {
@@ -134,6 +144,51 @@ export function EventDetailScreen({
       }, 2000);
     }
     setJoining(false);
+  }
+
+  async function handleJoinAsClan(clan: any) {
+    if (!currentUser || !currentUser.email) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    setRegisteringClan(true);
+
+    const members = clan.clan_members.filter((m: any) => m.status === 'approved');
+    const emptySpots = Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
+    
+    if (members.length > emptySpots) {
+       alert(`El evento solo tiene ${emptySpots} cupos y tu clan tiene ${members.length} miembros.`);
+       setRegisteringClan(false);
+       return;
+    }
+
+    try {
+      // Fetch emails for all members since event_participants uses user_username
+      const { data: profiles } = await supabase.from('profiles').select('id, username').in('id', members.map((m: any) => m.user_id));
+      if (!profiles) throw new Error("No profiles found");
+
+      const insertData = profiles.map(p => ({
+        event_id: event.id,
+        user_username: p.username,
+        status: "aceptado", // Clanes se aprueban automáticamente o entran como pendientes? "con un solo clic" implies direct or pending. Let's make it aceptado for immediate join.
+        clan_id: clan.id // Guardamos clan_id para saber que entraron juntos y pintar la camisa
+      }));
+
+      const { error } = await supabase.from("event_participants").insert(insertData);
+      
+      if (error) {
+         if (error.code === '23505') alert("Algunos miembros del clan ya están inscritos en este evento");
+         else throw error;
+      } else {
+        setShowSuccess(true);
+        fetchParticipants();
+        setTimeout(() => setShowSuccess(false), 2000);
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Error al inscribir al clan");
+    }
+    setRegisteringClan(false);
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
@@ -526,8 +581,15 @@ export function EventDetailScreen({
             ) : (
               <>
                 {approvedPlayers.map((p, i) => (
-                  <div key={p.id || i} title={p.user_username}>
+                  <div key={p.id || i} title={p.user_username} className="relative">
                     {renderAvatar(p.user_username || "Usuario", "h-10 w-10", p.profiles?.avatar_url)}
+                    {p.clan_id && (
+                       <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-secondary flex items-center justify-center shadow-sm" title="Miembro de Clan">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20.38 3.46 16 2a8.59 8.59 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" fill={p.clans?.hex_primary || "#32CD32"} stroke={p.clans?.hex_secondary || "#1a1a1a"} />
+                          </svg>
+                       </div>
+                    )}
                   </div>
                 ))}
                 {Array.from({ length: emptySpots }).map((_, i) => (
@@ -623,6 +685,21 @@ export function EventDetailScreen({
                   : "Solicitar unirme"}
             </button>
           )}
+          
+          {myCaptainedClans.filter(c => c.sport === event.sport).map(clan => (
+             <button
+                key={clan.id}
+                disabled={joining || registeringClan || emptySpots === 0}
+                onClick={() => handleJoinAsClan(clan)}
+                className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${
+                  emptySpots === 0
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : "bg-emerald-500 hover:bg-emerald-600 text-white"
+                }`}
+              >
+                {registeringClan ? "Inscribiendo..." : `Inscribir Clan ${clan.name}`}
+             </button>
+          ))}
         </div>
       </div>
 

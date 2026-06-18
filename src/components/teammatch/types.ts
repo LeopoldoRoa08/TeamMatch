@@ -21,3 +21,31 @@ export interface SportEvent {
   lng: number;
   description_after_arrival?: string;
 }
+
+export interface Clan {
+  id: string;
+  name: string;
+  sport: Sport;
+  captain_id: string;
+  invite_code: string;
+  hex_primary: string;
+  hex_secondary: string;
+  matches_played: number;
+  matches_won: number;
+  matches_lost: number;
+  created_at: string;
+}
+
+export interface ClanMember {
+  id: string;
+  clan_id: string;
+  user_id: string;
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+  profiles?: {
+    username: string;
+    avatar_url: string;
+    rating: number;
+    full_name?: string;
+  };
+}
