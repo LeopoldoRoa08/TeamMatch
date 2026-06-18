@@ -262,7 +262,7 @@ export function AuthScreen({ initialMode = "login", onSuccess, onClose }: Props)
           disabled={isLoading || isSuccess}
           className={`group mt-2 flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold transition-all active:scale-[0.98] disabled:cursor-not-allowed ${isSuccess
               ? "bg-emerald-500 text-white"
-              : "gradient-primary text-secondary shadow-pop hover:shadow-lg disabled:opacity-70"
+              : "gradient-primary text-foreground shadow-pop hover:shadow-lg disabled:opacity-70"
             }`}
         >
           {isLoading && <Loader2 size={16} className="animate-spin" />}

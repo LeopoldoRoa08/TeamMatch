@@ -253,10 +253,10 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
           className="grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95"
           aria-label={t("common.back") || "Volver"}
         >
-          <ArrowLeft size={18} className="text-secondary" />
+          <ArrowLeft size={18} className="text-foreground" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-secondary">{t("comments.title") || "Comentarios"}</h1>
+          <h1 className="text-lg font-bold text-foreground">{t("comments.title") || "Comentarios"}</h1>
           <p className="text-[11px] text-muted-foreground truncate max-w-[280px]">
             {cancha.name}
           </p>
@@ -276,7 +276,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
               💬
             </div>
             <div>
-              <p className="text-base font-bold text-secondary">{t("comments.noComments") || "Sin comentarios aún"}</p>
+              <p className="text-base font-bold text-foreground">{t("comments.noComments") || "Sin comentarios aún"}</p>
               <p className="mt-1 text-sm text-muted-foreground max-w-[220px]">
                 {canComment
                   ? (t("comments.beFirst") || "Sé el primero en dejar un comentario sobre las condiciones o accesibilidad de esta cancha.")
@@ -297,7 +297,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
                       JD
                     </div>
                     <div>
-                      <span className="text-xs font-extrabold text-secondary flex items-center gap-1">
+                      <span className="text-xs font-extrabold text-foreground flex items-center gap-1">
                         {t("comments.player") || "Jugador"}
                         <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[8px] font-bold text-emerald-700 ring-1 ring-emerald-200">
                           <ShieldCheck size={9} /> {t("comments.verified") || "Verificado"}
@@ -309,7 +309,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
                     {formatTime(c.hora)}
                   </span>
                 </div>
-                <p className="text-sm text-secondary leading-relaxed pl-1">
+                <p className="text-sm text-foreground leading-relaxed pl-1">
                   {c.comentario}
                 </p>
               </div>
@@ -332,7 +332,7 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
           <div className="flex flex-col items-center gap-3 rounded-2xl bg-muted/30 p-5 border border-dashed border-border">
             <div className="grid h-10 w-10 place-items-center rounded-full bg-muted text-lg">💬</div>
             <div className="text-center space-y-1">
-              <p className="text-sm font-bold text-secondary">{t("comments.loginToComment") || "Inicia sesión para comentar"}</p>
+              <p className="text-sm font-bold text-foreground">{t("comments.loginToComment") || "Inicia sesión para comentar"}</p>
               <p className="text-xs text-muted-foreground">
                 {t("comments.shareOpinion") || "Comparte tu opinión sobre esta cancha con la comunidad."}
               </p>
@@ -364,13 +364,13 @@ export function CanchaCommentsScreen({ cancha, onBack, onOpenAuth }: CanchaComme
                 placeholder={t("comments.placeholder") || "Escribe tu opinión sobre la cancha (iluminación, estado, etc.)…"}
                 maxLength={300}
                 rows={2}
-                className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/45 resize-none py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="w-full bg-transparent text-sm font-medium text-foreground outline-none placeholder:text-muted-foreground/45 resize-none py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 disabled={submitting}
               />
               <button
                 type="submit"
                 disabled={submitting || !newComment.trim()}
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-primary text-secondary shadow-pop transition-all active:scale-95 disabled:opacity-50 disabled:scale-100"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-primary text-foreground shadow-pop transition-all active:scale-95 disabled:opacity-50 disabled:scale-100"
                 aria-label={t("common.save") || "Enviar"}
               >
                 {submitting ? (

@@ -158,7 +158,7 @@ export function ClansScreen({
 
   const renderAvatarPicker = (data: any, setFunction: (val: any) => void) => (
     <div className="flex flex-col gap-3">
-      <label className="text-xs font-bold text-secondary uppercase">{t("editProfile.profilePhoto") || "Foto de Perfil"}</label>
+      <label className="text-xs font-bold text-foreground uppercase">{t("editProfile.profilePhoto") || "Foto de Perfil"}</label>
       <div className="flex items-center gap-4">
         <div className="relative shrink-0">
           {data.avatarUrl ? (
@@ -365,10 +365,10 @@ export function ClansScreen({
       <div className="h-full flex flex-col bg-background relative overflow-y-auto pb-24">
         <header className="sticky top-0 z-10 flex items-center gap-3 bg-background/90 px-5 py-4 backdrop-blur-md border-b border-border">
           <button onClick={() => setSelectedClan(null)} className="h-10 w-10 grid place-items-center rounded-full glass">
-            <ArrowLeft size={18} className="text-secondary" />
+            <ArrowLeft size={18} className="text-foreground" />
           </button>
           <div>
-            <h1 className="text-xl font-bold text-secondary">{selectedClan.name}</h1>
+            <h1 className="text-xl font-bold text-foreground">{selectedClan.name}</h1>
             <div className="text-xs text-muted-foreground flex items-center gap-1">
               <SportBadge sport={selectedClan.sport} />
             </div>
@@ -389,7 +389,7 @@ export function ClansScreen({
               </div>
             )}
             <div className="flex items-center gap-2 mt-4 z-10">
-              <h2 className="text-2xl font-black text-secondary">{selectedClan.name}</h2>
+              <h2 className="text-2xl font-black text-foreground">{selectedClan.name}</h2>
               {isCaptain && (
                 <button 
                   onClick={() => {
@@ -416,14 +416,14 @@ export function ClansScreen({
             )}
             {isCaptain && (
               <div className="mt-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 z-10">
-                {t("clans.inviteCode") || "Código Invitación:"} <span className="font-mono text-secondary">{selectedClan.invite_code}</span>
+                {t("clans.inviteCode") || "Código Invitación:"} <span className="font-mono text-foreground">{selectedClan.invite_code}</span>
               </div>
             )}
           </div>
 
           <div className="flex justify-center">
             <div className="bg-card border border-border rounded-2xl px-10 py-4 text-center shadow-soft">
-              <div className="text-3xl font-black text-secondary">{matchesPlayed}</div>
+              <div className="text-3xl font-black text-foreground">{matchesPlayed}</div>
               <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1">{t("clans.played") || "Partidos Jugados"}</div>
             </div>
           </div>
@@ -432,7 +432,7 @@ export function ClansScreen({
 
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-secondary flex items-center gap-2">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Users size={16} className="text-primary"/> {t("clans.members") || "Miembros"} ({approvedMembers.length})
               </h3>
               {isCaptain && (
@@ -454,12 +454,12 @@ export function ClansScreen({
                     {m.profiles?.avatar_url ? (
                       <img src={m.profiles.avatar_url} className="w-10 h-10 rounded-full object-cover" />
                     ) : (
-                      <div className="w-10 h-10 rounded-full gradient-primary grid place-items-center font-bold text-secondary">
+                      <div className="w-10 h-10 rounded-full gradient-primary grid place-items-center font-bold text-foreground">
                          {m.profiles?.username?.substring(0, 2).toUpperCase() || "U"}
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-secondary flex items-center gap-2">
+                      <div className="text-sm font-bold text-foreground flex items-center gap-2">
                         <span className="truncate">{m.profiles?.full_name || m.profiles?.username?.split('@')[0]}</span>
                         {m.user_id === selectedClan.captain_id && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0">{t("clans.captain") || "Capitán"}</span>}
                       </div>
@@ -507,7 +507,7 @@ export function ClansScreen({
                    ) : (
                      friends.map(f => (
                        <div key={f.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border border-border">
-                          <span className="text-sm font-bold text-secondary truncate max-w-[150px]">{f.full_name || f.username}</span>
+                          <span className="text-sm font-bold text-foreground truncate max-w-[150px]">{f.full_name || f.username}</span>
                           <button onClick={() => handleInviteFriend(f.id)} className="bg-primary text-secondary text-xs font-black px-3 py-1.5 rounded-full">Agregar</button>
                        </div>
                      ))
@@ -522,30 +522,30 @@ export function ClansScreen({
         {showEditModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
             <div className="bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[90vh] overflow-y-auto">
-              <h3 className="text-lg font-bold text-secondary mb-4">Editar Clan</h3>
+              <h3 className="text-lg font-bold text-foreground mb-4">Editar Clan</h3>
               <form onSubmit={handleEditClan} className="space-y-4">
                 {renderAvatarPicker(editData, setEditData)}
                 <div>
-                  <label className="text-xs font-bold text-secondary uppercase">Nombre</label>
-                  <input required value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary" />
+                  <label className="text-xs font-bold text-foreground uppercase">Nombre</label>
+                  <input required value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground outline-none focus:border-primary" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-secondary uppercase">Deporte</label>
-                  <select value={editData.sport} onChange={e => setEditData({...editData, sport: e.target.value as Sport})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary">
+                  <label className="text-xs font-bold text-foreground uppercase">Deporte</label>
+                  <select value={editData.sport} onChange={e => setEditData({...editData, sport: e.target.value as Sport})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground outline-none focus:border-primary">
                     {["Pádel", "Tenis", "Vóleibol", "Fútbol", "Golf"].map(s => <option key={s} value={s}>{s}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-secondary uppercase">Descripción</label>
-                  <textarea value={editData.description} onChange={e => setEditData({...editData, description: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary" placeholder="Describe tu clan..." rows={3} />
+                  <label className="text-xs font-bold text-foreground uppercase">Descripción</label>
+                  <textarea value={editData.description} onChange={e => setEditData({...editData, description: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground outline-none focus:border-primary" placeholder="Describe tu clan..." rows={3} />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-bold text-secondary uppercase">Color Primario</label>
+                    <label className="text-xs font-bold text-foreground uppercase">Color Primario</label>
                     <input type="color" value={editData.primary} onChange={e => setEditData({...editData, primary: e.target.value})} className="mt-1 w-full h-10 rounded-xl cursor-pointer" />
                   </div>
                   <div>
-                    <label className="text-xs font-bold text-secondary uppercase">Color Secundario</label>
+                    <label className="text-xs font-bold text-foreground uppercase">Color Secundario</label>
                     <input type="color" value={editData.secondary} onChange={e => setEditData({...editData, secondary: e.target.value})} className="mt-1 w-full h-10 rounded-xl cursor-pointer" />
                   </div>
                 </div>
@@ -566,14 +566,14 @@ export function ClansScreen({
       if (pendingMembers.length === 0) return null;
       return (
         <div className="bg-card border border-border p-4 rounded-2xl shadow-soft space-y-3">
-          <h3 className="text-xs font-black uppercase text-secondary flex items-center gap-2">
+          <h3 className="text-xs font-black uppercase text-foreground flex items-center gap-2">
              <span className="bg-rose-500 text-white px-2 py-0.5 rounded-full">{pendingMembers.length}</span>
              {t("clans.requests") || "Solicitudes de Unión"}
           </h3>
           <div className="space-y-2">
             {pendingMembers.map(req => (
                <div key={req.id} className="flex items-center justify-between bg-muted/30 p-2 rounded-xl">
-                  <span className="text-xs font-bold text-secondary truncate max-w-[120px]">{req.profiles?.full_name || req.profiles?.username}</span>
+                  <span className="text-xs font-bold text-foreground truncate max-w-[120px]">{req.profiles?.full_name || req.profiles?.username}</span>
                   <div className="flex gap-1">
                      <button onClick={() => handleRejectMember(req.id)} className="w-8 h-8 rounded-full bg-rose-500/10 text-rose-500 grid place-items-center"><X size={14}/></button>
                      <button onClick={() => handleApproveMember(req.id)} className="w-8 h-8 rounded-full bg-emerald-500/10 text-emerald-500 grid place-items-center"><Check size={14}/></button>
@@ -590,19 +590,19 @@ export function ClansScreen({
   return (
     <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
       <header className="px-5 pt-12 pb-3">
-        <h1 className="text-2xl font-bold text-secondary">{t("clans.title")}</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("clans.title")}</h1>
         <p className="text-sm text-muted-foreground">{t("clans.subtitle") || "Tu equipo permanente"}</p>
       </header>
 
       <div className="px-5 pb-4">
         <div className="flex gap-1 rounded-full bg-muted p-1 border border-border/40">
-          <button onClick={() => setActiveTab("mis-clanes")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "mis-clanes" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
+          <button onClick={() => setActiveTab("mis-clanes")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "mis-clanes" ? "bg-card text-foreground shadow-soft border border-border/20" : "text-muted-foreground"}`}>
             <Shield size={14} className={activeTab === "mis-clanes" ? "text-primary" : ""} /> {t("clans.myClan")}
           </button>
-          <button onClick={() => setActiveTab("crear")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "crear" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
+          <button onClick={() => setActiveTab("crear")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "crear" ? "bg-card text-foreground shadow-soft border border-border/20" : "text-muted-foreground"}`}>
             <Plus size={14} className={activeTab === "crear" ? "text-primary" : ""} /> {t("clans.createClan")}
           </button>
-          <button onClick={() => setActiveTab("unirse")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "unirse" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
+          <button onClick={() => setActiveTab("unirse")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "unirse" ? "bg-card text-foreground shadow-soft border border-border/20" : "text-muted-foreground"}`}>
             <Search size={14} className={activeTab === "unirse" ? "text-primary" : ""} /> {t("clans.joinClan").split(' ')[0]}
           </button>
         </div>
@@ -616,7 +616,7 @@ export function ClansScreen({
              ) : clans.length === 0 ? (
                 <div className="text-center py-12 bg-card rounded-3xl border border-dashed border-border mt-4">
                    <Shield size={48} className="mx-auto text-muted-foreground/30 mb-3" />
-                   <p className="text-sm font-bold text-secondary">{t("clans.noClans") || "No perteneces a ningún clan"}</p>
+                   <p className="text-sm font-bold text-foreground">{t("clans.noClans") || "No perteneces a ningún clan"}</p>
                    <button onClick={() => setActiveTab("crear")} className="mt-4 text-xs font-black text-primary bg-primary/10 px-4 py-2 rounded-full">{t("clans.createFirst") || "Crea tu primer clan"}</button>
                 </div>
              ) : (
@@ -630,7 +630,7 @@ export function ClansScreen({
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                         <h3 className="text-lg font-black text-secondary truncate">{clan.name}</h3>
+                         <h3 className="text-lg font-black text-foreground truncate">{clan.name}</h3>
                          <div className="text-xs text-muted-foreground flex gap-2 items-center mt-1">
                            <SportBadge sport={clan.sport} />
                            {clan.captain_id === user?.id && <span className="bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black text-[9px] uppercase">Capitán</span>}
@@ -663,21 +663,21 @@ export function ClansScreen({
                    <label className="text-xs font-black uppercase text-muted-foreground mb-1 block">Color Primario</label>
                    <div className="flex items-center gap-2">
                      <input type="color" value={createData.primary} onChange={e => setCreateData({...createData, primary: e.target.value})} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0" />
-                     <span className="text-xs font-mono text-secondary">{createData.primary}</span>
+                     <span className="text-xs font-mono text-foreground">{createData.primary}</span>
                    </div>
                 </div>
                 <div>
                    <label className="text-xs font-black uppercase text-muted-foreground mb-1 block">Color Secundario</label>
                    <div className="flex items-center gap-2">
                      <input type="color" value={createData.secondary} onChange={e => setCreateData({...createData, secondary: e.target.value})} className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0 p-0" />
-                     <span className="text-xs font-mono text-secondary">{createData.secondary}</span>
+                     <span className="text-xs font-mono text-foreground">{createData.secondary}</span>
                    </div>
                 </div>
              </div>
              
              {renderAvatarPicker(createData, setCreateData)}
              
-             <button disabled={creating} type="submit" className="w-full mt-4 gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
+             <button disabled={creating} type="submit" className="w-full mt-4 gradient-primary text-foreground py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
                 {creating ? (t("clans.btn.creating") || "Creando...") : (t("clans.btn.create") || "Crear Clan")}
              </button>
           </form>
@@ -688,10 +688,10 @@ export function ClansScreen({
              <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
                 <Search size={28} />
              </div>
-             <h3 className="text-lg font-black text-secondary">{t("clans.join.title") || "Unirse a un Clan"}</h3>
+             <h3 className="text-lg font-black text-foreground">{t("clans.join.title") || "Unirse a un Clan"}</h3>
              <p className="text-xs text-muted-foreground">{t("clans.join.desc") || "Pídele al capitán de tu equipo el código de invitación e ingrésalo abajo."}</p>
              <input required value={inviteCode} onChange={e => setInviteCode(e.target.value)} placeholder="Ej: A4F9K2" className="w-full max-w-[200px] mx-auto text-center font-mono text-xl tracking-widest uppercase bg-muted/50 border border-border rounded-xl px-4 py-3 text-secondary outline-none focus:border-primary" />
-             <button disabled={joining} type="submit" className="w-full gradient-primary text-secondary py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
+             <button disabled={joining} type="submit" className="w-full gradient-primary text-foreground py-3.5 rounded-xl font-black uppercase shadow-pop active:scale-95 transition-all">
                 {joining ? (t("clans.btn.joining") || "Enviando...") : (t("clans.btn.join") || "Solicitar Unión")}
              </button>
           </form>

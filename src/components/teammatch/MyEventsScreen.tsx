@@ -180,14 +180,14 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       <CouponPopup />
       <header className="flex items-center justify-between px-5 pb-3 pt-12">
         <div>
-          <h1 className="text-2xl font-bold text-secondary">{t("nav.events")}</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("nav.events")}</h1>
           <p className="text-sm text-muted-foreground">{t("events.search")}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             id="fab-create-event-btn"
             onClick={() => setShowCreateForm(true)}
-            className="flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-secondary shadow-pop transition-all active:scale-95 hover:scale-105"
+            className="flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-foreground shadow-pop transition-all active:scale-95 hover:scale-105"
             aria-label={t("events.createEvent") || "Crear partido"}
             style={{boxShadow: "0 4px 18px rgba(99,102,241,0.45)"}}
           >
@@ -210,7 +210,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
               <button
                 key={label}
                 onClick={() => setTab(index as 0 | 1 | 2)}
-                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === index ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
+                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === index ? "bg-card text-foreground shadow-soft" : "text-muted-foreground"
                   }`}
               >
                 {label}
@@ -244,13 +244,13 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                         className="h-10 w-10 rounded-full object-cover shadow-soft ring-2 ring-primary/30"
                       />
                     ) : (
-                      <div className="grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-secondary">
+                      <div className="grid h-10 w-10 place-items-center rounded-full gradient-primary text-sm font-bold text-foreground">
                         {(req.user_username || "U").substring(0, 2).toUpperCase()}
                       </div>
                     )}
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5">
-                        <div className="text-sm font-bold text-secondary">
+                        <div className="text-sm font-bold text-foreground">
                           {req.user_username?.split('@')[0] || (t("common.user") || "Usuario")}
                         </div>
                         {isPremium ? (
@@ -288,7 +288,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
                     <button
                       disabled={actionLoading === req.id.toString()}
                       onClick={() => handleAction(req.id, "aceptado")}
-                      className="flex flex-1 items-center justify-center rounded-xl gradient-primary py-2.5 text-xs font-bold text-secondary shadow-pop disabled:opacity-50"
+                      className="flex flex-1 items-center justify-center rounded-xl gradient-primary py-2.5 text-xs font-bold text-foreground shadow-pop disabled:opacity-50"
                     >
                       {actionLoading === req.id.toString() ? <Loader2 size={14} className="animate-spin" /> : (t("friends.accept") || "Aceptar")}
                     </button>

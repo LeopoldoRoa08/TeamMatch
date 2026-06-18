@@ -67,7 +67,7 @@ export function EventDetailScreen({
       );
     }
     return (
-      <div className={`${sizeClass} grid place-items-center rounded-full gradient-primary text-sm font-bold text-secondary shadow-soft ring-2 ring-primary/30`}>
+      <div className={`${sizeClass} grid place-items-center rounded-full gradient-primary text-sm font-bold text-foreground shadow-soft ring-2 ring-primary/30`}>
         {(username || "U").substring(0, 2).toUpperCase()}
       </div>
     );
@@ -404,7 +404,7 @@ export function EventDetailScreen({
           <CheckCircle2 size={48} strokeWidth={2.5} />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-secondary">{t("events.success.requestSentTitle") || "¡Solicitud enviada!"}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t("events.success.requestSentTitle") || "¡Solicitud enviada!"}</h2>
           <p className="text-sm text-muted-foreground">
             {t("events.success.requestSentDesc")?.replace("{sport}", event.sport) || `Tu solicitud para unirte al partido de ${event.sport} ha sido enviada con éxito.`}
           </p>
@@ -438,14 +438,14 @@ export function EventDetailScreen({
             onClick={onBack}
             className="grid h-10 w-10 place-items-center rounded-full glass shadow-soft"
           >
-            <ArrowLeft size={18} className="text-secondary" />
+            <ArrowLeft size={18} className="text-foreground" />
           </button>
           {/* Share button removed */}
         </div>
         <div className="absolute inset-x-0 bottom-4 px-5">
           <div className="mb-2 flex items-center gap-2">
             <SportBadge sport={event.sport} />
-            <span className="rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-secondary">
+            <span className="rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-foreground">
               {event.level}
             </span>
           </div>
@@ -461,9 +461,9 @@ export function EventDetailScreen({
           {renderAvatar(event.host, "h-11 w-11", hostProfile?.avatar_url)}
           <div className="flex-1">
             <div className="text-[11px] font-medium text-muted-foreground">{t("profile.organizer") || "Organizador"}</div>
-            <div className="text-sm font-bold text-secondary">{event.host}</div>
+            <div className="text-sm font-bold text-foreground">{event.host}</div>
           </div>
-          <div className="flex items-center gap-1 text-xs font-bold text-secondary">
+          <div className="flex items-center gap-1 text-xs font-bold text-foreground">
             <Star size={14} className="fill-accent text-accent" /> 4.8
           </div>
         </div>
@@ -476,21 +476,21 @@ export function EventDetailScreen({
               <Calendar size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.date") || "Fecha"}</div>
-                <div className="truncate text-sm font-bold text-secondary">{event.date}</div>
+                <div className="truncate text-sm font-bold text-foreground">{event.date}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Clock size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.time") || "Hora"}</div>
-                <div className="truncate text-sm font-bold text-secondary">{event.time}</div>
+                <div className="truncate text-sm font-bold text-foreground">{event.time}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <MapPin size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.location") || "Lugar"}</div>
-                <div className="truncate text-sm font-bold text-secondary" title={(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}>
+                <div className="truncate text-sm font-bold text-foreground" title={(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}>
                   {(event as any).canchas?.name || (event as any).cancha_name || (event as any).place_name || event.zone || event.location}
                 </div>
               </div>
@@ -499,7 +499,7 @@ export function EventDetailScreen({
               <Users size={16} className="text-primary shrink-0" />
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{t("events.spots") || "Cupos"}</div>
-                <div className="truncate text-sm font-bold text-secondary">{approvedPlayers.length}/{event.spots}</div>
+                <div className="truncate text-sm font-bold text-foreground">{approvedPlayers.length}/{event.spots}</div>
               </div>
             </div>
           </div>
@@ -549,7 +549,7 @@ export function EventDetailScreen({
 
         {/* Description */}
         <div>
-          <h3 className="mb-2 text-sm font-bold text-secondary">{t("events.description") || "Descripción"}</h3>
+          <h3 className="mb-2 text-sm font-bold text-foreground">{t("events.description") || "Descripción"}</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
             {event.description_after_arrival || t("events.defaultDescription") || 
               "Partido amistoso, cancha sintética con luces. Trae ropa cómoda y agua. Se aceptan jugadores con experiencia, ambiente respetuoso y competitivo."}
@@ -559,7 +559,7 @@ export function EventDetailScreen({
         {/* Pending Requests */}
         {pendingRequests.length > 0 && currentUser?.email && (currentUser.email === event.host || currentUser.email === (event as any).hostName) && (
           <div>
-            <h3 className="mb-3 text-sm font-bold text-secondary flex items-center gap-2">
+            <h3 className="mb-3 text-sm font-bold text-foreground flex items-center gap-2">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] text-white">
                 {pendingRequests.length}
               </span>
@@ -571,7 +571,7 @@ export function EventDetailScreen({
                   <div className="flex items-center gap-3">
                     {renderAvatar(req.user_username || "Usuario", "h-10 w-10", req.profiles?.avatar_url)}
                     <div>
-                      <div className="text-sm font-bold text-secondary">
+                      <div className="text-sm font-bold text-foreground">
                         {req.user_username?.split('@')[0] || "Usuario"}
                       </div>
                       <div className="text-[11px] text-muted-foreground flex items-center gap-1">
@@ -605,7 +605,7 @@ export function EventDetailScreen({
         {/* Players */}
         <div>
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="text-sm font-bold text-secondary">{t("events.approvedPlayers") || "Jugadores aprobados"}</h3>
+            <h3 className="text-sm font-bold text-foreground">{t("events.approvedPlayers") || "Jugadores aprobados"}</h3>
             <div className="flex items-center gap-2">
               {currentUser && (
                 <button
@@ -669,7 +669,7 @@ export function EventDetailScreen({
             <select
               value={selectedCouponCode}
               onChange={(e) => setSelectedCouponCode(e.target.value)}
-              className="text-xs font-bold text-secondary border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]"
+              className="text-xs font-bold text-foreground border border-border bg-card/85 rounded-xl px-2 py-1 outline-none focus:border-primary shrink-0 max-w-[200px]"
             >
               <option value="">{t("events.noCoupon") || "-- Sin cupón --"}</option>
               {activeCoupons.map((c: any) => (
@@ -686,7 +686,7 @@ export function EventDetailScreen({
             <div className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
               {t("events.contribution") || "Aporte"} {selectedCouponCode && <span className="text-[9px] font-extrabold text-primary bg-primary/10 px-1 rounded-full">{appliedDiscountText}</span>}
             </div>
-            <div className="text-lg font-bold text-secondary">
+            <div className="text-lg font-bold text-foreground">
               {finalPrice === 0 ? (t("events.free") || "Gratis") : `$${finalPrice.toFixed(2)} USD`}
               {selectedCouponCode && <span className="text-[10px] text-muted-foreground line-through ml-1.5">${event.price}</span>}
             </div>
@@ -730,7 +730,7 @@ export function EventDetailScreen({
               className={`ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold shadow-pop active:scale-[0.98] transition-all disabled:opacity-90 cursor-pointer ${
                 emptySpots === 0
                   ? "bg-muted text-muted-foreground cursor-not-allowed"
-                  : "gradient-primary text-secondary"
+                  : "gradient-primary text-foreground"
               }`}
             >
               {joining
@@ -802,13 +802,13 @@ export function EventDetailScreen({
                         </div>
                       )}
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-secondary truncate">{friend.name}</div>
+                        <div className="text-xs font-bold text-foreground truncate">{friend.name}</div>
                         <div className="text-[9px] text-muted-foreground">{friend.location}</div>
                       </div>
                     </div>
                     <button
                       onClick={() => handleInviteFriend(friend)}
-                      className="rounded-xl gradient-primary text-secondary px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
+                      className="rounded-xl gradient-primary text-foreground px-3 py-1.5 text-[10px] font-black transition-all active:scale-95 shadow-sm cursor-pointer"
                     >
                       {t("common.add") || "Agregar"}
                     </button>
@@ -922,7 +922,7 @@ export function EventDetailScreen({
                 <Trash2 size={28} className="text-rose-500" />
               </div>
               <div>
-                <h3 className="text-xl font-black text-secondary">{t("events.deleteEventConfirmTitle") || "¿Eliminar Evento?"}</h3>
+                <h3 className="text-xl font-black text-foreground">{t("events.deleteEventConfirmTitle") || "¿Eliminar Evento?"}</h3>
                 <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
                   {t("events.deleteEventConfirmDesc")?.replace("{title}", `"${event.title}"`) || `Esta acción eliminará "${event.title}" de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo.`}
                 </p>
@@ -953,7 +953,7 @@ export function EventDetailScreen({
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
            <div className="bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col shadow-pop relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" />
-              <h3 className="text-lg font-black text-secondary mb-1">{t("events.selectMembers") || "Seleccionar Miembros"}</h3>
+              <h3 className="text-lg font-black text-foreground mb-1">{t("events.selectMembers") || "Seleccionar Miembros"}</h3>
               <p className="text-xs text-muted-foreground mb-4">
                 {t("events.selectMembersDesc")?.replace("{spots}", String(Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length))) || `El evento tiene ${Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length)} cupos. Selecciona quiénes participarán.`}
               </p>
@@ -979,7 +979,7 @@ export function EventDetailScreen({
                      >
                         <div className="flex items-center gap-3">
                           {renderAvatar(m.profiles?.username || "Usuario", "h-8 w-8", m.profiles?.avatar_url)}
-                          <span className="text-sm font-bold text-secondary truncate max-w-[150px]">{m.profiles?.username?.split('@')[0]}</span>
+                          <span className="text-sm font-bold text-foreground truncate max-w-[150px]">{m.profiles?.username?.split('@')[0]}</span>
                         </div>
                         <div className={`h-5 w-5 rounded-md flex items-center justify-center border ${isSelected ? 'bg-primary border-primary text-secondary' : 'border-muted-foreground/30'}`}>
                           {isSelected && <Check size={12} strokeWidth={3} />}
@@ -995,7 +995,7 @@ export function EventDetailScreen({
                   onClick={() => {
                     executeClanJoin(clanToJoin, selectableClanMembers.filter((m: any) => selectedClanMemberIds.includes(m.user_id)));
                   }} 
-                  className="flex-1 gradient-primary text-secondary py-3 rounded-2xl font-black text-sm disabled:opacity-50 flex justify-center items-center"
+                  className="flex-1 gradient-primary text-foreground py-3 rounded-2xl font-black text-sm disabled:opacity-50 flex justify-center items-center"
                 >
                   {registeringClan ? <Loader2 size={16} className="animate-spin" /> : `${t("events.join") || "Unirse"} (${selectedClanMemberIds.length})`}
                 </button>
@@ -1067,7 +1067,7 @@ function InfoTile({
         )}
       </div>
       <div className="text-[11px] font-medium text-muted-foreground">{label}</div>
-      <div className="text-sm font-bold text-secondary truncate">{value}</div>
+      <div className="text-sm font-bold text-foreground truncate">{value}</div>
     </div>
   );
 }

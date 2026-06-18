@@ -7,9 +7,9 @@ export function Logo({ size = 28 }: { size?: number }) {
         className="grid place-items-center rounded-xl gradient-primary shadow-pop"
         style={{ width: size, height: size }}
       >
-        <Trophy className="text-secondary" style={{ width: size * 0.55, height: size * 0.55 }} strokeWidth={2.5} />
+        <Trophy className="text-foreground" style={{ width: size * 0.55, height: size * 0.55 }} strokeWidth={2.5} />
       </div>
-      <span className="font-bold tracking-tight text-secondary" style={{ fontSize: size * 0.65 }}>
+      <span className="font-bold tracking-tight text-foreground" style={{ fontSize: size * 0.65 }}>
         Teammatch
       </span>
     </div>

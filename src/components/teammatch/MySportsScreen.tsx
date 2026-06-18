@@ -151,10 +151,10 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
             onClick={() => setSelectedGroup(null)}
             className="grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95"
           >
-            <ArrowLeft size={18} className="text-secondary" />
+            <ArrowLeft size={18} className="text-foreground" />
           </button>
           <div>
-            <h1 className="text-lg font-bold text-secondary">
+            <h1 className="text-lg font-bold text-foreground">
               {selectedGroup.emoji} {selectedGroup.name}
             </h1>
             <p className="text-[11px] text-muted-foreground">
@@ -176,7 +176,7 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
                   {selectedGroup.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-secondary truncate">{ev.title}</div>
+                  <div className="font-bold text-foreground truncate">{ev.title}</div>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar size={11} />
@@ -211,7 +211,7 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
     <div className="h-full overflow-y-auto bg-background pb-24">
       <header className="flex items-center justify-between px-5 pb-3 pt-12">
         <div>
-          <h1 className="text-2xl font-bold text-secondary flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Trophy size={24} className="text-primary" />
             {t("mySports.title") || "Mis deportes"}
           </h1>
@@ -233,7 +233,7 @@ export function MySportsScreen({ onSelectEvent, onNavigateToProfile }: { onSelec
                   {g.emoji}
                 </div>
                 <div className="flex-1 text-left">
-                  <div className="text-sm font-bold text-secondary">{g.name}</div>
+                  <div className="text-sm font-bold text-foreground">{g.name}</div>
                   <div className="text-xs text-muted-foreground">
                     {g.count} {g.count === 1 ? (t("mySports.match") || "partido") : (t("mySports.matches") || "partidos")}
                   </div>

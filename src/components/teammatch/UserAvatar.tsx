@@ -37,7 +37,7 @@ export function UserAvatar({ size = "md", className = "", onClick }: UserAvatarP
   return (
     <div
       onClick={onClick}
-      className={`${sizeClass} grid place-items-center rounded-full gradient-primary font-bold text-secondary shadow-soft ${ringClass} ring-primary/30 ${onClick ? "cursor-pointer active:scale-95 transition-transform" : ""} ${className}`}
+      className={`${sizeClass} grid place-items-center rounded-full gradient-primary font-bold text-foreground shadow-soft ${ringClass} ring-primary/30 ${onClick ? "cursor-pointer active:scale-95 transition-transform" : ""} ${className}`}
     >
       {initials}
     </div>

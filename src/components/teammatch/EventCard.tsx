@@ -125,7 +125,7 @@ export function EventCard({
         <div className="absolute left-3 top-3">
           <SportBadge sport={event.sport} />
         </div>
-        <div className="absolute right-3 top-3 rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-secondary">
+        <div className="absolute right-3 top-3 rounded-full bg-card/90 px-2.5 py-1 text-[11px] font-bold text-foreground">
           {event.price === 0 ? (t("eventCard.free") || "Gratis") : `$${event.price}`}
         </div>
         <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between text-primary-foreground">
@@ -138,7 +138,7 @@ export function EventCard({
 
       <div className="p-3 flex-1 flex flex-col justify-between w-full space-y-3">
         <div className="flex flex-col gap-1.5 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1 font-medium text-secondary">
+          <span className="inline-flex items-center gap-1 font-medium text-foreground">
             {event.date}
           </span>
           <span className="inline-flex items-center gap-1">

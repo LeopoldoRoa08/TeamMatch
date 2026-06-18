@@ -31,7 +31,7 @@ export function BottomNav({ current, onChange }: Props) {
           size={22}
           strokeWidth={active ? 2.5 : 2}
         />
-        <span className={`text-[10px] font-semibold ${active ? "text-secondary" : "text-muted-foreground"}`}>
+        <span className={`text-[10px] font-semibold ${active ? "text-foreground" : "text-muted-foreground"}`}>
           {label}
         </span>
       </button>

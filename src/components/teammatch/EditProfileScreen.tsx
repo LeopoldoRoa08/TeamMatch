@@ -8,24 +8,13 @@ interface Props {
   onBack: () => void;
 }
 
-const PREDEFINED_AVATARS = [
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Christian",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Destiny",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Eden",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Jude",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Mia",
-  "https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver"
-];
-
 export function EditProfileScreen({ onBack }: Props) {
   const { user: currentUser, updateProfile } = useCurrentUser();
   const { t } = useSettings();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
-  
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isOrganizer, setIsOrganizer] = useState(false);
@@ -48,13 +37,13 @@ export function EditProfileScreen({ onBack }: Props) {
       setEmail(currentUser.email || "");
       setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
       setIsOrganizer(!!currentUser.user_metadata?.is_organizer);
-      
+
       setAge(currentUser.user_metadata?.age || undefined);
       setGender(currentUser.user_metadata?.gender || "");
       setDescription(currentUser.user_metadata?.description || "");
       setLocation(currentUser.user_metadata?.location || "");
       setPreferredSports(currentUser.user_metadata?.preferred_sports || []);
-      
+
       setLoading(false);
     } else {
       // Fallback in case context hasn't loaded yet
@@ -65,7 +54,7 @@ export function EditProfileScreen({ onBack }: Props) {
           setEmail(user.email || "");
           setAvatarUrl(user.user_metadata?.avatar_url || null);
           setIsOrganizer(!!user.user_metadata?.is_organizer);
-          
+
           setAge(user.user_metadata?.age || undefined);
           setGender(user.user_metadata?.gender || "");
           setDescription(user.user_metadata?.description || "");
@@ -101,7 +90,7 @@ export function EditProfileScreen({ onBack }: Props) {
       }
 
       const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-      
+
       setAvatarUrl(data.publicUrl);
     } catch (error: any) {
       setError(error.message || t("editProfile.imgError") || 'Error al subir la imagen');
@@ -128,7 +117,7 @@ export function EditProfileScreen({ onBack }: Props) {
         location,
         preferredSports
       });
-      
+
       setSuccess(t("editProfile.success") || "Perfil actualizado correctamente");
       setTimeout(() => {
         onBack();
@@ -156,9 +145,9 @@ export function EditProfileScreen({ onBack }: Props) {
           onClick={onBack}
           className="grid h-10 w-10 place-items-center rounded-full bg-card shadow-soft transition-transform active:scale-95"
         >
-          <ArrowLeft size={20} className="text-secondary" />
+          <ArrowLeft size={20} className="text-foreground" />
         </button>
-        <h1 className="text-xl font-bold text-secondary">{t("editProfile.title") || "Editar Perfil"}</h1>
+        <h1 className="text-xl font-bold text-foreground">{t("editProfile.title") || "Editar Perfil"}</h1>
       </header>
 
       <form onSubmit={handleSave} className="flex flex-1 flex-col overflow-hidden">
@@ -190,21 +179,6 @@ export function EditProfileScreen({ onBack }: Props) {
               </label>
             </div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{t("editProfile.profilePhoto") || "Foto de perfil"}</span>
-            
-            <div className="w-full flex gap-3 overflow-x-auto pb-2 scrollbar-hide px-2 snap-x">
-              {PREDEFINED_AVATARS.map((url, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setAvatarUrl(url)}
-                  className={`relative flex-none w-14 h-14 rounded-full overflow-hidden border-2 transition-all snap-center ${
-                    avatarUrl === url ? "border-primary scale-110 shadow-lg" : "border-transparent opacity-70 hover:opacity-100 bg-secondary/10"
-                  }`}
-                >
-                  <img src={url} alt={`Predefined ${i}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
           </div>
 
           <div className="space-y-4">
@@ -214,7 +188,7 @@ export function EditProfileScreen({ onBack }: Props) {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                 placeholder={t("editProfile.namePlaceholder") || "Tu nombre"}
                 required
               />
@@ -226,7 +200,7 @@ export function EditProfileScreen({ onBack }: Props) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                 placeholder={t("editProfile.emailPlaceholder") || "tu@email.com"}
                 required
               />
@@ -242,7 +216,7 @@ export function EditProfileScreen({ onBack }: Props) {
                   type="number"
                   value={age ?? ""}
                   onChange={(e) => setAge(e.target.value ? parseInt(e.target.value) : undefined)}
-                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                   placeholder={t("editProfile.agePlaceholder") || "Ej. 25"}
                   min="1"
                   max="120"
@@ -253,7 +227,7 @@ export function EditProfileScreen({ onBack }: Props) {
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                 >
                   <option value="">{t("editProfile.selectGender") || "Seleccionar..."}</option>
                   <option value="Masculino">{t("editProfile.male") || "Masculino"}</option>
@@ -269,7 +243,7 @@ export function EditProfileScreen({ onBack }: Props) {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary"
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary"
                 placeholder={t("editProfile.locationPlaceholder") || "Ej. Chacao, Caracas"}
               />
             </div>
@@ -280,7 +254,7 @@ export function EditProfileScreen({ onBack }: Props) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-secondary outline-none transition-colors focus:border-primary resize-none"
+                className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary resize-none"
                 placeholder={t("editProfile.aboutPlaceholder") || "Cuéntanos un poco sobre ti, tu nivel de juego, etc."}
               />
             </div>
@@ -308,11 +282,10 @@ export function EditProfileScreen({ onBack }: Props) {
                           setPreferredSports([...preferredSports, sport]);
                         }
                       }}
-                      className={`rounded-full px-3 py-1.5 text-xs font-bold border transition-all ${
-                        isSelected
+                      className={`rounded-full px-3 py-1.5 text-xs font-bold border transition-all ${isSelected
                           ? "bg-primary/20 text-primary border-primary"
                           : "bg-card text-muted-foreground border-border hover:border-muted-foreground"
-                      }`}
+                        }`}
                     >
                       {displaySport}
                     </button>
@@ -330,7 +303,7 @@ export function EditProfileScreen({ onBack }: Props) {
                   className="h-4 w-4 rounded border-border text-primary accent-primary"
                 />
                 <div className="text-left">
-                  <span className="text-sm font-bold text-secondary block">
+                  <span className="text-sm font-bold text-foreground block">
                     {t("editProfile.organizerMode") || "Modo Organizador"}
                   </span>
                   <span className="text-[10px] text-muted-foreground">
@@ -347,7 +320,7 @@ export function EditProfileScreen({ onBack }: Props) {
           <button
             type="submit"
             disabled={saving}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-sm font-bold text-secondary shadow-pop transition-transform active:scale-[0.98] disabled:opacity-70"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-sm font-bold text-foreground shadow-pop transition-transform active:scale-[0.98] disabled:opacity-70"
           >
             {saving ? (
               <Loader2 size={18} className="animate-spin" />

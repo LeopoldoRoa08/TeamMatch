@@ -1559,15 +1559,15 @@ const translations: Record<Language, Record<string, string>> = {
 
 const SettingsContext = createContext<SettingsContextValue>({
   language: "es",
-  setLanguage: () => {},
+  setLanguage: () => { },
   theme: "light",
-  setTheme: () => {},
+  setTheme: () => { },
   rpgMode: true,
-  setRpgMode: () => {},
+  setRpgMode: () => { },
   notifications: true,
-  setNotifications: () => {},
+  setNotifications: () => { },
   unit: "km",
-  setUnit: () => {},
+  setUnit: () => { },
   t: (key) => key,
 });
 

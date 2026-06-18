@@ -165,7 +165,7 @@ export function ProfileScreen({
                   <Sparkles size={18} className="text-[#32CD32] animate-pulse" />
                 </div>
                 <div>
-                  <h2 className="text-base font-black text-secondary">{t("profile.joinCommunity") || "Únete a la comunidad"}</h2>
+                  <h2 className="text-base font-black text-foreground">{t("profile.joinCommunity") || "Únete a la comunidad"}</h2>
                   <p className="text-[11px] text-muted-foreground">{t("profile.joinDesc") || "Accede a todo TeamMatch gratis"}</p>
                 </div>
               </div>
@@ -183,7 +183,7 @@ export function ProfileScreen({
                     <div className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#32CD32]/15">
                       <Icon size={13} className="text-[#32CD32]" />
                     </div>
-                    <span className="text-xs font-semibold text-secondary/80">{text}</span>
+                    <span className="text-xs font-semibold text-foreground/80">{text}</span>
                   </div>
                 ))}
               </div>
@@ -280,10 +280,10 @@ export function ProfileScreen({
       <div className="absolute inset-0 z-50 flex h-full flex-col items-center justify-center space-y-6 bg-background px-6 text-center animate-in fade-in zoom-in duration-500">
         <div className="absolute inset-0 sunburst-rays opacity-10 pointer-events-none" />
         <div className="grid h-24 w-24 place-items-center rounded-full bg-primary text-secondary shadow-pop ring-8 ring-primary/20 animate-bounce">
-          <Check size={48} strokeWidth={3} className="text-secondary" />
+          <Check size={48} strokeWidth={3} className="text-foreground" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-black text-secondary uppercase tracking-wide">{t("profile.itemClaimed") || "¡Objeto Canjeado! 💎"}</h2>
+          <h2 className="text-2xl font-black text-foreground uppercase tracking-wide">{t("profile.itemClaimed") || "¡Objeto Canjeado! 💎"}</h2>
           <p className="text-sm font-bold text-primary">
             {showClaimSuccess.title}
           </p>
@@ -298,7 +298,7 @@ export function ProfileScreen({
   return (
     <div className="h-full overflow-y-auto bg-background pb-28">
       {/* Hero / RPG Avatar Section */}
-      <div className="relative bg-background px-5 pb-6 pt-12 text-secondary">
+      <div className="relative bg-background px-5 pb-6 pt-12 text-foreground">
         <div className="flex items-center justify-between">
           <button
             onClick={onEdit}
@@ -345,7 +345,7 @@ export function ProfileScreen({
 
           <div className="flex-1 text-center sm:text-left space-y-1.5">
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <h1 className="text-xl font-black text-secondary flex items-center justify-center sm:justify-start gap-2">
+              <h1 className="text-xl font-black text-foreground flex items-center justify-center sm:justify-start gap-2">
                 {displayName}
                 {user?.user_metadata?.is_organizer && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-amber-500 shadow-pop border border-amber-500/30">
@@ -371,7 +371,7 @@ export function ProfileScreen({
           <>
             {/* Experiencia Progress Bar */}
             <div className="mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border">
-              <div className="flex items-center justify-between text-xs font-black text-secondary">
+              <div className="flex items-center justify-between text-xs font-black text-foreground">
                 <span className="flex items-center gap-1.5">
                   <Trophy size={13} className="text-primary animate-pulse" /> {t("profile.xpPoints")}
                 </span>
@@ -402,23 +402,23 @@ export function ProfileScreen({
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-secondary">{t("profile.achievements")}</h4>
+                    <h4 className="text-xs font-black uppercase tracking-wider text-foreground">{t("profile.achievements")}</h4>
                     <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
                       {unlockedCount} / {ACHIEVEMENTS.length}
                     </span>
                   </div>
                   {/* PlayStation-style tiny trophy counters */}
                   <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground">
-                    <span className="flex items-center gap-0.5">🏆 <span className="text-secondary">{platinumCount}</span></span>
-                    <span className="flex items-center gap-0.5">🥇 <span className="text-secondary">{goldCount}</span></span>
-                    <span className="flex items-center gap-0.5">🥈 <span className="text-secondary">{silverCount}</span></span>
-                    <span className="flex items-center gap-0.5">🥉 <span className="text-secondary">{bronzeCount}</span></span>
+                    <span className="flex items-center gap-0.5">🏆 <span className="text-foreground">{platinumCount}</span></span>
+                    <span className="flex items-center gap-0.5">🥇 <span className="text-foreground">{goldCount}</span></span>
+                    <span className="flex items-center gap-0.5">🥈 <span className="text-foreground">{silverCount}</span></span>
+                    <span className="flex items-center gap-0.5">🥉 <span className="text-foreground">{bronzeCount}</span></span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <div className="text-right">
-                  <span className="text-xs font-black text-secondary">{completionPercentage}%</span>
+                  <span className="text-xs font-black text-foreground">{completionPercentage}%</span>
                   <p className="text-[8px] text-muted-foreground uppercase font-black tracking-wider">{t("profile.progress")}</p>
                 </div>
                 <ArrowRight size={13} className="text-muted-foreground" />
@@ -516,7 +516,7 @@ export function ProfileScreen({
                     
                     <div className="flex-1 min-w-0 space-y-0.5">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <h4 className="text-xs font-black text-secondary truncate">
+                        <h4 className="text-xs font-black text-foreground truncate">
                           {ach.title}
                         </h4>
                         <span className={`text-[8px] font-black uppercase px-1.5 py-0.5 rounded bg-[#0d0f14]/5 ${style.color}`}>
@@ -596,22 +596,22 @@ export function ProfileScreen({
 
             {/* Información Personal (Edad, Ubicación, Género, Deportes, Bio) */}
             <div className="rounded-2xl border border-border bg-card p-4 shadow-soft space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-wider text-secondary flex items-center gap-1.5 border-b border-border pb-2">
+              <h4 className="text-xs font-black uppercase tracking-wider text-foreground flex items-center gap-1.5 border-b border-border pb-2">
                 <Sparkles size={14} className="text-primary animate-pulse" /> {t("profile.profileInfo") || "Información de Perfil"}
               </h4>
               
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
                 <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
                   <span className="text-[10px] text-muted-foreground block font-bold">{t("profile.age") || "Edad"}</span>
-                  <span className="font-black text-secondary">{user.user_metadata?.age ? `${user.user_metadata.age} ${t("common.years") || "años"}` : "—"}</span>
+                  <span className="font-black text-foreground">{user.user_metadata?.age ? `${user.user_metadata.age} ${t("common.years") || "años"}` : "—"}</span>
                 </div>
                 <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
                   <span className="text-[10px] text-muted-foreground block font-bold">{t("profile.gender") || "Género"}</span>
-                  <span className="font-black text-secondary">{user.user_metadata?.gender || "—"}</span>
+                  <span className="font-black text-foreground">{user.user_metadata?.gender || "—"}</span>
                 </div>
                 <div className="bg-muted/40 p-2.5 rounded-xl border border-border/50">
                   <span className="text-[10px] text-muted-foreground block font-bold">{t("profile.location") || "Ubicación"}</span>
-                  <span className="font-black text-secondary truncate block" title={user.user_metadata?.location || ""}>
+                  <span className="font-black text-foreground truncate block" title={user.user_metadata?.location || ""}>
                     {user.user_metadata?.location || "—"}
                   </span>
                 </div>
@@ -642,7 +642,7 @@ export function ProfileScreen({
 
             {rpgMode && (
               <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
-                <h4 className="text-xs font-black uppercase tracking-wider text-secondary mb-1">
+                <h4 className="text-xs font-black uppercase tracking-wider text-foreground mb-1">
                   {t("profile.campaignSummary") || "Resumen de Campaña"}
                 </h4>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
@@ -670,7 +670,7 @@ export function ProfileScreen({
             {coupons.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 text-center space-y-2 animate-fade-in">
                 <div className="text-4xl">🎁</div>
-                <h4 className="text-sm font-bold text-secondary">{t("profile.emptyChest") || "Cofre Vacío"}</h4>
+                <h4 className="text-sm font-bold text-foreground">{t("profile.emptyChest") || "Cofre Vacío"}</h4>
                 <p className="text-[11px] text-muted-foreground max-w-[240px] mx-auto">
                   {t("profile.emptyChestDesc") || "No tienes cupones. ¡Organiza eventos (+25 XP), únete a partidos (+15 XP) o usa la app diariamente para ganar cofres sorpresa!"}
                 </p>
@@ -701,7 +701,7 @@ export function ProfileScreen({
                           >
                             {isLegendary ? (t("profile.legendaryItem") || "Objeto Legendario ⭐") : (t("profile.epicItem") || "Objeto Épico 📜")}
                           </span>
-                          <h4 className="text-xs font-black text-secondary">{c.title}</h4>
+                          <h4 className="text-xs font-black text-foreground">{c.title}</h4>
                           <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
                             {c.description}
                           </p>
@@ -718,7 +718,7 @@ export function ProfileScreen({
 
                       <div className="mt-4 flex items-center justify-between gap-3 pt-3.5 border-t border-dashed border-border/60">
                         <div className="font-mono text-[10px] font-black text-muted-foreground bg-muted px-2 py-1 rounded-lg">
-                          {t("profile.code") || "Código:"} <span className="text-secondary select-all">{c.code}</span>
+                          {t("profile.code") || "Código:"} <span className="text-foreground select-all">{c.code}</span>
                         </div>
                         <div className="flex gap-2">
                           <button
@@ -744,7 +744,7 @@ export function ProfileScreen({
                                 setShowClaimSuccess({ title: c.title, discount: c.discount });
                                 setTimeout(() => setShowClaimSuccess(null), 3000);
                               }}
-                              className="rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-secondary transition-all active:scale-95 shadow-sm cursor-pointer"
+                              className="rounded-xl gradient-primary px-3 py-1.5 text-[10px] font-black text-foreground transition-all active:scale-95 shadow-sm cursor-pointer"
                             >
                               {t("common.redeem") || "Canjear"}
                             </button>
@@ -802,7 +802,7 @@ export function ProfileScreen({
                           {typeEmoji}
                         </div>
                         <div>
-                          <div className="text-xs font-black text-secondary leading-tight">
+                          <div className="text-xs font-black text-foreground leading-tight">
                             {h.title}
                           </div>
                           <div className="text-[9px] text-muted-foreground font-semibold mt-0.5">
@@ -865,7 +865,7 @@ function StatCard({
         </span>
         <Icon size={14} className={colorClass} />
       </div>
-      <div className="text-xl font-black text-secondary leading-none my-1">{value}</div>
+      <div className="text-xl font-black text-foreground leading-none my-1">{value}</div>
       <p className="text-[9px] text-muted-foreground leading-tight">{description}</p>
     </div>
   );

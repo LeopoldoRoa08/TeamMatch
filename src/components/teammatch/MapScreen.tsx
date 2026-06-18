@@ -380,7 +380,7 @@ export function MapScreen({
                 className={`snap-center shrink-0 whitespace-nowrap rounded-3xl px-6 py-3.5 text-sm font-black tracking-wide shadow-xl transition-all border-2 ${
                   isActive
                     ? "bg-primary text-secondary border-primary scale-[1.02]"
-                    : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"
+                    : "bg-background/95 text-foreground border-transparent hover:bg-background backdrop-blur-md"
                 }`}
               >
                 {s === "Todos" ? (t("sports.all") || "Todos") : (t(`sports.${s.toLowerCase().replace('ú', 'u').replace('á', 'a')}`) || s)}
@@ -389,7 +389,7 @@ export function MapScreen({
           })}
 
           {/* Filtro de Fecha */}
-          <div className="snap-center shrink-0 flex items-center bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md rounded-3xl px-5 py-3 text-sm font-black tracking-wide shadow-xl transition-all border-2">
+          <div className="snap-center shrink-0 flex items-center bg-background/95 text-foreground border-transparent hover:bg-background backdrop-blur-md rounded-3xl px-5 py-3 text-sm font-black tracking-wide shadow-xl transition-all border-2">
             <input 
               type="date"
               value={selectedDate}
@@ -399,7 +399,7 @@ export function MapScreen({
           </div>
 
           {/* Filtro de Distancia */}
-          <div className="snap-center shrink-0 flex items-center bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md rounded-3xl px-5 py-3 text-sm font-black tracking-wide shadow-xl transition-all border-2">
+          <div className="snap-center shrink-0 flex items-center bg-background/95 text-foreground border-transparent hover:bg-background backdrop-blur-md rounded-3xl px-5 py-3 text-sm font-black tracking-wide shadow-xl transition-all border-2">
             <select
               value={distanceLevel}
               onChange={(e) => setDistanceLevel(e.target.value)}
@@ -425,7 +425,7 @@ export function MapScreen({
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
                 <MapPin size={10} /> {t("map.hub") || "Hub Deportivo"}
               </span>
-              <h3 className="mt-1.5 text-base font-extrabold text-secondary tracking-tight">
+              <h3 className="mt-1.5 text-base font-extrabold text-foreground tracking-tight">
                 {selectedCancha.name}
               </h3>
               {selectedCancha.description && (
@@ -458,7 +458,7 @@ export function MapScreen({
                 <MessageSquare size={20} className="text-primary" />
               </div>
               <div>
-                <div className="font-bold text-xs text-secondary">{t("map.commentsTitle") || "Comentarios de la cancha"}</div>
+                <div className="font-bold text-xs text-foreground">{t("map.commentsTitle") || "Comentarios de la cancha"}</div>
                 <div className="text-[10px] text-muted-foreground mt-0.5">
                   {t("map.commentsDesc") || "Mira opiniones o escribe sobre esta cancha"}
                 </div>
@@ -506,7 +506,7 @@ export function MapScreen({
                       className="w-full flex items-center justify-between rounded-2xl bg-card p-3 border border-border transition-all active:scale-[0.98] hover:border-primary/40 text-left"
                     >
                       <div className="min-w-0">
-                        <div className="font-bold text-xs text-secondary truncate">{e.title}</div>
+                        <div className="font-bold text-xs text-foreground truncate">{e.title}</div>
                         <div className="text-[10px] text-muted-foreground mt-0.5">
                           ⏰ {e.date} · {e.time}
                         </div>
@@ -534,7 +534,7 @@ export function MapScreen({
           className={`absolute bottom-40 right-4 z-30 grid h-12 w-12 place-items-center rounded-2xl shadow-soft transition-all active:scale-90 hover:scale-105 ${
             userLocation
               ? "bg-blue-500 text-white shadow-[0_8px_25px_-4px_rgba(59,130,246,0.5)]"
-              : "glass text-secondary"
+              : "glass text-foreground"
           }`}
           aria-label={t("map.myLocation") || "Mi ubicación"}
           title={t("map.gpsLoc") || "Mi ubicación GPS"}

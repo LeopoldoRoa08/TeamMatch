@@ -43,7 +43,7 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
 
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
-          <h2 className="text-lg font-black text-secondary">{t("settings.title")}</h2>
+          <h2 className="text-lg font-black text-foreground">{t("settings.title")}</h2>
           <button
             onClick={onClose}
             className="p-2 rounded-full bg-muted text-muted-foreground hover:text-secondary hover:bg-muted/80 transition-colors"
@@ -116,7 +116,7 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
               {/* RPG Mode */}
               <div className="p-4 flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-secondary">{t("settings.rpgMode")}</h4>
+                  <h4 className="text-sm font-bold text-foreground">{t("settings.rpgMode")}</h4>
                   <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{t("settings.rpgModeDesc")}</p>
                 </div>
                 <button
@@ -130,7 +130,7 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
               {/* Notifications */}
               <div className="p-4 flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-secondary">{t("settings.pushNotif")}</h4>
+                  <h4 className="text-sm font-bold text-foreground">{t("settings.pushNotif")}</h4>
                   <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{t("settings.pushNotifDesc")}</p>
                 </div>
                 <button
@@ -144,19 +144,19 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
               {/* Distance Unit */}
               <div className="p-4 flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-secondary">{t("settings.distance")}</h4>
+                  <h4 className="text-sm font-bold text-foreground">{t("settings.distance")}</h4>
                   <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{t("settings.distanceDesc")}</p>
                 </div>
                 <div className="flex bg-muted rounded-lg p-1 shrink-0">
                   <button
                     onClick={() => setUnit("km")}
-                    className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "km" ? "bg-card text-secondary shadow-sm" : "text-muted-foreground"}`}
+                    className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "km" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
                   >
                     Km
                   </button>
                   <button
                     onClick={() => setUnit("mi")}
-                    className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "mi" ? "bg-card text-secondary shadow-sm" : "text-muted-foreground"}`}
+                    className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "mi" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
                   >
                     Mi
                   </button>

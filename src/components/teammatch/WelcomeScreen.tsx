@@ -55,7 +55,7 @@ export function WelcomeScreen({
                 className="flex items-center gap-3 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/5 p-3 backdrop-blur-sm"
               >
                 <div className="grid h-10 w-10 place-items-center rounded-xl gradient-primary shadow-pop">
-                  <Icon className="h-5 w-5 text-secondary" strokeWidth={2.5} />
+                  <Icon className="h-5 w-5 text-foreground" strokeWidth={2.5} />
                 </div>
                 <div className="flex-1">
                   <div className="text-sm font-semibold">{title}</div>
@@ -70,7 +70,7 @@ export function WelcomeScreen({
           <button
             id="welcome-register-btn"
             onClick={onRegister}
-            className="group flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-base font-bold text-secondary shadow-pop transition active:scale-[0.98]"
+            className="group flex w-full items-center justify-center gap-2 rounded-2xl gradient-primary py-4 text-base font-bold text-foreground shadow-pop transition active:scale-[0.98]"
           >
             {t("welcome.startPlaying") || "Empezar a jugar"}
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" strokeWidth={2.5} />

@@ -359,7 +359,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
 
           <button
             onClick={handleDismissSuccess}
-            className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-secondary shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
+            className="w-full rounded-2xl gradient-primary py-3.5 text-xs font-black uppercase tracking-wider text-foreground shadow-pop transition-all active:scale-95 mt-4 cursor-pointer"
           >
             {t("createEvent.understood") || "¡Entendido!"}
           </button>
@@ -377,10 +377,10 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
           className="grid h-10 w-10 place-items-center rounded-full bg-muted transition-all active:scale-95"
           aria-label="Cerrar formulario"
         >
-          <ArrowLeft size={18} className="text-secondary" />
+          <ArrowLeft size={18} className="text-foreground" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-secondary">{t("createEvent.title") || "Nuevo evento"}</h1>
+          <h1 className="text-lg font-bold text-foreground">{t("createEvent.title") || "Nuevo evento"}</h1>
           <p className="text-[11px] text-muted-foreground">
             {t("createEvent.subtitle") || "Completa los datos para publicar tu evento"}
           </p>
@@ -405,7 +405,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                 onClick={() => setField("sportId", s.id)}
                 className={`flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all active:scale-[0.97] ${
                   form.sportId === s.id
-                    ? "gradient-primary border-transparent text-secondary shadow-pop"
+                    ? "gradient-primary border-transparent text-foreground shadow-pop"
                     : "border-border bg-card text-muted-foreground hover:border-primary/40"
                 }`}
               >
@@ -455,7 +455,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               value={form.date}
               min={new Date().toISOString().split("T")[0]}
               onChange={(e) => setField("date", e.target.value)}
-              className={`w-full rounded-2xl border bg-card px-3 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${
+              className={`w-full rounded-2xl border bg-card px-3 py-3 text-sm font-medium text-foreground outline-none transition-colors focus:border-primary ${
                 errors.date ? "border-destructive" : "border-border"
               }`}
             />
@@ -472,7 +472,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               type="time"
               value={form.time}
               onChange={(e) => setField("time", e.target.value)}
-              className={`w-full rounded-2xl border bg-card px-3 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${
+              className={`w-full rounded-2xl border bg-card px-3 py-3 text-sm font-medium text-foreground outline-none transition-colors focus:border-primary ${
                 errors.time ? "border-destructive" : "border-border"
               }`}
             />
@@ -530,7 +530,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                       setField("address", "");
                     }
                   }}
-                  className={`w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft ${
+                  className={`w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-foreground outline-none transition-all focus:border-primary shadow-soft ${
                     errors.canchaId ? "border-destructive" : "border-border"
                   }`}
                 >
@@ -568,7 +568,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               <select
                 value={form.hostClanId}
                 onChange={(e) => setField("hostClanId", e.target.value)}
-                className="w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-secondary outline-none transition-all focus:border-primary shadow-soft border-border"
+                className="w-full appearance-none rounded-2xl border bg-card px-4 py-3.5 pr-10 text-sm font-semibold text-foreground outline-none transition-all focus:border-primary shadow-soft border-border"
               >
                 <option value="">{t("createEvent.noClan") || "-- No inscribir clan completo --"}</option>
                 {captainedClans.filter(c => c.sport === form.sportId).map((c) => (
@@ -600,7 +600,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               placeholder={t("createEvent.capacityPlaceholder") || "Ej: 12 jugadores (opcional)"}
               value={form.maxCapacity}
               onChange={(e) => setField("maxCapacity", e.target.value)}
-              className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
+              className="w-full bg-transparent text-sm font-medium text-foreground outline-none placeholder:text-muted-foreground/50"
             />
           </div>
         </FormSection>
@@ -618,7 +618,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
               placeholder={t("createEvent.descPlaceholder") || "Ej: Traer ropa cómoda, agua y actitud deportiva. (Máximo 150 caracteres)"}
               value={form.descriptionAfterArrival}
               onChange={(e) => setField("descriptionAfterArrival", e.target.value)}
-              className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50 resize-none py-1"
+              className="w-full bg-transparent text-sm font-medium text-foreground outline-none placeholder:text-muted-foreground/50 resize-none py-1"
             />
             <div className="text-[10px] text-muted-foreground text-right">
               {form.descriptionAfterArrival.length}/150
@@ -645,7 +645,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
         {/* Resumen rápido */}
         {form.sportId && form.intensity && (
           <div className="mb-3 flex items-center gap-2 text-[11px] text-muted-foreground">
-            <span className="font-semibold text-secondary">
+            <span className="font-semibold text-foreground">
               {SPORTS.find((s) => s.id === form.sportId)?.emoji}{" "}
               {SPORTS.find((s) => s.id === form.sportId)?.label}
             </span>
@@ -674,8 +674,8 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
           disabled={status === "loading"}
           className={`w-full rounded-2xl py-3.5 text-sm font-bold transition-all active:scale-[0.98] ${
             status === "loading"
-              ? "gradient-primary cursor-not-allowed opacity-70 text-secondary"
-              : "gradient-primary text-secondary shadow-pop hover:shadow-lg"
+              ? "gradient-primary cursor-not-allowed opacity-70 text-foreground"
+              : "gradient-primary text-foreground shadow-pop hover:shadow-lg"
           }`}
         >
           {status === "loading" ? (

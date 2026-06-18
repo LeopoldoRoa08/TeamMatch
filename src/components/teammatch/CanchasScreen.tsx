@@ -124,7 +124,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
           <CheckCircle2 size={48} strokeWidth={2.5} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-secondary">{t("canchas.added") || "¡Cancha añadida!"}</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t("canchas.added") || "¡Cancha añadida!"}</h2>
           <p className="mt-1 text-sm text-muted-foreground">{t("canchas.addedDesc") || "Ya aparece en el listado de canchas"}</p>
         </div>
       </div>
@@ -140,10 +140,10 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
           className="grid h-10 w-10 md:h-12 md:w-12 place-items-center rounded-full bg-muted hover:bg-muted/80 transition-all active:scale-95"
           aria-label="Volver"
         >
-          <ArrowLeft size={18} className="text-secondary md:scale-110" />
+          <ArrowLeft size={18} className="text-foreground md:scale-110" />
         </button>
         <div>
-          <h1 className="text-lg md:text-3xl font-bold text-secondary">{t("canchas.addTitle") || "Añadir cancha"}</h1>
+          <h1 className="text-lg md:text-3xl font-bold text-foreground">{t("canchas.addTitle") || "Añadir cancha"}</h1>
           <p className="text-[11px] md:text-sm text-muted-foreground">{t("canchas.addSubtitle") || "Registra una nueva cancha deportiva"}</p>
         </div>
       </div>
@@ -159,7 +159,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t("canchas.namePlaceholder") || "Ej: Cancha San Bernardino"}
-            className={`w-full rounded-2xl border bg-card px-4 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary ${
+            className={`w-full rounded-2xl border bg-card px-4 py-3 text-sm font-medium text-foreground outline-none transition-colors focus:border-primary ${
               errors.name ? "border-destructive" : "border-border"
             }`}
           />
@@ -189,7 +189,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
                   onClick={() => setSportId(s.id)}
                   className={`flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-sm font-semibold transition-all active:scale-[0.97] ${
                     sportId === s.id
-                      ? "gradient-primary border-transparent text-secondary shadow-pop"
+                      ? "gradient-primary border-transparent text-foreground shadow-pop"
                       : "border-border bg-card text-muted-foreground hover:border-primary/40"
                   }`}
                 >
@@ -247,7 +247,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t("canchas.descPlaceholder") || "Iluminación nocturna, vestuarios, estacionamiento..."}
             rows={3}
-            className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium text-secondary outline-none transition-colors focus:border-primary resize-none placeholder:text-muted-foreground/50"
+            className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium text-foreground outline-none transition-colors focus:border-primary resize-none placeholder:text-muted-foreground/50"
           />
         </div>
 
@@ -264,7 +264,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder={t("canchas.pricePlaceholder") || "Ej: 50 (opcional)"}
-              className="w-full bg-transparent text-sm font-medium text-secondary outline-none placeholder:text-muted-foreground/50"
+              className="w-full bg-transparent text-sm font-medium text-foreground outline-none placeholder:text-muted-foreground/50"
             />
           </div>
         </div>
@@ -282,7 +282,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
         <button
           onClick={handleSubmit}
           disabled={status === "loading"}
-          className="w-full rounded-2xl gradient-primary py-3.5 text-sm font-bold text-secondary shadow-pop transition-all active:scale-[0.98] disabled:opacity-70"
+          className="w-full rounded-2xl gradient-primary py-3.5 text-sm font-bold text-foreground shadow-pop transition-all active:scale-[0.98] disabled:opacity-70"
         >
           {status === "loading" ? (
             <span className="flex items-center justify-center gap-2">
@@ -355,10 +355,10 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
           className="grid h-10 w-10 md:h-12 md:w-12 place-items-center rounded-full bg-muted hover:bg-muted/80 transition-all active:scale-95"
           aria-label="Volver"
         >
-          <ArrowLeft size={18} className="text-secondary md:scale-110" />
+          <ArrowLeft size={18} className="text-foreground md:scale-110" />
         </button>
         <div className="flex-1">
-          <h1 className="text-lg md:text-3xl font-bold text-secondary">{t("canchas.title") || "Canchas"}</h1>
+          <h1 className="text-lg md:text-3xl font-bold text-foreground">{t("canchas.title") || "Canchas"}</h1>
           <p className="text-[11px] md:text-sm text-muted-foreground">
             {onSelect ? (t("canchas.selectForEvent") || "Selecciona una cancha para tu evento") : (t("canchas.available") || "Canchas disponibles")}
           </p>
@@ -366,7 +366,7 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
         {isOrganizer && (
           <button
             onClick={() => setView("add")}
-            className="flex items-center gap-1.5 rounded-xl gradient-primary px-3 py-2 md:px-5 md:py-3 text-xs md:text-sm font-bold text-secondary shadow-pop transition-all active:scale-95 hover:shadow-lg hover:-translate-y-0.5"
+            className="flex items-center gap-1.5 rounded-xl gradient-primary px-3 py-2 md:px-5 md:py-3 text-xs md:text-sm font-bold text-foreground shadow-pop transition-all active:scale-95 hover:shadow-lg hover:-translate-y-0.5"
           >
             <Plus size={14} strokeWidth={2.5} className="md:scale-110" />
             <span className="hidden md:inline">{t("canchas.addCourt") || "Añadir cancha"}</span>
@@ -387,7 +387,7 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
               🏟️
             </div>
             <div>
-              <p className="text-base font-bold text-secondary">{t("canchas.noCourts") || "No hay canchas por ahora"}</p>
+              <p className="text-base font-bold text-foreground">{t("canchas.noCourts") || "No hay canchas por ahora"}</p>
               {isOrganizer && (
                 <p className="mt-1 text-sm text-muted-foreground">
                   {t("canchas.beFirst") || "Sé el primero en añadir una cancha"}
@@ -397,7 +397,7 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
             {isOrganizer && (
               <button
                 onClick={() => setView("add")}
-                className="flex items-center gap-2 rounded-2xl gradient-primary px-5 py-3 text-sm font-bold text-secondary shadow-pop transition-all active:scale-95"
+                className="flex items-center gap-2 rounded-2xl gradient-primary px-5 py-3 text-sm font-bold text-foreground shadow-pop transition-all active:scale-95"
               >
                 <Plus size={16} strokeWidth={2.5} />
                 {t("canchas.addFirst") || "Añadir primera cancha"}
@@ -417,7 +417,7 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
                     {sportEmoji(c.sport_id)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-bold text-secondary truncate">{c.name}</div>
+                    <div className="font-bold text-foreground truncate">{c.name}</div>
                     <div className="text-xs text-muted-foreground">{sportLabel(c.sport_id)}</div>
                     {c.price != null && c.price > 0 && (
                       <div className="text-xs font-semibold text-primary mt-0.5">
