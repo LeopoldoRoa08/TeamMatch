@@ -149,7 +149,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
       </div>
 
       {/* Body */}
-      <div className="flex-1 overflow-y-auto px-5 md:px-12 py-5 md:py-8 pb-32 space-y-6 md:space-y-8 max-w-2xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-5 py-5 pb-32 space-y-6">
         {/* Nombre */}
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">
@@ -178,8 +178,8 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
           <div className="grid grid-cols-2 gap-2">
             {SPORTS.map((s) => {
               let displayLabel = s.label;
-              if (s.id === 1) displayLabel = t("sports.football") || "Fútbol";
-              else if (s.id === 2) displayLabel = t("sports.tennis") || "Tenis";
+              if (s.id === 1) displayLabel = t("sports.futbol") || "Fútbol";
+              else if (s.id === 2) displayLabel = t("sports.tenis") || "Tenis";
               else if (s.id === 3) displayLabel = t("sports.golf") || "Golf";
               else if (s.id === 4) displayLabel = t("sports.padel") || "Pádel";
 
@@ -209,7 +209,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
         {/* Ubicación */}
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground">
-            📍 {t("editProfile.location") || "Ubicación"} <span className="text-primary">*</span>
+            📍 {t("canchas.location") || "Ubicación"} <span className="text-primary">*</span>
           </label>
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
             <div className="flex items-center gap-2 border-b border-border bg-muted/50 px-4 py-3">
@@ -338,8 +338,8 @@ export function CanchasScreen({ onBack, onSelect, isOrganizer }: CanchasScreenPr
   }
 
   const sportLabel = (id: number) => {
-    if (id === 1) return t("sports.football") || "Fútbol";
-    if (id === 2) return t("sports.tennis") || "Tenis";
+    if (id === 1) return t("sports.futbol") || "Fútbol";
+    if (id === 2) return t("sports.tenis") || "Tenis";
     if (id === 3) return t("sports.golf") || "Golf";
     if (id === 4) return t("sports.padel") || "Pádel";
     return t("sports.other") || "Deporte";

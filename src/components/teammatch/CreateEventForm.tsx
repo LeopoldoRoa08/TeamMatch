@@ -408,7 +408,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                 }`}
               >
                 <span className="text-xl">{s.emoji}</span>
-                {s.label}
+                {t(`sports.${s.label.toLowerCase().replace('ú','u').replace('á','a').replace('é','e')}`) || s.label}
               </button>
             ))}
           </div>
@@ -433,7 +433,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                     : "bg-muted text-muted-foreground ring-transparent"
                 }`}
               >
-                {lvl}
+                {t(`createEvent.intensity.${lvl.toLowerCase()}`) || lvl}
               </button>
             ))}
           </div>
@@ -549,7 +549,7 @@ export function CreateEventForm({ onClose, onEventCreated, initialCancha }: Prop
                   onClick={() => setShowAddCanchaForm(true)}
                   className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline animate-fade-in"
                 >
-                  + Crear nueva cancha
+                  {t("createEvent.createCourt") || "+ Crear nueva cancha"}
                 </button>
               )}
             </div>
