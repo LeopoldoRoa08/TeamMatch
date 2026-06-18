@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { Loader2, Star, X, Plus } from "lucide-react";
 import { UserAvatar } from "./UserAvatar";
 import { CreateEventForm } from "./CreateEventForm";
+import { useSettings } from "@/lib/SettingsContext";
 import footballField from "@/assets/football-field.jpg";
 import padelCourt from "@/assets/padel-court.jpg";
 import hikingTrail from "@/assets/hiking-trail.jpg";
@@ -26,7 +27,8 @@ const getSportImage = (sportId: number) => {
 const tabs = ["Próximos", "Mis Partidos", "Solicitudes"] as const;
 
 export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e: SportEvent) => void, onNavigateToProfile?: () => void }) {
-  const [tab, setTab] = useState<(typeof tabs)[number]>("Próximos");
+  const { t } = useSettings();
+  const [tab, setTab] = useState<0 | 1 | 2>(0);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [pendingRequests, setPendingRequests] = useState<any[]>([]);
   const [availableEvents, setAvailableEvents] = useState<any[]>([]);
@@ -179,8 +181,8 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
       <CouponPopup />
       <header className="flex items-center justify-between px-5 pb-3 pt-12">
         <div>
-          <h1 className="text-2xl font-bold text-secondary">Mis eventos</h1>
-          <p className="text-sm text-muted-foreground">Tu agenda deportiva</p>
+          <h1 className="text-2xl font-bold text-secondary">{t("nav.events")}</h1>
+          <p className="text-sm text-muted-foreground">{t("events.search")}</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -191,7 +193,7 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
             style={{boxShadow: "0 4px 18px rgba(99,102,241,0.45)"}}
           >
             <Plus size={15} strokeWidth={2.5} />
-            Crear partido
+            {t("events.createEvent")}
           </button>
           <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
         </div>
@@ -199,24 +201,27 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
       <div className="sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur">
         <div className="flex gap-1 rounded-full bg-muted p-1">
-          {tabs.map((t) => {
-            // Only show 'Solicitudes' tab if the user has created at least one event
-            if (t === "Solicitudes" && createdEvents.length === 0) return null;
+          {[
+            t("events.tab.upcoming") || "Próximos",
+            t("events.tab.mine") || "Mis Partidos",
+            t("events.tab.requests") || "Solicitudes",
+          ].map((label, index) => {
+            if (index === 2 && createdEvents.length === 0) return null;
             return (
               <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
+                key={label}
+                onClick={() => setTab(index as 0 | 1 | 2)}
+                className={`flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === index ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"
                   }`}
               >
-                {t}
+                {label}
               </button>
             );
           })}
         </div>
       </div>
 
-      {tab === "Solicitudes" ? (
+      {tab === 2 ? (
         <div className="space-y-3 px-5 pt-3">
           {loading ? (
             <div className="flex justify-center p-5"><Loader2 className="animate-spin text-primary" /></div>
@@ -296,19 +301,19 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-4 px-5 pt-3">
-          {tab === "Próximos" && (
+          {tab === 0 && (
             <>
               {availableEvents.map((e) => (
                 <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />
               ))}
               {availableEvents.length === 0 && (
                 <div className="w-full text-center text-sm text-muted-foreground p-5 mt-10">
-                  No hay eventos disponibles
+                  {t("events.noEvents")}
                 </div>
               )}
             </>
           )}
-          {tab === "Mis Partidos" && (
+          {tab === 1 && (
             <>
               {myEvents.map((e) => (
                 <EventCard key={e.id} event={e} onClick={() => onSelect(e)} />

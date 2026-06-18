@@ -306,9 +306,11 @@ export function ProfileScreen({
           >
             <Edit3 size={16} />
           </button>
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft">
-            <Sparkles size={11} className="animate-pulse" /> {t("profile.rpgActive")}
-          </div>
+          {rpgMode && (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft">
+              <Sparkles size={11} className="animate-pulse" /> {t("profile.rpgActive")}
+            </div>
+          )}
           <button 
             onClick={() => setShowSettings(true)}
             className="grid h-10 w-10 place-items-center rounded-full bg-muted text-secondary hover:bg-muted/80 transition-colors"
@@ -320,7 +322,7 @@ export function ProfileScreen({
         <div className="mt-6 flex flex-col sm:flex-row items-center gap-4">
           <div className="relative shrink-0">
             {/* Level Badge Border */}
-            <div className={`h-22 w-22 rounded-full overflow-hidden p-1 bg-card ${borderClass}`}>
+            <div className={`h-22 w-22 rounded-full overflow-hidden p-1 bg-card ${rpgMode ? borderClass : "ring-4 ring-primary/20"}`}>
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
@@ -334,9 +336,11 @@ export function ProfileScreen({
               )}
             </div>
             {/* Level floating Badge */}
-            <div className="absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-black text-secondary ring-2 ring-card shadow-pop">
-              {level}
-            </div>
+            {rpgMode && (
+              <div className="absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-black text-secondary ring-2 ring-card shadow-pop">
+                {level}
+              </div>
+            )}
           </div>
 
           <div className="flex-1 text-center sm:text-left space-y-1.5">
@@ -349,84 +353,90 @@ export function ProfileScreen({
                   </span>
                 )}
               </h1>
-              <span
-                className={`inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`}
-              >
-                {rarityLabel}
-              </span>
+              {rpgMode && (
+                <span
+                  className={`inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`}
+                >
+                  {rarityLabel}
+                </span>
+              )}
             </div>
             
-            <p className="text-xs text-muted-foreground font-semibold">{rpgClass}</p>
+            {rpgMode && <p className="text-xs text-muted-foreground font-semibold">{rpgClass}</p>}
             <p className="text-[10px] text-muted-foreground/70">{email}</p>
           </div>
         </div>
 
-        {/* Experiencia Progress Bar */}
-        <div className="mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border">
-          <div className="flex items-center justify-between text-xs font-black text-secondary">
-            <span className="flex items-center gap-1.5">
-              <Trophy size={13} className="text-primary animate-pulse" /> Puntos de Experiencia
-            </span>
-            <span className="font-mono text-muted-foreground">{xp} / {xpNeeded} XP</span>
-          </div>
-          <div className="h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border">
-            <div
-              className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
-              style={{ width: `${xpPercentage}%` }}
-            />
-          </div>
-          <div className="flex justify-between items-center text-[9px] text-muted-foreground font-semibold">
-            <span>Nivel {level}</span>
-            <span>+{xpNeeded - xp} XP para Nivel {level + 1}</span>
-          </div>
-        </div>
-
-        {/* PlayStation-style Trophies Card (Clickable Banner) */}
-        <div 
-          onClick={() => setActiveTab("achievements")}
-          className="mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
-        >
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md">
-              <div className="h-full w-full rounded-full bg-background flex items-center justify-center text-lg">
-                🏆
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h4 className="text-xs font-black uppercase tracking-wider text-secondary">Logros Obtenidos</h4>
-                <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
-                  {unlockedCount} / {ACHIEVEMENTS.length}
+        {rpgMode && (
+          <>
+            {/* Experiencia Progress Bar */}
+            <div className="mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border">
+              <div className="flex items-center justify-between text-xs font-black text-secondary">
+                <span className="flex items-center gap-1.5">
+                  <Trophy size={13} className="text-primary animate-pulse" /> {t("profile.xpPoints")}
                 </span>
+                <span className="font-mono text-muted-foreground">{xp} / {xpNeeded} XP</span>
               </div>
-              {/* PlayStation-style tiny trophy counters */}
-              <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground">
-                <span className="flex items-center gap-0.5">🏆 <span className="text-secondary">{platinumCount}</span></span>
-                <span className="flex items-center gap-0.5">🥇 <span className="text-secondary">{goldCount}</span></span>
-                <span className="flex items-center gap-0.5">🥈 <span className="text-secondary">{silverCount}</span></span>
-                <span className="flex items-center gap-0.5">🥉 <span className="text-secondary">{bronzeCount}</span></span>
+              <div className="h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border">
+                <div
+                  className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+                  style={{ width: `${xpPercentage}%` }}
+                />
+              </div>
+              <div className="flex justify-between items-center text-[9px] text-muted-foreground font-semibold">
+                <span>{t("profile.level")} {level}</span>
+                <span>+{xpNeeded - xp} XP para Nivel {level + 1}</span>
               </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-right">
-              <span className="text-xs font-black text-secondary">{completionPercentage}%</span>
-              <p className="text-[8px] text-muted-foreground uppercase font-black tracking-wider">Progreso</p>
+
+            {/* PlayStation-style Trophies Card (Clickable Banner) */}
+            <div 
+              onClick={() => setActiveTab("achievements")}
+              className="mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md">
+                  <div className="h-full w-full rounded-full bg-background flex items-center justify-center text-lg">
+                    🏆
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <h4 className="text-xs font-black uppercase tracking-wider text-secondary">{t("profile.achievements")}</h4>
+                    <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
+                      {unlockedCount} / {ACHIEVEMENTS.length}
+                    </span>
+                  </div>
+                  {/* PlayStation-style tiny trophy counters */}
+                  <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground">
+                    <span className="flex items-center gap-0.5">🏆 <span className="text-secondary">{platinumCount}</span></span>
+                    <span className="flex items-center gap-0.5">🥇 <span className="text-secondary">{goldCount}</span></span>
+                    <span className="flex items-center gap-0.5">🥈 <span className="text-secondary">{silverCount}</span></span>
+                    <span className="flex items-center gap-0.5">🥉 <span className="text-secondary">{bronzeCount}</span></span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <span className="text-xs font-black text-secondary">{completionPercentage}%</span>
+                  <p className="text-[8px] text-muted-foreground uppercase font-black tracking-wider">{t("profile.progress")}</p>
+                </div>
+                <ArrowRight size={13} className="text-muted-foreground" />
+              </div>
             </div>
-            <ArrowRight size={13} className="text-muted-foreground" />
-          </div>
-        </div>
+          </>
+        )}
       </div>
 
       {/* Navigation Tabs (RPG Character Sheet Style) */}
       <div className="px-5">
-        <div className="grid grid-cols-4 gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border">
+        <div className={`grid ${rpgMode ? "grid-cols-4" : "grid-cols-2"} gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border`}>
           {[
-            { id: "stats", label: t("profile.stats"), icon: Shield },
-            { id: "achievements", label: t("profile.achievements").slice(0, 6), icon: Award },
-            { id: "inventory", label: t("profile.inventory"), icon: Trophy },
-            { id: "history", label: t("profile.history"), icon: BookOpen },
-          ].map((tab) => {
+            { id: "stats", label: t("profile.stats"), icon: Shield, show: true },
+            { id: "achievements", label: t("profile.achievements").slice(0, 6), icon: Award, show: rpgMode },
+            { id: "inventory", label: t("profile.inventory"), icon: Trophy, show: rpgMode },
+            { id: "history", label: t("profile.history"), icon: BookOpen, show: true },
+          ].filter(tab => tab.show).map((tab) => {
             const ActiveIcon = tab.icon;
             const isSelected = activeTab === tab.id;
             return (

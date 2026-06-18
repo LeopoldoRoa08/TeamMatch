@@ -16,6 +16,7 @@ import {
   Loader2
 } from "lucide-react";
 import { useCurrentUser } from "@/lib/UserContext";
+import { useSettings } from "@/lib/SettingsContext";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
 
@@ -41,6 +42,7 @@ export function FriendsScreen({
   onSelectEvent?: (e: any) => void;
 }) {
   const { user, addXp, incrementCarisma } = useCurrentUser();
+  const { t } = useSettings();
   const [activeSubTab, setActiveSubTab] = useState<"tinder" | "friends">("tinder");
   const [searchQuery, setSearchQuery] = useState("");
   
@@ -426,8 +428,8 @@ export function FriendsScreen({
 
       <header className="flex items-center justify-between px-5 pb-3 pt-12">
         <div>
-          <h1 className="text-2xl font-bold text-secondary">Amigos</h1>
-          <p className="text-sm text-muted-foreground">Conecta con jugadores afines</p>
+          <h1 className="text-2xl font-bold text-secondary">{t("friends.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("friends.findPlayers")}</p>
         </div>
         <button 
           onClick={onNavigateToProfile}
@@ -459,7 +461,7 @@ export function FriendsScreen({
             }`}
           >
             <UserCheck size={14} className={activeSubTab === "friends" ? "text-primary" : ""} />
-            Mis amigos ({friends.length})
+            {t("friends.myFriends")} ({friends.length})
           </button>
         </div>
       </div>
@@ -535,15 +537,15 @@ export function FriendsScreen({
             ) : (
               <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12">
                 <div className="text-5xl">⚔️</div>
-                <h3 className="text-base font-black text-secondary">¡Eso es todo por hoy!</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos.
+                <h4 className="text-lg font-black text-secondary">{t("friends.noFriends")}</h4>
+                <p className="text-sm text-muted-foreground mt-2 max-w-[250px] mx-auto">
+                  {t("friends.findPlayersDescription")}
                 </p>
                 <button
                   onClick={() => setCurrentIndex(0)}
                   className="rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20"
                 >
-                  Reiniciar Lista 🔄
+                  {t("friends.resetList")} 🔄
                 </button>
               </div>
             )}
@@ -553,7 +555,7 @@ export function FriendsScreen({
             {receivedRequests.length > 0 && (
               <div className="space-y-3">
                 <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <UserPlus size={14} className="text-primary" /> Solicitudes Recibidas
+                  <UserPlus size={14} className="text-primary" /> {t("friends.requests")}
                 </h3>
 
                 <div className="space-y-2">
@@ -564,7 +566,7 @@ export function FriendsScreen({
                         <div className="min-w-0">
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-sm font-bold text-secondary truncate">{req.name}</span>
-                            <span className="text-xs text-muted-foreground">{req.age} años</span>
+                            <span className="text-xs text-muted-foreground">{req.age} {t("common.years")}</span>
                           </div>
                           <div className="text-[10px] text-primary font-extrabold">{req.location}</div>
                           <p className="text-[10px] text-muted-foreground truncate max-w-[160px]">{req.bio}</p>
@@ -575,14 +577,14 @@ export function FriendsScreen({
                         <button
                           onClick={() => handleRejectRequest(req)}
                           className="grid h-8 w-8 place-items-center rounded-xl bg-muted/60 text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 transition-colors"
-                          title="Rechazar"
+                          title={t("friends.reject")}
                         >
                           <UserX size={15} />
                         </button>
                         <button
                           onClick={() => handleAcceptRequest(req)}
                           className="grid h-8 w-8 place-items-center rounded-xl gradient-primary text-secondary shadow-sm"
-                          title="Aceptar Match"
+                          title={t("friends.accept")}
                         >
                           <UserCheck size={15} />
                         </button>

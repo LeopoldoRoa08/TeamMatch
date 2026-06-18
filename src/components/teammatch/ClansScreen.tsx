@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Shield, Plus, Users, Search, UserPlus, Check, X, Loader2, Trophy, ArrowLeft, Star } from "lucide-react";
+import { Shield, Plus, Users, Search, UserPlus, Check, X, Loader2, Trophy, ArrowLeft, Star, Edit3, Trash2, LogOut } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCurrentUser } from "@/lib/UserContext";
+import { useSettings } from "@/lib/SettingsContext";
 import type { Clan, ClanMember, Sport } from "./types";
 import { SportBadge } from "./SportBadge";
 
@@ -13,6 +14,7 @@ export function ClansScreen({
   onSelectEvent?: (e: any) => void;
 }) {
   const { user } = useCurrentUser();
+  const { t } = useSettings();
   const [activeTab, setActiveTab] = useState<"mis-clanes" | "crear" | "unirse">("mis-clanes");
   
   const [clans, setClans] = useState<Clan[]>([]);
@@ -26,8 +28,13 @@ export function ClansScreen({
   const [friends, setFriends] = useState<any[]>([]);
 
   // Create Form
-  const [createData, setCreateData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a" });
+  const [createData, setCreateData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "" });
   const [creating, setCreating] = useState(false);
+
+  // Edit Form
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editData, setEditData] = useState({ name: "", sport: "Pádel" as Sport, primary: "#32CD32", secondary: "#1a1a1a", description: "" });
+  const [editing, setEditing] = useState(false);
 
   // Join Form
   const [inviteCode, setInviteCode] = useState("");
@@ -84,21 +91,24 @@ export function ClansScreen({
     setLoadingMembers(false);
   }
 
+  function generateInviteCode() {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+
   async function handleCreateClan(e: React.FormEvent) {
     e.preventDefault();
-    if (!user?.id) return;
+    if (!user?.id || !createData.name) return;
     setCreating(true);
-    
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    
     try {
+      const code = generateInviteCode();
       const { data: clan, error } = await supabase.from('clans').insert({
         name: createData.name,
         sport: createData.sport,
         captain_id: user.id,
         invite_code: code,
         hex_primary: createData.primary,
-        hex_secondary: createData.secondary
+        hex_secondary: createData.secondary,
+        description: createData.description
       }).select().single();
       
       if (error) throw error;
@@ -110,7 +120,7 @@ export function ClansScreen({
       });
       
       alert("¡Clan creado exitosamente!");
-      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a" });
+      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
       setActiveTab("mis-clanes");
       fetchMyClans();
     } catch (err: any) {
@@ -198,6 +208,60 @@ export function ClansScreen({
     }
   }
 
+  async function handleEditClan(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedClan) return;
+    setEditing(true);
+    try {
+      const { error } = await supabase.from('clans').update({
+        name: editData.name,
+        sport: editData.sport,
+        hex_primary: editData.primary,
+        hex_secondary: editData.secondary,
+        description: editData.description
+      }).eq('id', selectedClan.id);
+      
+      if (error) throw error;
+      
+      alert("Clan actualizado");
+      setShowEditModal(false);
+      const updated = { ...selectedClan, name: editData.name, sport: editData.sport, hex_primary: editData.primary, hex_secondary: editData.secondary, description: editData.description };
+      setSelectedClan(updated);
+      setClans(clans.map(c => c.id === updated.id ? updated : c));
+    } catch (err: any) {
+      alert("Error al editar: " + err.message);
+    }
+    setEditing(false);
+  }
+
+  async function handleRemoveMember(memberId: string) {
+    if (!confirm("¿Seguro que deseas eliminar a este miembro del clan?")) return;
+    try {
+      const { error } = await supabase.from('clan_members').delete().eq('id', memberId);
+      if (error) throw error;
+      fetchClanMembers(selectedClan!.id);
+    } catch (err: any) {
+      alert("Error al eliminar: " + err.message);
+    }
+  }
+
+  async function handleLeaveClan() {
+    if (!user?.id || !selectedClan) return;
+    if (!confirm("¿Seguro que deseas salir de este clan?")) return;
+    try {
+      const { error } = await supabase
+        .from('clan_members')
+        .delete()
+        .eq('clan_id', selectedClan.id)
+        .eq('user_id', user.id);
+      if (error) throw error;
+      setSelectedClan(null);
+      fetchMyClans();
+    } catch (err: any) {
+      alert("Error al salir del clan: " + err.message);
+    }
+  }
+
   // --- RENDERS ---
 
   if (selectedClan) {
@@ -228,7 +292,31 @@ export function ClansScreen({
             >
               🛡️
             </div>
-            <h2 className="text-2xl font-black text-secondary mt-4 z-10">{selectedClan.name}</h2>
+            <div className="flex items-center gap-2 mt-4 z-10">
+              <h2 className="text-2xl font-black text-secondary">{selectedClan.name}</h2>
+              {isCaptain && (
+                <button 
+                  onClick={() => {
+                    setEditData({
+                      name: selectedClan.name,
+                      sport: selectedClan.sport,
+                      primary: selectedClan.hex_primary,
+                      secondary: selectedClan.hex_secondary,
+                      description: selectedClan.description || ""
+                    });
+                    setShowEditModal(true);
+                  }} 
+                  className="grid h-8 w-8 place-items-center rounded-full bg-muted text-primary hover:bg-muted/80 transition-colors"
+                >
+                  <Edit3 size={14} />
+                </button>
+              )}
+            </div>
+            {selectedClan.description && (
+              <p className="text-xs text-muted-foreground mt-1 z-10 text-center max-w-[280px]">
+                {selectedClan.description}
+              </p>
+            )}
             {isCaptain && (
               <div className="mt-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 z-10">
                 Código Invitación: <span className="font-mono text-secondary">{selectedClan.invite_code}</span>
@@ -281,15 +369,24 @@ export function ClansScreen({
                          {m.profiles?.username?.substring(0, 2).toUpperCase() || "U"}
                       </div>
                     )}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="text-sm font-bold text-secondary flex items-center gap-2">
-                        {m.profiles?.full_name || m.profiles?.username?.split('@')[0]}
-                        {m.user_id === selectedClan.captain_id && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase">Capitán</span>}
+                        <span className="truncate">{m.profiles?.full_name || m.profiles?.username?.split('@')[0]}</span>
+                        {m.user_id === selectedClan.captain_id && <span className="text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0">Capitán</span>}
                       </div>
                       <div className="text-[10px] text-muted-foreground flex items-center gap-1">
                         <Star size={10} className="fill-accent text-accent" /> {m.profiles?.rating || "5.0"}
                       </div>
                     </div>
+                    {isCaptain && m.user_id !== selectedClan.captain_id && (
+                      <button
+                        onClick={() => handleRemoveMember(m.id)}
+                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 transition-colors"
+                        title="Eliminar miembro"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    )}
                   </div>
                 ))
               )}
@@ -297,7 +394,20 @@ export function ClansScreen({
           </div>
         </div>
 
-        {/* Modal de Amigos */}
+        {/* Leave Clan Button for non-captains */}
+        {!isCaptain && (
+          <div className="px-5 pb-2">
+            <button
+              onClick={handleLeaveClan}
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-500 font-black text-sm hover:bg-rose-500/20 transition-all active:scale-95"
+            >
+              <LogOut size={16} />
+              Salir del Clan
+            </button>
+          </div>
+        )}
+
+         {/* Modal de Amigos */}
         {showInviteModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
              <div className="bg-secondary p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col">
@@ -316,6 +426,47 @@ export function ClansScreen({
                 </div>
                 <button onClick={() => setShowInviteModal(false)} className="mt-4 w-full bg-muted text-muted-foreground py-3 rounded-2xl font-bold">Cerrar</button>
              </div>
+          </div>
+        )}
+
+        {/* Modal de Editar Clan */}
+        {showEditModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+            <div className="bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[90vh] overflow-y-auto">
+              <h3 className="text-lg font-bold text-secondary mb-4">Editar Clan</h3>
+              <form onSubmit={handleEditClan} className="space-y-4">
+                <div>
+                  <label className="text-xs font-bold text-secondary uppercase">Nombre</label>
+                  <input required value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-secondary uppercase">Deporte</label>
+                  <select value={editData.sport} onChange={e => setEditData({...editData, sport: e.target.value as Sport})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary">
+                    {["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol", "Fútbol", "Golf"].map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-secondary uppercase">Descripción</label>
+                  <textarea value={editData.description} onChange={e => setEditData({...editData, description: e.target.value})} className="mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary" placeholder="Describe tu clan..." rows={3} />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-bold text-secondary uppercase">Color Primario</label>
+                    <input type="color" value={editData.primary} onChange={e => setEditData({...editData, primary: e.target.value})} className="mt-1 w-full h-10 rounded-xl cursor-pointer" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-secondary uppercase">Color Secundario</label>
+                    <input type="color" value={editData.secondary} onChange={e => setEditData({...editData, secondary: e.target.value})} className="mt-1 w-full h-10 rounded-xl cursor-pointer" />
+                  </div>
+                </div>
+                <div className="pt-2 flex gap-2">
+                  <button type="button" onClick={() => setShowEditModal(false)} className="flex-1 py-3 rounded-xl bg-muted text-muted-foreground font-bold text-sm">Cancelar</button>
+                  <button type="submit" disabled={editing} className="flex-1 py-3 rounded-xl bg-primary text-secondary font-bold text-sm disabled:opacity-50 flex justify-center items-center">
+                    {editing ? <Loader2 size={16} className="animate-spin" /> : "Guardar"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </div>
@@ -349,20 +500,20 @@ export function ClansScreen({
   return (
     <div className="h-full flex flex-col bg-background relative overflow-hidden pb-24">
       <header className="px-5 pt-12 pb-3">
-        <h1 className="text-2xl font-bold text-secondary">Clanes</h1>
+        <h1 className="text-2xl font-bold text-secondary">{t("clans.title")}</h1>
         <p className="text-sm text-muted-foreground">Tu equipo permanente</p>
       </header>
 
       <div className="px-5 pb-4">
         <div className="flex gap-1 rounded-full bg-muted p-1 border border-border/40">
           <button onClick={() => setActiveTab("mis-clanes")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "mis-clanes" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
-            <Shield size={14} className={activeTab === "mis-clanes" ? "text-primary" : ""} /> Mis Clanes
+            <Shield size={14} className={activeTab === "mis-clanes" ? "text-primary" : ""} /> {t("clans.myClan")}
           </button>
           <button onClick={() => setActiveTab("crear")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "crear" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
-            <Plus size={14} className={activeTab === "crear" ? "text-primary" : ""} /> Crear Clan
+            <Plus size={14} className={activeTab === "crear" ? "text-primary" : ""} /> {t("clans.createClan")}
           </button>
           <button onClick={() => setActiveTab("unirse")} className={`flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "unirse" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`}>
-            <Search size={14} className={activeTab === "unirse" ? "text-primary" : ""} /> Unirse
+            <Search size={14} className={activeTab === "unirse" ? "text-primary" : ""} /> {t("clans.joinClan").split(' ')[0]}
           </button>
         </div>
       </div>

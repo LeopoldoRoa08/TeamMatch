@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { ArrowLeft, MapPin, Clock, Calendar, Users, Star, Check, X, Loader2, CheckCircle2, UserPlus } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Calendar, Users, Star, Check, X, Loader2, CheckCircle2, UserPlus, Trash2 } from "lucide-react";
 import type { SportEvent } from "./types";
 import { SportBadge } from "./SportBadge";
 import { supabase } from "@/lib/supabase";
@@ -40,6 +40,16 @@ export function EventDetailScreen({
 
   const [myCaptainedClans, setMyCaptainedClans] = useState<any[]>([]);
   const [registeringClan, setRegisteringClan] = useState(false);
+
+  // Clan Member Selection
+  const [showClanMemberSelectModal, setShowClanMemberSelectModal] = useState(false);
+  const [clanToJoin, setClanToJoin] = useState<any>(null);
+  const [selectableClanMembers, setSelectableClanMembers] = useState<any[]>([]);
+  const [selectedClanMemberIds, setSelectedClanMemberIds] = useState<string[]>([]);
+
+  // Delete event
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const renderAvatar = (username: string, sizeClass = "h-10 w-10", explicitAvatarUrl?: string | null) => {
     const isCurrentUser = currentUser?.email === username || (currentUser?.user_metadata?.full_name === username);
@@ -157,11 +167,19 @@ export function EventDetailScreen({
     const emptySpots = Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
     
     if (members.length > emptySpots) {
-       alert(`El evento solo tiene ${emptySpots} cupos y tu clan tiene ${members.length} miembros.`);
+       setClanToJoin(clan);
+       setSelectableClanMembers(members);
+       setSelectedClanMemberIds([]);
+       setShowClanMemberSelectModal(true);
        setRegisteringClan(false);
        return;
     }
 
+    await executeClanJoin(clan, members);
+  }
+
+  async function executeClanJoin(clan: any, members: any[]) {
+    setRegisteringClan(true);
     try {
       // Fetch emails for all members since event_participants uses user_username
       const { data: profiles } = await supabase.from('profiles').select('id, username').in('id', members.map((m: any) => m.user_id));
@@ -178,7 +196,7 @@ export function EventDetailScreen({
         }));
 
       if (insertData.length === 0) {
-        alert("Todos los miembros del clan ya están inscritos en este evento");
+        alert("Todos los miembros seleccionados ya están inscritos en este evento");
         setRegisteringClan(false);
         return;
       }
@@ -186,10 +204,11 @@ export function EventDetailScreen({
       const { error } = await supabase.from("event_participants").insert(insertData);
       
       if (error) {
-         if (error.code === '23505') alert("Algunos miembros del clan ya están inscritos en este evento");
+         if (error.code === '23505') alert("Algunos miembros ya están inscritos en este evento");
          else throw error;
       } else {
         setShowSuccess(true);
+        setShowClanMemberSelectModal(false);
         fetchParticipants();
         setTimeout(() => setShowSuccess(false), 2000);
       }
@@ -198,6 +217,23 @@ export function EventDetailScreen({
       alert("Error al inscribir al clan: " + (err.message || JSON.stringify(err)));
     }
     setRegisteringClan(false);
+  }
+
+  async function handleDeleteEvent() {
+    if (!currentUser || !isHost) return;
+    setDeleting(true);
+    try {
+      // Delete all participants first (or cascade should handle it)
+      await supabase.from('event_participants').delete().eq('event_id', event.id);
+      // Delete the event
+      const { error } = await supabase.from('events').delete().eq('id', event.id);
+      if (error) throw error;
+      setShowDeleteConfirm(false);
+      onBack();
+    } catch (err: any) {
+      alert('Error al eliminar el evento: ' + err.message);
+    }
+    setDeleting(false);
   }
 
   async function handleAction(participantId: number, status: "aceptado" | "rechazado") {
@@ -653,12 +689,21 @@ export function EventDetailScreen({
             </div>
           </div>
           {isHost ? (
-            <button
-              disabled={true}
-              className="ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center"
-            >
-              Eres el organizador 👑
-            </button>
+            <div className="ml-auto flex flex-col gap-2 flex-1">
+              <button
+                disabled={true}
+                className="w-full rounded-2xl py-3 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center"
+              >
+                Eres el organizador 👑
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="w-full rounded-2xl py-3 text-sm font-black bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              >
+                <Trash2 size={14} />
+                Eliminar Evento
+              </button>
+            </div>
           ) : isUserApproved ? (
             <button
               disabled={joining}
@@ -863,6 +908,96 @@ export function EventDetailScreen({
           </div>
         );
       })()}
+
+      {/* Delete Event Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+          <div className="bg-background p-6 rounded-3xl border border-rose-500/30 w-full max-w-sm shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/5 to-transparent pointer-events-none" />
+            <div className="relative z-10 flex flex-col items-center text-center gap-4">
+              <div className="h-16 w-16 rounded-full bg-rose-500/15 border border-rose-500/30 flex items-center justify-center">
+                <Trash2 size={28} className="text-rose-500" />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-secondary">¿Eliminar Evento?</h3>
+                <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
+                  Esta acción eliminará <span className="font-bold text-secondary">"{event.title}"</span> de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo.
+                </p>
+              </div>
+              <div className="w-full flex gap-3 pt-2">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={deleting}
+                  className="flex-1 py-3.5 rounded-2xl bg-muted text-muted-foreground font-bold text-sm hover:bg-muted/80 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleDeleteEvent}
+                  disabled={deleting}
+                  className="flex-1 py-3.5 rounded-2xl bg-rose-500 text-white font-black text-sm hover:bg-rose-600 active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {deleting ? <Loader2 size={16} className="animate-spin" /> : <><Trash2 size={14} /> Eliminar</>}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clan Member Selection Modal */}
+      {showClanMemberSelectModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+           <div className="bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col shadow-pop relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" />
+              <h3 className="text-lg font-black text-secondary mb-1">Seleccionar Miembros</h3>
+              <p className="text-xs text-muted-foreground mb-4">El evento tiene {Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length)} cupos. Selecciona quiénes participarán.</p>
+              <div className="flex-1 overflow-y-auto space-y-2 relative z-10">
+                 {selectableClanMembers.map((m: any) => {
+                   const isSelected = selectedClanMemberIds.includes(m.user_id);
+                   return (
+                     <button 
+                       key={m.id}
+                       onClick={() => {
+                         if (isSelected) {
+                           setSelectedClanMemberIds(selectedClanMemberIds.filter(id => id !== m.user_id));
+                         } else {
+                           const emptySpots = Math.max(0, event.spots - participants.filter(p => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
+                           if (selectedClanMemberIds.length >= emptySpots) {
+                             alert(`Solo puedes seleccionar hasta ${emptySpots} miembros.`);
+                             return;
+                           }
+                           setSelectedClanMemberIds([...selectedClanMemberIds, m.user_id]);
+                         }
+                       }}
+                       className={`w-full flex items-center justify-between p-3 rounded-2xl border transition-all ${isSelected ? 'border-primary bg-primary/10' : 'border-border bg-card'}`}
+                     >
+                        <div className="flex items-center gap-3">
+                          {renderAvatar(m.profiles?.username || "Usuario", "h-8 w-8", m.profiles?.avatar_url)}
+                          <span className="text-sm font-bold text-secondary truncate max-w-[150px]">{m.profiles?.username?.split('@')[0]}</span>
+                        </div>
+                        <div className={`h-5 w-5 rounded-md flex items-center justify-center border ${isSelected ? 'bg-primary border-primary text-secondary' : 'border-muted-foreground/30'}`}>
+                          {isSelected && <Check size={12} strokeWidth={3} />}
+                        </div>
+                     </button>
+                   );
+                 })}
+              </div>
+              <div className="mt-4 flex gap-2 relative z-10">
+                <button onClick={() => setShowClanMemberSelectModal(false)} className="flex-1 bg-muted text-muted-foreground py-3 rounded-2xl font-bold text-sm">Cancelar</button>
+                <button 
+                  disabled={selectedClanMemberIds.length === 0 || registeringClan}
+                  onClick={() => {
+                    executeClanJoin(clanToJoin, selectableClanMembers.filter((m: any) => selectedClanMemberIds.includes(m.user_id)));
+                  }} 
+                  className="flex-1 gradient-primary text-secondary py-3 rounded-2xl font-black text-sm disabled:opacity-50 flex justify-center items-center"
+                >
+                  {registeringClan ? <Loader2 size={16} className="animate-spin" /> : `Unirse (${selectedClanMemberIds.length})`}
+                </button>
+              </div>
+           </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { useState, useRef, useEffect, createContext, useContext, useCallback, useMemo, Suspense, lazy } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { MapPin, X, MessageSquare, ChevronRight, Crosshair, Users, Trophy, Zap, ArrowRight, CheckCircle2, ArrowLeft, Star, Calendar, Clock, Loader2, Check, UserPlus, Sparkles, Shield, Edit3, Settings, Award, BookOpen, Flame, Copy, LogOut, Camera, Save, ShieldCheck, AlertCircle, Send, CalendarCheck, FileText, Plus, Heart, UserCheck, UserX, Search, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
+import { MapPin, X, MessageSquare, ChevronRight, Crosshair, Users, Trophy, Zap, ArrowRight, CheckCircle2, ArrowLeft, Star, Calendar, Clock, Loader2, Check, UserPlus, Trash2, Palette, Sun, Moon, Sparkles, Globe, LogOut, Shield, Edit3, Settings, Award, BookOpen, Flame, Copy, Camera, Save, ShieldCheck, AlertCircle, Send, CalendarCheck, FileText, Plus, Heart, UserCheck, UserX, Search, User, Mail, Lock, EyeOff, Eye, Map as Map$1, XCircle } from "lucide-react";
 const supabaseUrl = "https://aknwdkjzodhkhzxjvipu.supabase.co";
 const supabaseAnonKey = "sb_publishable_wXXt4M1loO2NvsCC0nmM5A_1NJneITx";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -1295,6 +1295,436 @@ function UserProvider({ children }) {
 function useCurrentUser() {
   return useContext(UserContext);
 }
+const translations = {
+  es: {
+    // Settings
+    "settings.title": "Configuración",
+    "settings.aesthetics": "Estética de la App",
+    "settings.language": "Idioma",
+    "settings.gamePrefs": "Preferencias de Juego",
+    "settings.rpgMode": "Modo RPG Activo",
+    "settings.rpgModeDesc": "Muestra niveles, XP, cofres y stats. Apágalo para una vista más deportiva.",
+    "settings.pushNotif": "Notificaciones Push",
+    "settings.pushNotifDesc": "Avisos de partidos e invitaciones de clanes.",
+    "settings.distance": "Unidad de Distancia",
+    "settings.distanceDesc": "Para buscar eventos cercanos.",
+    "settings.logout": "Cerrar Sesión",
+    "themes.light": "Claro",
+    "themes.dark": "Oscuro",
+    "themes.neon": "Neón",
+    "themes.nature": "Naturaleza",
+    "themes.ocean": "Océano",
+    // Navigation
+    "nav.events": "Eventos",
+    "nav.sports": "Deportes",
+    "nav.map": "Mapa",
+    "nav.friends": "Amigos",
+    "nav.profile": "Perfil",
+    "nav.clans": "Clanes",
+    // Profile
+    "profile.rpgActive": "Modo RPG Activo",
+    "profile.level": "Nivel",
+    "profile.xpPoints": "Puntos de Experiencia",
+    "profile.achievements": "Logros Obtenidos",
+    "profile.progress": "Progreso",
+    "profile.stats": "Stats",
+    "profile.inventory": "Cofre",
+    "profile.history": "Aventuras",
+    "profile.logout": "Cerrar Sesión del Héroe",
+    "profile.editProfile": "Editar Perfil",
+    // Events
+    "events.joinEvent": "Unirme al Partido",
+    "friends.noFriends": "Aún no tienes amigos",
+    "friends.noCandidates": "No hay más jugadores disponibles",
+    "friends.findPlayersDescription": "Explora la pestaña 'Para ti' y encuentra jugadores con tus mismos gustos deportivos.",
+    "friends.resetList": "Reiniciar Lista",
+    "friends.requests": "Solicitudes Recibidas",
+    "friends.accept": "Aceptar",
+    "friends.reject": "Rechazar",
+    "clans.search": "Buscar clanes...",
+    "events.createEvent": "Crear Evento",
+    "events.noEvents": "No hay eventos disponibles",
+    "events.search": "Buscar eventos...",
+    "events.participants": "Participantes",
+    "events.registerClan": "Inscribir mi Clan",
+    // Clans
+    "clans.title": "Clanes",
+    "clans.createClan": "Crear Clan",
+    "clans.joinClan": "Unirme a un Clan",
+    "clans.myClan": "Mi Clan",
+    "clans.captain": "Capitán",
+    "clans.members": "Miembros",
+    // Common
+    "common.back": "Volver",
+    "common.save": "Guardar",
+    "common.cancel": "Cancelar",
+    "common.loading": "Cargando...",
+    "common.error": "Error",
+    "common.success": "¡Éxito!",
+    "common.search": "Buscar...",
+    "common.noResults": "Sin resultados"
+  },
+  en: {
+    "settings.title": "Settings",
+    "settings.aesthetics": "App Aesthetics",
+    "settings.language": "Language",
+    "settings.gamePrefs": "Game Preferences",
+    "settings.rpgMode": "RPG Mode Active",
+    "settings.rpgModeDesc": "Shows levels, XP, chests and stats. Turn off for a cleaner sports view.",
+    "settings.pushNotif": "Push Notifications",
+    "settings.pushNotifDesc": "Match alerts and clan invitations.",
+    "settings.distance": "Distance Unit",
+    "settings.distanceDesc": "For finding nearby events.",
+    "settings.logout": "Log Out",
+    "themes.light": "Light",
+    "themes.dark": "Dark",
+    "themes.neon": "Neon",
+    "themes.nature": "Nature",
+    "themes.ocean": "Ocean",
+    "nav.events": "Events",
+    "nav.sports": "Sports",
+    "nav.map": "Map",
+    "nav.friends": "Friends",
+    "nav.profile": "Profile",
+    "nav.clans": "Clans",
+    "profile.rpgActive": "RPG Mode Active",
+    "profile.level": "Level",
+    "profile.xpPoints": "Experience Points",
+    "profile.achievements": "Achievements",
+    "profile.progress": "Progress",
+    "profile.stats": "Stats",
+    "profile.inventory": "Chest",
+    "profile.history": "History",
+    "profile.logout": "Logout",
+    "profile.editProfile": "Edit Profile",
+    "events.joinEvent": "Join Match",
+    "events.createEvent": "Create Event",
+    "events.noEvents": "No events available",
+    "events.search": "Search events...",
+    "events.participants": "Participants",
+    "events.registerClan": "Register my Clan",
+    "events.tab.upcoming": "Upcoming",
+    "events.tab.mine": "My Matches",
+    "events.tab.requests": "Requests",
+    "clans.title": "Clans",
+    "clans.createClan": "Create Clan",
+    "clans.joinClan": "Join a Clan",
+    "clans.myClan": "My Clan",
+    "clans.captain": "Captain",
+    "clans.members": "Members",
+    "clans.search": "Search clans...",
+    "clans.noClans": "No clans available",
+    "friends.title": "Friends",
+    "friends.findPlayers": "Find Players",
+    "friends.myFriends": "My Friends",
+    "friends.noFriends": "No friends yet",
+    "friends.noCandidates": "No more players available",
+    "friends.findPlayersDescription": "Explore the 'For you' tab to find players with similar sports interests.",
+    "friends.resetList": "Reset List",
+    "friends.requests": "Received Requests",
+    "friends.accept": "Accept",
+    "friends.reject": "Reject",
+    "sports.title": "Sports",
+    "sports.search": "Search sports...",
+    "common.back": "Back",
+    "common.save": "Save",
+    "common.cancel": "Cancel",
+    "common.loading": "Loading...",
+    "common.error": "Error",
+    "common.success": "Success!",
+    "common.search": "Search...",
+    "common.noResults": "No results"
+  },
+  pt: {
+    "settings.title": "Configurações",
+    "settings.aesthetics": "Estética do App",
+    "settings.language": "Idioma",
+    "settings.gamePrefs": "Preferências de Jogo",
+    "settings.rpgMode": "Modo RPG Ativo",
+    "settings.rpgModeDesc": "Mostra níveis, XP, baús e atributos. Desligue para visão esportiva.",
+    "settings.pushNotif": "Notificações Push",
+    "settings.pushNotifDesc": "Avisos de partidas e convites de clãs.",
+    "settings.distance": "Unidade de Distância",
+    "settings.distanceDesc": "Para buscar eventos próximos.",
+    "settings.logout": "Sair",
+    "themes.light": "Claro",
+    "themes.dark": "Escuro",
+    "themes.neon": "Neon",
+    "themes.nature": "Natureza",
+    "themes.ocean": "Oceano",
+    "nav.events": "Eventos",
+    "nav.sports": "Esportes",
+    "nav.map": "Mapa",
+    "nav.friends": "Amigos",
+    "nav.profile": "Perfil",
+    "nav.clans": "Clãs",
+    "profile.rpgActive": "Modo RPG Ativo",
+    "profile.level": "Nível",
+    "profile.xpPoints": "Pontos de Experiência",
+    "profile.achievements": "Conquistas",
+    "profile.progress": "Progresso",
+    "profile.stats": "Stats",
+    "profile.inventory": "Baú",
+    "profile.history": "Histórico",
+    "profile.logout": "Sair",
+    "profile.editProfile": "Editar Perfil",
+    "events.joinEvent": "Entrar na Partida",
+    "events.createEvent": "Criar Evento",
+    "events.noEvents": "Nenhum evento disponível",
+    "events.search": "Buscar eventos...",
+    "events.participants": "Participantes",
+    "events.registerClan": "Inscrever meu Clã",
+    "events.tab.upcoming": "Próximos",
+    "events.tab.mine": "Minhas Partidas",
+    "events.tab.requests": "Solicitações",
+    "clans.title": "Clãs",
+    "clans.createClan": "Criar Clã",
+    "clans.joinClan": "Entrar num Clã",
+    "clans.myClan": "Meu Clã",
+    "clans.captain": "Capitão",
+    "clans.members": "Membros",
+    "common.back": "Voltar",
+    "common.save": "Salvar",
+    "common.cancel": "Cancelar",
+    "common.loading": "Carregando...",
+    "common.error": "Erro",
+    "common.success": "Sucesso!",
+    "common.search": "Buscar...",
+    "common.noResults": "Sem resultados"
+  },
+  fr: {
+    "settings.title": "Paramètres",
+    "settings.aesthetics": "Esthétique",
+    "settings.language": "Langue",
+    "settings.gamePrefs": "Préférences de Jeu",
+    "settings.rpgMode": "Mode RPG Actif",
+    "settings.rpgModeDesc": "Affiche niveaux, XP, coffres et stats.",
+    "settings.pushNotif": "Notifications Push",
+    "settings.pushNotifDesc": "Alertes de matchs et invitations de clan.",
+    "settings.distance": "Unité de Distance",
+    "settings.distanceDesc": "Pour trouver des événements à proximité.",
+    "settings.logout": "Se Déconnecter",
+    "themes.light": "Clair",
+    "themes.dark": "Sombre",
+    "themes.neon": "Néon",
+    "themes.nature": "Nature",
+    "themes.ocean": "Océan",
+    "nav.events": "Événements",
+    "nav.sports": "Sports",
+    "nav.map": "Carte",
+    "nav.friends": "Amis",
+    "nav.profile": "Profil",
+    "nav.clans": "Clans",
+    "profile.rpgActive": "Mode RPG Actif",
+    "profile.level": "Niveau",
+    "profile.xpPoints": "Points d'Expérience",
+    "profile.achievements": "Succès",
+    "profile.progress": "Progrès",
+    "profile.stats": "Stats",
+    "profile.inventory": "Coffre",
+    "profile.history": "Historique",
+    "profile.logout": "Déconnexion",
+    "profile.editProfile": "Modifier le Profil",
+    "events.joinEvent": "Rejoindre le Match",
+    "events.createEvent": "Créer un Événement",
+    "events.noEvents": "Aucun événement disponible",
+    "events.search": "Rechercher...",
+    "events.participants": "Participants",
+    "events.registerClan": "Inscrire mon Clan",
+    "clans.title": "Clans",
+    "clans.createClan": "Créer un Clan",
+    "clans.joinClan": "Rejoindre un Clan",
+    "clans.myClan": "Mon Clan",
+    "clans.captain": "Capitaine",
+    "clans.members": "Membres",
+    "common.back": "Retour",
+    "common.save": "Sauvegarder",
+    "common.cancel": "Annuler",
+    "common.loading": "Chargement...",
+    "common.error": "Erreur",
+    "common.success": "Succès !",
+    "common.search": "Rechercher...",
+    "common.noResults": "Aucun résultat"
+  },
+  it: {
+    "settings.title": "Impostazioni",
+    "settings.aesthetics": "Estetica dell'App",
+    "settings.language": "Lingua",
+    "settings.gamePrefs": "Preferenze di Gioco",
+    "settings.rpgMode": "Modalità RPG Attiva",
+    "settings.rpgModeDesc": "Mostra livelli, XP, forzieri e statistiche.",
+    "settings.pushNotif": "Notifiche Push",
+    "settings.pushNotifDesc": "Avvisi di partite e inviti ai clan.",
+    "settings.distance": "Unità di Distanza",
+    "settings.distanceDesc": "Per trovare eventi vicini.",
+    "settings.logout": "Esci",
+    "themes.light": "Chiaro",
+    "themes.dark": "Scuro",
+    "themes.neon": "Neon",
+    "themes.nature": "Natura",
+    "themes.ocean": "Oceano",
+    "nav.events": "Eventi",
+    "nav.sports": "Sport",
+    "nav.map": "Mappa",
+    "nav.friends": "Amici",
+    "nav.profile": "Profilo",
+    "nav.clans": "Clan",
+    "profile.rpgActive": "Modalità RPG Attiva",
+    "profile.level": "Livello",
+    "profile.xpPoints": "Punti Esperienza",
+    "profile.achievements": "Obiettivi",
+    "profile.progress": "Progresso",
+    "profile.stats": "Stats",
+    "profile.inventory": "Forziere",
+    "profile.history": "Cronologia",
+    "profile.logout": "Esci",
+    "profile.editProfile": "Modifica Profilo",
+    "events.joinEvent": "Unisciti alla Partita",
+    "events.createEvent": "Crea Evento",
+    "events.noEvents": "Nessun evento disponibile",
+    "events.search": "Cerca eventi...",
+    "events.participants": "Partecipanti",
+    "events.registerClan": "Iscrivere il mio Clan",
+    "clans.title": "Clan",
+    "clans.createClan": "Crea Clan",
+    "clans.joinClan": "Unisciti a un Clan",
+    "clans.myClan": "Il mio Clan",
+    "clans.captain": "Capitano",
+    "clans.members": "Membri",
+    "common.back": "Indietro",
+    "common.save": "Salva",
+    "common.cancel": "Annulla",
+    "common.loading": "Caricamento...",
+    "common.error": "Errore",
+    "common.success": "Successo!",
+    "common.search": "Cerca...",
+    "common.noResults": "Nessun risultato"
+  },
+  de: {
+    "settings.title": "Einstellungen",
+    "settings.aesthetics": "App-Ästhetik",
+    "settings.language": "Sprache",
+    "settings.gamePrefs": "Spieleinstellungen",
+    "settings.rpgMode": "RPG-Modus Aktiv",
+    "settings.rpgModeDesc": "Zeigt Level, XP, Truhen und Stats an.",
+    "settings.pushNotif": "Push-Benachrichtigungen",
+    "settings.pushNotifDesc": "Spielbenachrichtigungen und Clan-Einladungen.",
+    "settings.distance": "Entfernungseinheit",
+    "settings.distanceDesc": "Um Ereignisse in der Nähe zu finden.",
+    "settings.logout": "Abmelden",
+    "themes.light": "Hell",
+    "themes.dark": "Dunkel",
+    "themes.neon": "Neon",
+    "themes.nature": "Natur",
+    "themes.ocean": "Ozean",
+    "nav.events": "Ereignisse",
+    "nav.sports": "Sport",
+    "nav.map": "Karte",
+    "nav.friends": "Freunde",
+    "nav.profile": "Profil",
+    "nav.clans": "Clans",
+    "profile.rpgActive": "RPG-Modus Aktiv",
+    "profile.level": "Level",
+    "profile.xpPoints": "Erfahrungspunkte",
+    "profile.achievements": "Erfolge",
+    "profile.progress": "Fortschritt",
+    "profile.stats": "Stats",
+    "profile.inventory": "Truhe",
+    "profile.history": "Verlauf",
+    "profile.logout": "Abmelden",
+    "profile.editProfile": "Profil Bearbeiten",
+    "events.joinEvent": "Spiel beitreten",
+    "events.createEvent": "Ereignis erstellen",
+    "events.noEvents": "Keine Ereignisse verfügbar",
+    "events.search": "Suche...",
+    "events.participants": "Teilnehmer",
+    "events.registerClan": "Meinen Clan anmelden",
+    "clans.title": "Clans",
+    "clans.createClan": "Clan erstellen",
+    "clans.joinClan": "Clan beitreten",
+    "clans.myClan": "Mein Clan",
+    "clans.captain": "Kapitän",
+    "clans.members": "Mitglieder",
+    "common.back": "Zurück",
+    "common.save": "Speichern",
+    "common.cancel": "Abbrechen",
+    "common.loading": "Laden...",
+    "common.error": "Fehler",
+    "common.success": "Erfolg!",
+    "common.search": "Suchen...",
+    "common.noResults": "Keine Ergebnisse"
+  }
+};
+const SettingsContext = createContext({
+  language: "es",
+  setLanguage: () => {
+  },
+  theme: "light",
+  setTheme: () => {
+  },
+  rpgMode: true,
+  setRpgMode: () => {
+  },
+  notifications: true,
+  setNotifications: () => {
+  },
+  unit: "km",
+  setUnit: () => {
+  },
+  t: (key) => key
+});
+function SettingsProvider({ children }) {
+  const [language, setLanguageState] = useState("es");
+  const [theme, setThemeState] = useState("light");
+  const [rpgMode, setRpgModeState] = useState(true);
+  const [notifications, setNotificationsState] = useState(true);
+  const [unit, setUnitState] = useState("km");
+  useEffect(() => {
+    const savedLang = localStorage.getItem("app-language");
+    if (savedLang && translations[savedLang]) setLanguageState(savedLang);
+    const savedTheme = localStorage.getItem("app-theme");
+    if (savedTheme) setThemeState(savedTheme);
+    const savedRpg = localStorage.getItem("app-rpg");
+    if (savedRpg !== null) setRpgModeState(savedRpg !== "false");
+    const savedNotif = localStorage.getItem("app-notifications");
+    if (savedNotif !== null) setNotificationsState(savedNotif !== "false");
+    const savedUnit = localStorage.getItem("app-unit");
+    if (savedUnit) setUnitState(savedUnit);
+  }, []);
+  useEffect(() => {
+    const html = document.documentElement;
+    html.classList.remove("dark", "theme-neon", "theme-nature", "theme-ocean");
+    if (theme === "dark") html.classList.add("dark");
+    else if (theme !== "light") html.classList.add(`theme-${theme}`);
+    localStorage.setItem("app-theme", theme);
+  }, [theme]);
+  const setLanguage = (lang) => {
+    setLanguageState(lang);
+    localStorage.setItem("app-language", lang);
+  };
+  const setTheme = (t2) => {
+    setThemeState(t2);
+  };
+  const setRpgMode = (val) => {
+    setRpgModeState(val);
+    localStorage.setItem("app-rpg", val.toString());
+  };
+  const setNotifications = (val) => {
+    setNotificationsState(val);
+    localStorage.setItem("app-notifications", val.toString());
+  };
+  const setUnit = (val) => {
+    setUnitState(val);
+    localStorage.setItem("app-unit", val);
+  };
+  const t = (key) => {
+    return translations[language]?.[key] ?? translations["es"][key] ?? key;
+  };
+  return /* @__PURE__ */ jsx(SettingsContext.Provider, { value: { language, setLanguage, theme, setTheme, rpgMode, setRpgMode, notifications, setNotifications, unit, setUnit, t }, children });
+}
+function useSettings() {
+  return useContext(SettingsContext);
+}
 const sizeMap = {
   sm: "h-8 w-8 text-xs",
   md: "h-10 w-10 text-sm",
@@ -1410,6 +1840,7 @@ function MapScreen({
   onNavigateToComments,
   onNavigateToProfile
 }) {
+  const { t } = useSettings();
   const [active, setActive] = useState("Todos");
   const [selectedSport, setSelectedSport] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
@@ -1606,7 +2037,7 @@ function MapScreen({
                 }
               },
               className: `snap-center shrink-0 whitespace-nowrap rounded-3xl px-6 py-3.5 text-sm font-black tracking-wide shadow-xl transition-all border-2 ${isActive ? "bg-primary text-secondary border-primary scale-[1.02]" : "bg-background/95 text-secondary border-transparent hover:bg-background backdrop-blur-md"}`,
-              children: s
+              children: s === "Todos" ? t("events.all") : s
             },
             s
           );
@@ -1627,9 +2058,9 @@ function MapScreen({
             onChange: (e) => setDistanceLevel(e.target.value),
             className: "bg-transparent outline-none cursor-pointer font-black",
             children: [
-              /* @__PURE__ */ jsx("option", { value: "Cerca", children: "Cerca (≤ 5km)" }),
-              /* @__PURE__ */ jsx("option", { value: "Medio", children: "Medio (≤ 15km)" }),
-              /* @__PURE__ */ jsx("option", { value: "Cualquier distancia", children: "Cualquier distancia" })
+              /* @__PURE__ */ jsx("option", { value: "Cerca", children: t("map.distanceNear", "Cerca (≤ 5km)") }),
+              /* @__PURE__ */ jsx("option", { value: "Medio", children: t("map.distanceMedium", "Medio (≤ 15km)") }),
+              /* @__PURE__ */ jsx("option", { value: "Cualquier distancia", children: t("map.distanceAny", "Cualquier distancia") })
             ]
           }
         ) })
@@ -1679,9 +2110,9 @@ function MapScreen({
         }
       ),
       /* @__PURE__ */ jsxs("div", { className: "mt-5 space-y-3", children: [
-        /* @__PURE__ */ jsx("h4", { className: "text-[10px] font-bold uppercase tracking-wider text-muted-foreground", children: "Partidos programados" }),
+        /* @__PURE__ */ jsx("h4", { className: "text-[10px] font-bold uppercase tracking-wider text-muted-foreground", children: t("map.scheduledMatches", "Partidos programados") }),
         (() => {
-          if (selectedCancha.lat == null || selectedCancha.lng == null) return /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: "Coordenadas no disponibles." });
+          if (selectedCancha.lat == null || selectedCancha.lng == null) return /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: t("map.coordsNotAvailable", "Coordenadas no disponibles.") });
           const canchaEvents = filteredEvents.filter((e) => {
             if (e.lat == null || isNaN(e.lat) || e.lng == null || isNaN(e.lng)) return false;
             const diffLat = Math.abs(e.lat - selectedCancha.lat);
@@ -1872,6 +2303,12 @@ function EventDetailScreen({
   const [hostProfile, setHostProfile] = useState(null);
   const [myCaptainedClans, setMyCaptainedClans] = useState([]);
   const [registeringClan, setRegisteringClan] = useState(false);
+  const [showClanMemberSelectModal, setShowClanMemberSelectModal] = useState(false);
+  const [clanToJoin, setClanToJoin] = useState(null);
+  const [selectableClanMembers, setSelectableClanMembers] = useState([]);
+  const [selectedClanMemberIds, setSelectedClanMemberIds] = useState([]);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const renderAvatar = (username, sizeClass = "h-10 w-10", explicitAvatarUrl) => {
     const isCurrentUser = currentUser?.email === username || currentUser?.user_metadata?.full_name === username;
     const url = isCurrentUser ? currentUserAvatar || explicitAvatarUrl : explicitAvatarUrl;
@@ -1962,35 +2399,61 @@ function EventDetailScreen({
     const members = clan.clan_members.filter((m) => m.status === "approved");
     const emptySpots2 = Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
     if (members.length > emptySpots2) {
-      alert(`El evento solo tiene ${emptySpots2} cupos y tu clan tiene ${members.length} miembros.`);
+      setClanToJoin(clan);
+      setSelectableClanMembers(members);
+      setSelectedClanMemberIds([]);
+      setShowClanMemberSelectModal(true);
       setRegisteringClan(false);
       return;
     }
+    await executeClanJoin(clan, members);
+  }
+  async function executeClanJoin(clan, members) {
+    setRegisteringClan(true);
     try {
       const { data: profiles } = await supabase.from("profiles").select("id, username").in("id", members.map((m) => m.user_id));
       if (!profiles) throw new Error("No profiles found");
-      const insertData = profiles.map((p) => ({
+      const existingUsernames = participants.map((p) => p.user_username);
+      const insertData = profiles.filter((p) => !existingUsernames.includes(p.username)).map((p) => ({
         event_id: event.id,
         user_username: p.username,
         status: "aceptado",
-        // Clanes se aprueban automáticamente o entran como pendientes? "con un solo clic" implies direct or pending. Let's make it aceptado for immediate join.
         clan_id: clan.id
-        // Guardamos clan_id para saber que entraron juntos y pintar la camisa
       }));
+      if (insertData.length === 0) {
+        alert("Todos los miembros seleccionados ya están inscritos en este evento");
+        setRegisteringClan(false);
+        return;
+      }
       const { error } = await supabase.from("event_participants").insert(insertData);
       if (error) {
-        if (error.code === "23505") alert("Algunos miembros del clan ya están inscritos en este evento");
+        if (error.code === "23505") alert("Algunos miembros ya están inscritos en este evento");
         else throw error;
       } else {
         setShowSuccess(true);
+        setShowClanMemberSelectModal(false);
         fetchParticipants();
         setTimeout(() => setShowSuccess(false), 2e3);
       }
     } catch (err) {
       console.error(err);
-      alert("Error al inscribir al clan");
+      alert("Error al inscribir al clan: " + (err.message || JSON.stringify(err)));
     }
     setRegisteringClan(false);
+  }
+  async function handleDeleteEvent() {
+    if (!currentUser || !isHost) return;
+    setDeleting(true);
+    try {
+      await supabase.from("event_participants").delete().eq("event_id", event.id);
+      const { error } = await supabase.from("events").delete().eq("id", event.id);
+      if (error) throw error;
+      setShowDeleteConfirm(false);
+      onBack();
+    } catch (err) {
+      alert("Error al eliminar el evento: " + err.message);
+    }
+    setDeleting(false);
   }
   async function handleAction(participantId, status) {
     if (!currentUser?.email || currentUser.email !== event.host && currentUser.email !== event.hostName) {
@@ -2362,14 +2825,27 @@ function EventDetailScreen({
             ] })
           ] })
         ] }),
-        isHost ? /* @__PURE__ */ jsx(
-          "button",
-          {
-            disabled: true,
-            className: "ml-auto flex-1 rounded-2xl py-3.5 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center",
-            children: "Eres el organizador 👑"
-          }
-        ) : isUserApproved ? /* @__PURE__ */ jsx(
+        isHost ? /* @__PURE__ */ jsxs("div", { className: "ml-auto flex flex-col gap-2 flex-1", children: [
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              disabled: true,
+              className: "w-full rounded-2xl py-3 text-sm font-bold bg-primary text-secondary cursor-default select-none shadow-soft text-center",
+              children: "Eres el organizador 👑"
+            }
+          ),
+          /* @__PURE__ */ jsxs(
+            "button",
+            {
+              onClick: () => setShowDeleteConfirm(true),
+              className: "w-full rounded-2xl py-3 text-sm font-black bg-rose-500/10 text-rose-500 border border-rose-500/30 hover:bg-rose-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2",
+              children: [
+                /* @__PURE__ */ jsx(Trash2, { size: 14 }),
+                "Eliminar Evento"
+              ]
+            }
+          )
+        ] }) : isUserApproved ? /* @__PURE__ */ jsx(
           "button",
           {
             disabled: joining,
@@ -2516,7 +2992,100 @@ function EventDetailScreen({
           )
         ] })
       ] }) });
-    })()
+    })(),
+    showDeleteConfirm && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[70] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm", children: /* @__PURE__ */ jsxs("div", { className: "bg-background p-6 rounded-3xl border border-rose-500/30 w-full max-w-sm shadow-pop relative overflow-hidden animate-in zoom-in-95 duration-200", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-tr from-rose-500/5 to-transparent pointer-events-none" }),
+      /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col items-center text-center gap-4", children: [
+        /* @__PURE__ */ jsx("div", { className: "h-16 w-16 rounded-full bg-rose-500/15 border border-rose-500/30 flex items-center justify-center", children: /* @__PURE__ */ jsx(Trash2, { size: 28, className: "text-rose-500" }) }),
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx("h3", { className: "text-xl font-black text-secondary", children: "¿Eliminar Evento?" }),
+          /* @__PURE__ */ jsxs("p", { className: "text-sm text-muted-foreground mt-1.5 leading-relaxed", children: [
+            "Esta acción eliminará ",
+            /* @__PURE__ */ jsxs("span", { className: "font-bold text-secondary", children: [
+              '"',
+              event.title,
+              '"'
+            ] }),
+            " de forma permanente. Todos los participantes serán removidos y no habrá forma de revertirlo."
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "w-full flex gap-3 pt-2", children: [
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: () => setShowDeleteConfirm(false),
+              disabled: deleting,
+              className: "flex-1 py-3.5 rounded-2xl bg-muted text-muted-foreground font-bold text-sm hover:bg-muted/80 transition-all",
+              children: "Cancelar"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              onClick: handleDeleteEvent,
+              disabled: deleting,
+              className: "flex-1 py-3.5 rounded-2xl bg-rose-500 text-white font-black text-sm hover:bg-rose-600 active:scale-95 transition-all disabled:opacity-60 flex items-center justify-center gap-2",
+              children: deleting ? /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+                /* @__PURE__ */ jsx(Trash2, { size: 14 }),
+                " Eliminar"
+              ] })
+            }
+          )
+        ] })
+      ] })
+    ] }) }),
+    showClanMemberSelectModal && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm", children: /* @__PURE__ */ jsxs("div", { className: "bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col shadow-pop relative overflow-hidden", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-tr from-primary/5 to-transparent pointer-events-none" }),
+      /* @__PURE__ */ jsx("h3", { className: "text-lg font-black text-secondary mb-1", children: "Seleccionar Miembros" }),
+      /* @__PURE__ */ jsxs("p", { className: "text-xs text-muted-foreground mb-4", children: [
+        "El evento tiene ",
+        Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length),
+        " cupos. Selecciona quiénes participarán."
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto space-y-2 relative z-10", children: selectableClanMembers.map((m) => {
+        const isSelected = selectedClanMemberIds.includes(m.user_id);
+        return /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => {
+              if (isSelected) {
+                setSelectedClanMemberIds(selectedClanMemberIds.filter((id) => id !== m.user_id));
+              } else {
+                const emptySpots2 = Math.max(0, event.spots - participants.filter((p) => p.status === "approved" || p.status === "aceptado" || p.status === "aprobado" || !p.status).length);
+                if (selectedClanMemberIds.length >= emptySpots2) {
+                  alert(`Solo puedes seleccionar hasta ${emptySpots2} miembros.`);
+                  return;
+                }
+                setSelectedClanMemberIds([...selectedClanMemberIds, m.user_id]);
+              }
+            },
+            className: `w-full flex items-center justify-between p-3 rounded-2xl border transition-all ${isSelected ? "border-primary bg-primary/10" : "border-border bg-card"}`,
+            children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+                renderAvatar(m.profiles?.username || "Usuario", "h-8 w-8", m.profiles?.avatar_url),
+                /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate max-w-[150px]", children: m.profiles?.username?.split("@")[0] })
+              ] }),
+              /* @__PURE__ */ jsx("div", { className: `h-5 w-5 rounded-md flex items-center justify-center border ${isSelected ? "bg-primary border-primary text-secondary" : "border-muted-foreground/30"}`, children: isSelected && /* @__PURE__ */ jsx(Check, { size: 12, strokeWidth: 3 }) })
+            ]
+          },
+          m.id
+        );
+      }) }),
+      /* @__PURE__ */ jsxs("div", { className: "mt-4 flex gap-2 relative z-10", children: [
+        /* @__PURE__ */ jsx("button", { onClick: () => setShowClanMemberSelectModal(false), className: "flex-1 bg-muted text-muted-foreground py-3 rounded-2xl font-bold text-sm", children: "Cancelar" }),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            disabled: selectedClanMemberIds.length === 0 || registeringClan,
+            onClick: () => {
+              executeClanJoin(clanToJoin, selectableClanMembers.filter((m) => selectedClanMemberIds.includes(m.user_id)));
+            },
+            className: "flex-1 gradient-primary text-secondary py-3 rounded-2xl font-black text-sm disabled:opacity-50 flex justify-center items-center",
+            children: registeringClan ? /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }) : `Unirse (${selectedClanMemberIds.length})`
+          }
+        )
+      ] })
+    ] }) })
   ] });
 }
 const getFormattedProfile$1 = (p) => {
@@ -2559,6 +3128,162 @@ const getFormattedProfile$1 = (p) => {
     is_organizer: p.is_organizer || false
   };
 };
+function SettingsModal({ isOpen, onClose, onLogout }) {
+  const { language, setLanguage, theme, setTheme, rpgMode, setRpgMode, notifications, setNotifications, unit, setUnit, t } = useSettings();
+  if (!isOpen) return null;
+  const themes = [
+    { id: "light", icon: Sun, color: "bg-[#f8f9fa] border-gray-300 text-gray-800" },
+    { id: "dark", icon: Moon, color: "bg-[#111827] border-gray-600 text-gray-100" },
+    { id: "neon", icon: Sparkles, color: "bg-[#2e0536] border-[#ff00a0] text-[#ff00a0]" },
+    { id: "nature", icon: Palette, color: "bg-[#f0fdf4] border-[#22c55e] text-[#15803d]" },
+    { id: "ocean", icon: Palette, color: "bg-[#eff6ff] border-[#3b82f6] text-[#1d4ed8]" }
+  ];
+  const languages = [
+    { id: "es", name: "Español", flag: "🇪🇸" },
+    { id: "en", name: "English", flag: "🇺🇸" },
+    { id: "pt", name: "Português", flag: "🇧🇷" },
+    { id: "fr", name: "Français", flag: "🇫🇷" },
+    { id: "it", name: "Italiano", flag: "🇮🇹" },
+    { id: "de", name: "Deutsch", flag: "🇩🇪" }
+  ];
+  const themeNames = {
+    light: t("themes.light"),
+    dark: t("themes.dark"),
+    neon: t("themes.neon"),
+    nature: t("themes.nature"),
+    ocean: t("themes.ocean")
+  };
+  return /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-[100] flex flex-col justify-end bg-background/80 backdrop-blur-sm animate-in fade-in duration-200", children: /* @__PURE__ */ jsxs("div", { className: "bg-card w-full max-h-[90vh] rounded-t-3xl border-t border-border shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.3)] flex flex-col animate-in slide-in-from-bottom-full duration-300", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between p-5 border-b border-border shrink-0", children: [
+      /* @__PURE__ */ jsx("h2", { className: "text-lg font-black text-secondary", children: t("settings.title") }),
+      /* @__PURE__ */ jsx(
+        "button",
+        {
+          onClick: onClose,
+          className: "p-2 rounded-full bg-muted text-muted-foreground hover:text-secondary hover:bg-muted/80 transition-colors",
+          children: /* @__PURE__ */ jsx(X, { size: 20 })
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "p-5 overflow-y-auto flex-1 space-y-8 pb-24", children: [
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx(Palette, { size: 14, className: "text-primary" }),
+          " ",
+          t("settings.aesthetics")
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "flex gap-3 overflow-x-auto pb-2 snap-x", children: themes.map((themeObj) => /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => setTheme(themeObj.id),
+            className: `relative snap-center shrink-0 w-24 h-24 rounded-2xl border-2 flex flex-col items-center justify-center gap-2 transition-all active:scale-95 ${themeObj.color} ${theme === themeObj.id ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105" : "opacity-60"}`,
+            children: [
+              /* @__PURE__ */ jsx(themeObj.icon, { size: 24 }),
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-black", children: themeNames[themeObj.id] }),
+              theme === themeObj.id && /* @__PURE__ */ jsx("span", { className: "absolute top-1.5 right-1.5 bg-primary text-secondary rounded-full p-0.5 shadow-sm", children: /* @__PURE__ */ jsx(Check, { size: 10, strokeWidth: 4 }) })
+            ]
+          },
+          themeObj.id
+        )) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx(Globe, { size: 14, className: "text-primary" }),
+          " ",
+          t("settings.language")
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: "grid grid-cols-2 gap-2", children: languages.map((l) => /* @__PURE__ */ jsxs(
+          "button",
+          {
+            onClick: () => setLanguage(l.id),
+            className: `flex items-center justify-between p-3 rounded-xl border transition-all ${language === l.id ? "bg-primary/10 border-primary/30 text-primary font-bold shadow-soft" : "bg-muted/30 border-border/50 text-secondary hover:bg-muted/50"}`,
+            children: [
+              /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-2 text-sm", children: [
+                /* @__PURE__ */ jsx("span", { className: "text-lg leading-none", children: l.flag }),
+                l.name
+              ] }),
+              language === l.id && /* @__PURE__ */ jsx(Check, { size: 14 })
+            ]
+          },
+          l.id
+        )) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: "space-y-3", children: [
+        /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
+          /* @__PURE__ */ jsx(Zap, { size: 14, className: "text-primary" }),
+          " ",
+          t("settings.gamePrefs")
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border", children: [
+          /* @__PURE__ */ jsxs("div", { className: "p-4 flex items-center justify-between gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+              /* @__PURE__ */ jsx("h4", { className: "text-sm font-bold text-secondary", children: t("settings.rpgMode") }),
+              /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-0.5 leading-snug", children: t("settings.rpgModeDesc") })
+            ] }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setRpgMode(!rpgMode),
+                className: `w-12 h-6 rounded-full transition-all duration-300 relative shrink-0 ${rpgMode ? "bg-primary shadow-pop" : "bg-muted-foreground/30"}`,
+                children: /* @__PURE__ */ jsx("span", { className: `block w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm transition-all duration-300 ${rpgMode ? "left-[calc(100%-1.375rem)]" : "left-0.5"}` })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "p-4 flex items-center justify-between gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+              /* @__PURE__ */ jsx("h4", { className: "text-sm font-bold text-secondary", children: t("settings.pushNotif") }),
+              /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-0.5 leading-snug", children: t("settings.pushNotifDesc") })
+            ] }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setNotifications(!notifications),
+                className: `w-12 h-6 rounded-full transition-all duration-300 relative shrink-0 ${notifications ? "bg-primary shadow-pop" : "bg-muted-foreground/30"}`,
+                children: /* @__PURE__ */ jsx("span", { className: `block w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm transition-all duration-300 ${notifications ? "left-[calc(100%-1.375rem)]" : "left-0.5"}` })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "p-4 flex items-center justify-between gap-4", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
+              /* @__PURE__ */ jsx("h4", { className: "text-sm font-bold text-secondary", children: t("settings.distance") }),
+              /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground mt-0.5 leading-snug", children: t("settings.distanceDesc") })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex bg-muted rounded-lg p-1 shrink-0", children: [
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  onClick: () => setUnit("km"),
+                  className: `px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "km" ? "bg-card text-secondary shadow-sm" : "text-muted-foreground"}`,
+                  children: "Km"
+                }
+              ),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  onClick: () => setUnit("mi"),
+                  className: `px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "mi" ? "bg-card text-secondary shadow-sm" : "text-muted-foreground"}`,
+                  children: "Mi"
+                }
+              )
+            ] })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx("section", { className: "pt-2", children: /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: onLogout,
+          className: "w-full flex items-center justify-center gap-2 p-3.5 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive font-black active:scale-95 transition-all hover:bg-destructive/20",
+          children: [
+            /* @__PURE__ */ jsx(LogOut, { size: 16 }),
+            " ",
+            t("settings.logout")
+          ]
+        }
+      ) })
+    ] })
+  ] }) });
+}
 function ProfileScreen({
   onEdit,
   onSelectEvent,
@@ -2580,9 +3305,11 @@ function ProfileScreen({
     carisma,
     unlockedAchievements
   } = useCurrentUser();
+  const { t, rpgMode } = useSettings();
   const [activeTab, setActiveTab] = useState("stats");
   const [copiedCode, setCopiedCode] = useState(null);
   const [showClaimSuccess, setShowClaimSuccess] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const handleLogout = async () => {
     const { supabase: supabase2 } = await Promise.resolve().then(() => supabase$1);
     await supabase2.auth.signOut();
@@ -2774,7 +3501,7 @@ function ProfileScreen({
     ] });
   }
   return /* @__PURE__ */ jsxs("div", { className: "h-full overflow-y-auto bg-background pb-28", children: [
-    /* @__PURE__ */ jsxs("div", { className: "relative bg-background px-5 pb-24 pt-12 text-secondary", children: [
+    /* @__PURE__ */ jsxs("div", { className: "relative bg-background px-5 pb-6 pt-12 text-secondary", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
         /* @__PURE__ */ jsx(
           "button",
@@ -2784,15 +3511,23 @@ function ProfileScreen({
             children: /* @__PURE__ */ jsx(Edit3, { size: 16 })
           }
         ),
-        /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft", children: [
+        rpgMode && /* @__PURE__ */ jsxs("div", { className: "inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft", children: [
           /* @__PURE__ */ jsx(Sparkles, { size: 11, className: "animate-pulse" }),
-          " Modo RPG Activo"
+          " ",
+          t("profile.rpgActive")
         ] }),
-        /* @__PURE__ */ jsx("button", { className: "grid h-10 w-10 place-items-center rounded-full bg-muted text-secondary", children: /* @__PURE__ */ jsx(Settings, { size: 16 }) })
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setShowSettings(true),
+            className: "grid h-10 w-10 place-items-center rounded-full bg-muted text-secondary hover:bg-muted/80 transition-colors",
+            children: /* @__PURE__ */ jsx(Settings, { size: 16 })
+          }
+        )
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "mt-6 flex flex-col sm:flex-row items-center gap-4", children: [
         /* @__PURE__ */ jsxs("div", { className: "relative shrink-0", children: [
-          /* @__PURE__ */ jsx("div", { className: `h-22 w-22 rounded-full overflow-hidden p-1 bg-card ${borderClass}`, children: avatarUrl ? /* @__PURE__ */ jsx(
+          /* @__PURE__ */ jsx("div", { className: `h-22 w-22 rounded-full overflow-hidden p-1 bg-card ${rpgMode ? borderClass : "ring-4 ring-primary/20"}`, children: avatarUrl ? /* @__PURE__ */ jsx(
             "img",
             {
               src: avatarUrl,
@@ -2800,7 +3535,7 @@ function ProfileScreen({
               className: "h-full w-full rounded-full object-cover shadow-inner"
             }
           ) : /* @__PURE__ */ jsx("div", { className: "grid h-full w-full place-items-center rounded-full bg-secondary text-2xl font-black text-primary shadow-inner", children: initials }) }),
-          /* @__PURE__ */ jsx("div", { className: "absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-black text-secondary ring-2 ring-card shadow-pop", children: level })
+          rpgMode && /* @__PURE__ */ jsx("div", { className: "absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-black text-secondary ring-2 ring-card shadow-pop", children: level })
         ] }),
         /* @__PURE__ */ jsxs("div", { className: "flex-1 text-center sm:text-left space-y-1.5", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center gap-2", children: [
@@ -2811,7 +3546,7 @@ function ProfileScreen({
                 " Organizador"
               ] })
             ] }),
-            /* @__PURE__ */ jsx(
+            rpgMode && /* @__PURE__ */ jsx(
               "span",
               {
                 className: `inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`,
@@ -2819,113 +3554,117 @@ function ProfileScreen({
               }
             )
           ] }),
-          /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-semibold", children: rpgClass }),
+          rpgMode && /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground font-semibold", children: rpgClass }),
           /* @__PURE__ */ jsx("p", { className: "text-[10px] text-muted-foreground/70", children: email })
         ] })
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border", children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-xs font-black text-secondary", children: [
-          /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1.5", children: [
-            /* @__PURE__ */ jsx(Trophy, { size: 13, className: "text-primary animate-pulse" }),
-            " Puntos de Experiencia"
+      rpgMode && /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsxs("div", { className: "mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-xs font-black text-secondary", children: [
+            /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1.5", children: [
+              /* @__PURE__ */ jsx(Trophy, { size: 13, className: "text-primary animate-pulse" }),
+              " ",
+              t("profile.xpPoints")
+            ] }),
+            /* @__PURE__ */ jsxs("span", { className: "font-mono text-muted-foreground", children: [
+              xp,
+              " / ",
+              xpNeeded,
+              " XP"
+            ] })
           ] }),
-          /* @__PURE__ */ jsxs("span", { className: "font-mono text-muted-foreground", children: [
-            xp,
-            " / ",
-            xpNeeded,
-            " XP"
+          /* @__PURE__ */ jsx("div", { className: "h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border", children: /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "h-full rounded-full bg-primary transition-all duration-500 ease-out",
+              style: { width: `${xpPercentage}%` }
+            }
+          ) }),
+          /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center text-[9px] text-muted-foreground font-semibold", children: [
+            /* @__PURE__ */ jsxs("span", { children: [
+              t("profile.level"),
+              " ",
+              level
+            ] }),
+            /* @__PURE__ */ jsxs("span", { children: [
+              "+",
+              xpNeeded - xp,
+              " XP para Nivel ",
+              level + 1
+            ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsx("div", { className: "h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border", children: /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs(
           "div",
           {
-            className: "h-full rounded-full bg-primary transition-all duration-500 ease-out",
-            style: { width: `${xpPercentage}%` }
-          }
-        ) }),
-        /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-center text-[9px] text-muted-foreground font-semibold", children: [
-          /* @__PURE__ */ jsxs("span", { children: [
-            "Nivel ",
-            level
-          ] }),
-          /* @__PURE__ */ jsxs("span", { children: [
-            "+",
-            xpNeeded - xp,
-            " XP para Nivel ",
-            level + 1
-          ] })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxs(
-        "div",
-        {
-          onClick: () => setActiveTab("achievements"),
-          className: "mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in",
-          children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
-              /* @__PURE__ */ jsx("div", { className: "h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md", children: /* @__PURE__ */ jsx("div", { className: "h-full w-full rounded-full bg-background flex items-center justify-center text-lg", children: "🏆" }) }),
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
-                  /* @__PURE__ */ jsx("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary", children: "Logros Obtenidos" }),
-                  /* @__PURE__ */ jsxs("span", { className: "text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20", children: [
-                    unlockedCount,
-                    " / ",
-                    ACHIEVEMENTS.length
-                  ] })
-                ] }),
-                /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground", children: [
-                  /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
-                    "🏆 ",
-                    /* @__PURE__ */ jsx("span", { className: "text-secondary", children: platinumCount })
+            onClick: () => setActiveTab("achievements"),
+            className: "mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in",
+            children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsx("div", { className: "h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md", children: /* @__PURE__ */ jsx("div", { className: "h-full w-full rounded-full bg-background flex items-center justify-center text-lg", children: "🏆" }) }),
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", children: [
+                    /* @__PURE__ */ jsx("h4", { className: "text-xs font-black uppercase tracking-wider text-secondary", children: t("profile.achievements") }),
+                    /* @__PURE__ */ jsxs("span", { className: "text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20", children: [
+                      unlockedCount,
+                      " / ",
+                      ACHIEVEMENTS.length
+                    ] })
                   ] }),
-                  /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
-                    "🥇 ",
-                    /* @__PURE__ */ jsx("span", { className: "text-secondary", children: goldCount })
-                  ] }),
-                  /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
-                    "🥈 ",
-                    /* @__PURE__ */ jsx("span", { className: "text-secondary", children: silverCount })
-                  ] }),
-                  /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
-                    "🥉 ",
-                    /* @__PURE__ */ jsx("span", { className: "text-secondary", children: bronzeCount })
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground", children: [
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
+                      "🏆 ",
+                      /* @__PURE__ */ jsx("span", { className: "text-secondary", children: platinumCount })
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
+                      "🥇 ",
+                      /* @__PURE__ */ jsx("span", { className: "text-secondary", children: goldCount })
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
+                      "🥈 ",
+                      /* @__PURE__ */ jsx("span", { className: "text-secondary", children: silverCount })
+                    ] }),
+                    /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-0.5", children: [
+                      "🥉 ",
+                      /* @__PURE__ */ jsx("span", { className: "text-secondary", children: bronzeCount })
+                    ] })
                   ] })
                 ] })
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-              /* @__PURE__ */ jsxs("div", { className: "text-right", children: [
-                /* @__PURE__ */ jsxs("span", { className: "text-xs font-black text-secondary", children: [
-                  completionPercentage,
-                  "%"
-                ] }),
-                /* @__PURE__ */ jsx("p", { className: "text-[8px] text-muted-foreground uppercase font-black tracking-wider", children: "Progreso" })
               ] }),
-              /* @__PURE__ */ jsx(ArrowRight, { size: 13, className: "text-muted-foreground" })
-            ] })
-          ]
-        }
-      )
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxs("div", { className: "text-right", children: [
+                  /* @__PURE__ */ jsxs("span", { className: "text-xs font-black text-secondary", children: [
+                    completionPercentage,
+                    "%"
+                  ] }),
+                  /* @__PURE__ */ jsx("p", { className: "text-[8px] text-muted-foreground uppercase font-black tracking-wider", children: t("profile.progress") })
+                ] }),
+                /* @__PURE__ */ jsx(ArrowRight, { size: 13, className: "text-muted-foreground" })
+              ] })
+            ]
+          }
+        )
+      ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "px-5 -mt-8", children: /* @__PURE__ */ jsx("div", { className: "grid grid-cols-4 gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border", children: [
-      { id: "stats", label: "Stats", icon: Shield },
-      { id: "achievements", label: "Logros", icon: Award },
-      { id: "inventory", label: "Cofre", icon: Trophy },
-      { id: "history", label: "Aventuras", icon: BookOpen }
-    ].map((t) => {
-      const ActiveIcon = t.icon;
-      const isSelected = activeTab === t.id;
+    /* @__PURE__ */ jsx("div", { className: "px-5", children: /* @__PURE__ */ jsx("div", { className: `grid ${rpgMode ? "grid-cols-4" : "grid-cols-2"} gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border`, children: [
+      { id: "stats", label: t("profile.stats"), icon: Shield, show: true },
+      { id: "achievements", label: t("profile.achievements").slice(0, 6), icon: Award, show: rpgMode },
+      { id: "inventory", label: t("profile.inventory"), icon: Trophy, show: rpgMode },
+      { id: "history", label: t("profile.history"), icon: BookOpen, show: true }
+    ].filter((tab) => tab.show).map((tab) => {
+      const ActiveIcon = tab.icon;
+      const isSelected = activeTab === tab.id;
       return /* @__PURE__ */ jsxs(
         "button",
         {
-          onClick: () => setActiveTab(t.id),
+          onClick: () => setActiveTab(tab.id),
           className: `flex flex-col items-center gap-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wide transition-all active:scale-95 ${isSelected ? "bg-secondary text-primary shadow-sm" : "text-muted-foreground hover:bg-muted/50 hover:text-secondary"}`,
           children: [
             /* @__PURE__ */ jsx(ActiveIcon, { size: 13, className: isSelected ? "text-primary" : "" }),
-            t.label
+            tab.label
           ]
         },
-        t.id
+        tab.id
       );
     }) }) }),
     /* @__PURE__ */ jsxs("div", { className: "mt-6 px-5", children: [
@@ -3213,10 +3952,18 @@ function ProfileScreen({
         className: "flex w-full items-center justify-center gap-2 rounded-2xl bg-red-500/10 py-4 text-xs font-black uppercase tracking-wider text-red-500 transition-colors hover:bg-red-500/20",
         children: [
           /* @__PURE__ */ jsx(LogOut, { size: 16 }),
-          "Cerrar Sesión del Héroe"
+          t("profile.logout")
         ]
       }
-    ) })
+    ) }),
+    /* @__PURE__ */ jsx(
+      SettingsModal,
+      {
+        isOpen: showSettings,
+        onClose: () => setShowSettings(false),
+        onLogout: handleLogout
+      }
+    )
   ] });
 }
 function StatCard({
@@ -4878,9 +5625,9 @@ const getSportImage$1 = (sportId) => {
   if (sportId === 4) return padelCourt;
   return runningTrail;
 };
-const tabs = ["Próximos", "Mis Partidos", "Solicitudes"];
 function MyEventsScreen({ onSelect, onNavigateToProfile }) {
-  const [tab, setTab] = useState("Próximos");
+  const { t } = useSettings();
+  const [tab, setTab] = useState(0);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [availableEvents, setAvailableEvents] = useState([]);
@@ -4994,8 +5741,8 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
     /* @__PURE__ */ jsx(CouponPopup, {}),
     /* @__PURE__ */ jsxs("header", { className: "flex items-center justify-between px-5 pb-3 pt-12", children: [
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Mis eventos" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tu agenda deportiva" })
+        /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: t("nav.events") }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: t("events.search") })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
         /* @__PURE__ */ jsxs(
@@ -5008,26 +5755,30 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
             style: { boxShadow: "0 4px 18px rgba(99,102,241,0.45)" },
             children: [
               /* @__PURE__ */ jsx(Plus, { size: 15, strokeWidth: 2.5 }),
-              "Crear partido"
+              t("events.createEvent")
             ]
           }
         ),
         /* @__PURE__ */ jsx(UserAvatar, { size: "md", className: "cursor-pointer", onClick: onNavigateToProfile })
       ] })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur", children: /* @__PURE__ */ jsx("div", { className: "flex gap-1 rounded-full bg-muted p-1", children: tabs.map((t) => {
-      if (t === "Solicitudes" && createdEvents.length === 0) return null;
+    /* @__PURE__ */ jsx("div", { className: "sticky top-0 z-10 bg-background/80 px-5 pb-3 pt-1 backdrop-blur", children: /* @__PURE__ */ jsx("div", { className: "flex gap-1 rounded-full bg-muted p-1", children: [
+      t("events.tab.upcoming") || "Próximos",
+      t("events.tab.mine") || "Mis Partidos",
+      t("events.tab.requests") || "Solicitudes"
+    ].map((label, index) => {
+      if (index === 2 && createdEvents.length === 0) return null;
       return /* @__PURE__ */ jsx(
         "button",
         {
-          onClick: () => setTab(t),
-          className: `flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === t ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"}`,
-          children: t
+          onClick: () => setTab(index),
+          className: `flex-1 rounded-full py-2 text-xs font-semibold transition-all ${tab === index ? "bg-card text-secondary shadow-soft" : "text-muted-foreground"}`,
+          children: label
         },
-        t
+        label
       );
     }) }) }),
-    tab === "Solicitudes" ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
+    tab === 2 ? /* @__PURE__ */ jsx("div", { className: "space-y-3 px-5 pt-3", children: loading ? /* @__PURE__ */ jsx("div", { className: "flex justify-center p-5", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary" }) }) : pendingRequests.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-sm text-muted-foreground p-5", children: "No tienes solicitudes pendientes nuevas" }) : pendingRequests.map((req) => {
       const isPremium = req.profiles?.is_premium;
       const sportName = req.events?.sport_id === 1 ? "Fútbol" : req.events?.sport_id === 2 ? "Tenis" : req.events?.sport_id === 3 ? "Golf" : req.events?.sport_id === 4 ? "Pádel" : "Evento";
       return /* @__PURE__ */ jsxs("div", { className: "rounded-2xl bg-card p-4 shadow-soft", children: [
@@ -5094,11 +5845,11 @@ function MyEventsScreen({ onSelect, onNavigateToProfile }) {
         ] })
       ] }, req.id);
     }) }) : /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-3 gap-4 px-5 pt-3", children: [
-      tab === "Próximos" && /* @__PURE__ */ jsxs(Fragment, { children: [
+      tab === 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
         availableEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
-        availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No hay eventos disponibles" })
+        availableEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: t("events.noEvents") })
       ] }),
-      tab === "Mis Partidos" && /* @__PURE__ */ jsxs(Fragment, { children: [
+      tab === 1 && /* @__PURE__ */ jsxs(Fragment, { children: [
         myEvents.map((e) => /* @__PURE__ */ jsx(EventCard, { event: e, onClick: () => onSelect(e) }, e.id)),
         myEvents.length === 0 && /* @__PURE__ */ jsx("div", { className: "w-full text-center text-sm text-muted-foreground p-5 mt-10", children: "No tienes partidos próximos programados" })
       ] })
@@ -5426,6 +6177,7 @@ function FriendsScreen({
   onSelectEvent
 }) {
   const { user, addXp, incrementCarisma } = useCurrentUser();
+  const { t } = useSettings();
   const [activeSubTab, setActiveSubTab] = useState("tinder");
   const [searchQuery, setSearchQuery] = useState("");
   const [candidates, setCandidates] = useState([]);
@@ -5694,8 +6446,8 @@ function FriendsScreen({
     ] }),
     /* @__PURE__ */ jsxs("header", { className: "flex items-center justify-between px-5 pb-3 pt-12", children: [
       /* @__PURE__ */ jsxs("div", { children: [
-        /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Amigos" }),
-        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Conecta con jugadores afines" })
+        /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: t("friends.title") }),
+        /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: t("friends.findPlayers") })
       ] }),
       /* @__PURE__ */ jsx(
         "button",
@@ -5725,7 +6477,8 @@ function FriendsScreen({
           className: `flex-1 rounded-full py-2 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeSubTab === "friends" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`,
           children: [
             /* @__PURE__ */ jsx(UserCheck, { size: 14, className: activeSubTab === "friends" ? "text-primary" : "" }),
-            "Mis amigos (",
+            t("friends.myFriends"),
+            " (",
             friends.length,
             ")"
           ]
@@ -5792,21 +6545,25 @@ function FriendsScreen({
       ] })
     ] }) : /* @__PURE__ */ jsxs("div", { className: "rounded-3xl border border-dashed border-border bg-card p-8 text-center space-y-4 max-w-sm w-full py-12", children: [
       /* @__PURE__ */ jsx("div", { className: "text-5xl", children: "⚔️" }),
-      /* @__PURE__ */ jsx("h3", { className: "text-base font-black text-secondary", children: "¡Eso es todo por hoy!" }),
-      /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: "Has revisado todos los candidatos cercanos en Caracas. Configura más deportes favoritos en tu perfil para encontrar nuevos partidos y amigos." }),
-      /* @__PURE__ */ jsx(
+      /* @__PURE__ */ jsx("h4", { className: "text-lg font-black text-secondary", children: t("friends.noFriends") }),
+      /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground mt-2 max-w-[250px] mx-auto", children: t("friends.findPlayersDescription") }),
+      /* @__PURE__ */ jsxs(
         "button",
         {
           onClick: () => setCurrentIndex(0),
           className: "rounded-2xl bg-secondary hover:bg-secondary/90 text-primary py-3 px-6 text-xs font-black uppercase tracking-wider transition-all active:scale-95 shadow-soft border border-primary/20",
-          children: "Reiniciar Lista 🔄"
+          children: [
+            t("friends.resetList"),
+            " 🔄"
+          ]
         }
       )
     ] }) }) : /* @__PURE__ */ jsxs("div", { className: "space-y-5 pb-8", children: [
       receivedRequests.length > 0 && /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
         /* @__PURE__ */ jsxs("h3", { className: "text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5", children: [
           /* @__PURE__ */ jsx(UserPlus, { size: 14, className: "text-primary" }),
-          " Solicitudes Recibidas"
+          " ",
+          t("friends.requests")
         ] }),
         /* @__PURE__ */ jsx("div", { className: "space-y-2", children: receivedRequests.map((req) => /* @__PURE__ */ jsxs("div", { className: "rounded-2xl border border-border bg-card p-3 shadow-soft flex items-center justify-between gap-3 animate-in slide-in-from-top duration-300", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 min-w-0", children: [
@@ -5816,7 +6573,8 @@ function FriendsScreen({
                 /* @__PURE__ */ jsx("span", { className: "text-sm font-bold text-secondary truncate", children: req.name }),
                 /* @__PURE__ */ jsxs("span", { className: "text-xs text-muted-foreground", children: [
                   req.age,
-                  " años"
+                  " ",
+                  t("common.years")
                 ] })
               ] }),
               /* @__PURE__ */ jsx("div", { className: "text-[10px] text-primary font-extrabold", children: req.location }),
@@ -5829,7 +6587,7 @@ function FriendsScreen({
               {
                 onClick: () => handleRejectRequest(req),
                 className: "grid h-8 w-8 place-items-center rounded-xl bg-muted/60 text-muted-foreground hover:bg-rose-500/10 hover:text-rose-500 transition-colors",
-                title: "Rechazar",
+                title: t("friends.reject"),
                 children: /* @__PURE__ */ jsx(UserX, { size: 15 })
               }
             ),
@@ -5838,7 +6596,7 @@ function FriendsScreen({
               {
                 onClick: () => handleAcceptRequest(req),
                 className: "grid h-8 w-8 place-items-center rounded-xl gradient-primary text-secondary shadow-sm",
-                title: "Aceptar Match",
+                title: t("friends.accept"),
                 children: /* @__PURE__ */ jsx(UserCheck, { size: 15 })
               }
             )
@@ -5905,6 +6663,7 @@ function ClansScreen({
   onSelectEvent
 }) {
   const { user } = useCurrentUser();
+  const { t } = useSettings();
   const [activeTab, setActiveTab] = useState("mis-clanes");
   const [clans, setClans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -5913,8 +6672,11 @@ function ClansScreen({
   const [loadingMembers, setLoadingMembers] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [friends, setFriends] = useState([]);
-  const [createData, setCreateData] = useState({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a" });
+  const [createData, setCreateData] = useState({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
   const [creating, setCreating] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editData, setEditData] = useState({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
+  const [editing, setEditing] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
   const [joining, setJoining] = useState(false);
   useEffect(() => {
@@ -5955,19 +6717,23 @@ function ClansScreen({
     }
     setLoadingMembers(false);
   }
+  function generateInviteCode() {
+    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
   async function handleCreateClan(e) {
     e.preventDefault();
-    if (!user?.id) return;
+    if (!user?.id || !createData.name) return;
     setCreating(true);
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
     try {
+      const code = generateInviteCode();
       const { data: clan, error } = await supabase.from("clans").insert({
         name: createData.name,
         sport: createData.sport,
         captain_id: user.id,
         invite_code: code,
         hex_primary: createData.primary,
-        hex_secondary: createData.secondary
+        hex_secondary: createData.secondary,
+        description: createData.description
       }).select().single();
       if (error) throw error;
       await supabase.from("clan_members").insert({
@@ -5976,7 +6742,7 @@ function ClansScreen({
         status: "approved"
       });
       alert("¡Clan creado exitosamente!");
-      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a" });
+      setCreateData({ name: "", sport: "Pádel", primary: "#32CD32", secondary: "#1a1a1a", description: "" });
       setActiveTab("mis-clanes");
       fetchMyClans();
     } catch (err) {
@@ -6050,6 +6816,51 @@ function ClansScreen({
       else alert("Error al añadir");
     }
   }
+  async function handleEditClan(e) {
+    e.preventDefault();
+    if (!selectedClan) return;
+    setEditing(true);
+    try {
+      const { error } = await supabase.from("clans").update({
+        name: editData.name,
+        sport: editData.sport,
+        hex_primary: editData.primary,
+        hex_secondary: editData.secondary,
+        description: editData.description
+      }).eq("id", selectedClan.id);
+      if (error) throw error;
+      alert("Clan actualizado");
+      setShowEditModal(false);
+      const updated = { ...selectedClan, name: editData.name, sport: editData.sport, hex_primary: editData.primary, hex_secondary: editData.secondary, description: editData.description };
+      setSelectedClan(updated);
+      setClans(clans.map((c) => c.id === updated.id ? updated : c));
+    } catch (err) {
+      alert("Error al editar: " + err.message);
+    }
+    setEditing(false);
+  }
+  async function handleRemoveMember(memberId) {
+    if (!confirm("¿Seguro que deseas eliminar a este miembro del clan?")) return;
+    try {
+      const { error } = await supabase.from("clan_members").delete().eq("id", memberId);
+      if (error) throw error;
+      fetchClanMembers(selectedClan.id);
+    } catch (err) {
+      alert("Error al eliminar: " + err.message);
+    }
+  }
+  async function handleLeaveClan() {
+    if (!user?.id || !selectedClan) return;
+    if (!confirm("¿Seguro que deseas salir de este clan?")) return;
+    try {
+      const { error } = await supabase.from("clan_members").delete().eq("clan_id", selectedClan.id).eq("user_id", user.id);
+      if (error) throw error;
+      setSelectedClan(null);
+      fetchMyClans();
+    } catch (err) {
+      alert("Error al salir del clan: " + err.message);
+    }
+  }
   if (selectedClan) {
     let pendingRequestsSection = function() {
       if (pendingMembers.length === 0) return null;
@@ -6089,7 +6900,27 @@ function ClansScreen({
               children: "🛡️"
             }
           ),
-          /* @__PURE__ */ jsx("h2", { className: "text-2xl font-black text-secondary mt-4 z-10", children: selectedClan.name }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 mt-4 z-10", children: [
+            /* @__PURE__ */ jsx("h2", { className: "text-2xl font-black text-secondary", children: selectedClan.name }),
+            isCaptain && /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => {
+                  setEditData({
+                    name: selectedClan.name,
+                    sport: selectedClan.sport,
+                    primary: selectedClan.hex_primary,
+                    secondary: selectedClan.hex_secondary,
+                    description: selectedClan.description || ""
+                  });
+                  setShowEditModal(true);
+                },
+                className: "grid h-8 w-8 place-items-center rounded-full bg-muted text-primary hover:bg-muted/80 transition-colors",
+                children: /* @__PURE__ */ jsx(Edit3, { size: 14 })
+              }
+            )
+          ] }),
+          selectedClan.description && /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground mt-1 z-10 text-center max-w-[280px]", children: selectedClan.description }),
           isCaptain && /* @__PURE__ */ jsxs("div", { className: "mt-2 text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 z-10", children: [
             "Código Invitación: ",
             /* @__PURE__ */ jsx("span", { className: "font-mono text-secondary", children: selectedClan.invite_code })
@@ -6132,20 +6963,40 @@ function ClansScreen({
           ] }),
           /* @__PURE__ */ jsx("div", { className: "space-y-2", children: loadingMembers ? /* @__PURE__ */ jsx("div", { className: "text-center py-4", children: /* @__PURE__ */ jsx(Loader2, { className: "animate-spin text-primary inline" }) }) : approvedMembers.map((m) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 bg-card p-3 rounded-2xl border border-border shadow-soft", children: [
             m.profiles?.avatar_url ? /* @__PURE__ */ jsx("img", { src: m.profiles.avatar_url, className: "w-10 h-10 rounded-full object-cover" }) : /* @__PURE__ */ jsx("div", { className: "w-10 h-10 rounded-full gradient-primary grid place-items-center font-bold text-secondary", children: m.profiles?.username?.substring(0, 2).toUpperCase() || "U" }),
-            /* @__PURE__ */ jsxs("div", { className: "flex-1", children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex-1 min-w-0", children: [
               /* @__PURE__ */ jsxs("div", { className: "text-sm font-bold text-secondary flex items-center gap-2", children: [
-                m.profiles?.full_name || m.profiles?.username?.split("@")[0],
-                m.user_id === selectedClan.captain_id && /* @__PURE__ */ jsx("span", { className: "text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase", children: "Capitán" })
+                /* @__PURE__ */ jsx("span", { className: "truncate", children: m.profiles?.full_name || m.profiles?.username?.split("@")[0] }),
+                m.user_id === selectedClan.captain_id && /* @__PURE__ */ jsx("span", { className: "text-[10px] bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded-full font-black uppercase shrink-0", children: "Capitán" })
               ] }),
               /* @__PURE__ */ jsxs("div", { className: "text-[10px] text-muted-foreground flex items-center gap-1", children: [
                 /* @__PURE__ */ jsx(Star, { size: 10, className: "fill-accent text-accent" }),
                 " ",
                 m.profiles?.rating || "5.0"
               ] })
-            ] })
+            ] }),
+            isCaptain && m.user_id !== selectedClan.captain_id && /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => handleRemoveMember(m.id),
+                className: "grid h-8 w-8 shrink-0 place-items-center rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 transition-colors",
+                title: "Eliminar miembro",
+                children: /* @__PURE__ */ jsx(Trash2, { size: 14 })
+              }
+            )
           ] }, m.id)) })
         ] })
       ] }),
+      !isCaptain && /* @__PURE__ */ jsx("div", { className: "px-5 pb-2", children: /* @__PURE__ */ jsxs(
+        "button",
+        {
+          onClick: handleLeaveClan,
+          className: "w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-500 font-black text-sm hover:bg-rose-500/20 transition-all active:scale-95",
+          children: [
+            /* @__PURE__ */ jsx(LogOut, { size: 16 }),
+            "Salir del Clan"
+          ]
+        }
+      ) }),
       showInviteModal && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4", children: /* @__PURE__ */ jsxs("div", { className: "bg-secondary p-5 rounded-3xl border border-border w-full max-w-sm max-h-[80vh] flex flex-col", children: [
         /* @__PURE__ */ jsx("h3", { className: "text-lg font-bold text-white mb-4", children: "Invitar Amigos" }),
         /* @__PURE__ */ jsx("div", { className: "flex-1 overflow-y-auto space-y-2", children: friends.length === 0 ? /* @__PURE__ */ jsx("div", { className: "text-center text-white/50 text-xs py-4", children: "No tienes amigos para invitar." }) : friends.map((f) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between bg-card p-3 rounded-2xl border border-border", children: [
@@ -6153,26 +7004,60 @@ function ClansScreen({
           /* @__PURE__ */ jsx("button", { onClick: () => handleInviteFriend(f.id), className: "bg-primary text-secondary text-xs font-black px-3 py-1.5 rounded-full", children: "Agregar" })
         ] }, f.id)) }),
         /* @__PURE__ */ jsx("button", { onClick: () => setShowInviteModal(false), className: "mt-4 w-full bg-muted text-muted-foreground py-3 rounded-2xl font-bold", children: "Cerrar" })
+      ] }) }),
+      showEditModal && /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4", children: /* @__PURE__ */ jsxs("div", { className: "bg-background p-5 rounded-3xl border border-border w-full max-w-sm max-h-[90vh] overflow-y-auto", children: [
+        /* @__PURE__ */ jsx("h3", { className: "text-lg font-bold text-secondary mb-4", children: "Editar Clan" }),
+        /* @__PURE__ */ jsxs("form", { onSubmit: handleEditClan, className: "space-y-4", children: [
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-secondary uppercase", children: "Nombre" }),
+            /* @__PURE__ */ jsx("input", { required: true, value: editData.name, onChange: (e) => setEditData({ ...editData, name: e.target.value }), className: "mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary" })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-secondary uppercase", children: "Deporte" }),
+            /* @__PURE__ */ jsx("select", { value: editData.sport, onChange: (e) => setEditData({ ...editData, sport: e.target.value }), className: "mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary", children: ["Running", "Senderismo", "Pádel", "Tenis", "Vóleibol", "Fútbol", "Golf"].map((s) => /* @__PURE__ */ jsx("option", { value: s, children: s }, s)) })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { children: [
+            /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-secondary uppercase", children: "Descripción" }),
+            /* @__PURE__ */ jsx("textarea", { value: editData.description, onChange: (e) => setEditData({ ...editData, description: e.target.value }), className: "mt-1 w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-secondary outline-none focus:border-primary", placeholder: "Describe tu clan...", rows: 3 })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-secondary uppercase", children: "Color Primario" }),
+              /* @__PURE__ */ jsx("input", { type: "color", value: editData.primary, onChange: (e) => setEditData({ ...editData, primary: e.target.value }), className: "mt-1 w-full h-10 rounded-xl cursor-pointer" })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { children: [
+              /* @__PURE__ */ jsx("label", { className: "text-xs font-bold text-secondary uppercase", children: "Color Secundario" }),
+              /* @__PURE__ */ jsx("input", { type: "color", value: editData.secondary, onChange: (e) => setEditData({ ...editData, secondary: e.target.value }), className: "mt-1 w-full h-10 rounded-xl cursor-pointer" })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "pt-2 flex gap-2", children: [
+            /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setShowEditModal(false), className: "flex-1 py-3 rounded-xl bg-muted text-muted-foreground font-bold text-sm", children: "Cancelar" }),
+            /* @__PURE__ */ jsx("button", { type: "submit", disabled: editing, className: "flex-1 py-3 rounded-xl bg-primary text-secondary font-bold text-sm disabled:opacity-50 flex justify-center items-center", children: editing ? /* @__PURE__ */ jsx(Loader2, { size: 16, className: "animate-spin" }) : "Guardar" })
+          ] })
+        ] })
       ] }) })
     ] });
   }
   return /* @__PURE__ */ jsxs("div", { className: "h-full flex flex-col bg-background relative overflow-hidden pb-24", children: [
     /* @__PURE__ */ jsxs("header", { className: "px-5 pt-12 pb-3", children: [
-      /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: "Clanes" }),
+      /* @__PURE__ */ jsx("h1", { className: "text-2xl font-bold text-secondary", children: t("clans.title") }),
       /* @__PURE__ */ jsx("p", { className: "text-sm text-muted-foreground", children: "Tu equipo permanente" })
     ] }),
     /* @__PURE__ */ jsx("div", { className: "px-5 pb-4", children: /* @__PURE__ */ jsxs("div", { className: "flex gap-1 rounded-full bg-muted p-1 border border-border/40", children: [
       /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("mis-clanes"), className: `flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "mis-clanes" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`, children: [
         /* @__PURE__ */ jsx(Shield, { size: 14, className: activeTab === "mis-clanes" ? "text-primary" : "" }),
-        " Mis Clanes"
+        " ",
+        t("clans.myClan")
       ] }),
       /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("crear"), className: `flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "crear" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`, children: [
         /* @__PURE__ */ jsx(Plus, { size: 14, className: activeTab === "crear" ? "text-primary" : "" }),
-        " Crear Clan"
+        " ",
+        t("clans.createClan")
       ] }),
       /* @__PURE__ */ jsxs("button", { onClick: () => setActiveTab("unirse"), className: `flex-1 rounded-full py-2.5 text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${activeTab === "unirse" ? "bg-card text-secondary shadow-soft border border-border/20" : "text-muted-foreground"}`, children: [
         /* @__PURE__ */ jsx(Search, { size: 14, className: activeTab === "unirse" ? "text-primary" : "" }),
-        " Unirse"
+        " ",
+        t("clans.joinClan").split(" ")[0]
       ] })
     ] }) }),
     /* @__PURE__ */ jsxs("div", { className: "flex-1 overflow-y-auto px-5", children: [
@@ -6508,13 +7393,14 @@ function InputField({
   ] });
 }
 function BottomNav({ current, onChange }) {
+  const { t } = useSettings();
   const items = [
-    { id: "events", label: "Eventos", icon: CalendarCheck },
-    { id: "map", label: "Explorar", icon: Map$1 },
-    { id: "friends", label: "Amigos", icon: Users },
-    { id: "clans", label: "Clanes", icon: Shield },
-    { id: "sports", label: "Deportes", icon: Trophy },
-    { id: "profile", label: "Perfil", icon: User }
+    { id: "events", label: t("nav.events"), icon: CalendarCheck },
+    { id: "map", label: t("nav.map"), icon: Map$1 },
+    { id: "friends", label: t("nav.friends"), icon: Users },
+    { id: "clans", label: t("nav.clans"), icon: Shield },
+    { id: "sports", label: t("nav.sports"), icon: Trophy },
+    { id: "profile", label: t("nav.profile"), icon: User }
   ];
   const Btn = ({ id, label, Icon }) => {
     const active = current === id;
@@ -6540,7 +7426,7 @@ function BottomNav({ current, onChange }) {
   return /* @__PURE__ */ jsx("div", { className: "absolute inset-x-0 bottom-0 z-30 pointer-events-none flex justify-center pb-0 lg:pb-6", children: /* @__PURE__ */ jsx("nav", { className: "pointer-events-auto w-full lg:max-w-md lg:rounded-2xl glass border-t lg:border border-border shadow-pop", children: /* @__PURE__ */ jsx("div", { className: "flex items-end px-2 pb-[calc(8px+env(safe-area-inset-bottom))] lg:pb-2 pt-1 lg:pt-2", children: items.map((it) => /* @__PURE__ */ jsx(Btn, { id: it.id, label: it.label, Icon: it.icon }, it.id)) }) }) });
 }
 function Index() {
-  return /* @__PURE__ */ jsx(UserProvider, { children: /* @__PURE__ */ jsx(AppContent, {}) });
+  return /* @__PURE__ */ jsx(SettingsProvider, { children: /* @__PURE__ */ jsx(UserProvider, { children: /* @__PURE__ */ jsx(AppContent, {}) }) });
 }
 function AppContent() {
   const {

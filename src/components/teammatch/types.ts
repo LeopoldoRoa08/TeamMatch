@@ -34,6 +34,7 @@ export interface Clan {
   matches_won: number;
   matches_lost: number;
   created_at: string;
+  description?: string;
 }
 
 export interface ClanMember {
