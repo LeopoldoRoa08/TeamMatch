@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { X, Moon, Sun, Monitor, Globe, Bell, Shield, MapPin, Zap, LogOut, Check, Palette, Sparkles, ChevronRight } from "lucide-react";
+import { t } from "@/lib/i18n";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -42,17 +43,16 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);
     localStorage.setItem("app-language", lang);
-    // En un proyecto real aquí llamaríamos a i18n.changeLanguage(lang)
   };
 
   if (!isOpen) return null;
 
   const themes = [
-    { id: "light", name: "Claro", icon: Sun, color: "bg-[#f8f9fa] border-gray-200 text-gray-800" },
-    { id: "dark", name: "Oscuro", icon: Moon, color: "bg-[#111827] border-gray-700 text-gray-200" },
-    { id: "neon", name: "Neón", icon: Sparkles, color: "bg-[#2e0536] border-[#ff00a0] text-[#ff00a0]" },
-    { id: "nature", name: "Naturaleza", icon: Palette, color: "bg-[#f0fdf4] border-[#22c55e] text-[#15803d]" },
-    { id: "ocean", name: "Océano", icon: Palette, color: "bg-[#eff6ff] border-[#3b82f6] text-[#1d4ed8]" },
+    { id: "light", name: t("themes.light", language), icon: Sun, color: "bg-[#f8f9fa] border-gray-200 text-gray-800" },
+    { id: "dark", name: t("themes.dark", language), icon: Moon, color: "bg-[#111827] border-gray-700 text-gray-200" },
+    { id: "neon", name: t("themes.neon", language), icon: Sparkles, color: "bg-[#2e0536] border-[#ff00a0] text-[#ff00a0]" },
+    { id: "nature", name: t("themes.nature", language), icon: Palette, color: "bg-[#f0fdf4] border-[#22c55e] text-[#15803d]" },
+    { id: "ocean", name: t("themes.ocean", language), icon: Palette, color: "bg-[#eff6ff] border-[#3b82f6] text-[#1d4ed8]" },
   ];
 
   const languages = [
@@ -70,7 +70,7 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
         
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h2 className="text-lg font-black text-secondary">Configuración</h2>
+          <h2 className="text-lg font-black text-secondary">{t("settings.title", language)}</h2>
           <button onClick={onClose} className="p-2 rounded-full bg-muted text-muted-foreground hover:text-secondary hover:bg-muted/80 transition-colors">
             <X size={20} />
           </button>
@@ -82,18 +82,18 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
           {/* Estética / Tema */}
           <section className="space-y-3">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Palette size={14} className="text-primary" /> Estética de la App
+              <Palette size={14} className="text-primary" /> {t("settings.aesthetics", language)}
             </h3>
             <div className="flex gap-3 overflow-x-auto pb-2 snap-x hide-scrollbar">
-              {themes.map((t) => (
+              {themes.map((themeObj) => (
                 <button
-                  key={t.id}
-                  onClick={() => setTheme(t.id)}
-                  className={`snap-center shrink-0 w-24 aspect-square rounded-2xl border-2 flex flex-col items-center justify-center gap-2 transition-all active:scale-95 ${t.color} ${theme === t.id ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'opacity-70 grayscale-[0.3]'}`}
+                  key={themeObj.id}
+                  onClick={() => setTheme(themeObj.id)}
+                  className={`snap-center shrink-0 w-24 aspect-square rounded-2xl border-2 flex flex-col items-center justify-center gap-2 transition-all active:scale-95 ${themeObj.color} ${theme === themeObj.id ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'opacity-70 grayscale-[0.3]'}`}
                 >
-                  <t.icon size={24} />
-                  <span className="text-[10px] font-black">{t.name}</span>
-                  {theme === t.id && (
+                  <themeObj.icon size={24} />
+                  <span className="text-[10px] font-black">{themeObj.name}</span>
+                  {theme === themeObj.id && (
                     <div className="absolute top-2 right-2 bg-primary text-secondary rounded-full p-0.5 shadow-sm">
                       <Check size={10} strokeWidth={4} />
                     </div>
@@ -106,7 +106,7 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
           {/* Idioma */}
           <section className="space-y-3">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Globe size={14} className="text-primary" /> Idioma
+              <Globe size={14} className="text-primary" /> {t("settings.language", language)}
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {languages.map((l) => (
@@ -131,20 +131,20 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
           {/* Preferencias de Juego */}
           <section className="space-y-3">
             <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Zap size={14} className="text-primary" /> Preferencias de Juego
+              <Zap size={14} className="text-primary" /> {t("settings.gamePrefs", language)}
             </h3>
             <div className="rounded-2xl border border-border bg-card overflow-hidden">
               <div className="p-4 flex items-center justify-between border-b border-border">
                 <div>
-                  <h4 className="text-sm font-bold text-secondary">Modo RPG Activo</h4>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Muestra niveles, XP, cofres y stats. Apágalo para una vista más deportiva.</p>
+                  <h4 className="text-sm font-bold text-secondary">{t("settings.rpgMode", language)}</h4>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 max-w-[200px]">{t("settings.rpgModeDesc", language)}</p>
                 </div>
                 <button 
                   onClick={() => {
                     setRpgMode(!rpgMode);
                     localStorage.setItem("app-rpg", (!rpgMode).toString());
                   }}
-                  className={`w-12 h-6 rounded-full transition-colors relative ${rpgMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative shrink-0 ${rpgMode ? 'bg-primary' : 'bg-muted-foreground/30'}`}
                 >
                   <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all shadow-sm ${rpgMode ? 'left-6' : 'left-0.5'}`} />
                 </button>
@@ -152,12 +152,12 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
 
               <div className="p-4 flex items-center justify-between border-b border-border">
                 <div>
-                  <h4 className="text-sm font-bold text-secondary">Notificaciones Push</h4>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Avisos de partidos e invitaciones de clanes.</p>
+                  <h4 className="text-sm font-bold text-secondary">{t("settings.pushNotif", language)}</h4>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 max-w-[200px]">{t("settings.pushNotifDesc", language)}</p>
                 </div>
                 <button 
                   onClick={() => setNotifications(!notifications)}
-                  className={`w-12 h-6 rounded-full transition-colors relative ${notifications ? 'bg-primary' : 'bg-muted-foreground/30'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative shrink-0 ${notifications ? 'bg-primary' : 'bg-muted-foreground/30'}`}
                 >
                   <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all shadow-sm ${notifications ? 'left-6' : 'left-0.5'}`} />
                 </button>
@@ -165,10 +165,10 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
 
               <div className="p-4 flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-secondary">Unidad de Distancia</h4>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Para buscar eventos cercanos.</p>
+                  <h4 className="text-sm font-bold text-secondary">{t("settings.distance", language)}</h4>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 max-w-[200px]">{t("settings.distanceDesc", language)}</p>
                 </div>
-                <div className="flex bg-muted rounded-lg p-1">
+                <div className="flex bg-muted rounded-lg p-1 shrink-0">
                   <button 
                     onClick={() => setUnit("km")}
                     className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${unit === "km" ? 'bg-card text-secondary shadow-sm' : 'text-muted-foreground'}`}
@@ -192,7 +192,7 @@ export function SettingsModal({ isOpen, onClose, onLogout }: SettingsModalProps)
               onClick={onLogout}
               className="w-full flex items-center justify-center gap-2 p-3.5 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive font-black active:scale-95 transition-all"
             >
-              <LogOut size={16} /> Cerrar Sesión
+              <LogOut size={16} /> {t("settings.logout", language)}
             </button>
           </section>
 
