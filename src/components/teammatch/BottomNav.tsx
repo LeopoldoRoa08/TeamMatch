@@ -1,5 +1,6 @@
 import { Map, CalendarCheck, User, Trophy, Users, Shield } from "lucide-react";
 import type { Screen } from "./types-nav";
+import { useSettings } from "@/lib/SettingsContext";
 
 interface Props {
   current: Screen;
@@ -7,13 +8,15 @@ interface Props {
 }
 
 export function BottomNav({ current, onChange }: Props) {
+  const { t } = useSettings();
+
   const items: { id: Screen; label: string; icon: typeof Map }[] = [
-    { id: "events", label: "Eventos", icon: CalendarCheck },
-    { id: "map", label: "Explorar", icon: Map },
-    { id: "friends", label: "Amigos", icon: Users as any },
-    { id: "clans", label: "Clanes", icon: Shield as any },
-    { id: "sports", label: "Deportes", icon: Trophy as any },
-    { id: "profile", label: "Perfil", icon: User as any },
+    { id: "events", label: t("nav.events"), icon: CalendarCheck },
+    { id: "map", label: t("nav.map"), icon: Map },
+    { id: "friends", label: t("nav.friends"), icon: Users as any },
+    { id: "clans", label: t("nav.clans"), icon: Shield as any },
+    { id: "sports", label: t("nav.sports"), icon: Trophy as any },
+    { id: "profile", label: t("nav.profile"), icon: User as any },
   ];
 
   const Btn = ({ id, label, Icon }: { id: Screen; label: string; Icon: typeof Map }) => {

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { UserProvider, useCurrentUser } from "@/lib/UserContext";
+import { SettingsProvider } from "@/lib/SettingsContext";
 import { Sparkles, CheckCircle2, XCircle, Zap, X, Award } from "lucide-react";
 import { MapScreen } from "@/components/teammatch/MapScreen";
 import { EventDetailScreen } from "@/components/teammatch/EventDetailScreen";
@@ -38,9 +39,11 @@ type AppState = "checking" | "auth" | "app";
 
 function Index() {
   return (
-    <UserProvider>
-      <AppContent />
-    </UserProvider>
+    <SettingsProvider>
+      <UserProvider>
+        <AppContent />
+      </UserProvider>
+    </SettingsProvider>
   );
 }
 

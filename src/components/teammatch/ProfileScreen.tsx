@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useCurrentUser } from "@/lib/UserContext";
+import { useSettings } from "@/lib/SettingsContext";
 import { SettingsModal } from "./SettingsModal";
 import { ACHIEVEMENTS, type Achievement } from "./achievementsData";
 
@@ -49,6 +50,8 @@ export function ProfileScreen({
     carisma,
     unlockedAchievements,
   } = useCurrentUser();
+
+  const { t, rpgMode } = useSettings();
 
   const [activeTab, setActiveTab] = useState<"stats" | "inventory" | "history" | "achievements">("stats");
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -304,7 +307,7 @@ export function ProfileScreen({
             <Edit3 size={16} />
           </button>
           <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[11px] font-bold text-primary shadow-soft">
-            <Sparkles size={11} className="animate-pulse" /> Modo RPG Activo
+            <Sparkles size={11} className="animate-pulse" /> {t("profile.rpgActive")}
           </div>
           <button 
             onClick={() => setShowSettings(true)}
@@ -419,17 +422,17 @@ export function ProfileScreen({
       <div className="px-5">
         <div className="grid grid-cols-4 gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border">
           {[
-            { id: "stats", label: "Stats", icon: Shield },
-            { id: "achievements", label: "Logros", icon: Award },
-            { id: "inventory", label: "Cofre", icon: Trophy },
-            { id: "history", label: "Aventuras", icon: BookOpen },
-          ].map((t) => {
-            const ActiveIcon = t.icon;
-            const isSelected = activeTab === t.id;
+            { id: "stats", label: t("profile.stats"), icon: Shield },
+            { id: "achievements", label: t("profile.achievements").slice(0, 6), icon: Award },
+            { id: "inventory", label: t("profile.inventory"), icon: Trophy },
+            { id: "history", label: t("profile.history"), icon: BookOpen },
+          ].map((tab) => {
+            const ActiveIcon = tab.icon;
+            const isSelected = activeTab === tab.id;
             return (
               <button
-                key={t.id}
-                onClick={() => setActiveTab(t.id as any)}
+                              key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
                 className={`flex flex-col items-center gap-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wide transition-all active:scale-95 ${
                   isSelected
                     ? "bg-secondary text-primary shadow-sm"
@@ -437,7 +440,7 @@ export function ProfileScreen({
                 }`}
               >
                 <ActiveIcon size={13} className={isSelected ? "text-primary" : ""} />
-                {t.label}
+                {tab.label}
               </button>
             );
           })}
@@ -811,7 +814,7 @@ export function ProfileScreen({
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-500/10 py-4 text-xs font-black uppercase tracking-wider text-red-500 transition-colors hover:bg-red-500/20"
         >
           <LogOut size={16} />
-          Cerrar Sesión del Héroe
+          {t("profile.logout")}
         </button>
       </div>
 
