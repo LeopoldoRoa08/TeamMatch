@@ -74,6 +74,7 @@ interface UserContextValue {
     icon: string;
   } | null;
   clearAchievementNotification: () => void;
+  isPremium: boolean | null;
 }
 
 const UserContext = createContext<UserContextValue>({
@@ -101,6 +102,7 @@ const UserContext = createContext<UserContextValue>({
   unlockedAchievements: [],
   achievementNotification: null,
   clearAchievementNotification: () => {},
+  isPremium: null,
 });
 
 function getCouponForLevel(level: number): RpgCoupon | null {
@@ -296,6 +298,9 @@ function evaluateAchievements(
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const { rpgMode } = useSettings();
   const [user, setUser] = useState<any>(null);
+  const [dbIsPremium, setDbIsPremium] = useState<boolean | null>(null);
+  const [xp, setXp] = useState<number>(0);
+  const [level, setLevel] = useState<number>(1);
   const [xpNotification, setXpNotification] = useState<XpNotification | null>(null);
   const [eventNotification, setEventNotification] = useState<EventNotification | null>(null);
   const [achievementQueue, setAchievementQueue] = useState<Achievement[]>([]);
@@ -308,6 +313,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const previousStatuses = useRef<Record<number, string>>({});
   const isFirstFetch = useRef(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Sync state variables with user metadata when the user object changes
+  useEffect(() => {
+    if (user) {
+      setXp(user.user_metadata?.xp || 0);
+      setLevel(user.user_metadata?.level || 1);
+    }
+  }, [user]);
 
   const clearAchievementNotification = () => setAchievementNotification(null);
 
@@ -347,280 +360,78 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const initializeAndTrackUse = async (currentUser: any) => {
-    const wasCounted = sessionStorage.getItem("teammatch_session_counted");
-    const meta = currentUser?.user_metadata || {};
-    
-    // Synchronize to public.profiles table
     try {
-      await supabase.from("profiles").upsert({
-        id: currentUser.id,
-        username: currentUser.email || "",
-        full_name: meta.full_name || null,
-        avatar_url: meta.avatar_url || null,
-        rating: meta.rating || 4.80,
-        is_premium: meta.is_premium || false,
-        age: meta.age || null,
-        gender: meta.gender || null,
-        description: meta.description || null,
-        location: meta.location || null,
-        preferred_sports: meta.preferred_sports || null
-      });
-    } catch (e) {
-      console.error("Error upserting public profile:", e);
-    }
-    
-    // Si aún no inicializado, crear valores por defecto
-    const isBrandNew = meta.xp === undefined || meta.level === undefined;
+      // 1. Fetch profile first (strictly only the profiles table to avoid join errors if tables don't exist)
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select(`
+          id,
+          username,
+          full_name,
+          avatar_url,
+          rating,
+          is_premium,
+          age,
+          gender,
+          description,
+          location,
+          preferred_sports
+        `)
+        .eq("id", currentUser.id)
+        .maybeSingle();
 
-    if (isBrandNew) {
-      const initialMetadata = {
-        xp: 0,
-        level: 1,
-        use_count: 1,
-        coupons: [],
-        joined_events_count: 0,
-        created_events_count: 0,
-        xp_history: [
-          {
-            id: "init_" + Date.now(),
-            title: "Creación de Personaje 🎮",
-            xp: 0,
-            date: new Date().toLocaleDateString(),
-            type: "system",
-          },
-        ],
-        carisma: 0,
-        unlocked_achievements: [],
-      };
-      
-      const { data: { user: updatedUser } } = await supabase.auth.updateUser({
-        data: initialMetadata,
-      });
-      if (updatedUser) setUser(updatedUser);
-      sessionStorage.setItem("teammatch_session_counted", "true");
-      return;
-    }
-
-    // Si ya existe pero no se ha contado esta sesión, incrementar use_count
-    if (!wasCounted) {
-      sessionStorage.setItem("teammatch_session_counted", "true");
-      const currentUseCount = (meta.use_count || 0) + 1;
-      const currentXp = meta.xp || 0;
-      const currentLevel = meta.level || 1;
-      const xpGained = 10; // +10 XP por uso de la app
-
-      let newXp = currentXp + xpGained;
-      let newLevel = currentLevel;
-      let isLevelUp = false;
-
-      while (newXp >= newLevel * 100) {
-        newXp -= newLevel * 100;
-        newLevel += 1;
-        isLevelUp = true;
+      if (profileError) {
+        console.error("Error reading user profile on startup:", profileError.message);
       }
 
-      // 1. Inicializar coupons y otorgar el del 5to uso si corresponde
-      let newCoupons = [...(meta.coupons || [])];
-      let awardedCoupon: RpgCoupon | null = null;
-      if (currentUseCount >= 5 && !newCoupons.some((c: any) => c.code === "FIDELIDAD5")) {
-        awardedCoupon = {
-          id: "FIDELIDAD5",
-          code: "FIDELIDAD5",
-          title: "Pergamino de Fidelidad 📜",
-          discount: "$5 USD de Descuento",
-          description: "Otorgado automáticamente tras tu 5to uso de la app.",
-          date: new Date().toLocaleDateString(),
-          claimed: false,
-        };
-        newCoupons.push(awardedCoupon);
+      let premiumStatus = false;
+      let userXp = currentUser.user_metadata?.xp || 0;
+      let userLevel = currentUser.user_metadata?.level || 1;
+
+      if (profileData) {
+        // Read is_premium from profiles table directly as the primary source of truth
+        premiumStatus = profileData.is_premium ?? currentUser.user_metadata?.is_premium ?? false;
+      } else {
+        premiumStatus = currentUser.user_metadata?.is_premium ?? false;
       }
 
-      // 2. Inicializar el historial con la entrada del uso diario
-      let tempHistory = [
-        {
-          id: "use_" + Date.now(),
-          title: `Aventura Diaria (Uso #${currentUseCount}) ⚡`,
-          xp: xpGained,
-          date: new Date().toLocaleDateString(),
-          type: "use" as const,
-        },
-        ...(meta.xp_history || []),
-      ];
+      // 2. Resilient check for separate is_premium table (in try-catch so it won't crash if table doesn't exist)
+      try {
+        const { data: premiumTableData, error: premiumTableError } = await supabase
+          .from("is_premium")
+          .select("is_active")
+          .eq("user_id", currentUser.id)
+          .maybeSingle();
 
-      // 3. Evaluar logros desbloqueados por este uso (y cascada de nivel por su XP)
-      let tempXp = newXp;
-      let tempLevel = newLevel;
-      let tempUnlocked = [...(meta.unlocked_achievements || [])];
-      const allNewlyUnlocked: Achievement[] = [];
-
-      let hasNewUnlocks = true;
-      while (hasNewUnlocks) {
-        const stats = {
-          useCount: currentUseCount,
-          joinedEventsCount: meta.joined_events_count || 0,
-          createdEventsCount: meta.created_events_count || 0,
-          carisma: meta.carisma || 0,
-          level: tempLevel,
-          description: meta.description || "",
-          location: meta.location || "",
-          preferredSports: meta.preferred_sports || [],
-          fullName: meta.full_name || "",
-          age: meta.age || 0,
-          gender: meta.gender || "",
-          coupons: newCoupons,
-          xpHistory: tempHistory,
-        };
-
-        const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(tempUnlocked, stats);
-        if (newlyUnlocked.length > 0) {
-          allNewlyUnlocked.push(...newlyUnlocked);
-          tempUnlocked = updatedUnlocked;
-          
-          let achXp = 0;
-          newlyUnlocked.forEach(a => achXp += a.xpReward);
-          tempXp += achXp;
-          
-          while (tempXp >= tempLevel * 100) {
-            tempXp -= tempLevel * 100;
-            tempLevel += 1;
-            isLevelUp = true;
-          }
-        } else {
-          hasNewUnlocks = false;
+        if (!premiumTableError && premiumTableData) {
+          premiumStatus = premiumTableData.is_active;
         }
+      } catch (e) {
+        // Silent catch: table is_premium might not exist in this database schema
       }
 
-      newXp = tempXp;
-      newLevel = tempLevel;
+      // 3. Resilient check for separate user_level_progress table (in try-catch)
+      try {
+        const { data: progressData, error: progressError } = await supabase
+          .from("user_level_progress")
+          .select("xp, level")
+          .eq("user_id", currentUser.id)
+          .maybeSingle();
 
-      // Recompensa si sube de nivel por el uso diario o logros
-      if (isLevelUp) {
-        const levelCoupon = getCouponForLevel(newLevel);
-        if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
-          newCoupons.push(levelCoupon);
-          if (!awardedCoupon) awardedCoupon = levelCoupon;
+        if (!progressError && progressData) {
+          userXp = progressData.xp ?? userXp;
+          userLevel = progressData.level ?? userLevel;
         }
+      } catch (e) {
+        // Silent catch: table user_level_progress might not exist in this database schema
       }
 
-      const achievementHistoryEntries = allNewlyUnlocked.map((ach) => ({
-        id: "ach_" + ach.id + "_" + Date.now(),
-        title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
-        xp: ach.xpReward,
-        date: new Date().toLocaleDateString(),
-        type: "system" as const,
-      }));
-
-      // Unir los logros al historial
-      const finalHistory = [
-        ...achievementHistoryEntries,
-        ...tempHistory,
-      ];
-
-      const { data: { user: updatedUser } } = await supabase.auth.updateUser({
-        data: {
-          xp: newXp,
-          level: newLevel,
-          use_count: currentUseCount,
-          coupons: newCoupons,
-          xp_history: finalHistory,
-          unlocked_achievements: tempUnlocked,
-        },
-      });
-      if (updatedUser) setUser(updatedUser);
-
-      if (allNewlyUnlocked.length > 0) {
-        setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
-      }
-
-      // Gatillar notificación
-      setXpNotification({
-        xp: xpGained,
-        reason: `¡Uso diario #${currentUseCount} de la app!`,
-        isLevelUp,
-        newLevel: isLevelUp ? newLevel : undefined,
-        newCoupon: awardedCoupon,
-      });
-    } else {
-      // Si ya fue contado en esta sesión, sincronizar logros met-but-locked por si acaso
-      const currentUnlocked = meta.unlocked_achievements || [];
-      const stats = {
-        useCount: meta.use_count || 0,
-        joinedEventsCount: meta.joined_events_count || 0,
-        createdEventsCount: meta.created_events_count || 0,
-        carisma: meta.carisma || 0,
-        level: meta.level || 1,
-        description: meta.description || "",
-        location: meta.location || "",
-        preferredSports: meta.preferred_sports || [],
-        fullName: meta.full_name || "",
-        age: meta.age || 0,
-        gender: meta.gender || "",
-        coupons: meta.coupons || [],
-        xpHistory: meta.xp_history || [],
-      };
-
-      const { newlyUnlocked, updatedUnlocked } = evaluateAchievements(currentUnlocked, stats);
-      if (newlyUnlocked.length > 0) {
-        let tempXp = meta.xp || 0;
-        let tempLevel = meta.level || 1;
-        let isLevelUp = false;
-        
-        let achXp = 0;
-        newlyUnlocked.forEach(a => achXp += a.xpReward);
-        tempXp += achXp;
-        
-        while (tempXp >= tempLevel * 100) {
-          tempXp -= tempLevel * 100;
-          tempLevel += 1;
-          isLevelUp = true;
-        }
-
-        let newCoupons = [...(meta.coupons || [])];
-        let awardedCoupon: RpgCoupon | null = null;
-        if (isLevelUp) {
-          const levelCoupon = getCouponForLevel(tempLevel);
-          if (levelCoupon && !newCoupons.some((c: any) => c.code === levelCoupon.code)) {
-            newCoupons.push(levelCoupon);
-            awardedCoupon = levelCoupon;
-          }
-        }
-
-        const achievementHistoryEntries = newlyUnlocked.map((ach) => ({
-          id: "ach_" + ach.id + "_" + Date.now(),
-          title: `🏆 ¡Logro Desbloqueado: ${ach.title}!`,
-          xp: ach.xpReward,
-          date: new Date().toLocaleDateString(),
-          type: "system" as const,
-        }));
-
-        const newHistory = [
-          ...achievementHistoryEntries,
-          ...(meta.xp_history || []),
-        ];
-
-        const { data: { user: updatedUser } } = await supabase.auth.updateUser({
-          data: {
-            xp: tempXp,
-            level: tempLevel,
-            coupons: newCoupons,
-            unlocked_achievements: updatedUnlocked,
-            xp_history: newHistory,
-          },
-        });
-        if (updatedUser) setUser(updatedUser);
-
-        setAchievementQueue((prev) => [...prev, ...newlyUnlocked]);
-
-        if (isLevelUp) {
-          setXpNotification({
-            xp: achXp,
-            reason: "¡Hazaña lograda por tus logros desbloqueados!",
-            isLevelUp,
-            newLevel: tempLevel,
-            newCoupon: awardedCoupon,
-          });
-        }
-      }
+      setDbIsPremium(premiumStatus);
+      setXp(userXp);
+      setLevel(userLevel);
+    } catch (err) {
+      console.error("Error initializing session (read-only):", err);
+      setDbIsPremium(currentUser.user_metadata?.is_premium ?? false);
     }
   };
 
@@ -750,18 +561,32 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       },
     });
     if (updatedUser) setUser(updatedUser);
+    const isUserPremium = dbIsPremium || user?.user_metadata?.is_premium || false;
 
-    if (allNewlyUnlocked.length > 0) {
+    try {
+      await supabase.from("user_level_progress").upsert({
+        user_id: user.id,
+        xp: newXp,
+        level: newLevel,
+        updated_at: new Date().toISOString()
+      });
+    } catch (e) {
+      // Silencioso
+    }
+
+    if (isUserPremium && allNewlyUnlocked.length > 0) {
       setAchievementQueue((prev) => [...prev, ...allNewlyUnlocked]);
     }
 
-    setXpNotification({
-      xp: amount,
-      reason,
-      isLevelUp,
-      newLevel: isLevelUp ? newLevel : undefined,
-      newCoupon: awardedCoupon,
-    });
+    if (isUserPremium) {
+      setXpNotification({
+        xp: amount,
+        reason,
+        isLevelUp,
+        newLevel: isLevelUp ? newLevel : undefined,
+        newCoupon: awardedCoupon,
+      });
+    }
   };
 
   const claimCoupon = async (code: string) => {
@@ -995,8 +820,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         username: (updates.email || user.email || "").trim(),
         full_name: updates.name,
         avatar_url: updates.avatarUrl,
-        rating: user.user_metadata?.rating || 4.80,
-        is_premium: user.user_metadata?.is_premium || false,
         age: updates.age,
         gender: updates.gender,
         description: updates.description,
@@ -1163,8 +986,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const avatarUrl = user?.user_metadata?.avatar_url ?? null;
 
   // RPG stats extracted from metadata
-  const xp = user?.user_metadata?.xp || 0;
-  const level = user?.user_metadata?.level || 1;
   const useCount = user?.user_metadata?.use_count || 0;
   const coupons = user?.user_metadata?.coupons || [];
   const xpHistory = user?.user_metadata?.xp_history || [];
@@ -1281,6 +1102,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const isPremium = dbIsPremium;
+
   return (
     <UserContext.Provider
       value={{
@@ -1308,6 +1131,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         unlockedAchievements: user?.user_metadata?.unlocked_achievements || [],
         achievementNotification,
         clearAchievementNotification,
+        isPremium,
       }}
     >
       {children}

@@ -315,12 +315,9 @@ const translations: Record<Language, Record<string, string>> = {
     "map.error.denied": "Permiso de ubicación denegado",
     "map.error.unavailable": "Ubicación no disponible",
     "map.error.timeout": "Tiempo de espera agotado",
-    "sports.all": "Todos",
     "sports.title": "Deportes",
     "sports.football": "Fútbol",
     "sports.tennis": "Tenis",
-    "sports.golf": "Golf",
-    "sports.padel": "Pádel",
     "sports.other": "Otro",
     "common.close": "Cerrar",
     // CreateEventForm

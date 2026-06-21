@@ -49,6 +49,7 @@ export function ProfileScreen({
     claimCoupon,
     carisma,
     unlockedAchievements,
+    isPremium,
   } = useCurrentUser();
 
   const { t, rpgMode } = useSettings();
@@ -336,7 +337,7 @@ export function ProfileScreen({
               )}
             </div>
             {/* Level floating Badge */}
-            {rpgMode && (
+            {rpgMode && isPremium && (
               <div className="absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-black text-secondary ring-2 ring-card shadow-pop">
                 {level}
               </div>
@@ -352,8 +353,17 @@ export function ProfileScreen({
                     <Star size={9} className="fill-amber-500 text-amber-500" /> {t("profile.organizer") || "Organizador"}
                   </span>
                 )}
+                {isPremium ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[9px] px-2.5 py-0.5 font-black uppercase tracking-wider shadow-pop">
+                    👑 Premium
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-muted text-muted-foreground border border-border text-[9px] px-2.5 py-0.5 font-bold uppercase tracking-wider">
+                    Básico
+                  </span>
+                )}
               </h1>
-              {rpgMode && (
+              {rpgMode && isPremium && (
                 <span
                   className={`inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide w-fit mx-auto sm:mx-0 ${rarityColor}`}
                 >
@@ -362,79 +372,103 @@ export function ProfileScreen({
               )}
             </div>
             
-            {rpgMode && <p className="text-xs text-muted-foreground font-semibold">{rpgClass}</p>}
+            {rpgMode && isPremium && <p className="text-xs text-muted-foreground font-semibold">{rpgClass}</p>}
             <p className="text-[10px] text-muted-foreground/70">{email}</p>
           </div>
         </div>
 
         {rpgMode && (
-          <>
-            {/* Experiencia Progress Bar */}
-            <div className="mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border">
-              <div className="flex items-center justify-between text-xs font-black text-foreground">
-                <span className="flex items-center gap-1.5">
-                  <Trophy size={13} className="text-primary animate-pulse" /> {t("profile.xpPoints")}
-                </span>
-                <span className="font-mono text-muted-foreground">{xp} / {xpNeeded} XP</span>
+          isPremium ? (
+            <>
+              {/* Experiencia Progress Bar */}
+              <div className="mt-8 space-y-1.5 bg-muted/50 p-3.5 rounded-2xl border border-border">
+                <div className="flex items-center justify-between text-xs font-black text-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <Trophy size={13} className="text-primary animate-pulse" /> {t("profile.xpPoints")}
+                  </span>
+                  <span className="font-mono text-muted-foreground">{xp} / {xpNeeded} XP</span>
+                </div>
+                <div className="h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+                    style={{ width: `${xpPercentage}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[9px] text-muted-foreground font-semibold">
+                  <span>{t("profile.level")} {level}</span>
+                  <span>{t("profile.xpForNextLevel") ? t("profile.xpForNextLevel").replace("{xp}", String(xpNeeded - xp)).replace("{level}", String(level + 1)) : `+${xpNeeded - xp} XP para Nivel ${level + 1}`}</span>
+                </div>
               </div>
-              <div className="h-3.5 w-full rounded-full bg-muted shadow-inner overflow-hidden border border-border">
-                <div
-                  className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
-                  style={{ width: `${xpPercentage}%` }}
-                />
-              </div>
-              <div className="flex justify-between items-center text-[9px] text-muted-foreground font-semibold">
-                <span>{t("profile.level")} {level}</span>
-                <span>{t("profile.xpForNextLevel") ? t("profile.xpForNextLevel").replace("{xp}", String(xpNeeded - xp)).replace("{level}", String(level + 1)) : `+${xpNeeded - xp} XP para Nivel ${level + 1}`}</span>
-              </div>
-            </div>
 
-            {/* PlayStation-style Trophies Card (Clickable Banner) */}
-            <div 
-              onClick={() => setActiveTab("achievements")}
-              className="mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md">
-                  <div className="h-full w-full rounded-full bg-background flex items-center justify-center text-lg">
-                    🏆
+              {/* PlayStation-style Trophies Card (Clickable Banner) */}
+              <div 
+                onClick={() => setActiveTab("achievements")}
+                className="mt-3.5 bg-card p-3.5 rounded-2xl border border-border hover:bg-muted/50 active:scale-[0.99] transition-all cursor-pointer flex items-center justify-between shadow-soft select-none animate-fade-in"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-[#ffd700] via-[#c0c0c0] to-[#cd7f32] p-[1.5px] flex items-center justify-center shadow-md">
+                    <div className="h-full w-full rounded-full bg-background flex items-center justify-center text-lg">
+                      🏆
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="text-xs font-black uppercase tracking-wider text-foreground">{t("profile.achievements")}</h4>
+                      <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
+                        {unlockedCount} / {ACHIEVEMENTS.length}
+                      </span>
+                    </div>
+                    {/* PlayStation-style tiny trophy counters */}
+                    <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground">
+                      <span className="flex items-center gap-0.5">🏆 <span className="text-foreground">{platinumCount}</span></span>
+                      <span className="flex items-center gap-0.5">🥇 <span className="text-foreground">{goldCount}</span></span>
+                      <span className="flex items-center gap-0.5">🥈 <span className="text-foreground">{silverCount}</span></span>
+                      <span className="flex items-center gap-0.5">🥉 <span className="text-foreground">{bronzeCount}</span></span>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h4 className="text-xs font-black uppercase tracking-wider text-foreground">{t("profile.achievements")}</h4>
-                    <span className="text-[9px] font-black text-primary bg-primary/10 px-1.5 rounded-full border border-primary/20">
-                      {unlockedCount} / {ACHIEVEMENTS.length}
-                    </span>
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <span className="text-xs font-black text-foreground">{completionPercentage}%</span>
+                    <p className="text-[8px] text-muted-foreground uppercase font-black tracking-wider">{t("profile.progress")}</p>
                   </div>
-                  {/* PlayStation-style tiny trophy counters */}
-                  <div className="flex items-center gap-3 mt-1.5 text-[10px] font-bold text-muted-foreground">
-                    <span className="flex items-center gap-0.5">🏆 <span className="text-foreground">{platinumCount}</span></span>
-                    <span className="flex items-center gap-0.5">🥇 <span className="text-foreground">{goldCount}</span></span>
-                    <span className="flex items-center gap-0.5">🥈 <span className="text-foreground">{silverCount}</span></span>
-                    <span className="flex items-center gap-0.5">🥉 <span className="text-foreground">{bronzeCount}</span></span>
-                  </div>
+                  <ArrowRight size={13} className="text-muted-foreground" />
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="text-right">
-                  <span className="text-xs font-black text-foreground">{completionPercentage}%</span>
-                  <p className="text-[8px] text-muted-foreground uppercase font-black tracking-wider">{t("profile.progress")}</p>
-                </div>
-                <ArrowRight size={13} className="text-muted-foreground" />
+            </>
+          ) : (
+            /* Tarjeta de conversión RPG para No-Premiums */
+            <div className="mt-8 bg-muted border border-border rounded-3xl p-6 text-center space-y-4 shadow-soft">
+              <div className="flex justify-center text-amber-500">
+                <Trophy size={40} className="text-primary animate-pulse" />
               </div>
+              <div className="space-y-1.5">
+                <h4 className="text-sm font-extrabold text-foreground">
+                  ¡Tu progreso de nivel está a salvo! 🛡️
+                </h4>
+                <p className="text-xs text-muted-foreground leading-relaxed px-2">
+                  Cada partido en el que participas te otorga puntos de experiencia en segundo plano. Hazte Premium para revelar tu nivel actual, desbloquear logros, equipar objetos mágicos y reclamar cupones de descuento.
+                </p>
+              </div>
+              <button 
+                onClick={() => alert("¡Próximamente! Aquí se abrirá la pasarela de pago para adquirir Premium.")}
+                className="w-full rounded-2xl bg-amber-500 hover:bg-amber-600 font-black text-xs uppercase py-3.5 tracking-wide shadow-pop hover:scale-102 active:scale-98 transition-all"
+                style={{ color: "#0f1117" }}
+              >
+                Ver Planes Premium ⚡
+              </button>
             </div>
-          </>
+          )
         )}
       </div>
 
       {/* Navigation Tabs (RPG Character Sheet Style) */}
       <div className="px-5">
-        <div className={`grid ${rpgMode ? "grid-cols-4" : "grid-cols-2"} gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border`}>
+        <div className={`grid ${rpgMode && isPremium ? "grid-cols-4" : "grid-cols-2"} gap-1 rounded-2xl bg-card p-1 shadow-pop border border-border`}>
           {[
             { id: "stats", label: t("profile.stats"), icon: Shield, show: true },
-            { id: "achievements", label: t("profile.achievements").slice(0, 6), icon: Award, show: rpgMode },
-            { id: "inventory", label: t("profile.inventory"), icon: Trophy, show: rpgMode },
+            { id: "achievements", label: t("profile.achievements").slice(0, 6), icon: Award, show: rpgMode && isPremium },
+            { id: "inventory", label: t("profile.inventory"), icon: Trophy, show: rpgMode && isPremium },
             { id: "history", label: t("profile.history"), icon: BookOpen, show: true },
           ].filter(tab => tab.show).map((tab) => {
             const ActiveIcon = tab.icon;
@@ -551,7 +585,7 @@ export function ProfileScreen({
         {/* TAB 1: Stats / Info */}
         {activeTab === "stats" && (
           <div className="space-y-4">
-            {rpgMode && (
+            {rpgMode && isPremium && (
               <>
                 <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                   <Award size={14} className="text-primary" /> {t("profile.playerAttributes") || "Atributos del Jugador"}
@@ -640,7 +674,7 @@ export function ProfileScreen({
               )}
             </div>
 
-            {rpgMode && (
+            {rpgMode && isPremium && (
               <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
                 <h4 className="text-xs font-black uppercase tracking-wider text-foreground mb-1">
                   {t("profile.campaignSummary") || "Resumen de Campaña"}

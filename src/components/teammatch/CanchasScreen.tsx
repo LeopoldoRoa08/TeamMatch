@@ -177,7 +177,7 @@ export function AddCanchaForm({ onBack, onSaved }: { onBack: () => void; onSaved
           </label>
           <div className="grid grid-cols-2 gap-2">
             {SPORTS.map((s) => {
-              let displayLabel = s.label;
+              let displayLabel: string = s.label;
               if (s.id === 1) displayLabel = t("sports.futbol") || "Fútbol";
               else if (s.id === 2) displayLabel = t("sports.tenis") || "Tenis";
               else if (s.id === 3) displayLabel = t("sports.golf") || "Golf";

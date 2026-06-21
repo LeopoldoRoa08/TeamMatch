@@ -3,6 +3,8 @@ import { events as mockEvents } from "./data";
 import { EventCard } from "./EventCard";
 import type { SportEvent } from "./types";
 import { CouponPopup } from "./CouponPopup";
+import { PremiumFeature } from "./PremiumFeature";
+import { NonPremiumOnly } from "./NonPremiumOnly";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Star, X, Plus } from "lucide-react";
 import { UserAvatar } from "./UserAvatar";
@@ -177,23 +179,27 @@ export function MyEventsScreen({ onSelect, onNavigateToProfile }: { onSelect: (e
 
   return (
     <div className="h-full overflow-y-auto bg-background pb-24">
-      <CouponPopup />
+      <NonPremiumOnly>
+        <CouponPopup />
+      </NonPremiumOnly>
       <header className="flex items-center justify-between px-5 pb-3 pt-12">
         <div>
           <h1 className="text-2xl font-bold text-foreground">{t("nav.events")}</h1>
           <p className="text-sm text-muted-foreground">{t("events.search")}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            id="fab-create-event-btn"
-            onClick={() => setShowCreateForm(true)}
-            className="flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-foreground shadow-pop transition-all active:scale-95 hover:scale-105"
-            aria-label={t("events.createEvent") || "Crear partido"}
-            style={{boxShadow: "0 4px 18px rgba(99,102,241,0.45)"}}
-          >
-            <Plus size={15} strokeWidth={2.5} />
-            {t("events.createEvent")}
-          </button>
+          <PremiumFeature featureName="Crear Partidos" renderDisabled={true}>
+            <button
+              id="fab-create-event-btn"
+              onClick={() => setShowCreateForm(true)}
+              className="flex items-center gap-1.5 rounded-2xl gradient-primary px-4 py-2.5 text-xs font-bold text-foreground shadow-pop transition-all active:scale-95 hover:scale-105"
+              aria-label={t("events.createEvent") || "Crear partido"}
+              style={{boxShadow: "0 4px 18px rgba(99,102,241,0.45)"}}
+            >
+              <Plus size={15} strokeWidth={2.5} />
+              {t("events.createEvent")}
+            </button>
+          </PremiumFeature>
           <UserAvatar size="md" className="cursor-pointer" onClick={onNavigateToProfile} />
         </div>
       </header>
